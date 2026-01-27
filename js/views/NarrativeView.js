@@ -7,7 +7,7 @@ import { BaseView } from './BaseView.js';
 import { DataService } from '../data/DataService.js';
 import { PageHeader } from '../utils/PageHeader.js';
 import { CardBuilder } from '../utils/CardBuilder.js';
-import { SubNarrativeList } from '../components/SubNarrativeList.js';
+import { ThemeList } from '../components/ThemeList.js';
 import { SentimentChart } from '../components/SentimentChart.js';
 import { VennDiagram } from '../components/VennDiagram.js';
 import { MapView } from '../components/MapView.js';
@@ -127,10 +127,10 @@ export class NarrativeView extends BaseView {
 
     // Set up description toggle for themes (only on dashboard tab)
     if (this.isDashboardTab()) {
-      const descToggle = this.container.querySelector('#subnarrative-desc-toggle');
-      if (descToggle && this.components.subNarrativeList) {
+      const descToggle = this.container.querySelector('#theme-desc-toggle');
+      if (descToggle && this.components.themeList) {
         descToggle.addEventListener('click', () => {
-          const isShowing = this.components.subNarrativeList.toggleDescription();
+          const isShowing = this.components.themeList.toggleDescription();
           descToggle.classList.toggle('active', isShowing);
         });
       }
@@ -141,7 +141,7 @@ export class NarrativeView extends BaseView {
   }
 
   fetchNarrativeData(narrative) {
-    const subNarratives = DataService.getSubNarrativesForNarrative(narrative.id);
+    const themes = DataService.getThemesForNarrative(narrative.id);
     const factionData = DataService.getFactionsForNarrative(narrative.id);
     const factions = factionData.map(f => f.faction).filter(Boolean);
     const factionOverlaps = factions.length > 1 
@@ -177,7 +177,7 @@ export class NarrativeView extends BaseView {
     const documents = DataService.getDocumentsForNarrative(narrative.id);
 
     return {
-      subNarratives, factionData, factions, factionOverlaps,
+      themes, factionData, factions, factionOverlaps,
       events, allEvents, hasVolumeData, publisherVolumeTime, hasPublisherData, hasVolumeTimeline,
       locations, mapLocations, personIds, orgIds, hasNetwork, documents
     };
@@ -189,9 +189,9 @@ export class NarrativeView extends BaseView {
   buildDashboardCards(narrative, data) {
     const cards = [];
 
-    if (data.subNarratives.length > 0) {
-      cards.push(CardBuilder.create('Themes', 'narrative-subnarratives', {
-        count: data.subNarratives.length,
+    if (data.themes.length > 0) {
+      cards.push(CardBuilder.create('Themes', 'narrative-themes', {
+        count: data.themes.length,
         fullWidth: true,
         noPadding: true,
         actions: CardBuilder.descriptionToggle('subnarrative-desc-toggle')
@@ -251,7 +251,7 @@ export class NarrativeView extends BaseView {
 
   async initializeComponents() {
     const {
-      narrative, subNarratives, factionData, factions, factionOverlaps,
+      narrative, themes, factionData, factions, factionOverlaps,
       allEvents, hasVolumeData, publisherVolumeTime, hasPublisherData,
       mapLocations, personIds, orgIds, documents
     } = this._prefetchedData;
@@ -297,13 +297,13 @@ export class NarrativeView extends BaseView {
     // Dashboard Tab: Initialize all other components
 
     // Themes List
-    if (subNarratives.length > 0) {
-      this.components.subNarrativeList = new SubNarrativeList('narrative-subnarratives', {
+    if (themes.length > 0) {
+      this.components.themeList = new ThemeList('narrative-themes', {
         onItemClick: (s) => {
           window.location.hash = `#/subnarrative/${s.id}`;
         }
       });
-      this.components.subNarrativeList.update({ subNarratives });
+      this.components.themeList.update({ themes });
     }
 
     // Volume & Events Chart (half-width)

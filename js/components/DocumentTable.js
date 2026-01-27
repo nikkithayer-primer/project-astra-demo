@@ -11,7 +11,7 @@ import { DataService } from '../data/DataService.js';
 import { renderClassificationBadge } from './ClassificationBanner.js';
 import { DocumentContentRenderer } from './DocumentContentRenderer.js';
 import { NarrativeList } from './NarrativeList.js';
-import { SubNarrativeList } from './SubNarrativeList.js';
+import { ThemeList } from './ThemeList.js';
 import { MapView } from './MapView.js';
 import { Timeline } from './Timeline.js';
 import { NetworkGraph } from './NetworkGraph.js';
@@ -25,6 +25,7 @@ import {
   getDocumentTypeInfo,
   isSocialMedia
 } from '../utils/classification.js';
+import { dataStore } from '../data/DataStore.js';
 
 // Column configuration
 const COLUMN_CONFIG = {
@@ -99,9 +100,9 @@ const COLUMN_CONFIG = {
     width: '180px',
     minWidth: '140px',
     sortable: true,
-    idField: 'subNarrativeIds',
-    getValue: (doc) => (doc.subNarrativeIds || []).length,
-    getEntities: (doc) => (doc.subNarrativeIds || []).map(id => DataService.getSubNarrative(id)).filter(Boolean),
+    idField: 'themeIds',
+    getValue: (doc) => (doc.themeIds || []).length,
+    getEntities: (doc) => (doc.themeIds || []).map(id => DataService.getTheme(id)).filter(Boolean),
     route: 'subnarrative',
     displayField: 'text'
   },
@@ -212,6 +213,15 @@ export class DocumentTable extends BaseComponent {
     this.contentRenderer = null;
     this.viewerTab = 'content'; // 'content' or 'details'
     this._keydownHandler = null;
+  }
+
+  /**
+   * Check if classification markings should be shown
+   * @returns {boolean}
+   */
+  shouldShowClassification() {
+    const settings = dataStore.getSettings();
+    return settings.showClassification;
   }
 
   /**
@@ -481,6 +491,10 @@ export class DocumentTable extends BaseComponent {
   }
 
   renderClassificationCell(doc) {
+    const settings = dataStore.getSettings();
+    if (!settings.showClassification) {
+      return '<td class="doc-col-classification"></td>';
+    }
     const classification = doc.classification || 'U';
     return `
       <td class="doc-col-classification">
@@ -1104,7 +1118,7 @@ export class DocumentTable extends BaseComponent {
    */
   renderDetailsView(doc) {
     const narratives = DataService.getNarrativesForDocument(doc.id);
-    const subNarratives = DataService.getSubNarrativesForDocument(doc.id);
+    const themes = DataService.getThemesForDocument(doc.id);
     const persons = DataService.getPersonsForDocument(doc.id);
     const organizations = DataService.getOrganizationsForDocument(doc.id);
     const locations = DataService.getLocationsForDocument(doc.id);
@@ -1124,11 +1138,11 @@ export class DocumentTable extends BaseComponent {
         }
       },
       {
-        condition: subNarratives.length > 0,
+        condition: themes.length > 0,
         title: 'Related Themes',
         id: 'doc-details-themes',
         options: { 
-          count: subNarratives.length, 
+          count: themes.length, 
           halfWidth: true, 
           noPadding: true,
           actions: CardBuilder.descriptionToggle('doc-theme-desc-toggle')
@@ -1186,7 +1200,7 @@ export class DocumentTable extends BaseComponent {
    */
   initializeDetailsComponents(doc) {
     const narratives = DataService.getNarrativesForDocument(doc.id);
-    const subNarratives = DataService.getSubNarrativesForDocument(doc.id);
+    const themes = DataService.getThemesForDocument(doc.id);
     const persons = DataService.getPersonsForDocument(doc.id);
     const organizations = DataService.getOrganizationsForDocument(doc.id);
     const locations = DataService.getLocationsForDocument(doc.id);
@@ -1206,14 +1220,14 @@ export class DocumentTable extends BaseComponent {
     }
 
     // Initialize Theme List
-    if (subNarratives.length > 0 && document.getElementById('doc-details-themes')) {
-      this.detailsThemeList = new SubNarrativeList('doc-details-themes', {
+    if (themes.length > 0 && document.getElementById('doc-details-themes')) {
+      this.detailsThemeList = new ThemeList('doc-details-themes', {
         maxItems: 10,
         onItemClick: (s) => {
           window.location.hash = `#/subnarrative/${s.id}`;
         }
       });
-      this.detailsThemeList.update({ subNarratives });
+      this.detailsThemeList.update({ themes });
     }
 
     // Initialize Map
@@ -1287,10 +1301,11 @@ export class DocumentTable extends BaseComponent {
    */
   renderSocialHeader(doc) {
     const author = doc.author || {};
-    const engagement = doc.engagement || {};
+    const metrics = doc.metrics || {};
     const publisherName = this.getPublisherName(this.getDocPublisherId(doc));
     const formatted = this.formatDate(doc.publishedDate);
     const classification = doc.classification || 'U';
+    const showClassification = this.shouldShowClassification();
 
     return `
       <div class="document-viewer-header-social">
@@ -1309,7 +1324,7 @@ export class DocumentTable extends BaseComponent {
             ${publisherName}
           </span>
           <span class="viewer-social-date">${formatted.date} ${formatted.time}</span>
-          ${classification !== 'U' ? renderClassificationBadge(classification) : ''}
+          ${showClassification && classification !== 'U' ? renderClassificationBadge(classification) : ''}
         </div>
 
         <div class="viewer-social-engagement">
@@ -1317,20 +1332,20 @@ export class DocumentTable extends BaseComponent {
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/>
             </svg>
-            <span>${this.formatEngagement(engagement.replies || 0)}</span>
+            <span>${this.formatEngagement(metrics.comments || 0)}</span>
           </div>
           <div class="viewer-social-stat">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
             </svg>
-            <span>${this.formatEngagement(engagement.likes || 0)}</span>
+            <span>${this.formatEngagement(metrics.likes || 0)}</span>
           </div>
           <div class="viewer-social-stat">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <path d="M17 1l4 4-4 4"/><path d="M3 11V9a4 4 0 0 1 4-4h14"/>
               <path d="M7 23l-4-4 4-4"/><path d="M21 13v2a4 4 0 0 1-4 4H3"/>
             </svg>
-            <span>${this.formatEngagement(engagement.reblogs || 0)}</span>
+            <span>${this.formatEngagement(metrics.shares || 0)}</span>
           </div>
         </div>
 
@@ -1352,9 +1367,10 @@ export class DocumentTable extends BaseComponent {
   renderTikTokHeader(doc) {
     const author = doc.author || {};
     const video = doc.video || {};
-    const engagement = doc.engagement || {};
+    const metrics = doc.metrics || {};
     const formatted = this.formatDate(doc.publishedDate);
     const classification = doc.classification || 'U';
+    const showClassification = this.shouldShowClassification();
 
     // Format video duration
     const duration = video.duration || 0;
@@ -1388,7 +1404,7 @@ export class DocumentTable extends BaseComponent {
             ${durationStr}
           </span>
           <span class="viewer-social-date">${formatted.date} ${formatted.time}</span>
-          ${classification !== 'U' ? renderClassificationBadge(classification) : ''}
+          ${showClassification && classification !== 'U' ? renderClassificationBadge(classification) : ''}
         </div>
 
         <div class="viewer-social-engagement">
@@ -1396,20 +1412,20 @@ export class DocumentTable extends BaseComponent {
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/>
             </svg>
-            <span>${this.formatEngagement(engagement.replies || 0)}</span>
+            <span>${this.formatEngagement(metrics.comments || 0)}</span>
           </div>
           <div class="viewer-social-stat">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
             </svg>
-            <span>${this.formatEngagement(engagement.likes || 0)}</span>
+            <span>${this.formatEngagement(metrics.likes || 0)}</span>
           </div>
           <div class="viewer-social-stat">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <path d="M17 1l4 4-4 4"/><path d="M3 11V9a4 4 0 0 1 4-4h14"/>
               <path d="M7 23l-4-4 4-4"/><path d="M21 13v2a4 4 0 0 1-4 4H3"/>
             </svg>
-            <span>${this.formatEngagement(engagement.reblogs || 0)}</span>
+            <span>${this.formatEngagement(metrics.shares || 0)}</span>
           </div>
         </div>
 
@@ -1432,6 +1448,7 @@ export class DocumentTable extends BaseComponent {
     const publisherName = this.getPublisherName(this.getDocPublisherId(doc));
     const formatted = this.formatDate(doc.publishedDate);
     const classification = doc.classification || 'U';
+    const showClassification = this.shouldShowClassification();
     const title = doc.title || 'Untitled Article';
 
     return `
@@ -1440,7 +1457,7 @@ export class DocumentTable extends BaseComponent {
           <span class="viewer-news-publisher">
             ${publisherName}
           </span>
-          ${classification !== 'U' ? renderClassificationBadge(classification) : ''}
+          ${showClassification && classification !== 'U' ? renderClassificationBadge(classification) : ''}
         </div>
 
         <h2 class="viewer-news-title">${title}</h2>
@@ -1469,13 +1486,16 @@ export class DocumentTable extends BaseComponent {
     const publisherName = this.getPublisherName(this.getDocPublisherId(doc));
     const formatted = this.formatDate(doc.publishedDate);
     const classification = doc.classification || 'U';
+    const showClassification = this.shouldShowClassification();
     const title = doc.title || 'Untitled Document';
 
     return `
       <div class="document-viewer-header-internal">
-        <div class="viewer-internal-classification-banner classification-banner classification-banner-${classification.toLowerCase()}">
-          ${CLASSIFICATION_LEVELS[classification]?.fullName || classification}
-        </div>
+        ${showClassification ? `
+          <div class="viewer-internal-classification-banner classification-banner classification-banner-${classification.toLowerCase()}">
+            ${CLASSIFICATION_LEVELS[classification]?.fullName || classification}
+          </div>
+        ` : ''}
 
         ${doc.department ? `
           <div class="viewer-internal-department">${doc.department}</div>

@@ -10,7 +10,7 @@ export const narratives = [
     missionId: 'mission-002',
     status: 'in_progress',
     sentiment: -0.58,
-    subNarrativeIds: ['sub-006', 'sub-007'],
+    themeIds: ['sub-006', 'sub-007'],
     factionMentions: {
       'faction-005': { volume: 450, sentiment: -0.68 },
       'faction-006': { volume: 180, sentiment: -0.42 }
@@ -54,7 +54,7 @@ export const narratives = [
     missionId: 'mission-003',
     status: 'in_progress',
     sentiment: -0.52,
-    subNarrativeIds: ['sub-009', 'sub-010', 'sub-011'],
+    themeIds: ['sub-009', 'sub-010', 'sub-011'],
     factionMentions: {
       'faction-001': { volume: 180, sentiment: 0.62 },
       'faction-002': { volume: 120, sentiment: -0.74 }
@@ -90,7 +90,7 @@ export const narratives = [
     missionId: 'mission-003',
     status: 'under_investigation',
     sentiment: -0.68,
-    subNarrativeIds: ['sub-012', 'sub-013', 'sub-014', 'sub-015'],
+    themeIds: ['sub-012', 'sub-013', 'sub-014', 'sub-015'],
     factionMentions: {
       'faction-001': { volume: 160, sentiment: 0.72 },
       'faction-002': { volume: 140, sentiment: -0.81 },
@@ -137,7 +137,7 @@ export const narratives = [
     missionId: 'mission-003',
     status: 'under_investigation',
     sentiment: -0.72,
-    subNarrativeIds: ['sub-016', 'sub-017'],
+    themeIds: ['sub-016', 'sub-017'],
     factionMentions: {
       'faction-001': { volume: 45, sentiment: -0.35 },
       'faction-002': { volume: 38, sentiment: -0.68 },
@@ -176,7 +176,7 @@ export const narratives = [
     missionId: 'mission-003',
     status: 'in_progress',
     sentiment: -0.58,
-    subNarrativeIds: ['sub-018', 'sub-019', 'sub-020', 'sub-021'],
+    themeIds: ['sub-018', 'sub-019', 'sub-020', 'sub-021'],
     factionMentions: {
       'faction-001': { volume: 280, sentiment: 0.68 },
       'faction-002': { volume: 195, sentiment: -0.72 },
@@ -221,7 +221,7 @@ export const narratives = [
     missionId: 'mission-003',
     status: 'new',
     sentiment: -0.48,
-    subNarrativeIds: ['sub-022', 'sub-023', 'sub-024'],
+    themeIds: ['sub-022', 'sub-023', 'sub-024'],
     factionMentions: {
       'faction-001': { volume: 145, sentiment: 0.72 },
       'faction-002': { volume: 165, sentiment: -0.78 },
@@ -263,7 +263,7 @@ export const narratives = [
     missionId: 'mission-002',
     status: 'new',
     sentiment: -0.55,
-    subNarrativeIds: ['sub-025', 'sub-026', 'sub-027'],
+    themeIds: ['sub-025', 'sub-026', 'sub-027'],
     factionMentions: {
       'faction-001': { volume: 125, sentiment: 0.58 },
       'faction-005': { volume: 195, sentiment: -0.78 },

@@ -1,5 +1,5 @@
 /**
- * SubNarrativeView.js
+ * ThemeView.js
  * Detail view for a theme (similar to NarrativeView but with parent link)
  */
 
@@ -17,25 +17,25 @@ import { getSourceViewer } from '../components/SourceViewerModal.js';
 import { initAllCardToggles } from '../utils/cardWidthToggle.js';
 import { renderEntityList } from '../utils/entityRenderer.js';
 
-export class SubNarrativeView extends BaseView {
-  constructor(container, subNarrativeId, options = {}) {
+export class ThemeView extends BaseView {
+  constructor(container, themeId, options = {}) {
     super(container, options);
-    this.subNarrativeId = subNarrativeId;
+    this.themeId = themeId;
     this.networkViewMode = 'graph'; // 'graph' or 'list'
   }
 
   async render() {
-    const subNarrative = DataService.getSubNarrative(this.subNarrativeId);
-    if (!subNarrative) {
+    const theme = DataService.getTheme(this.themeId);
+    if (!theme) {
       this.renderNotFound('Theme');
       return;
     }
 
     // Fetch all data upfront
-    const data = this.fetchSubNarrativeData(subNarrative);
+    const data = this.fetchThemeData(theme);
     
     // Build cards HTML
-    const cardsHtml = this.buildCardsHtml(subNarrative, data);
+    const cardsHtml = this.buildCardsHtml(theme, data);
 
     // Build breadcrumbs with optional parent narrative
     const breadcrumbs = [
@@ -50,11 +50,11 @@ export class SubNarrativeView extends BaseView {
     // Build page header
     const headerHtml = PageHeader.render({
       breadcrumbs: breadcrumbs,
-      title: subNarrative.text,
-      subtitle: `<span class="badge badge-${this.getSentimentClass(subNarrative.sentiment)}">${this.formatSentiment(subNarrative.sentiment)}</span>`,
-      description: subNarrative.description,
-      descriptionLink: subNarrative.description 
-        ? `<a href="#" class="source-link" id="subnarrative-source-link">View source</a>` 
+      title: theme.text,
+      subtitle: `<span class="badge badge-${this.getSentimentClass(theme.sentiment)}">${this.formatSentiment(theme.sentiment)}</span>`,
+      description: theme.description,
+      descriptionLink: theme.description 
+        ? `<a href="#" class="source-link" id="theme-source-link">View source</a>` 
         : ''
     });
 
@@ -79,20 +79,20 @@ export class SubNarrativeView extends BaseView {
     // Initialize card width toggles
     if (cardsHtml) {
       const contentGrid = this.container.querySelector('.content-grid');
-      initAllCardToggles(contentGrid, `subnarrative-${this.subNarrativeId}`);
+      initAllCardToggles(contentGrid, `theme-${this.themeId}`);
     }
 
     // Store pre-fetched data for component initialization
-    this._prefetchedData = { subNarrative, ...data };
+    this._prefetchedData = { theme, ...data };
 
     await this.initializeComponents();
 
     // Set up source link handler
-    const sourceLink = this.container.querySelector('#subnarrative-source-link');
+    const sourceLink = this.container.querySelector('#theme-source-link');
     if (sourceLink) {
       sourceLink.addEventListener('click', (e) => {
         e.preventDefault();
-        getSourceViewer().open(subNarrative, 'subnarrative');
+        getSourceViewer().open(theme, 'theme');
       });
     }
 
@@ -100,9 +100,9 @@ export class SubNarrativeView extends BaseView {
     this.initDragDrop();
   }
 
-  fetchSubNarrativeData(subNarrative) {
-    const parentNarrative = DataService.getParentNarrative(this.subNarrativeId);
-    const factionData = DataService.getFactionsForSubNarrative(subNarrative.id);
+  fetchThemeData(theme) {
+    const parentNarrative = DataService.getParentNarrative(this.themeId);
+    const factionData = DataService.getFactionsForTheme(theme.id);
     const factions = factionData.map(f => f.faction).filter(Boolean);
     const factionOverlaps = factions.length > 1
       ? DataService.getFactionOverlapsFor(factions[0]?.id).filter(o =>
@@ -111,11 +111,11 @@ export class SubNarrativeView extends BaseView {
       : [];
 
     // Check data availability for each section
-    const hasVolumeData = subNarrative.volumeOverTime && subNarrative.volumeOverTime.length > 0 && factions.length > 0;
-    const locations = (subNarrative.locationIds || []).map(lid => DataService.getLocation(lid)).filter(Boolean);
-    const events = (subNarrative.eventIds || []).map(eid => DataService.getEvent(eid)).filter(Boolean);
-    const personIds = subNarrative.personIds || [];
-    const orgIds = subNarrative.organizationIds || [];
+    const hasVolumeData = theme.volumeOverTime && theme.volumeOverTime.length > 0 && factions.length > 0;
+    const locations = (theme.locationIds || []).map(lid => DataService.getLocation(lid)).filter(Boolean);
+    const events = (theme.eventIds || []).map(eid => DataService.getEvent(eid)).filter(Boolean);
+    const personIds = theme.personIds || [];
+    const orgIds = theme.organizationIds || [];
     const hasNetwork = personIds.length > 0 || orgIds.length > 0;
 
     return {
@@ -124,7 +124,7 @@ export class SubNarrativeView extends BaseView {
     };
   }
 
-  buildCardsHtml(subNarrative, data) {
+  buildCardsHtml(theme, data) {
     const cards = [];
 
     if (data.hasVolumeData) {
@@ -160,15 +160,15 @@ export class SubNarrativeView extends BaseView {
 
   async initializeComponents() {
     const {
-      subNarrative, factionData, factions, factionOverlaps,
+      theme, factionData, factions, factionOverlaps,
       hasVolumeData, locations, events, personIds, orgIds
     } = this._prefetchedData;
 
     // Volume Over Time Chart
     if (hasVolumeData) {
-      const dates = subNarrative.volumeOverTime.map(d => d.date);
+      const dates = theme.volumeOverTime.map(d => d.date);
       const series = factions.map(f =>
-        subNarrative.volumeOverTime.map(d => (d.factionVolumes || {})[f.id] || 0)
+        theme.volumeOverTime.map(d => (d.factionVolumes || {})[f.id] || 0)
       );
 
       this.components.volumeChart = new StackedAreaChart('sub-volume-chart', {
@@ -351,4 +351,4 @@ export class SubNarrativeView extends BaseView {
   }
 }
 
-export default SubNarrativeView;
+export default ThemeView;

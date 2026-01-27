@@ -22,7 +22,7 @@ export const monitors = [
       newNarrative: true
     },
     options: {
-      includeSubNarratives: true,
+      includeThemes: true,
       includeRelatedEvents: true
     }
   },
@@ -44,7 +44,7 @@ export const monitors = [
       sentimentShift: { threshold: 0.15, direction: 'negative' }
     },
     options: {
-      includeSubNarratives: true,
+      includeThemes: true,
       includeRelatedEvents: true
     }
   },
@@ -67,7 +67,7 @@ export const monitors = [
       factionEngagement: true
     },
     options: {
-      includeSubNarratives: true,
+      includeThemes: true,
       includeRelatedEvents: true
     }
   },
@@ -90,7 +90,7 @@ export const monitors = [
       volumeSpike: { threshold: 200, timeWindow: '12h' }
     },
     options: {
-      includeSubNarratives: true,
+      includeThemes: true,
       includeRelatedEvents: true
     }
   },
@@ -112,7 +112,7 @@ export const monitors = [
       sentimentShift: { threshold: 0.15, direction: 'any' }
     },
     options: {
-      includeSubNarratives: true,
+      includeThemes: true,
       includeRelatedEvents: true
     }
   },
@@ -134,7 +134,7 @@ export const monitors = [
       newEvent: true
     },
     options: {
-      includeSubNarratives: true,
+      includeThemes: true,
       includeRelatedEvents: true
     }
   },
@@ -157,7 +157,7 @@ export const monitors = [
       newEvent: true
     },
     options: {
-      includeSubNarratives: true,
+      includeThemes: true,
       includeRelatedEvents: true
     }
   }

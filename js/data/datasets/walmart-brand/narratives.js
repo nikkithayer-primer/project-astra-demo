@@ -10,13 +10,13 @@ export const narratives = [
     missionId: 'mission-001',
     status: 'in_progress',
     sentiment: -0.68,
-    subNarrativeIds: ['sub-001', 'sub-002', 'sub-003'],
+    themeIds: ['sub-001', 'sub-002', 'sub-003'],
     factionMentions: {
       'faction-001': { volume: 685, sentiment: -0.82 },
       'faction-002': { volume: 245, sentiment: -0.72 },
       'faction-005': { volume: 165, sentiment: -0.35 }
     },
-    sourceVolumes: {
+    publisherVolumes: {
       'pub-tiktok': { volume: 385, sentiment: -0.75 },
       'pub-x': { volume: 295, sentiment: -0.68 },
       'pub-reddit': { volume: 185, sentiment: -0.72 },
@@ -35,13 +35,13 @@ export const narratives = [
     locationIds: ['loc-002', 'loc-003'],
     eventIds: ['event-001', 'event-002', 'event-003'],
     volumeOverTime: [
-      { date: '2026-01-14', factionVolumes: { 'faction-001': 125, 'faction-002': 45, 'faction-005': 28 }, sourceVolumes: { 'pub-tiktok': 72, 'pub-x': 55, 'pub-reddit': 35, 'pub-facebook': 28 } },
-      { date: '2026-01-15', factionVolumes: { 'faction-001': 195, 'faction-002': 72, 'faction-005': 42 }, sourceVolumes: { 'pub-tiktok': 115, 'pub-x': 85, 'pub-reddit': 55, 'pub-facebook': 42 } },
-      { date: '2026-01-16', factionVolumes: { 'faction-001': 285, 'faction-002': 105, 'faction-005': 65 }, sourceVolumes: { 'pub-tiktok': 165, 'pub-x': 125, 'pub-reddit': 78, 'pub-facebook': 62 } },
-      { date: '2026-01-17', factionVolumes: { 'faction-001': 425, 'faction-002': 155, 'faction-005': 95 }, sourceVolumes: { 'pub-tiktok': 245, 'pub-x': 185, 'pub-reddit': 115, 'pub-facebook': 92 } },
-      { date: '2026-01-18', factionVolumes: { 'faction-001': 545, 'faction-002': 195, 'faction-005': 125 }, sourceVolumes: { 'pub-tiktok': 315, 'pub-x': 235, 'pub-reddit': 148, 'pub-facebook': 118 } },
-      { date: '2026-01-19', factionVolumes: { 'faction-001': 625, 'faction-002': 225, 'faction-005': 148 }, sourceVolumes: { 'pub-tiktok': 358, 'pub-x': 272, 'pub-reddit': 168, 'pub-facebook': 135 } },
-      { date: '2026-01-20', factionVolumes: { 'faction-001': 685, 'faction-002': 245, 'faction-005': 165 }, sourceVolumes: { 'pub-tiktok': 385, 'pub-x': 295, 'pub-reddit': 185, 'pub-facebook': 145 } }
+      { date: '2026-01-14', factionVolumes: { 'faction-001': 125, 'faction-002': 45, 'faction-005': 28 }, publisherVolumes: { 'pub-tiktok': 72, 'pub-x': 55, 'pub-reddit': 35, 'pub-facebook': 28 } },
+      { date: '2026-01-15', factionVolumes: { 'faction-001': 195, 'faction-002': 72, 'faction-005': 42 }, publisherVolumes: { 'pub-tiktok': 115, 'pub-x': 85, 'pub-reddit': 55, 'pub-facebook': 42 } },
+      { date: '2026-01-16', factionVolumes: { 'faction-001': 285, 'faction-002': 105, 'faction-005': 65 }, publisherVolumes: { 'pub-tiktok': 165, 'pub-x': 125, 'pub-reddit': 78, 'pub-facebook': 62 } },
+      { date: '2026-01-17', factionVolumes: { 'faction-001': 425, 'faction-002': 155, 'faction-005': 95 }, publisherVolumes: { 'pub-tiktok': 245, 'pub-x': 185, 'pub-reddit': 115, 'pub-facebook': 92 } },
+      { date: '2026-01-18', factionVolumes: { 'faction-001': 545, 'faction-002': 195, 'faction-005': 125 }, publisherVolumes: { 'pub-tiktok': 315, 'pub-x': 235, 'pub-reddit': 148, 'pub-facebook': 118 } },
+      { date: '2026-01-19', factionVolumes: { 'faction-001': 625, 'faction-002': 225, 'faction-005': 148 }, publisherVolumes: { 'pub-tiktok': 358, 'pub-x': 272, 'pub-reddit': 168, 'pub-facebook': 135 } },
+      { date: '2026-01-20', factionVolumes: { 'faction-001': 685, 'faction-002': 245, 'faction-005': 165 }, publisherVolumes: { 'pub-tiktok': 385, 'pub-x': 295, 'pub-reddit': 185, 'pub-facebook': 145 } }
     ],
     documentIds: ['doc-001', 'doc-002', 'doc-003', 'doc-004'],
     createdAt: '2026-01-14T00:00:00Z'
@@ -53,13 +53,13 @@ export const narratives = [
     missionId: 'mission-002',
     status: 'in_progress',
     sentiment: -0.55,
-    subNarrativeIds: ['sub-004', 'sub-005'],
+    themeIds: ['sub-004', 'sub-005'],
     factionMentions: {
       'faction-001': { volume: 425, sentiment: -0.72 },
       'faction-005': { volume: 185, sentiment: -0.42 },
       'faction-006': { volume: 145, sentiment: 0.35 }
     },
-    sourceVolumes: {
+    publisherVolumes: {
       'pub-x': { volume: 225, sentiment: -0.62 },
       'pub-facebook': { volume: 185, sentiment: -0.68 },
       'pub-reddit': { volume: 145, sentiment: -0.58 },
@@ -78,11 +78,11 @@ export const narratives = [
     locationIds: ['loc-001', 'loc-004', 'loc-005'],
     eventIds: ['event-004', 'event-005'],
     volumeOverTime: [
-      { date: '2026-01-15', factionVolumes: { 'faction-001': 145, 'faction-005': 62, 'faction-006': 48 }, sourceVolumes: { 'pub-x': 78, 'pub-facebook': 62, 'pub-reddit': 48 } },
-      { date: '2026-01-16', factionVolumes: { 'faction-001': 225, 'faction-005': 95, 'faction-006': 72 }, sourceVolumes: { 'pub-x': 118, 'pub-facebook': 95, 'pub-reddit': 75 } },
-      { date: '2026-01-17', factionVolumes: { 'faction-001': 305, 'faction-005': 128, 'faction-006': 98 }, sourceVolumes: { 'pub-x': 158, 'pub-facebook': 128, 'pub-reddit': 102 } },
-      { date: '2026-01-18', factionVolumes: { 'faction-001': 365, 'faction-005': 155, 'faction-006': 122 }, sourceVolumes: { 'pub-x': 192, 'pub-facebook': 155, 'pub-reddit': 125 } },
-      { date: '2026-01-19', factionVolumes: { 'faction-001': 425, 'faction-005': 185, 'faction-006': 145 }, sourceVolumes: { 'pub-x': 225, 'pub-facebook': 185, 'pub-reddit': 145 } }
+      { date: '2026-01-15', factionVolumes: { 'faction-001': 145, 'faction-005': 62, 'faction-006': 48 }, publisherVolumes: { 'pub-x': 78, 'pub-facebook': 62, 'pub-reddit': 48 } },
+      { date: '2026-01-16', factionVolumes: { 'faction-001': 225, 'faction-005': 95, 'faction-006': 72 }, publisherVolumes: { 'pub-x': 118, 'pub-facebook': 95, 'pub-reddit': 75 } },
+      { date: '2026-01-17', factionVolumes: { 'faction-001': 305, 'faction-005': 128, 'faction-006': 98 }, publisherVolumes: { 'pub-x': 158, 'pub-facebook': 128, 'pub-reddit': 102 } },
+      { date: '2026-01-18', factionVolumes: { 'faction-001': 365, 'faction-005': 155, 'faction-006': 122 }, publisherVolumes: { 'pub-x': 192, 'pub-facebook': 155, 'pub-reddit': 125 } },
+      { date: '2026-01-19', factionVolumes: { 'faction-001': 425, 'faction-005': 185, 'faction-006': 145 }, publisherVolumes: { 'pub-x': 225, 'pub-facebook': 185, 'pub-reddit': 145 } }
     ],
     documentIds: ['doc-005', 'doc-006', 'doc-007'],
     createdAt: '2026-01-15T00:00:00Z'
@@ -94,14 +94,14 @@ export const narratives = [
     missionId: 'mission-001',
     status: 'under_investigation',
     sentiment: -0.62,
-    subNarrativeIds: ['sub-006', 'sub-007', 'sub-008'],
+    themeIds: ['sub-006', 'sub-007', 'sub-008'],
     factionMentions: {
       'faction-002': { volume: 485, sentiment: -0.78 },
       'faction-003': { volume: 345, sentiment: -0.82 },
       'faction-001': { volume: 225, sentiment: -0.55 },
       'faction-005': { volume: 145, sentiment: -0.38 }
     },
-    sourceVolumes: {
+    publisherVolumes: {
       'pub-tiktok': { volume: 345, sentiment: -0.72 },
       'pub-reddit': { volume: 285, sentiment: -0.75 },
       'pub-x': { volume: 195, sentiment: -0.65 },
@@ -121,12 +121,12 @@ export const narratives = [
     locationIds: ['loc-001', 'loc-006'],
     eventIds: ['event-006', 'event-007'],
     volumeOverTime: [
-      { date: '2026-01-13', factionVolumes: { 'faction-002': 125, 'faction-003': 92, 'faction-001': 58, 'faction-005': 38 }, sourceVolumes: { 'pub-tiktok': 92, 'pub-reddit': 75, 'pub-x': 52 } },
-      { date: '2026-01-14', factionVolumes: { 'faction-002': 195, 'faction-003': 145, 'faction-001': 92, 'faction-005': 58 }, sourceVolumes: { 'pub-tiktok': 145, 'pub-reddit': 118, 'pub-x': 82 } },
-      { date: '2026-01-15', factionVolumes: { 'faction-002': 275, 'faction-003': 205, 'faction-001': 128, 'faction-005': 82 }, sourceVolumes: { 'pub-tiktok': 198, 'pub-reddit': 165, 'pub-x': 115 } },
-      { date: '2026-01-16', factionVolumes: { 'faction-002': 345, 'faction-003': 258, 'faction-001': 165, 'faction-005': 105 }, sourceVolumes: { 'pub-tiktok': 252, 'pub-reddit': 208, 'pub-x': 145 } },
-      { date: '2026-01-17', factionVolumes: { 'faction-002': 415, 'faction-003': 305, 'faction-001': 195, 'faction-005': 125 }, sourceVolumes: { 'pub-tiktok': 302, 'pub-reddit': 248, 'pub-x': 172 } },
-      { date: '2026-01-18', factionVolumes: { 'faction-002': 485, 'faction-003': 345, 'faction-001': 225, 'faction-005': 145 }, sourceVolumes: { 'pub-tiktok': 345, 'pub-reddit': 285, 'pub-x': 195 } }
+      { date: '2026-01-13', factionVolumes: { 'faction-002': 125, 'faction-003': 92, 'faction-001': 58, 'faction-005': 38 }, publisherVolumes: { 'pub-tiktok': 92, 'pub-reddit': 75, 'pub-x': 52 } },
+      { date: '2026-01-14', factionVolumes: { 'faction-002': 195, 'faction-003': 145, 'faction-001': 92, 'faction-005': 58 }, publisherVolumes: { 'pub-tiktok': 145, 'pub-reddit': 118, 'pub-x': 82 } },
+      { date: '2026-01-15', factionVolumes: { 'faction-002': 275, 'faction-003': 205, 'faction-001': 128, 'faction-005': 82 }, publisherVolumes: { 'pub-tiktok': 198, 'pub-reddit': 165, 'pub-x': 115 } },
+      { date: '2026-01-16', factionVolumes: { 'faction-002': 345, 'faction-003': 258, 'faction-001': 165, 'faction-005': 105 }, publisherVolumes: { 'pub-tiktok': 252, 'pub-reddit': 208, 'pub-x': 145 } },
+      { date: '2026-01-17', factionVolumes: { 'faction-002': 415, 'faction-003': 305, 'faction-001': 195, 'faction-005': 125 }, publisherVolumes: { 'pub-tiktok': 302, 'pub-reddit': 248, 'pub-x': 172 } },
+      { date: '2026-01-18', factionVolumes: { 'faction-002': 485, 'faction-003': 345, 'faction-001': 225, 'faction-005': 145 }, publisherVolumes: { 'pub-tiktok': 345, 'pub-reddit': 285, 'pub-x': 195 } }
     ],
     documentIds: ['doc-008', 'doc-009', 'doc-010', 'doc-011'],
     createdAt: '2026-01-13T00:00:00Z'
@@ -138,13 +138,13 @@ export const narratives = [
     missionId: 'mission-003',
     status: 'in_progress',
     sentiment: -0.72,
-    subNarrativeIds: ['sub-009', 'sub-010'],
+    themeIds: ['sub-009', 'sub-010'],
     factionMentions: {
       'faction-004': { volume: 385, sentiment: -0.85 },
       'faction-001': { volume: 295, sentiment: -0.78 },
       'faction-005': { volume: 165, sentiment: -0.55 }
     },
-    sourceVolumes: {
+    publisherVolumes: {
       'pub-localnews': { volume: 185, sentiment: -0.68 },
       'pub-usatoday': { volume: 125, sentiment: -0.62 },
       'pub-reuters': { volume: 98, sentiment: -0.55 },
@@ -163,11 +163,11 @@ export const narratives = [
     locationIds: ['loc-001', 'loc-007'],
     eventIds: ['event-008', 'event-009', 'event-010'],
     volumeOverTime: [
-      { date: '2026-01-16', factionVolumes: { 'faction-004': 95, 'faction-001': 72, 'faction-005': 42 }, sourceVolumes: { 'pub-localnews': 45, 'pub-usatoday': 32, 'pub-x': 42 } },
-      { date: '2026-01-17', factionVolumes: { 'faction-004': 185, 'faction-001': 145, 'faction-005': 85 }, sourceVolumes: { 'pub-localnews': 92, 'pub-usatoday': 65, 'pub-x': 85, 'pub-reuters': 48 } },
-      { date: '2026-01-18', factionVolumes: { 'faction-004': 285, 'faction-001': 225, 'faction-005': 125 }, sourceVolumes: { 'pub-localnews': 142, 'pub-usatoday': 98, 'pub-x': 128, 'pub-reuters': 75 } },
-      { date: '2026-01-19', factionVolumes: { 'faction-004': 345, 'faction-001': 265, 'faction-005': 148 }, sourceVolumes: { 'pub-localnews': 168, 'pub-usatoday': 115, 'pub-x': 152, 'pub-reuters': 88 } },
-      { date: '2026-01-20', factionVolumes: { 'faction-004': 385, 'faction-001': 295, 'faction-005': 165 }, sourceVolumes: { 'pub-localnews': 185, 'pub-usatoday': 125, 'pub-x': 165, 'pub-reuters': 98 } }
+      { date: '2026-01-16', factionVolumes: { 'faction-004': 95, 'faction-001': 72, 'faction-005': 42 }, publisherVolumes: { 'pub-localnews': 45, 'pub-usatoday': 32, 'pub-x': 42 } },
+      { date: '2026-01-17', factionVolumes: { 'faction-004': 185, 'faction-001': 145, 'faction-005': 85 }, publisherVolumes: { 'pub-localnews': 92, 'pub-usatoday': 65, 'pub-x': 85, 'pub-reuters': 48 } },
+      { date: '2026-01-18', factionVolumes: { 'faction-004': 285, 'faction-001': 225, 'faction-005': 125 }, publisherVolumes: { 'pub-localnews': 142, 'pub-usatoday': 98, 'pub-x': 128, 'pub-reuters': 75 } },
+      { date: '2026-01-19', factionVolumes: { 'faction-004': 345, 'faction-001': 265, 'faction-005': 148 }, publisherVolumes: { 'pub-localnews': 168, 'pub-usatoday': 115, 'pub-x': 152, 'pub-reuters': 88 } },
+      { date: '2026-01-20', factionVolumes: { 'faction-004': 385, 'faction-001': 295, 'faction-005': 165 }, publisherVolumes: { 'pub-localnews': 185, 'pub-usatoday': 125, 'pub-x': 165, 'pub-reuters': 98 } }
     ],
     documentIds: ['doc-012', 'doc-013', 'doc-014'],
     createdAt: '2026-01-16T00:00:00Z'
@@ -179,13 +179,13 @@ export const narratives = [
     missionId: 'mission-002',
     status: 'new',
     sentiment: -0.58,
-    subNarrativeIds: ['sub-011', 'sub-012'],
+    themeIds: ['sub-011', 'sub-012'],
     factionMentions: {
       'faction-001': { volume: 365, sentiment: -0.72 },
       'faction-005': { volume: 195, sentiment: -0.45 },
       'faction-006': { volume: 175, sentiment: 0.42 }
     },
-    sourceVolumes: {
+    publisherVolumes: {
       'pub-tiktok': { volume: 225, sentiment: -0.65 },
       'pub-x': { volume: 185, sentiment: -0.58 },
       'pub-reddit': { volume: 145, sentiment: -0.62 },
@@ -204,10 +204,10 @@ export const narratives = [
     locationIds: ['loc-001'],
     eventIds: ['event-011'],
     volumeOverTime: [
-      { date: '2026-01-17', factionVolumes: { 'faction-001': 125, 'faction-005': 65, 'faction-006': 58 }, sourceVolumes: { 'pub-tiktok': 75, 'pub-x': 62, 'pub-reddit': 48 } },
-      { date: '2026-01-18', factionVolumes: { 'faction-001': 225, 'faction-005': 125, 'faction-006': 108 }, sourceVolumes: { 'pub-tiktok': 138, 'pub-x': 115, 'pub-reddit': 92 } },
-      { date: '2026-01-19', factionVolumes: { 'faction-001': 305, 'faction-005': 165, 'faction-006': 145 }, sourceVolumes: { 'pub-tiktok': 185, 'pub-x': 155, 'pub-reddit': 122 } },
-      { date: '2026-01-20', factionVolumes: { 'faction-001': 365, 'faction-005': 195, 'faction-006': 175 }, sourceVolumes: { 'pub-tiktok': 225, 'pub-x': 185, 'pub-reddit': 145 } }
+      { date: '2026-01-17', factionVolumes: { 'faction-001': 125, 'faction-005': 65, 'faction-006': 58 }, publisherVolumes: { 'pub-tiktok': 75, 'pub-x': 62, 'pub-reddit': 48 } },
+      { date: '2026-01-18', factionVolumes: { 'faction-001': 225, 'faction-005': 125, 'faction-006': 108 }, publisherVolumes: { 'pub-tiktok': 138, 'pub-x': 115, 'pub-reddit': 92 } },
+      { date: '2026-01-19', factionVolumes: { 'faction-001': 305, 'faction-005': 165, 'faction-006': 145 }, publisherVolumes: { 'pub-tiktok': 185, 'pub-x': 155, 'pub-reddit': 122 } },
+      { date: '2026-01-20', factionVolumes: { 'faction-001': 365, 'faction-005': 195, 'faction-006': 175 }, publisherVolumes: { 'pub-tiktok': 225, 'pub-x': 185, 'pub-reddit': 145 } }
     ],
     documentIds: ['doc-015', 'doc-016', 'doc-017'],
     createdAt: '2026-01-17T00:00:00Z'
@@ -219,13 +219,13 @@ export const narratives = [
     missionId: 'mission-004',
     status: 'in_progress',
     sentiment: -0.42,
-    subNarrativeIds: ['sub-013', 'sub-014'],
+    themeIds: ['sub-013', 'sub-014'],
     factionMentions: {
       'faction-006': { volume: 425, sentiment: 0.65 },
       'faction-005': { volume: 285, sentiment: -0.35 },
       'faction-001': { volume: 185, sentiment: -0.52 }
     },
-    sourceVolumes: {
+    publisherVolumes: {
       'pub-retaildive': { volume: 125, sentiment: -0.28 },
       'pub-modernretail': { volume: 98, sentiment: -0.32 },
       'pub-wsj': { volume: 85, sentiment: -0.25 },
@@ -244,11 +244,11 @@ export const narratives = [
     locationIds: ['loc-001', 'loc-008'],
     eventIds: ['event-012', 'event-013'],
     volumeOverTime: [
-      { date: '2026-01-14', factionVolumes: { 'faction-006': 145, 'faction-005': 95, 'faction-001': 62 }, sourceVolumes: { 'pub-retaildive': 42, 'pub-x': 55, 'pub-reddit': 42 } },
-      { date: '2026-01-15', factionVolumes: { 'faction-006': 225, 'faction-005': 148, 'faction-001': 95 }, sourceVolumes: { 'pub-retaildive': 68, 'pub-x': 85, 'pub-reddit': 65 } },
-      { date: '2026-01-16', factionVolumes: { 'faction-006': 305, 'faction-005': 198, 'faction-001': 128 }, sourceVolumes: { 'pub-retaildive': 92, 'pub-x': 115, 'pub-reddit': 88 } },
-      { date: '2026-01-17', factionVolumes: { 'faction-006': 365, 'faction-005': 242, 'faction-001': 155 }, sourceVolumes: { 'pub-retaildive': 112, 'pub-x': 142, 'pub-reddit': 108 } },
-      { date: '2026-01-18', factionVolumes: { 'faction-006': 425, 'faction-005': 285, 'faction-001': 185 }, sourceVolumes: { 'pub-retaildive': 125, 'pub-x': 165, 'pub-reddit': 125 } }
+      { date: '2026-01-14', factionVolumes: { 'faction-006': 145, 'faction-005': 95, 'faction-001': 62 }, publisherVolumes: { 'pub-retaildive': 42, 'pub-x': 55, 'pub-reddit': 42 } },
+      { date: '2026-01-15', factionVolumes: { 'faction-006': 225, 'faction-005': 148, 'faction-001': 95 }, publisherVolumes: { 'pub-retaildive': 68, 'pub-x': 85, 'pub-reddit': 65 } },
+      { date: '2026-01-16', factionVolumes: { 'faction-006': 305, 'faction-005': 198, 'faction-001': 128 }, publisherVolumes: { 'pub-retaildive': 92, 'pub-x': 115, 'pub-reddit': 88 } },
+      { date: '2026-01-17', factionVolumes: { 'faction-006': 365, 'faction-005': 242, 'faction-001': 155 }, publisherVolumes: { 'pub-retaildive': 112, 'pub-x': 142, 'pub-reddit': 108 } },
+      { date: '2026-01-18', factionVolumes: { 'faction-006': 425, 'faction-005': 285, 'faction-001': 185 }, publisherVolumes: { 'pub-retaildive': 125, 'pub-x': 165, 'pub-reddit': 125 } }
     ],
     documentIds: ['doc-018', 'doc-019', 'doc-020'],
     createdAt: '2026-01-14T00:00:00Z'
@@ -260,13 +260,13 @@ export const narratives = [
     missionId: 'mission-001',
     status: 'new',
     sentiment: -0.65,
-    subNarrativeIds: ['sub-015', 'sub-016'],
+    themeIds: ['sub-015', 'sub-016'],
     factionMentions: {
       'faction-001': { volume: 285, sentiment: -0.75 },
       'faction-003': { volume: 165, sentiment: -0.68 },
       'faction-005': { volume: 125, sentiment: -0.35 }
     },
-    sourceVolumes: {
+    publisherVolumes: {
       'pub-localnews': { volume: 225, sentiment: -0.65 },
       'pub-facebook': { volume: 185, sentiment: -0.72 },
       'pub-x': { volume: 125, sentiment: -0.58 },
@@ -284,9 +284,9 @@ export const narratives = [
     locationIds: ['loc-009', 'loc-010'],
     eventIds: ['event-014'],
     volumeOverTime: [
-      { date: '2026-01-18', factionVolumes: { 'faction-001': 95, 'faction-003': 55, 'faction-005': 42 }, sourceVolumes: { 'pub-localnews': 75, 'pub-facebook': 62, 'pub-x': 42 } },
-      { date: '2026-01-19', factionVolumes: { 'faction-001': 185, 'faction-003': 108, 'faction-005': 82 }, sourceVolumes: { 'pub-localnews': 148, 'pub-facebook': 122, 'pub-x': 82 } },
-      { date: '2026-01-20', factionVolumes: { 'faction-001': 285, 'faction-003': 165, 'faction-005': 125 }, sourceVolumes: { 'pub-localnews': 225, 'pub-facebook': 185, 'pub-x': 125 } }
+      { date: '2026-01-18', factionVolumes: { 'faction-001': 95, 'faction-003': 55, 'faction-005': 42 }, publisherVolumes: { 'pub-localnews': 75, 'pub-facebook': 62, 'pub-x': 42 } },
+      { date: '2026-01-19', factionVolumes: { 'faction-001': 185, 'faction-003': 108, 'faction-005': 82 }, publisherVolumes: { 'pub-localnews': 148, 'pub-facebook': 122, 'pub-x': 82 } },
+      { date: '2026-01-20', factionVolumes: { 'faction-001': 285, 'faction-003': 165, 'faction-005': 125 }, publisherVolumes: { 'pub-localnews': 225, 'pub-facebook': 185, 'pub-x': 125 } }
     ],
     documentIds: ['doc-021', 'doc-022', 'doc-023'],
     createdAt: '2026-01-18T00:00:00Z'

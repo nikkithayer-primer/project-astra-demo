@@ -1,17 +1,15 @@
 /**
- * Sub-narratives for Walmart Brand dataset
+ * Themes for Walmart Brand dataset
  */
 
-export const subNarratives = [
+export const themes = [
   // Self-checkout narrative sub-narratives
   {
     id: 'sub-001',
     text: 'TikTok videos show customers detained and searched after honest self-checkout mistakes',
+    description: 'Viral TikTok content showing Walmart customers being stopped, questioned, and searched by loss prevention staff after self-checkout, even when they have receipts. Videos depict humiliating confrontations that have sparked widespread outrage.',
     parentNarrativeId: 'narr-001',
-    status: 'in_progress',
     sentiment: -0.82,
-    documentIds: ['doc-001', 'doc-002'],
-    createdAt: '2026-01-14T00:00:00Z',
     factionMentions: {
       'faction-001': { volume: 385, sentiment: -0.85 },
       'faction-002': { volume: 145, sentiment: -0.78 }
@@ -33,11 +31,9 @@ export const subNarratives = [
   {
     id: 'sub-002',
     text: 'Class-action lawsuit filed alleging systematic false detention of customers',
+    description: 'A Texas law firm has filed a class-action lawsuit against Walmart alleging a pattern of falsely detaining customers at self-checkout stations. The suit claims Walmart employees are incentivized to make stops regardless of evidence.',
     parentNarrativeId: 'narr-001',
-    status: 'in_progress',
     sentiment: -0.75,
-    documentIds: ['doc-003'],
-    createdAt: '2026-01-18T00:00:00Z',
     factionMentions: {
       'faction-001': { volume: 185, sentiment: -0.78 },
       'faction-002': { volume: 65, sentiment: -0.72 },
@@ -56,11 +52,9 @@ export const subNarratives = [
   {
     id: 'sub-003',
     text: 'Walmart announces plan to increase staffed checkout lanes in response to complaints',
+    description: 'In response to mounting criticism, Walmart announced plans to add staffed checkout lanes in 500 stores. The company framed this as a customer service improvement, though critics note it follows pressure from viral complaints.',
     parentNarrativeId: 'narr-001',
-    status: 'in_progress',
     sentiment: 0.35,
-    documentIds: ['doc-004'],
-    createdAt: '2026-01-19T00:00:00Z',
     factionMentions: {
       'faction-001': { volume: 115, sentiment: 0.28 },
       'faction-005': { volume: 70, sentiment: 0.45 }
@@ -79,11 +73,9 @@ export const subNarratives = [
   {
     id: 'sub-004',
     text: 'Viral photos show barren grocery aisles, especially in household essentials',
+    description: 'Social media users are sharing photos of empty Walmart shelves across multiple states, particularly in grocery and household essentials sections. Some customers report driving to multiple stores without finding needed items.',
     parentNarrativeId: 'narr-002',
-    status: 'in_progress',
     sentiment: -0.72,
-    documentIds: ['doc-005', 'doc-006'],
-    createdAt: '2026-01-15T00:00:00Z',
     factionMentions: {
       'faction-001': { volume: 285, sentiment: -0.75 },
       'faction-005': { volume: 95, sentiment: -0.48 }
@@ -104,11 +96,9 @@ export const subNarratives = [
   {
     id: 'sub-005',
     text: 'Retail analysts question Walmart\'s inventory management technology',
+    description: 'Industry analysts are questioning whether Walmart\'s inventory management systems need significant upgrades. Reports suggest the company\'s technology stack may be struggling to handle current supply chain complexity.',
     parentNarrativeId: 'narr-002',
-    status: 'under_investigation',
     sentiment: -0.45,
-    documentIds: ['doc-007'],
-    createdAt: '2026-01-17T00:00:00Z',
     factionMentions: {
       'faction-005': { volume: 90, sentiment: -0.38 },
       'faction-006': { volume: 145, sentiment: 0.35 }
@@ -129,11 +119,9 @@ export const subNarratives = [
   {
     id: 'sub-006',
     text: 'Employees share videos of being alone in departments meant for multiple workers',
+    description: 'Current Walmart employees are posting TikTok videos showing them working alone in departments typically staffed by multiple people. Videos often show long lines of waiting customers while single workers struggle to keep up.',
     parentNarrativeId: 'narr-003',
-    status: 'in_progress',
     sentiment: -0.78,
-    documentIds: ['doc-008', 'doc-009'],
-    createdAt: '2026-01-13T00:00:00Z',
     factionMentions: {
       'faction-003': { volume: 245, sentiment: -0.82 },
       'faction-001': { volume: 125, sentiment: -0.68 }
@@ -156,11 +144,9 @@ export const subNarratives = [
   {
     id: 'sub-007',
     text: 'UFCW launches #RespectWalmartWorkers campaign amplifying employee stories',
+    description: 'The United Food and Commercial Workers union has launched a coordinated campaign amplifying worker stories under the hashtag #RespectWalmartWorkers. The campaign is gaining traction as it connects with broader labor movement messaging.',
     parentNarrativeId: 'narr-003',
-    status: 'in_progress',
     sentiment: -0.72,
-    documentIds: ['doc-010'],
-    createdAt: '2026-01-15T00:00:00Z',
     factionMentions: {
       'faction-003': { volume: 185, sentiment: -0.75 },
       'faction-004': { volume: 95, sentiment: -0.62 }
@@ -181,11 +167,9 @@ export const subNarratives = [
   {
     id: 'sub-008',
     text: 'Walmart responds highlighting $14 minimum wage and associate benefits',
+    description: 'Walmart corporate communications has responded to worker complaints by highlighting its $14 minimum wage, associate stock purchase program, and healthcare benefits. Industry analysts view this as a defensive PR move.',
     parentNarrativeId: 'narr-003',
-    status: 'in_progress',
     sentiment: 0.25,
-    documentIds: ['doc-011'],
-    createdAt: '2026-01-17T00:00:00Z',
     factionMentions: {
       'faction-005': { volume: 85, sentiment: 0.38 },
       'faction-006': { volume: 65, sentiment: 0.52 }
@@ -206,11 +190,9 @@ export const subNarratives = [
   {
     id: 'sub-009',
     text: 'FDA expands Great Value recall to 15 products across multiple categories',
+    description: 'The FDA has expanded its recall of Walmart\'s Great Value brand products to include 15 items across frozen vegetables, canned goods, and dairy. Testing revealed potential bacterial contamination at a supplier facility.',
     parentNarrativeId: 'narr-004',
-    status: 'in_progress',
     sentiment: -0.85,
-    documentIds: ['doc-012', 'doc-013'],
-    createdAt: '2026-01-18T00:00:00Z',
     factionMentions: {
       'faction-001': { volume: 195, sentiment: -0.88 },
       'faction-004': { volume: 125, sentiment: -0.72 }
@@ -228,11 +210,9 @@ export const subNarratives = [
   {
     id: 'sub-010',
     text: 'Consumer Reports demands stricter quality controls on private-label products',
+    description: 'Consumer Reports has published an editorial demanding stricter quality controls on private-label store brands, citing the Great Value recall as evidence of systemic issues in cost-cutting measures by major retailers.',
     parentNarrativeId: 'narr-004',
-    status: 'in_progress',
     sentiment: -0.68,
-    documentIds: ['doc-014'],
-    createdAt: '2026-01-19T00:00:00Z',
     factionMentions: {
       'faction-004': { volume: 75, sentiment: -0.65 },
       'faction-005': { volume: 55, sentiment: -0.52 }
@@ -251,11 +231,9 @@ export const subNarratives = [
   {
     id: 'sub-011',
     text: 'TikTok price comparison videos show Walmart losing to Aldi on staples',
+    description: 'A trend of TikTok price comparison videos shows Walmart losing to discount competitors like Aldi on everyday staples. Creators document item-by-item comparisons showing 15-25% price differences on common groceries.',
     parentNarrativeId: 'narr-005',
-    status: 'new',
     sentiment: -0.65,
-    documentIds: ['doc-015', 'doc-016'],
-    createdAt: '2026-01-17T00:00:00Z',
     factionMentions: {
       'faction-001': { volume: 165, sentiment: -0.68 },
       'faction-002': { volume: 85, sentiment: -0.58 }
@@ -274,11 +252,9 @@ export const subNarratives = [
   {
     id: 'sub-012',
     text: 'WSJ analysis shows Walmart retained pandemic-era price increases',
+    description: 'A Wall Street Journal analysis found Walmart has retained many pandemic-era price increases despite supply chain normalization and declining wholesale costs. The report suggests margins have expanded while consumer prices remain elevated.',
     parentNarrativeId: 'narr-005',
-    status: 'new',
     sentiment: -0.55,
-    documentIds: ['doc-017'],
-    createdAt: '2026-01-17T00:00:00Z',
     factionMentions: {
       'faction-005': { volume: 95, sentiment: -0.48 },
       'faction-001': { volume: 72, sentiment: -0.62 }
@@ -299,11 +275,9 @@ export const subNarratives = [
   {
     id: 'sub-013',
     text: 'Target achieves 98% on-time delivery rate, leading industry metrics',
+    description: 'Target reported achieving a 98% on-time delivery rate for online orders, significantly outperforming Walmart\'s reported 89% rate. Analysts credit Target\'s investments in local fulfillment infrastructure.',
     parentNarrativeId: 'narr-006',
-    status: 'in_progress',
     sentiment: 0.45,
-    documentIds: ['doc-018'],
-    createdAt: '2026-01-14T00:00:00Z',
     factionMentions: {
       'faction-005': { volume: 85, sentiment: 0.52 },
       'faction-006': { volume: 115, sentiment: 0.68 }
@@ -325,11 +299,9 @@ export const subNarratives = [
   {
     id: 'sub-014',
     text: 'Amazon expands sub-24-hour delivery to 85% of US households',
+    description: 'Amazon announced expansion of its sub-24-hour delivery service to cover 85% of US households, putting pressure on Walmart\'s same-day delivery capabilities. The expansion leverages Amazon\'s growing network of regional fulfillment centers.',
     parentNarrativeId: 'narr-006',
-    status: 'in_progress',
     sentiment: 0.52,
-    documentIds: ['doc-019', 'doc-020'],
-    createdAt: '2026-01-16T00:00:00Z',
     factionMentions: {
       'faction-005': { volume: 92, sentiment: 0.48 },
       'faction-006': { volume: 135, sentiment: 0.72 }
@@ -351,11 +323,9 @@ export const subNarratives = [
   {
     id: 'sub-015',
     text: 'Missouri town faces "food desert" designation after Walmart closure announcement',
+    description: 'A rural Missouri town faces potential USDA "food desert" designation following Walmart\'s announcement to close its only store within 25 miles. Local officials warn residents will need to travel over an hour for fresh groceries.',
     parentNarrativeId: 'narr-007',
-    status: 'new',
     sentiment: -0.78,
-    documentIds: ['doc-021', 'doc-022'],
-    createdAt: '2026-01-18T00:00:00Z',
     factionMentions: {
       'faction-001': { volume: 145, sentiment: -0.82 },
       'faction-004': { volume: 85, sentiment: -0.68 }
@@ -373,11 +343,9 @@ export const subNarratives = [
   {
     id: 'sub-016',
     text: 'Local politicians call on Walmart to maintain stores as community obligation',
+    description: 'Local and state politicians are calling on Walmart to maintain rural stores as a "community obligation," arguing the company benefited from tax incentives and drove out competitors when opening these locations.',
     parentNarrativeId: 'narr-007',
-    status: 'new',
     sentiment: -0.58,
-    documentIds: ['doc-023'],
-    createdAt: '2026-01-19T00:00:00Z',
     factionMentions: {
       'faction-004': { volume: 65, sentiment: -0.55 },
       'faction-001': { volume: 48, sentiment: -0.62 }

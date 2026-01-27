@@ -54,7 +54,8 @@ class DataStore {
     return {
       dashboardEnabled: true,
       defaultStartPage: 'dashboard', // 'dashboard' or 'monitors'
-      defaultViewTab: 'dashboard'    // 'dashboard' or 'documents'
+      defaultViewTab: 'dashboard',   // 'dashboard' or 'documents'
+      showClassification: true       // Show portion marks and classification
     };
   }
 
@@ -382,7 +383,7 @@ class DataStore {
       text: narrative.text,
       missionId: narrative.missionId || null,
       sentiment: narrative.sentiment || 'neutral',
-      subNarrativeIds: [],
+      themeIds: [],
       factionMentions: narrative.factionMentions || {},
       personIds: narrative.personIds || [],
       organizationIds: narrative.organizationIds || [],
@@ -409,46 +410,46 @@ class DataStore {
 
   deleteNarrative(id) {
     // Remove associated themes
-    this.data.subNarratives = this.data.subNarratives.filter(s => s.parentNarrativeId !== id);
+    this.data.themes = this.data.themes.filter(s => s.parentNarrativeId !== id);
     this.data.narratives = this.data.narratives.filter(n => n.id !== id);
     this.save();
   }
 
   // ============================================
-  // SubNarrative CRUD
+  // Theme CRUD
   // ============================================
 
-  createSubNarrative(subNarrative) {
+  createTheme(theme) {
     const id = this.generateId('sub');
-    this.data.subNarratives.push({
+    this.data.themes.push({
       id,
-      text: subNarrative.text,
-      parentNarrativeId: subNarrative.parentNarrativeId,
-      sentiment: subNarrative.sentiment || 'neutral',
-      factionMentions: subNarrative.factionMentions || {},
-      personIds: subNarrative.personIds || [],
-      organizationIds: subNarrative.organizationIds || [],
-      locationIds: subNarrative.locationIds || [],
-      eventIds: subNarrative.eventIds || [],
-      volumeOverTime: subNarrative.volumeOverTime || this.generateInitialVolume(),
+      text: theme.text,
+      parentNarrativeId: theme.parentNarrativeId,
+      sentiment: theme.sentiment || 'neutral',
+      factionMentions: theme.factionMentions || {},
+      personIds: theme.personIds || [],
+      organizationIds: theme.organizationIds || [],
+      locationIds: theme.locationIds || [],
+      eventIds: theme.eventIds || [],
+      volumeOverTime: theme.volumeOverTime || this.generateInitialVolume(),
       createdAt: new Date().toISOString()
     });
 
     // Link to parent narrative
-    const parentIdx = this.data.narratives.findIndex(n => n.id === subNarrative.parentNarrativeId);
+    const parentIdx = this.data.narratives.findIndex(n => n.id === theme.parentNarrativeId);
     if (parentIdx !== -1) {
-      this.data.narratives[parentIdx].subNarrativeIds.push(id);
+      this.data.narratives[parentIdx].themeIds.push(id);
     }
 
     this.save();
     return id;
   }
 
-  updateSubNarrative(id, updates) {
-    const idx = this.data.subNarratives.findIndex(s => s.id === id);
+  updateTheme(id, updates) {
+    const idx = this.data.themes.findIndex(s => s.id === id);
     if (idx !== -1) {
-      this.data.subNarratives[idx] = {
-        ...this.data.subNarratives[idx],
+      this.data.themes[idx] = {
+        ...this.data.themes[idx],
         ...updates,
         updatedAt: new Date().toISOString()
       };
@@ -456,17 +457,17 @@ class DataStore {
     }
   }
 
-  deleteSubNarrative(id) {
-    const sub = this.data.subNarratives.find(s => s.id === id);
+  deleteTheme(id) {
+    const sub = this.data.themes.find(s => s.id === id);
     if (sub) {
       // Remove from parent's list
       const parentIdx = this.data.narratives.findIndex(n => n.id === sub.parentNarrativeId);
       if (parentIdx !== -1) {
-        this.data.narratives[parentIdx].subNarrativeIds =
-          this.data.narratives[parentIdx].subNarrativeIds.filter(sid => sid !== id);
+        this.data.narratives[parentIdx].themeIds =
+          this.data.narratives[parentIdx].themeIds.filter(sid => sid !== id);
       }
     }
-    this.data.subNarratives = this.data.subNarratives.filter(s => s.id !== id);
+    this.data.themes = this.data.themes.filter(s => s.id !== id);
     this.save();
   }
 
@@ -493,7 +494,7 @@ class DataStore {
     this.deleteEntity('factions', id, () => {
       // Clean up references
       this.removeKeyFromObjectField('narratives', 'factionMentions', id);
-      this.removeKeyFromObjectField('subNarratives', 'factionMentions', id);
+      this.removeKeyFromObjectField('themes', 'factionMentions', id);
       this.data.factionOverlaps = this.data.factionOverlaps.filter(
         o => !o.factionIds.includes(id)
       );
@@ -524,7 +525,7 @@ class DataStore {
     this.deleteEntity('locations', id, () => {
       // Clean up references
       this.removeIdFromArrayField('narratives', 'locationIds', id);
-      this.removeIdFromArrayField('subNarratives', 'locationIds', id);
+      this.removeIdFromArrayField('themes', 'locationIds', id);
       this.data.events.forEach(e => {
         if (e.locationId === id) e.locationId = null;
       });
@@ -594,7 +595,7 @@ class DataStore {
     this.data.narratives.forEach(n => {
       n.eventIds = n.eventIds.filter(eid => eid !== id);
     });
-    this.data.subNarratives.forEach(s => {
+    this.data.themes.forEach(s => {
       s.eventIds = s.eventIds.filter(eid => eid !== id);
     });
     this.data.persons.forEach(p => {
@@ -627,7 +628,7 @@ class DataStore {
     this.deleteEntity('persons', id, () => {
       // Clean up references in narratives, themes, events, and factions
       this.removeIdFromArrayField('narratives', 'personIds', id);
-      this.removeIdFromArrayField('subNarratives', 'personIds', id);
+      this.removeIdFromArrayField('themes', 'personIds', id);
       this.removeIdFromArrayField('events', 'personIds', id);
       this.removeIdFromArrayField('factions', 'affiliatedPersonIds', id);
     });
@@ -655,7 +656,7 @@ class DataStore {
     this.deleteEntity('organizations', id, () => {
       // Clean up references in narratives, themes, events, and factions
       this.removeIdFromArrayField('narratives', 'organizationIds', id);
-      this.removeIdFromArrayField('subNarratives', 'organizationIds', id);
+      this.removeIdFromArrayField('themes', 'organizationIds', id);
       this.removeIdFromArrayField('events', 'organizationIds', id);
       this.removeIdFromArrayField('factions', 'affiliatedOrganizationIds', id);
     });
@@ -704,7 +705,7 @@ class DataStore {
       },
       options: {
         includeSubEvents: monitor.options?.includeSubEvents ?? true,
-        includeSubNarratives: monitor.options?.includeSubNarratives ?? true,
+        includeThemes: monitor.options?.includeThemes ?? true,
         includeRelatedEvents: monitor.options?.includeRelatedEvents ?? true
       },
       triggers: monitor.triggers || {
@@ -730,6 +731,29 @@ class DataStore {
         this.data.alerts = this.data.alerts.filter(a => a.monitorId !== id);
       }
     });
+  }
+
+  // ============================================
+  // Workspace CRUD
+  // ============================================
+
+  createWorkspace(workspace) {
+    return this.createEntity('workspaces', 'workspace', {
+      name: workspace.name,
+      query: workspace.query || '',
+      description: workspace.description || '',
+      documentIds: workspace.documentIds || [],
+      filters: workspace.filters || {},
+      status: workspace.status || 'active'
+    });
+  }
+
+  updateWorkspace(id, updates) {
+    return this.updateEntity('workspaces', id, updates);
+  }
+
+  deleteWorkspace(id) {
+    return this.deleteEntity('workspaces', id);
   }
 
   generateInitialTopicVolume() {
@@ -866,7 +890,7 @@ class DataStore {
     return {
       missions: [],
       narratives: [],
-      subNarratives: [],
+      themes: [],
       factions: [],
       factionOverlaps: [],
       locations: [],
@@ -879,7 +903,8 @@ class DataStore {
       publisherCategories: [],
       monitors: [],
       alerts: [],
-      users: []
+      users: [],
+      workspaces: []
     };
   }
 }

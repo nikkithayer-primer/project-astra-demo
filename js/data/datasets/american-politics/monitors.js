@@ -15,7 +15,7 @@ export const monitors = [
     },
     options: {
       includeSubEvents: true,
-      includeSubNarratives: true,
+      includeThemes: true,
       includeRelatedEvents: true
     },
     triggers: {
@@ -40,7 +40,7 @@ export const monitors = [
     },
     options: {
       includeSubEvents: true,
-      includeSubNarratives: true,
+      includeThemes: true,
       includeRelatedEvents: true
     },
     triggers: {
@@ -66,7 +66,7 @@ export const monitors = [
     },
     options: {
       includeSubEvents: true,
-      includeSubNarratives: true,
+      includeThemes: true,
       includeRelatedEvents: true
     },
     triggers: {
@@ -92,7 +92,7 @@ export const monitors = [
     },
     options: {
       includeSubEvents: true,
-      includeSubNarratives: true,
+      includeThemes: true,
       includeRelatedEvents: true
     },
     triggers: {
@@ -118,7 +118,7 @@ export const monitors = [
     },
     options: {
       includeSubEvents: true,
-      includeSubNarratives: true,
+      includeThemes: true,
       includeRelatedEvents: true
     },
     triggers: {
@@ -145,7 +145,7 @@ export const alerts = [
     triggeredAt: '2026-01-20T14:30:00Z',
     acknowledged: false,
     relatedNarrativeIds: ['narr-006', 'narr-008', 'narr-009'],
-    relatedSubNarrativeIds: ['sub-012', 'sub-013', 'sub-018'],
+    relatedThemeIds: ['sub-012', 'sub-013', 'sub-018'],
     relatedEventIds: ['event-010', 'event-017'],
     relatedSubEventIds: [],
     metadata: {
@@ -165,7 +165,7 @@ export const alerts = [
     triggeredAt: '2026-01-19T11:00:00Z',
     acknowledged: true,
     relatedNarrativeIds: ['narr-008'],
-    relatedSubNarrativeIds: ['sub-018', 'sub-021'],
+    relatedThemeIds: ['sub-018', 'sub-021'],
     relatedEventIds: ['event-017'],
     relatedSubEventIds: ['event-018', 'event-019', 'event-020'],
     metadata: {
@@ -183,7 +183,7 @@ export const alerts = [
     triggeredAt: '2026-01-20T11:30:00Z',
     acknowledged: false,
     relatedNarrativeIds: ['narr-005'],
-    relatedSubNarrativeIds: ['sub-010'],
+    relatedThemeIds: ['sub-010'],
     relatedEventIds: ['event-007'],
     relatedSubEventIds: [],
     metadata: {
@@ -203,7 +203,7 @@ export const alerts = [
     triggeredAt: '2026-01-18T09:00:00Z',
     acknowledged: true,
     relatedNarrativeIds: ['narr-010'],
-    relatedSubNarrativeIds: ['sub-025', 'sub-026', 'sub-027'],
+    relatedThemeIds: ['sub-025', 'sub-026', 'sub-027'],
     relatedEventIds: ['event-026'],
     relatedSubEventIds: [],
     metadata: {
@@ -221,7 +221,7 @@ export const alerts = [
     triggeredAt: '2026-01-20T08:00:00Z',
     acknowledged: false,
     relatedNarrativeIds: ['narr-010', 'narr-003'],
-    relatedSubNarrativeIds: ['sub-006', 'sub-026'],
+    relatedThemeIds: ['sub-006', 'sub-026'],
     relatedEventIds: [],
     relatedSubEventIds: [],
     metadata: {
@@ -243,7 +243,7 @@ export const alerts = [
     triggeredAt: '2026-01-19T16:00:00Z',
     acknowledged: true,
     relatedNarrativeIds: ['narr-007'],
-    relatedSubNarrativeIds: ['sub-016'],
+    relatedThemeIds: ['sub-016'],
     relatedEventIds: ['event-015'],
     relatedSubEventIds: ['event-016'],
     metadata: {
@@ -261,7 +261,7 @@ export const alerts = [
     triggeredAt: '2026-01-20T10:00:00Z',
     acknowledged: false,
     relatedNarrativeIds: ['narr-007'],
-    relatedSubNarrativeIds: ['sub-016', 'sub-017'],
+    relatedThemeIds: ['sub-016', 'sub-017'],
     relatedEventIds: ['event-015', 'event-016'],
     relatedSubEventIds: [],
     metadata: {

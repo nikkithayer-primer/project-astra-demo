@@ -1,8 +1,8 @@
 /**
- * Sub-narratives for American Politics dataset
+ * Themes for American Politics dataset
  */
 
-export const subNarratives = [
+export const themes = [
   {
     id: 'sub-006',
     text: 'Vegans gain popularity on TikTok as alternative to processed food',

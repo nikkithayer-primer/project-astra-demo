@@ -18,8 +18,8 @@ export class NarrativeList extends BaseItemList {
       showStatus: true,
       showSparkline: true,
       showVolume: true,
-      showSubNarratives: true,
-      maxSubNarratives: 5,
+      showThemes: true,
+      maxThemes: 5,
       defaultShowDescription: false,
       ...options
     });
@@ -73,8 +73,8 @@ export class NarrativeList extends BaseItemList {
   /**
    * Calculate volume for a subnarrative
    */
-  calculateSubNarrativeVolume(subNarrative) {
-    return Object.values(subNarrative.factionMentions || {})
+  calculateThemeVolume(theme) {
+    return Object.values(theme.factionMentions || {})
       .reduce((sum, f) => sum + (f.volume || 0), 0);
   }
 
@@ -85,11 +85,11 @@ export class NarrativeList extends BaseItemList {
     const totalVolume = this.calculateVolume(item);
     const status = item.status || 'new';
     
-    // Get subnarratives for this narrative
-    const subNarratives = this.options.showSubNarratives 
-      ? DataService.getSubNarrativesForNarrative(item.id)
+    // Get themes for this narrative
+    const themes = this.options.showThemes 
+      ? DataService.getThemesForNarrative(item.id)
       : [];
-    const hasSubNarratives = subNarratives.length > 0;
+    const hasThemes = themes.length > 0;
     const isExpanded = this.isExpanded(item.id);
 
     // Build originated date for display
@@ -99,7 +99,7 @@ export class NarrativeList extends BaseItemList {
     let subSparklineIndex = sparklineIndex + 1;
 
     return `
-      <div class="narrative-item${hasSubNarratives ? ' has-subnarratives' : ''}${isExpanded ? ' expanded' : ''}" data-id="${item.id}">
+      <div class="narrative-item${hasThemes ? ' has-themes' : ''}${isExpanded ? ' expanded' : ''}" data-id="${item.id}">
         ${this.options.showStatus ? `
           <div class="narrative-status-column" title="${formatStatus(status)}">
             ${this.getStatusIcon(status)}
@@ -118,7 +118,7 @@ export class NarrativeList extends BaseItemList {
               </p>
             ` : ''}
           ` : ''}
-          ${hasSubNarratives ? `
+          ${hasThemes ? `
             <button class="narrative-expand-toggle" data-narrative-id="${item.id}" title="${isExpanded ? 'Collapse' : 'Expand'} themes">
               <svg class="tree-icon" viewBox="0 0 16 16" width="14" height="14" fill="currentColor" stroke="currentColor" stroke-width="1">
                 <circle cx="4" cy="8" r="2"/>
@@ -126,7 +126,7 @@ export class NarrativeList extends BaseItemList {
                 <circle cx="12" cy="12" r="1.5"/>
                 <path d="M6 8h3M9 4v8" fill="none"/>
               </svg>
-              <span class="subnarrative-count">${subNarratives.length}</span>
+              <span class="theme-count">${themes.length}</span>
               <svg class="chevron-icon" viewBox="0 0 16 16" width="10" height="10" fill="none" stroke="currentColor" stroke-width="2">
                 <path d="M6 4l4 4-4 4"/>
               </svg>
@@ -142,10 +142,10 @@ export class NarrativeList extends BaseItemList {
           ` : ''}
         </div>
       </div>
-      ${hasSubNarratives && isExpanded ? `
+      ${hasThemes && isExpanded ? `
         <ul class="subnarrative-nested-list">
-          ${subNarratives.slice(0, this.options.maxSubNarratives).map((sub) => {
-            const subVolume = this.calculateSubNarrativeVolume(sub);
+          ${themes.slice(0, this.options.maxThemes).map((sub) => {
+            const subVolume = this.calculateThemeVolume(sub);
             const subOriginatedDate = sub.createdAt ? this.formatDate(sub.createdAt) : '';
             const currentSubIndex = subSparklineIndex++;
             
@@ -173,9 +173,9 @@ export class NarrativeList extends BaseItemList {
               </li>
             `;
           }).join('')}
-          ${subNarratives.length > this.options.maxSubNarratives ? `
-            <li class="subnarrative-more">
-              +${subNarratives.length - this.options.maxSubNarratives} more themes
+          ${themes.length > this.options.maxThemes ? `
+            <li class="theme-more">
+              +${themes.length - this.options.maxThemes} more themes
             </li>
           ` : ''}
         </ul>
@@ -189,10 +189,10 @@ export class NarrativeList extends BaseItemList {
   getNextSparklineIndex(item, currentIndex) {
     let nextIndex = currentIndex + 1;
     
-    // If expanded, add indices for subnarratives
-    if (this.options.showSubNarratives && this.isExpanded(item.id)) {
-      const subNarratives = DataService.getSubNarrativesForNarrative(item.id);
-      nextIndex += Math.min(subNarratives.length, this.options.maxSubNarratives);
+    // If expanded, add indices for themes
+    if (this.options.showThemes && this.isExpanded(item.id)) {
+      const themes = DataService.getThemesForNarrative(item.id);
+      nextIndex += Math.min(themes.length, this.options.maxThemes);
     }
     
     return nextIndex;
@@ -212,10 +212,10 @@ export class NarrativeList extends BaseItemList {
         sentiment: narrative.sentiment
       });
       
-      // Add subnarrative sparkline data if expanded
-      if (this.options.showSubNarratives && this.isExpanded(narrative.id)) {
-        const subNarratives = DataService.getSubNarrativesForNarrative(narrative.id);
-        subNarratives.slice(0, this.options.maxSubNarratives).forEach((sub) => {
+      // Add theme sparkline data if expanded
+      if (this.options.showThemes && this.isExpanded(narrative.id)) {
+        const themes = DataService.getThemesForNarrative(narrative.id);
+        themes.slice(0, this.options.maxThemes).forEach((sub) => {
           data.push({
             values: this.getSparklineValues(sub),
             color: this.getSparklineColor(sub),

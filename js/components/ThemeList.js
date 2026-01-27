@@ -1,13 +1,13 @@
 /**
- * SubNarrativeList.js
- * List of themes/subnarratives with sentiment badges and sparklines
+ * ThemeList.js
+ * List of themes with sentiment badges and sparklines
  * Extends BaseItemList for common list functionality
  */
 
 import { BaseItemList } from './BaseItemList.js';
 import { getSourceViewer } from './SourceViewerModal.js';
 
-export class SubNarrativeList extends BaseItemList {
+export class ThemeList extends BaseItemList {
   constructor(containerId, options = {}) {
     super(containerId, {
       maxItems: 10,
@@ -22,7 +22,7 @@ export class SubNarrativeList extends BaseItemList {
    * Get items from data
    */
   getItems() {
-    return this.data?.subNarratives || [];
+    return this.data?.themes || [];
   }
 
   /**
@@ -48,7 +48,7 @@ export class SubNarrativeList extends BaseItemList {
           ${item.description && this.showDescription ? `
             <p class="narrative-description">
               ${item.description}
-              <a href="#" class="source-link" data-id="${item.id}" data-type="subnarrative">View source</a>
+              <a href="#" class="source-link" data-id="${item.id}" data-type="theme">View source</a>
             </p>
           ` : ''}
         </div>
@@ -73,11 +73,11 @@ export class SubNarrativeList extends BaseItemList {
       sourceLink.addEventListener('click', (e) => {
         e.preventDefault();
         e.stopPropagation();
-        getSourceViewer().open(item, 'subnarrative');
+        getSourceViewer().open(item, 'theme');
       });
     }
   }
 
 }
 
-export default SubNarrativeList;
+export default ThemeList;

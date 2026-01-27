@@ -9,7 +9,7 @@ import { DataService } from '../data/DataService.js';
 import { PageHeader } from '../utils/PageHeader.js';
 import { CardBuilder } from '../utils/CardBuilder.js';
 import { NarrativeList } from '../components/NarrativeList.js';
-import { SubNarrativeList } from '../components/SubNarrativeList.js';
+import { ThemeList } from '../components/ThemeList.js';
 import { MapView } from '../components/MapView.js';
 import { Timeline } from '../components/Timeline.js';
 import { NetworkGraph } from '../components/NetworkGraph.js';
@@ -178,7 +178,7 @@ export class DocumentView extends BaseView {
   fetchDocumentData(doc) {
     const publisher = DataService.getPublisherForDocument(this.documentId);
     const narratives = DataService.getNarrativesForDocument(this.documentId);
-    const subNarratives = DataService.getSubNarrativesForDocument(this.documentId);
+    const themes = DataService.getThemesForDocument(this.documentId);
     const persons = DataService.getPersonsForDocument(this.documentId);
     const organizations = DataService.getOrganizationsForDocument(this.documentId);
     const locations = DataService.getLocationsForDocument(this.documentId);
@@ -190,7 +190,7 @@ export class DocumentView extends BaseView {
     const comments = DataService.getCommentsForDocument(this.documentId);
 
     return {
-      publisher, narratives, subNarratives, persons, organizations, locations, events, hasNetwork,
+      publisher, narratives, themes, persons, organizations, locations, events, hasNetwork,
       highlights, comments
     };
   }
@@ -219,9 +219,9 @@ export class DocumentView extends BaseView {
       }));
     }
 
-    if (data.subNarratives.length > 0) {
+    if (data.themes.length > 0) {
       cards.push(CardBuilder.create('Related Themes', 'doc-subnarratives', {
-        count: data.subNarratives.length,
+        count: data.themes.length,
         noPadding: true
       }));
     }
@@ -339,7 +339,7 @@ export class DocumentView extends BaseView {
 
   async initializeComponents() {
     const {
-      doc, narratives, subNarratives, persons, organizations, locations, events,
+      doc, narratives, themes, persons, organizations, locations, events,
       highlights, comments
     } = this._prefetchedData;
 
@@ -369,14 +369,14 @@ export class DocumentView extends BaseView {
     }
 
     // Themes List
-    if (subNarratives.length > 0) {
-      this.components.subNarrativeList = new SubNarrativeList('doc-subnarratives', {
+    if (themes.length > 0) {
+      this.components.themeList = new ThemeList('doc-themes', {
         maxItems: 10,
         onItemClick: (s) => {
           window.location.hash = `#/subnarrative/${s.id}`;
         }
       });
-      this.components.subNarrativeList.update({ subNarratives });
+      this.components.themeList.update({ themes });
     }
 
     // Network Graph

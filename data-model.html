@@ -1126,17 +1126,30 @@
                 </div>
               </li>
               <li class="field-item">
-                <span class="field-name">role</span>
+                <span class="field-name">type</span>
                 <div class="field-meta">
-                  <span class="field-type">enum</span>
-                  <p class="field-desc">Role in operations</p>
+                  <span class="field-type required">enum</span>
+                  <p class="field-desc">Person type category</p>
                   <p class="field-enum">
-                    <code>operator</code>
-                    <code>amplifier</code>
-                    <code>target</code>
-                    <code>influencer</code>
-                    <code>unknown</code>
+                    <code>politician</code>
+                    <code>executive</code>
+                    <code>government_official</code>
+                    <code>judge</code>
+                    <code>analyst</code>
+                    <code>journalist</code>
+                    <code>activist</code>
+                    <code>labor_leader</code>
+                    <code>civilian</code>
+                    <code>employee</code>
+                    <code>legal_professional</code>
                   </p>
+                </div>
+              </li>
+              <li class="field-item">
+                <span class="field-name">affiliatedOrganizationId</span>
+                <div class="field-meta">
+                  <span class="field-type">string (UUID)</span>
+                  <p class="field-desc">Primary organization affiliation (singular)</p>
                 </div>
               </li>
               <li class="field-item">
@@ -1161,31 +1174,38 @@
                 </div>
               </li>
               <li class="field-item">
-                <span class="field-name">organizationIds</span>
+                <span class="field-name">affiliatedFactionIds</span>
                 <div class="field-meta">
                   <span class="field-type">string[] (UUID)</span>
-                  <p class="field-desc">Affiliated organizations</p>
+                  <p class="field-desc">Factions this person is affiliated with</p>
                 </div>
               </li>
               <li class="field-item">
-                <span class="field-name">factionIds</span>
+                <span class="field-name">relatedLocationIds</span>
                 <div class="field-meta">
                   <span class="field-type">string[] (UUID)</span>
-                  <p class="field-desc">Affiliated factions</p>
+                  <p class="field-desc">Locations associated with this person</p>
                 </div>
               </li>
               <li class="field-item">
-                <span class="field-name">locationIds</span>
-                <div class="field-meta">
-                  <span class="field-type">string[] (UUID)</span>
-                  <p class="field-desc">Locations mentioned alongside this person</p>
-                </div>
-              </li>
-              <li class="field-item">
-                <span class="field-name">eventIds</span>
+                <span class="field-name">relatedEventIds</span>
                 <div class="field-meta">
                   <span class="field-type">string[] (UUID)</span>
                   <p class="field-desc">Events this person is involved in</p>
+                </div>
+              </li>
+              <li class="field-item">
+                <span class="field-name">documentIds</span>
+                <div class="field-meta">
+                  <span class="field-type">string[] (UUID)</span>
+                  <p class="field-desc">Documents that mention this person</p>
+                </div>
+              </li>
+              <li class="field-item">
+                <span class="field-name">factionSentiment</span>
+                <div class="field-meta">
+                  <span class="field-type">object</span>
+                  <p class="field-desc">Sentiment scores by faction: <code>{ factionId: number }</code> where values range from -1.0 (negative) to 1.0 (positive)</p>
                 </div>
               </li>
             </ul>
@@ -1220,14 +1240,21 @@
               <li class="field-item">
                 <span class="field-name">type</span>
                 <div class="field-meta">
-                  <span class="field-type">enum</span>
+                  <span class="field-type required">enum</span>
                   <p class="field-desc">Organization classification</p>
                   <p class="field-enum">
+                    <code>corporation</code>
                     <code>government</code>
-                    <code>corporate</code>
-                    <code>non_profit</code>
-                    <code>media_outlet</code>
-                    <code>other</code>
+                    <code>political</code>
+                    <code>judicial</code>
+                    <code>nonprofit</code>
+                    <code>union</code>
+                    <code>media</code>
+                    <code>research</code>
+                    <code>religious</code>
+                    <code>financial</code>
+                    <code>law_enforcement</code>
+                    <code>military</code>
                   </p>
                 </div>
               </li>
@@ -1253,24 +1280,31 @@
                 </div>
               </li>
               <li class="field-item">
-                <span class="field-name">relatedOrganizationIds</span>
+                <span class="field-name">affiliatedFactionIds</span>
                 <div class="field-meta">
                   <span class="field-type">string[] (UUID)</span>
-                  <p class="field-desc">Related organizations</p>
+                  <p class="field-desc">Factions this organization is affiliated with</p>
                 </div>
               </li>
               <li class="field-item">
-                <span class="field-name">factionIds</span>
+                <span class="field-name">relatedLocationIds</span>
                 <div class="field-meta">
                   <span class="field-type">string[] (UUID)</span>
-                  <p class="field-desc">Affiliated factions</p>
+                  <p class="field-desc">Locations associated with this organization</p>
                 </div>
               </li>
               <li class="field-item">
-                <span class="field-name">locationIds</span>
+                <span class="field-name">documentIds</span>
                 <div class="field-meta">
                   <span class="field-type">string[] (UUID)</span>
-                  <p class="field-desc">Locations mentioned alongside this organization</p>
+                  <p class="field-desc">Documents that mention this organization</p>
+                </div>
+              </li>
+              <li class="field-item">
+                <span class="field-name">factionSentiment</span>
+                <div class="field-meta">
+                  <span class="field-type">object</span>
+                  <p class="field-desc">Sentiment scores by faction: <code>{ factionId: number }</code> where values range from -1.0 (negative) to 1.0 (positive)</p>
                 </div>
               </li>
             </ul>
@@ -2023,10 +2057,17 @@
                 </div>
               </li>
               <li class="field-item">
-                <span class="field-name">subNarrativeIds</span>
+                <span class="field-name">themeIds</span>
                 <div class="field-meta">
                   <span class="field-type">string[] (UUID)</span>
                   <p class="field-desc">Themes this document relates to</p>
+                </div>
+              </li>
+              <li class="field-item">
+                <span class="field-name">factionIds</span>
+                <div class="field-meta">
+                  <span class="field-type">string[] (UUID)</span>
+                  <p class="field-desc">Factions relevant to this document</p>
                 </div>
               </li>
               <li class="field-item">
@@ -2062,31 +2103,59 @@
             <h4 style="margin: var(--space-lg) 0 var(--space-md); color: var(--text-secondary); font-size: var(--text-sm); font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px;">Social Post Fields (documentType: social_post)</h4>
             <ul class="field-list">
               <li class="field-item">
+                <span class="field-name">title</span>
+                <div class="field-meta">
+                  <span class="field-type required">string</span>
+                  <p class="field-desc">Descriptive title for the post (e.g., "X post: Analysis of policy change")</p>
+                </div>
+              </li>
+              <li class="field-item">
+                <span class="field-name">excerpt</span>
+                <div class="field-meta">
+                  <span class="field-type required">string</span>
+                  <p class="field-desc">Brief summary or description of the post content</p>
+                </div>
+              </li>
+              <li class="field-item">
                 <span class="field-name">author</span>
                 <div class="field-meta">
-                  <span class="field-type">object</span>
+                  <span class="field-type required">object</span>
                   <p class="field-desc">Author information: <code>{ username, displayName, avatarUrl }</code></p>
                 </div>
               </li>
               <li class="field-item">
-                <span class="field-name">content</span>
-                <div class="field-meta">
-                  <span class="field-type">string</span>
-                  <p class="field-desc">Full text content of the post</p>
-                </div>
-              </li>
-              <li class="field-item">
-                <span class="field-name">media</span>
+                <span class="field-name">contentBlocks</span>
                 <div class="field-meta">
                   <span class="field-type">array</span>
-                  <p class="field-desc">Attached media: <code>[{ type, url, altText }]</code></p>
+                  <p class="field-desc">Structured content: <code>[{ type, content, portionMark }]</code></p>
                 </div>
               </li>
               <li class="field-item">
-                <span class="field-name">engagement</span>
+                <span class="field-name">headerImage</span>
                 <div class="field-meta">
                   <span class="field-type">object</span>
-                  <p class="field-desc">Engagement metrics: <code>{ replies, likes, reblogs }</code></p>
+                  <p class="field-desc">Optional header/preview image: <code>{ url, caption }</code></p>
+                </div>
+              </li>
+              <li class="field-item">
+                <span class="field-name">video</span>
+                <div class="field-meta">
+                  <span class="field-type">object</span>
+                  <p class="field-desc">Video metadata (for TikTok/video posts): <code>{ thumbnailUrl, duration }</code></p>
+                </div>
+              </li>
+              <li class="field-item">
+                <span class="field-name">transcription</span>
+                <div class="field-meta">
+                  <span class="field-type">string</span>
+                  <p class="field-desc">Full video transcription (for TikTok/video posts)</p>
+                </div>
+              </li>
+              <li class="field-item">
+                <span class="field-name">metrics</span>
+                <div class="field-meta">
+                  <span class="field-type required">object</span>
+                  <p class="field-desc">Interaction metrics: <code>{ views?, likes?, comments?, shares?, platform }</code>. Normalize platform terms (upvotes→likes, reactions→likes, retweets→shares, replies→comments).</p>
                 </div>
               </li>
             </ul>
@@ -2122,10 +2191,10 @@
                 </div>
               </li>
               <li class="field-item">
-                <span class="field-name">engagement</span>
+                <span class="field-name">metrics</span>
                 <div class="field-meta">
                   <span class="field-type">object</span>
-                  <p class="field-desc">Engagement metrics: <code>{ replies, likes, reblogs }</code></p>
+                  <p class="field-desc">Interaction metrics: <code>{ views?, likes?, comments?, shares?, platform? }</code>. Normalize platform terms (upvotes→likes, reactions→likes, retweets→shares, replies→comments).</p>
                 </div>
               </li>
             </ul>

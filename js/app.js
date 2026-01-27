@@ -328,6 +328,21 @@ class App {
             </select>
           </div>
         </div>
+        
+        <div class="settings-section">
+          <h3 class="settings-section-title">Display</h3>
+          
+          <div class="settings-row">
+            <div class="settings-label">
+              <span class="settings-label-text">Show Portion Marks and Classification</span>
+              <span class="settings-label-description">Display security classification markings on documents and content</span>
+            </div>
+            <label class="toggle-switch">
+              <input type="checkbox" id="setting-show-classification" ${settings.showClassification ? 'checked' : ''}>
+              <span class="toggle-slider"></span>
+            </label>
+          </div>
+        </div>
       </div>
       <div class="modal-footer">
         <button class="btn btn-secondary" onclick="window.app.closeModal()">Cancel</button>
@@ -360,11 +375,13 @@ class App {
     const dashboardEnabled = document.getElementById('setting-dashboard-enabled')?.checked ?? true;
     const defaultStartPage = document.getElementById('setting-start-page')?.value || 'dashboard';
     const defaultViewTab = document.getElementById('setting-default-tab')?.value || 'dashboard';
+    const showClassification = document.getElementById('setting-show-classification')?.checked ?? true;
     
     this.dataStore.updateSettings({
       dashboardEnabled,
       defaultStartPage: dashboardEnabled ? defaultStartPage : 'monitors',
-      defaultViewTab
+      defaultViewTab,
+      showClassification
     });
     
     this.closeModal();
@@ -578,8 +595,8 @@ class App {
         return id ? this.getNarrativeSummary(id) : this.getNarrativeListSummary();
       case 'narratives':
         return this.getNarrativeListSummary();
-      case 'subnarrative':
-        return id ? this.getSubNarrativeSummary(id) : null;
+      case 'theme':
+        return id ? this.getThemeSummary(id) : null;
       case 'faction':
         return id ? this.getFactionSummary(id) : this.getFactionListSummary();
       case 'factions':
@@ -633,7 +650,7 @@ class App {
     const narrativesWithVolume = recentNarratives.map(n => {
       const totalVolume = Object.values(n.factionMentions || {})
         .reduce((sum, f) => sum + (f.volume || 0), 0);
-      const themes = DataService.getSubNarrativesForNarrative(n.id);
+      const themes = DataService.getThemesForNarrative(n.id);
       return { ...n, totalVolume, themes };
     });
     
@@ -714,7 +731,7 @@ class App {
     const narrative = DataService.getNarrativeById(id);
     if (!narrative) return null;
     
-    const subNarratives = DataService.getSubNarrativesForNarrative(id);
+    const themes = DataService.getThemesForNarrative(id);
     const factions = DataService.getFactionsForNarrative(id);
     const sentiment = narrative.sentiment || 0;
     const sentimentLabel = sentiment > 0.2 ? 'positive' : sentiment < -0.2 ? 'negative' : 'neutral';
@@ -722,7 +739,7 @@ class App {
     return `<strong>Narrative: ${this.escapeHtml(narrative.title || narrative.text?.substring(0, 50) + '...')}</strong><br><br>` +
       `<strong>Status:</strong> ${narrative.status || 'unknown'}<br>` +
       `<strong>Sentiment:</strong> ${sentimentLabel} (${(sentiment * 100).toFixed(0)}%)<br>` +
-      `<strong>Themes:</strong> ${subNarratives.length}<br>` +
+      `<strong>Themes:</strong> ${themes.length}<br>` +
       `<strong>Factions involved:</strong> ${factions.length}<br><br>` +
       `Ask about factions pushing this narrative, sentiment trends, or related events.`;
   }
@@ -743,13 +760,13 @@ class App {
   /**
    * Generate theme summary
    */
-  getSubNarrativeSummary(id) {
-    const subNarrative = DataService.getSubNarrativeById(id);
-    if (!subNarrative) return null;
+  getThemeSummary(id) {
+    const theme = DataService.getThemeById(id);
+    if (!theme) return null;
     
-    const parentNarrative = DataService.getNarrativeById(subNarrative.narrativeId);
+    const parentNarrative = DataService.getNarrativeById(theme.narrativeId);
     
-    return `<strong>Theme: ${this.escapeHtml(subNarrative.title || subNarrative.text?.substring(0, 50) + '...')}</strong><br><br>` +
+    return `<strong>Theme: ${this.escapeHtml(theme.title || theme.text?.substring(0, 50) + '...')}</strong><br><br>` +
       (parentNarrative ? `<strong>Parent narrative:</strong> ${this.escapeHtml(parentNarrative.title || 'Untitled')}<br><br>` : '') +
       `Ask about how this theme relates to the broader narrative or faction involvement.`;
   }

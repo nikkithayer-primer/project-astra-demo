@@ -34,11 +34,12 @@ export const documents = [
       { type: 'paragraph', content: 'Democratic leaders, however, expressed concern about the administration\'s approach. Senate Minority Leader Chuck Schumer called the Greenland situation "an unnecessary crisis that damages our relationships with our oldest allies."', portionMark: { classification: 'U', handling: '' } }
     ],
     narrativeIds: ['narr-005'],
-    subNarrativeIds: ['sub-009'],
+    themeIds: ['sub-009'],
     personIds: ['person-003', 'person-004'],
     organizationIds: ['org-009'],
     locationIds: ['loc-005'],
     eventIds: ['event-006'],
+    metrics: { shares: 45200 },
     highlights: [
       {
         id: 'highlight-001',
@@ -133,11 +134,14 @@ export const documents = [
       { type: 'paragraph', content: '"The president is not going to be lectured by foreign leaders about what\'s best for America," Leavitt said during the daily briefing. "If President Macron wants to have a private conversation, perhaps he should be more respectful."', portionMark: { classification: 'U', handling: '' } }
     ],
     narrativeIds: ['narr-005'],
-    subNarrativeIds: ['sub-010'],
+    themeIds: ['sub-010'],
     personIds: ['person-003', 'person-004'],
     organizationIds: [],
     locationIds: ['loc-001'],
-    eventIds: ['event-007']
+    eventIds: ['event-007'],
+    metrics: { shares: 128500 },
+    highlights: [],
+    comments: []
   },
   {
     id: 'doc-003',
@@ -167,11 +171,14 @@ export const documents = [
       { type: 'paragraph', content: 'Polish Foreign Minister Radosław Sikorski cautioned that "Europe cannot defend itself without the United States, and we should not pretend otherwise. Our focus should be on repairing the relationship, not replacing it."', portionMark: { classification: 'U', handling: '' } }
     ],
     narrativeIds: ['narr-005'],
-    subNarrativeIds: ['sub-011'],
+    themeIds: ['sub-011'],
     personIds: ['person-005'],
     organizationIds: ['org-008'],
     locationIds: ['loc-005'],
-    eventIds: ['event-009']
+    eventIds: ['event-009'],
+    metrics: { shares: 38700 },
+    highlights: [],
+    comments: []
   },
   {
     id: 'doc-004',
@@ -202,11 +209,14 @@ export const documents = [
       { type: 'paragraph', content: 'Meanwhile, the Arctic Council, of which both the U.S. and Denmark are members, announced an emergency session to discuss "recent statements that threaten regional stability."', portionMark: { classification: 'U', handling: '' } }
     ],
     narrativeIds: ['narr-005'],
-    subNarrativeIds: ['sub-011'],
+    themeIds: ['sub-011'],
     personIds: ['person-006', 'person-003'],
     organizationIds: [],
     locationIds: ['loc-006'],
-    eventIds: ['event-008']
+    eventIds: ['event-008'],
+    metrics: { shares: 52300 },
+    highlights: [],
+    comments: []
   },
 
   // Minnesota immigration documents (narr-006)
@@ -239,11 +249,12 @@ export const documents = [
       { type: 'paragraph', content: 'The confrontation has drawn comparisons to the civil rights era, when the federal government clashed with state officials over desegregation. However, in this case, the federal government is seeking to compel state cooperation rather than override discriminatory state policies.', portionMark: { classification: 'U', handling: '' } }
     ],
     narrativeIds: ['narr-006'],
-    subNarrativeIds: ['sub-012'],
+    themeIds: ['sub-012'],
     personIds: ['person-007'],
     organizationIds: ['org-010'],
     locationIds: ['loc-002'],
     eventIds: ['event-010'],
+    metrics: { shares: 67800 },
     highlights: [
       {
         id: 'highlight-004',
@@ -335,11 +346,14 @@ export const documents = [
       { type: 'paragraph', content: '"This administration has treated peaceful protesters as enemy combatants," said ACLU attorney Teresa Nelson. "Today\'s ruling reminds them that they cannot suspend the Bill of Rights simply by declaring an immigration emergency."', portionMark: { classification: 'U', handling: '' } }
     ],
     narrativeIds: ['narr-006', 'narr-009'],
-    subNarrativeIds: ['sub-013'],
+    themeIds: ['sub-013'],
     personIds: ['person-017'],
     organizationIds: ['org-010', 'org-011'],
     locationIds: ['loc-002'],
-    eventIds: ['event-011']
+    eventIds: ['event-011'],
+    metrics: { shares: 54200 },
+    highlights: [],
+    comments: []
   },
   {
     id: 'doc-007',
@@ -373,11 +387,14 @@ export const documents = [
       { type: 'paragraph', content: '"When the government investigates murder victims instead of killers, we have lost our way as a nation," said ACLU-MN Executive Director John Gordon. "Renee Good was exercising her First Amendment rights when she was killed by a federal agent. That agent should be the focus of any investigation."', portionMark: { classification: 'U', handling: '' } }
     ],
     narrativeIds: ['narr-006'],
-    subNarrativeIds: ['sub-015'],
+    themeIds: ['sub-015'],
     personIds: ['person-008'],
     organizationIds: ['org-011', 'org-012'],
     locationIds: ['loc-002'],
-    eventIds: ['event-013', 'event-014']
+    eventIds: ['event-013', 'event-014'],
+    metrics: { shares: 89400 },
+    highlights: [],
+    comments: []
   },
 
   // Church protest documents (narr-008)
@@ -408,11 +425,14 @@ export const documents = [
       { type: 'paragraph', content: 'Attorney General Pam Bondi condemned the protest in a statement, saying the administration would "use the full force of federal law to protect Christians from intimidation and harassment."', portionMark: { classification: 'U', handling: '' } }
     ],
     narrativeIds: ['narr-008'],
-    subNarrativeIds: ['sub-021'],
+    themeIds: ['sub-021'],
     personIds: ['person-014', 'person-015'],
     organizationIds: ['org-016', 'org-011'],
     locationIds: ['loc-008'],
-    eventIds: ['event-017']
+    eventIds: ['event-017'],
+    metrics: { shares: 73500 },
+    highlights: [],
+    comments: []
   },
   {
     id: 'doc-009',
@@ -441,11 +461,14 @@ export const documents = [
       { type: 'paragraph', content: 'Bondi dismissed the criticism as "desperate deflection" and said the DOJ would "prosecute all violations of federal law, regardless of the victim\'s faith."', portionMark: { classification: 'U', handling: '' } }
     ],
     narrativeIds: ['narr-008'],
-    subNarrativeIds: ['sub-018'],
+    themeIds: ['sub-018'],
     personIds: ['person-013', 'person-012'],
     organizationIds: ['org-010'],
     locationIds: ['loc-001'],
-    eventIds: ['event-018']
+    eventIds: ['event-018'],
+    metrics: { shares: 42100 },
+    highlights: [],
+    comments: []
   },
   {
     id: 'doc-010',
@@ -474,15 +497,21 @@ export const documents = [
       { type: 'paragraph', content: 'He noted that multiple other journalists were present at the protest without facing similar threats, suggesting the administration was targeting him specifically due to his critical coverage of immigration enforcement.', portionMark: { classification: 'U', handling: '' } }
     ],
     narrativeIds: ['narr-008'],
-    subNarrativeIds: ['sub-019'],
+    themeIds: ['sub-019'],
     personIds: ['person-012', 'person-016'],
     organizationIds: ['org-010'],
     locationIds: ['loc-008'],
-    eventIds: ['event-019']
+    eventIds: ['event-019'],
+    metrics: { shares: 156800 },
+    highlights: [],
+    comments: []
   },
   {
     id: 'doc-011',
     documentType: 'social_post',
+    classification: 'U',
+    title: 'Truth Social post: Trump responds to Minnesota church protest',
+    excerpt: 'Former President Trump calls church protesters "professional troublemakers" and demands "LAW AND ORDER" in response to Minnesota demonstration.',
     url: 'https://truthsocial.com/@realDonaldTrump/posts/123456789',
     publishedDate: '2026-01-21T06:30:00Z',
     publisherId: 'pub-x',
@@ -491,18 +520,24 @@ export const documents = [
       displayName: 'Donald J. Trump',
       avatarUrl: 'img/placeholders/avatar-default.svg'
     },
-    content: 'The agitators and insurrectionists who disrupted a Church Service in Minnesota are highly trained, and should be thrown in jail, or thrown out of the Country. They are not "protesters," they are professional troublemakers who are destroying our Country. LAW AND ORDER!',
-    engagement: {
-      replies: 45821,
+    contentBlocks: [
+      { type: 'paragraph', content: 'The agitators and insurrectionists who disrupted a Church Service in Minnesota are highly trained, and should be thrown in jail, or thrown out of the Country. They are not "protesters," they are professional troublemakers who are destroying our Country. LAW AND ORDER!', portionMark: { classification: 'U', handling: '' } }
+    ],
+    metrics: {
+      comments: 45821,
       likes: 187432,
-      reblogs: 52847
+      shares: 52847,
+      platform: 'x'
     },
     narrativeIds: ['narr-008'],
-    subNarrativeIds: ['sub-020'],
+    themeIds: ['sub-020'],
     personIds: ['person-003'],
     organizationIds: [],
     locationIds: ['loc-001'],
-    eventIds: ['event-020']
+    eventIds: ['event-020'],
+    metrics: { views: 8500000, shares: 52847 },
+    highlights: [],
+    comments: []
   },
   {
     id: 'doc-012',
@@ -532,11 +567,14 @@ export const documents = [
       { type: 'paragraph', content: 'Cities Church has not responded to requests for comment on Easterwood\'s specific role in deportation operations.', portionMark: { classification: 'U', handling: '' } }
     ],
     narrativeIds: ['narr-008'],
-    subNarrativeIds: ['sub-021'],
+    themeIds: ['sub-021'],
     personIds: ['person-015', 'person-014'],
     organizationIds: ['org-018', 'org-016'],
     locationIds: ['loc-008'],
-    eventIds: ['event-017']
+    eventIds: ['event-017'],
+    metrics: { shares: 38900 },
+    highlights: [],
+    comments: []
   },
 
   // Indiana judge shooting documents (narr-007)
@@ -567,11 +605,14 @@ export const documents = [
       { type: 'paragraph', content: 'The attack comes amid growing concerns about violence against judicial officials nationwide. According to the U.S. Marshals Service, threats against federal judges have increased more than 400% over the past five years.', portionMark: { classification: 'U', handling: '' } }
     ],
     narrativeIds: ['narr-007'],
-    subNarrativeIds: ['sub-016'],
+    themeIds: ['sub-016'],
     personIds: ['person-009', 'person-010'],
     organizationIds: ['org-013', 'org-015'],
     locationIds: ['loc-007'],
-    eventIds: ['event-015']
+    eventIds: ['event-015'],
+    metrics: { shares: 95200 },
+    highlights: [],
+    comments: []
   },
   {
     id: 'doc-014',
@@ -601,11 +642,14 @@ export const documents = [
       { type: 'paragraph', content: '"Judges make difficult decisions that affect people\'s lives," Rush wrote. "While most accept these decisions, some respond with anger and, increasingly, with threats. We must be prepared."', portionMark: { classification: 'U', handling: '' } }
     ],
     narrativeIds: ['narr-007'],
-    subNarrativeIds: ['sub-017'],
+    themeIds: ['sub-017'],
     personIds: ['person-011'],
     organizationIds: ['org-014'],
     locationIds: ['loc-007'],
-    eventIds: ['event-016']
+    eventIds: ['event-016'],
+    metrics: { shares: 28700 },
+    highlights: [],
+    comments: []
   },
 
   // Legal battles documents (narr-009)
@@ -636,11 +680,14 @@ export const documents = [
       { type: 'paragraph', content: 'DHS Secretary Kristi Noem welcomed the ruling, saying it would allow facilities to maintain "appropriate security protocols" while still permitting congressional oversight.', portionMark: { classification: 'U', handling: '' } }
     ],
     narrativeIds: ['narr-009'],
-    subNarrativeIds: ['sub-022'],
+    themeIds: ['sub-022'],
     personIds: ['person-025', 'person-021', 'person-022', 'person-023'],
     organizationIds: ['org-017', 'org-020'],
     locationIds: ['loc-009'],
-    eventIds: ['event-021', 'event-022']
+    eventIds: ['event-021', 'event-022'],
+    metrics: { shares: 31400 },
+    highlights: [],
+    comments: []
   },
   {
     id: 'doc-016',
@@ -669,11 +716,14 @@ export const documents = [
       { type: 'paragraph', content: 'A hearing on Minnesota\'s request for a preliminary injunction is scheduled for next week.', portionMark: { classification: 'U', handling: '' } }
     ],
     narrativeIds: ['narr-009'],
-    subNarrativeIds: ['sub-023'],
+    themeIds: ['sub-023'],
     personIds: ['person-007', 'person-017'],
     organizationIds: ['org-010'],
     locationIds: ['loc-002'],
-    eventIds: ['event-023']
+    eventIds: ['event-023'],
+    metrics: { shares: 24600 },
+    highlights: [],
+    comments: []
   },
   {
     id: 'doc-017',
@@ -703,11 +753,14 @@ export const documents = [
       { type: 'paragraph', content: 'Noem dismissed the criticism as "political theater" and said she stood by her agents "100 percent."', portionMark: { classification: 'U', handling: '' } }
     ],
     narrativeIds: ['narr-009'],
-    subNarrativeIds: ['sub-024'],
+    themeIds: ['sub-024'],
     personIds: ['person-018'],
     organizationIds: ['org-017'],
     locationIds: ['loc-001'],
-    eventIds: ['event-025']
+    eventIds: ['event-025'],
+    metrics: { shares: 67300 },
+    highlights: [],
+    comments: []
   },
 
   // RFK dietary guidelines documents (narr-010)
@@ -739,11 +792,14 @@ export const documents = [
       { type: 'paragraph', content: 'Environmental groups expressed alarm at the potential climate impact of significantly increased meat consumption.', portionMark: { classification: 'U', handling: '' } }
     ],
     narrativeIds: ['narr-010'],
-    subNarrativeIds: ['sub-025'],
+    themeIds: ['sub-025'],
     personIds: ['person-026'],
     organizationIds: ['org-022'],
     locationIds: ['loc-001'],
-    eventIds: ['event-026']
+    eventIds: ['event-026'],
+    metrics: { shares: 142500 },
+    highlights: [],
+    comments: []
   },
   {
     id: 'doc-019',
@@ -772,11 +828,14 @@ export const documents = [
       { type: 'paragraph', content: 'Environmental groups said they would challenge the guidelines in court, arguing they violate federal environmental review requirements.', portionMark: { classification: 'U', handling: '' } }
     ],
     narrativeIds: ['narr-010'],
-    subNarrativeIds: ['sub-026'],
+    themeIds: ['sub-026'],
     personIds: [],
     organizationIds: ['org-023'],
     locationIds: [],
-    eventIds: []
+    eventIds: [],
+    metrics: { shares: 78300 },
+    highlights: [],
+    comments: []
   },
   {
     id: 'doc-020',
@@ -805,11 +864,14 @@ export const documents = [
       { type: 'paragraph', content: 'Critics called the explanation unconvincing, noting that the new guidelines make no distinction between factory-farmed and sustainably-raised meat.', portionMark: { classification: 'U', handling: '' } }
     ],
     narrativeIds: ['narr-010'],
-    subNarrativeIds: ['sub-027'],
+    themeIds: ['sub-027'],
     personIds: ['person-026'],
     organizationIds: ['org-022'],
     locationIds: [],
-    eventIds: []
+    eventIds: [],
+    metrics: { shares: 93100 },
+    highlights: [],
+    comments: []
   },
 
   // Food preservatives documents (narr-003)
@@ -840,11 +902,14 @@ export const documents = [
       { type: 'paragraph', content: 'Some food companies have begun offering "nitrite-free" versions of popular products, though experts note that these often use celery powder, which naturally contains nitrites in similar concentrations.', portionMark: { classification: 'U', handling: '' } }
     ],
     narrativeIds: ['narr-003'],
-    subNarrativeIds: ['sub-007'],
+    themeIds: ['sub-007'],
     personIds: [],
     organizationIds: ['org-003'],
     locationIds: [],
-    eventIds: []
+    eventIds: [],
+    metrics: { shares: 56400 },
+    highlights: [],
+    comments: []
   },
   {
     id: 'doc-022',
@@ -874,15 +939,21 @@ export const documents = [
       { type: 'paragraph', content: 'The American Cancer Society recommends limiting consumption of processed and ultra-processed foods as part of a cancer prevention strategy.', portionMark: { classification: 'U', handling: '' } }
     ],
     narrativeIds: ['narr-003'],
-    subNarrativeIds: [],
+    themeIds: [],
     personIds: [],
     organizationIds: [],
     locationIds: [],
-    eventIds: []
+    eventIds: [],
+    metrics: { shares: 48700 },
+    highlights: [],
+    comments: []
   },
   {
     id: 'doc-023',
     documentType: 'social_post',
+    classification: 'U',
+    title: 'TikTok: Health news channel covers RFK Jr. confirmation hearings',
+    excerpt: 'Health-focused TikTok channel discusses potential changes to FDA food policy under potential HHS Secretary RFK Jr.',
     url: 'https://tiktok.com/@healthnews/video/123456',
     publishedDate: '2026-01-12T18:00:00Z',
     publisherId: 'pub-tiktok',
@@ -891,29 +962,38 @@ export const documents = [
       displayName: 'Health News Daily',
       avatarUrl: 'img/placeholders/avatar-default.svg'
     },
-    content: 'The cancer study everyone is talking about 🧵 New research links food preservatives to 32% higher cancer risk. Here\'s what you need to know and what foods to AVOID. #health #cancer #foodsafety #wellness #plantbased',
+    contentBlocks: [
+      { type: 'paragraph', content: 'The cancer study everyone is talking about 🧵 New research links food preservatives to 32% higher cancer risk. Here\'s what you need to know and what foods to AVOID. #health #cancer #foodsafety #wellness #plantbased', portionMark: { classification: 'U', handling: '' } }
+    ],
     video: {
       thumbnailUrl: 'img/placeholders/video-thumbnail.svg',
       duration: 87
     },
     transcription: 'So this new study just dropped and it\'s kind of terrifying. Researchers found that sodium nitrite, which is in like ALL processed meats - bacon, hot dogs, deli meat - is linked to a 32% increase in prostate cancer risk. And potassium nitrate? 22% higher breast cancer risk. The good news is there are alternatives. More and more people are switching to plant-based options and honestly? The vegan influencers have been saying this for years. Time to clean up our diets, people.',
-    engagement: {
-      replies: 8234,
+    metrics: {
+      comments: 8234,
       likes: 245891,
-      reblogs: 42156
+      shares: 42156,
+      platform: 'tiktok'
     },
     narrativeIds: ['narr-003'],
-    subNarrativeIds: ['sub-006'],
+    themeIds: ['sub-006'],
     personIds: [],
     organizationIds: ['org-004'],
     locationIds: [],
-    eventIds: []
+    eventIds: [],
+    metrics: { views: 4800000, shares: 42156 },
+    highlights: [],
+    comments: []
   },
 
   // Social media posts as documents
   {
     id: 'doc-024',
     documentType: 'social_post',
+    classification: 'U',
+    title: 'X post: Immigrant rights group documents ICE raid',
+    excerpt: 'Immigration rights advocacy account shares eyewitness reports and calls for community documentation of ICE activities in Minneapolis.',
     url: 'https://x.com/user/status/123456789',
     publishedDate: '2026-01-19T16:00:00Z',
     publisherId: 'pub-x',
@@ -922,22 +1002,31 @@ export const documents = [
       displayName: 'Immigrant Rights Watch',
       avatarUrl: 'img/placeholders/avatar-default.svg'
     },
-    content: 'THREAD: David Easterwood is an ICE official in Minneapolis. On Sundays, he preaches at Cities Church about Christian love and compassion.\n\nDuring the week, he oversees operations that separate families and detain asylum seekers.\n\nHow do you reconcile these two roles? 🧵 (1/12)',
-    engagement: {
-      replies: 12847,
+    contentBlocks: [
+      { type: 'paragraph', content: 'THREAD: David Easterwood is an ICE official in Minneapolis. On Sundays, he preaches at Cities Church about Christian love and compassion.\n\nDuring the week, he oversees operations that separate families and detain asylum seekers.\n\nHow do you reconcile these two roles? 🧵 (1/12)', portionMark: { classification: 'U', handling: '' } }
+    ],
+    metrics: {
+      comments: 12847,
       likes: 67234,
-      reblogs: 28491
+      shares: 28491,
+      platform: 'x'
     },
     narrativeIds: ['narr-008'],
-    subNarrativeIds: ['sub-021'],
+    themeIds: ['sub-021'],
     personIds: ['person-014'],
     organizationIds: ['org-011', 'org-016'],
     locationIds: ['loc-008'],
-    eventIds: ['event-017']
+    eventIds: ['event-017'],
+    metrics: { views: 2500000, shares: 28491 },
+    highlights: [],
+    comments: []
   },
   {
     id: 'doc-025',
     documentType: 'social_post',
+    classification: 'U',
+    title: 'Reddit post: Minneapolis resident describes ICE presence in neighborhood',
+    excerpt: 'Reddit user shares account of increased ICE vehicle presence and activity in Minneapolis neighborhood.',
     url: 'https://reddit.com/r/minnesota/comments/abc123',
     publishedDate: '2026-01-17T20:00:00Z',
     publisherId: 'pub-reddit',
@@ -946,17 +1035,359 @@ export const documents = [
       displayName: 'mpls_witness_2026',
       avatarUrl: 'img/placeholders/avatar-default.svg'
     },
-    content: '**[AMA] I was at the Minneapolis ICE protest when federal agents used pepper spray on peaceful demonstrators. Ask me anything.**\n\nI\'ve been protesting for three days now. What I\'ve seen is terrifying. Federal agents in unmarked vehicles, people being grabbed off the street, pepper spray used on people who were just standing there with signs.\n\nI have video. I have photos. I\'m willing to share what I witnessed.\n\nProof sent to mods.\n\n**Edit:** Wow this blew up. I\'ll try to answer as many questions as I can. To those asking - yes, I\'m safe. For now.\n\n**Edit 2:** For everyone asking about legal resources, check the pinned comment.',
-    engagement: {
-      replies: 8234,
+    contentBlocks: [
+      { type: 'paragraph', content: '**[AMA] I was at the Minneapolis ICE protest when federal agents used pepper spray on peaceful demonstrators. Ask me anything.**\n\nI\'ve been protesting for three days now. What I\'ve seen is terrifying. Federal agents in unmarked vehicles, people being grabbed off the street, pepper spray used on people who were just standing there with signs.\n\nI have video. I have photos. I\'m willing to share what I witnessed.\n\nProof sent to mods.\n\n**Edit:** Wow this blew up. I\'ll try to answer as many questions as I can. To those asking - yes, I\'m safe. For now.\n\n**Edit 2:** For everyone asking about legal resources, check the pinned comment.', portionMark: { classification: 'U', handling: '' } }
+    ],
+    metrics: {
+      comments: 8234,
       likes: 24891,
-      reblogs: 1247
+      shares: 1247,
+      platform: 'reddit'
     },
     narrativeIds: ['narr-006'],
-    subNarrativeIds: ['sub-013'],
+    themeIds: ['sub-013'],
     personIds: [],
     organizationIds: ['org-011'],
     locationIds: ['loc-002'],
-    eventIds: []
+    eventIds: [],
+    metrics: { likes: 24891, comments: 8234, platform: 'reddit' },
+    highlights: [],
+    comments: []
+  },
+
+  // ============================================
+  // INTERNAL DOCUMENTS
+  // ============================================
+
+  // Internal Document - Minnesota Immigration Enforcement Assessment (SECRET)
+  {
+    id: 'doc-026',
+    documentType: 'internal',
+    classification: 'S',
+    url: null,
+    publishedDate: '2026-01-19T09:00:00Z',
+    publisherId: null,
+    title: 'Situation Assessment: Federal-State Conflict in Minnesota Immigration Enforcement',
+    author: 'Domestic Operations Division',
+    department: 'Operations Division',
+    contentBlocks: [
+      { type: 'heading', content: 'Executive Summary', portionMark: { classification: 'U', handling: '' } },
+      { type: 'paragraph', content: 'This assessment examines the escalating conflict between federal immigration enforcement agencies and Minnesota state/local authorities. The situation has evolved from policy disagreements to active interference with federal operations and potential constitutional confrontation.', portionMark: { classification: 'U', handling: 'FOUO' } },
+      { type: 'heading', content: 'Current Situation', portionMark: { classification: 'S', handling: '' } },
+      { type: 'paragraph', content: 'ICE operations in Minneapolis have encountered organized resistance from both state officials and civilian protesters. Minnesota AG Keith Ellison has publicly stated his office will not cooperate with federal immigration enforcement and has threatened legal action against ICE agents operating within city limits without local coordination.', portionMark: { classification: 'S', handling: 'NOFORN' } },
+      { type: 'paragraph', content: 'Intelligence indicates protest organizers are receiving real-time information about ICE movements, suggesting possible leaks from local law enforcement or federal sources. Three ICE vehicles were surrounded by protesters on January 17, preventing detention transport for approximately 4 hours.', portionMark: { classification: 'S', handling: 'NOFORN' } },
+      { type: 'heading', content: 'Fatal Shooting Incident', portionMark: { classification: 'S', handling: '' } },
+      { type: 'paragraph', content: 'The January 15 shooting death of protester Renee Good by ICE Agent [REDACTED] has significantly escalated tensions. Preliminary review indicates the agent discharged their weapon after claiming to see a metallic object. No weapon was recovered from the scene. Body camera footage is under DOJ review.', portionMark: { classification: 'S', handling: 'NOFORN' } },
+      { type: 'heading', content: 'Legal Developments', portionMark: { classification: 'S', handling: '' } },
+      { type: 'paragraph', content: 'Judge Morrison\'s January 18 ruling restricting warrantless vehicle stops and protest-adjacent arrests has created operational constraints. DOJ appeal pending. Meanwhile, Minnesota legislature is fast-tracking a "sanctuary state" bill that would prohibit state resources from supporting federal immigration enforcement.', portionMark: { classification: 'S', handling: 'NOFORN' } },
+      { type: 'heading', content: 'Recommendations', portionMark: { classification: 'S', handling: '' } },
+      { type: 'list', content: ['Prioritize operations in jurisdictions with cooperative local law enforcement', 'Increase operational security to address potential intelligence leaks', 'Coordinate with US Marshals for federal facility protection', 'Prepare contingency plans for potential federalization scenarios'], portionMark: { classification: 'S', handling: 'NOFORN' } }
+    ],
+    excerpt: 'Assessment of federal-state conflict over immigration enforcement in Minnesota, including operational challenges and legal developments.',
+    narrativeIds: ['narr-006'],
+    themeIds: ['sub-012', 'sub-013', 'sub-014', 'sub-015'],
+    personIds: ['person-007', 'person-008'],
+    organizationIds: ['org-010', 'org-011', 'org-012'],
+    locationIds: ['loc-002', 'loc-008'],
+    eventIds: ['event-010', 'event-011', 'event-013'],
+    factionIds: ['faction-001', 'faction-002', 'faction-003', 'faction-004'],
+    highlights: [
+      {
+        id: 'highlight-026-001',
+        userId: 'user-001',
+        blockIndex: 4,
+        startOffset: 0,
+        endOffset: 145,
+        highlightedText: 'Intelligence indicates protest organizers are receiving real-time information about ICE movements, suggesting possible leaks from local law enforcement',
+        createdAt: '2026-01-19T10:30:00Z'
+      },
+      {
+        id: 'highlight-026-002',
+        userId: 'user-003',
+        blockIndex: 6,
+        startOffset: 0,
+        endOffset: 168,
+        highlightedText: 'The January 15 shooting death of protester Renee Good by ICE Agent [REDACTED] has significantly escalated tensions. Preliminary review indicates the agent discharged',
+        createdAt: '2026-01-19T11:00:00Z'
+      }
+    ],
+    comments: [
+      {
+        id: 'comment-026-001',
+        userId: 'user-001',
+        blockIndex: 4,
+        anchorStartOffset: 0,
+        anchorEndOffset: 145,
+        anchorText: 'Intelligence indicates protest organizers are receiving real-time information about ICE movements',
+        content: 'Need to coordinate with FBI counterintelligence on the leak investigation.',
+        createdAt: '2026-01-19T10:35:00Z',
+        replies: [
+          {
+            id: 'reply-026-001',
+            userId: 'user-004',
+            content: 'CI team has been notified. Initial assessment due COB Friday.',
+            createdAt: '2026-01-19T14:20:00Z'
+          }
+        ]
+      }
+    ]
+  },
+
+  // Internal Document - Greenland Diplomatic Assessment (SECRET)
+  {
+    id: 'doc-027',
+    documentType: 'internal',
+    classification: 'S',
+    url: null,
+    publishedDate: '2026-01-21T08:00:00Z',
+    publisherId: null,
+    title: 'Diplomatic Assessment: Greenland Acquisition Rhetoric and Allied Response',
+    author: 'European Affairs Division',
+    department: 'Intelligence Analysis',
+    contentBlocks: [
+      { type: 'heading', content: 'Summary', portionMark: { classification: 'U', handling: '' } },
+      { type: 'paragraph', content: 'President Trump\'s renewed statements regarding Greenland acquisition have triggered significant diplomatic fallout with European allies. This assessment evaluates allied responses and potential implications for US-European relations.', portionMark: { classification: 'U', handling: 'FOUO' } },
+      { type: 'heading', content: 'Allied Government Responses', portionMark: { classification: 'S', handling: '' } },
+      { type: 'paragraph', content: 'Danish Prime Minister Frederiksen privately conveyed to State Department that any formal acquisition overture would be treated as hostile action against a NATO ally. French President Macron\'s Davos remarks were coordinated with German Chancellor and EU leadership to present unified European front.', portionMark: { classification: 'S', handling: 'NOFORN' } },
+      { type: 'paragraph', content: 'Greenland Premier Egede has accelerated discussions with European Commission about enhanced EU association status as counterweight to US pressure. Internal polling shows 78% of Greenlandic population opposes any form of US territorial incorporation.', portionMark: { classification: 'S', handling: 'NOFORN' } },
+      { type: 'heading', content: 'Strategic Implications', portionMark: { classification: 'S', handling: '' } },
+      { type: 'paragraph', content: 'European Commission is fast-tracking discussions on reduced intelligence sharing with US agencies. Von der Leyen\'s "European independence" remarks signal potential acceleration of EU autonomous defense initiatives. NATO coordination mechanisms may face strain if rhetoric continues.', portionMark: { classification: 'S', handling: 'NOFORN' } },
+      { type: 'heading', content: 'Social Media Disclosure Incident', portionMark: { classification: 'S', handling: '' } },
+      { type: 'paragraph', content: 'President Trump\'s posting of private diplomatic messages from President Macron has created precedent concern among allied leaders. Multiple European heads of state have indicated they will limit direct communications with the White House and route sensitive matters through intermediaries.', portionMark: { classification: 'S', handling: 'NOFORN' } },
+      { type: 'heading', content: 'Assessment', portionMark: { classification: 'U', handling: '' } },
+      { type: 'paragraph', content: 'Current trajectory risks significant degradation of transatlantic intelligence and security cooperation. Recommend diplomatic outreach to reassure allies on commitment to territorial sovereignty principles.', portionMark: { classification: 'U', handling: 'FOUO' } }
+    ],
+    excerpt: 'Assessment of European allied responses to Greenland acquisition rhetoric and implications for transatlantic relations.',
+    narrativeIds: ['narr-005'],
+    themeIds: ['sub-009', 'sub-010', 'sub-011'],
+    personIds: ['person-003', 'person-004', 'person-005', 'person-006'],
+    organizationIds: ['org-008', 'org-009'],
+    locationIds: ['loc-005', 'loc-006', 'loc-001'],
+    eventIds: ['event-006', 'event-007', 'event-008', 'event-009'],
+    factionIds: ['faction-001', 'faction-002'],
+    highlights: [
+      {
+        id: 'highlight-027-001',
+        userId: 'user-002',
+        blockIndex: 3,
+        startOffset: 0,
+        endOffset: 178,
+        highlightedText: 'Danish Prime Minister Frederiksen privately conveyed to State Department that any formal acquisition overture would be treated as hostile action against a NATO ally',
+        createdAt: '2026-01-21T09:15:00Z'
+      }
+    ],
+    comments: [
+      {
+        id: 'comment-027-001',
+        userId: 'user-002',
+        blockIndex: 6,
+        anchorStartOffset: 0,
+        anchorEndOffset: 150,
+        anchorText: 'European Commission is fast-tracking discussions on reduced intelligence sharing with US agencies',
+        content: 'This could significantly impact Five Eyes coordination. Flagging for senior leadership.',
+        createdAt: '2026-01-21T09:30:00Z',
+        replies: []
+      }
+    ]
+  },
+
+  // Internal Document - Immigration Operations Briefing (TOP SECRET)
+  {
+    id: 'doc-028',
+    documentType: 'internal',
+    classification: 'TS',
+    url: null,
+    publishedDate: '2026-01-20T06:00:00Z',
+    publisherId: null,
+    title: 'Operational Briefing: Nationwide Immigration Enforcement Surge - Phase II',
+    author: 'Operations Command',
+    department: 'Operations Division',
+    contentBlocks: [
+      { type: 'heading', content: 'Classification Notice', portionMark: { classification: 'TS', handling: 'NOFORN' } },
+      { type: 'paragraph', content: 'This document contains operational details regarding ongoing and planned immigration enforcement activities. Unauthorized disclosure could compromise officer safety and operational effectiveness.', portionMark: { classification: 'TS', handling: 'NOFORN' } },
+      { type: 'heading', content: 'Phase II Overview', portionMark: { classification: 'TS', handling: '' } },
+      { type: 'paragraph', content: 'Phase II of Operation Secure Borders will commence January 25, 2026 with simultaneous enforcement actions in 12 metropolitan areas. Target acquisition has identified 4,800 priority individuals with final removal orders. Operations will utilize augmented staffing from Border Patrol details.', portionMark: { classification: 'TS', handling: 'NOFORN' } },
+      { type: 'heading', content: 'Sensitive Location Guidance', portionMark: { classification: 'TS', handling: '' } },
+      { type: 'paragraph', content: 'Per revised DHS guidance dated January 10, 2026, sensitive location restrictions have been narrowed. Schools and hospitals remain protected during normal operating hours. Churches and courthouses are no longer categorically excluded from enforcement activity. Field commanders have discretion for time-sensitive apprehensions.', portionMark: { classification: 'TS', handling: 'NOFORN' } },
+      { type: 'heading', content: 'Sanctuary Jurisdiction Protocols', portionMark: { classification: 'TS', handling: '' } },
+      { type: 'paragraph', content: 'Operations in non-cooperative jurisdictions (Chicago, Los Angeles, Minneapolis, San Francisco, NYC) will proceed without local notification. Enhanced protective details authorized for all operations in these areas. Legal has pre-positioned habeas responses for anticipated legal challenges.', portionMark: { classification: 'TS', handling: 'NOFORN' } },
+      { type: 'heading', content: 'Media Strategy', portionMark: { classification: 'S', handling: '' } },
+      { type: 'paragraph', content: 'Public Affairs has prepared messaging emphasizing focus on criminal aliens and final order cases. Operational details will not be disclosed until 48 hours post-completion. Any media inquiries regarding specific operations should be directed to PA with "no comment on ongoing operations" response.', portionMark: { classification: 'S', handling: 'NOFORN' } },
+      { type: 'heading', content: 'Command Authority', portionMark: { classification: 'TS', handling: '' } },
+      { type: 'list', content: ['Overall command: Acting ICE Director [REDACTED]', 'Northern Region: SAC Chicago', 'Western Region: SAC Los Angeles', 'Authorization expires: February 15, 2026 unless extended'], portionMark: { classification: 'TS', handling: 'NOFORN' } }
+    ],
+    excerpt: 'Operational briefing for Phase II immigration enforcement operations across 12 metropolitan areas.',
+    narrativeIds: ['narr-006'],
+    themeIds: ['sub-012', 'sub-014'],
+    personIds: ['person-012'],
+    organizationIds: ['org-010', 'org-011'],
+    locationIds: ['loc-002', 'loc-009'],
+    eventIds: ['event-010', 'event-011'],
+    factionIds: ['faction-001', 'faction-004'],
+    highlights: [
+      {
+        id: 'highlight-028-001',
+        userId: 'user-004',
+        blockIndex: 5,
+        startOffset: 0,
+        endOffset: 185,
+        highlightedText: 'Per revised DHS guidance dated January 10, 2026, sensitive location restrictions have been narrowed. Schools and hospitals remain protected during normal operating hours.',
+        createdAt: '2026-01-20T07:00:00Z'
+      }
+    ],
+    comments: []
+  },
+
+  // Internal Document - Judicial Threat Assessment (SECRET)
+  {
+    id: 'doc-029',
+    documentType: 'internal',
+    classification: 'S',
+    url: null,
+    publishedDate: '2026-01-20T14:00:00Z',
+    publisherId: null,
+    title: 'Threat Assessment: Violence Against Judiciary - Lafayette Incident Analysis',
+    author: 'Threat Analysis Unit',
+    department: 'Intelligence Analysis',
+    contentBlocks: [
+      { type: 'heading', content: 'Incident Summary', portionMark: { classification: 'U', handling: '' } },
+      { type: 'paragraph', content: 'On January 19, 2026 at approximately 14:30 EST, Tippecanoe Superior Court Judge Steven Meyer and his wife Kimberly were shot at their residence in Lafayette, Indiana. Both victims sustained non-life-threatening injuries and are in stable condition at a local hospital.', portionMark: { classification: 'U', handling: '' } },
+      { type: 'heading', content: 'Investigation Status', portionMark: { classification: 'S', handling: '' } },
+      { type: 'paragraph', content: 'FBI and local law enforcement have identified a person of interest based on surveillance footage from neighboring properties. Individual matches description of male observed conducting prior surveillance of the residence on January 15 and 17. Vehicle registration traces to an address in rural Tippecanoe County.', portionMark: { classification: 'S', handling: 'NOFORN' } },
+      { type: 'paragraph', content: 'Digital forensics team has obtained warrant for suspect\'s social media accounts. Preliminary analysis reveals extensive posting history in sovereign citizen forums and anti-government groups. Several posts reference Judge Meyer by name in connection with a 2024 property dispute ruling.', portionMark: { classification: 'S', handling: 'NOFORN' } },
+      { type: 'heading', content: 'Threat Pattern Analysis', portionMark: { classification: 'S', handling: '' } },
+      { type: 'paragraph', content: 'This incident fits an emerging pattern of targeted violence against state and local judiciary. Since 2023, there have been 47 verified threats against Indiana judges, with 8 resulting in protective orders. Sovereign citizen and anti-government extremist movements have increasingly identified local judges as targets.', portionMark: { classification: 'S', handling: 'NOFORN' } },
+      { type: 'heading', content: 'Protective Recommendations', portionMark: { classification: 'U', handling: '' } },
+      { type: 'paragraph', content: 'Recommend enhanced security assessments for all Indiana judges who have presided over property disputes, foreclosures, or cases involving known sovereign citizen adherents. US Marshals Service should coordinate with local sheriff departments on threat notification protocols.', portionMark: { classification: 'U', handling: 'FOUO' } },
+      { type: 'heading', content: 'Related Intelligence', portionMark: { classification: 'S', handling: '' } },
+      { type: 'paragraph', content: 'Open source monitoring has detected increased chatter in sovereign citizen channels celebrating the attack and discussing "lawful" targeting of judges. Several posts include doxed information on other Indiana judges. FBI Domestic Terrorism unit has been notified.', portionMark: { classification: 'S', handling: 'NOFORN' } }
+    ],
+    excerpt: 'Threat assessment following shooting of Indiana judge, including investigation status and pattern analysis of anti-judiciary violence.',
+    narrativeIds: ['narr-007'],
+    themeIds: ['sub-016', 'sub-017'],
+    personIds: ['person-009', 'person-010', 'person-011'],
+    organizationIds: ['org-013', 'org-014', 'org-015'],
+    locationIds: ['loc-007'],
+    eventIds: ['event-015', 'event-016'],
+    factionIds: ['faction-004'],
+    highlights: [
+      {
+        id: 'highlight-029-001',
+        userId: 'user-005',
+        blockIndex: 4,
+        startOffset: 0,
+        endOffset: 175,
+        highlightedText: 'Digital forensics team has obtained warrant for suspect\'s social media accounts. Preliminary analysis reveals extensive posting history in sovereign citizen forums',
+        createdAt: '2026-01-20T15:00:00Z'
+      }
+    ],
+    comments: [
+      {
+        id: 'comment-029-001',
+        userId: 'user-005',
+        blockIndex: 9,
+        anchorStartOffset: 0,
+        anchorEndOffset: 150,
+        anchorText: 'Open source monitoring has detected increased chatter in sovereign citizen channels celebrating the attack',
+        content: 'Cross-referencing with DHS domestic extremism database. Will share findings with JTTF.',
+        createdAt: '2026-01-20T15:30:00Z',
+        replies: []
+      }
+    ]
+  },
+
+  // Internal Document - Food Safety Public Health Analysis (UNCLASSIFIED//FOUO)
+  {
+    id: 'doc-030',
+    documentType: 'internal',
+    classification: 'U',
+    url: null,
+    publishedDate: '2026-01-18T10:00:00Z',
+    publisherId: null,
+    title: 'Public Health Analysis: Food Preservative Research and Social Media Narratives',
+    author: 'Public Health Monitoring Unit',
+    department: 'Intelligence Analysis',
+    contentBlocks: [
+      { type: 'heading', content: 'Background', portionMark: { classification: 'U', handling: '' } },
+      { type: 'paragraph', content: 'This analysis examines the recent proliferation of social media content related to food preservatives and cancer risk, following publication of several peer-reviewed studies in January 2026. The narrative has gained significant traction across multiple platforms.', portionMark: { classification: 'U', handling: '' } },
+      { type: 'heading', content: 'Scientific Context', portionMark: { classification: 'U', handling: '' } },
+      { type: 'paragraph', content: 'The NutriNet-Santé cohort study (n=104,980) published in Lancet Oncology found statistically significant associations between sodium nitrite consumption and increased cancer risk. Harvard School of Public Health\'s ultra-processed food study corroborated findings with different methodology. Both studies have limitations including observational design and potential confounding variables.', portionMark: { classification: 'U', handling: 'FOUO' } },
+      { type: 'heading', content: 'Social Media Amplification', portionMark: { classification: 'U', handling: '' } },
+      { type: 'paragraph', content: 'Health activist and vegan communities have heavily amplified study findings, often with exaggerated or misleading framing. TikTok content frequently omits study limitations and presents correlational findings as causal. Engagement metrics show 450M+ views on preservative-related content in past 14 days.', portionMark: { classification: 'U', handling: 'FOUO' } },
+      { type: 'heading', content: 'Disinformation Assessment', portionMark: { classification: 'U', handling: '' } },
+      { type: 'paragraph', content: 'No evidence of foreign state involvement in amplification. Narrative appears to be organically driven by domestic health advocacy groups and influencers with commercial interests in alternative food products. Some content promotes unregulated supplements as "cancer-fighting" alternatives.', portionMark: { classification: 'U', handling: 'FOUO' } },
+      { type: 'heading', content: 'FDA Response Monitoring', portionMark: { classification: 'U', handling: '' } },
+      { type: 'paragraph', content: 'FDA has not issued new guidance on nitrite/nitrate limits. Agency spokesperson emphasized that current regulations reflect comprehensive safety assessments. Consumer advocacy groups (CSPI, Consumer Reports) have called for regulatory review. Congressional inquiry from Sen. Booker requesting FDA testimony.', portionMark: { classification: 'U', handling: 'FOUO' } },
+      { type: 'heading', content: 'Monitoring Recommendations', portionMark: { classification: 'U', handling: '' } },
+      { type: 'list', content: ['Continue monitoring for foreign amplification of narrative', 'Track commercial entities benefiting from health fears', 'Assess potential for narrative to undermine trust in food safety institutions', 'Coordinate with FDA public affairs on counter-messaging if needed'], portionMark: { classification: 'U', handling: 'FOUO' } }
+    ],
+    excerpt: 'Analysis of social media narratives around food preservative research, including scientific context and disinformation assessment.',
+    narrativeIds: ['narr-003'],
+    themeIds: ['sub-006', 'sub-007'],
+    personIds: [],
+    organizationIds: ['org-003', 'org-004'],
+    locationIds: [],
+    eventIds: [],
+    factionIds: ['faction-005', 'faction-006'],
+    highlights: [
+      {
+        id: 'highlight-030-001',
+        userId: 'user-002',
+        blockIndex: 5,
+        startOffset: 0,
+        endOffset: 180,
+        highlightedText: 'Health activist and vegan communities have heavily amplified study findings, often with exaggerated or misleading framing. TikTok content frequently omits study limitations',
+        createdAt: '2026-01-18T11:30:00Z'
+      }
+    ],
+    comments: []
+  },
+
+  // Internal Document - Protest Intelligence Summary (CONFIDENTIAL)
+  {
+    id: 'doc-031',
+    documentType: 'internal',
+    classification: 'C',
+    url: null,
+    publishedDate: '2026-01-18T16:00:00Z',
+    publisherId: null,
+    title: 'Intelligence Summary: Minneapolis Anti-ICE Protest Activity',
+    author: 'Civil Unrest Monitoring Unit',
+    department: 'Operations Division',
+    contentBlocks: [
+      { type: 'heading', content: 'Daily Summary - January 18, 2026', portionMark: { classification: 'U', handling: '' } },
+      { type: 'paragraph', content: 'Protest activity at 9th and Hennepin intersection continued for the fourth consecutive day. Estimated crowd size peaked at 2,800 individuals between 16:00-19:00 local time, representing a 40% increase from previous day.', portionMark: { classification: 'U', handling: 'FOUO' } },
+      { type: 'heading', content: 'Key Observations', portionMark: { classification: 'C', handling: '' } },
+      { type: 'paragraph', content: 'Protest organization has become more sophisticated. Identified coordinators using encrypted communications and rotating leadership to avoid surveillance detection. Legal observer teams from ACLU and National Lawyers Guild present at all times. Medic stations established at three locations.', portionMark: { classification: 'C', handling: 'NOFORN' } },
+      { type: 'paragraph', content: 'Candlelight vigil for Renee Good drew approximately 1,200 attendees. Widow spoke publicly for first time, calling for federal investigation of ICE agent. Minnesota AG Ellison attended but did not speak.', portionMark: { classification: 'U', handling: 'FOUO' } },
+      { type: 'heading', content: 'Social Media Coordination', portionMark: { classification: 'C', handling: '' } },
+      { type: 'paragraph', content: 'Primary coordination occurring via private Telegram channels and Signal groups. Public-facing accounts on X and Instagram focus on narrative building and mainstream media engagement. Identified 12 accounts with >50K followers actively promoting protest participation.', portionMark: { classification: 'C', handling: 'NOFORN' } },
+      { type: 'heading', content: 'Planned Activities', portionMark: { classification: 'C', handling: '' } },
+      { type: 'paragraph', content: 'Open source indicates planned escalation for January 20, including possible march to federal building and symbolic "citizen\'s arrest" of ICE leadership. DSA Minneapolis chapter promoting "general strike" solidarity action. Expect significant counter-protest presence from Blue Lives Matter affiliated groups.', portionMark: { classification: 'C', handling: 'NOFORN' } },
+      { type: 'heading', content: 'Resource Requirements', portionMark: { classification: 'U', handling: '' } },
+      { type: 'paragraph', content: 'Request continuation of augmented monitoring through January 25. Additional aerial surveillance assets may be required if protest activity spreads to additional locations as indicated by organizer communications.', portionMark: { classification: 'U', handling: 'FOUO' } }
+    ],
+    excerpt: 'Daily intelligence summary of Minneapolis anti-ICE protest activity, including organizational analysis and planned activities.',
+    narrativeIds: ['narr-006'],
+    themeIds: ['sub-012', 'sub-013'],
+    personIds: ['person-007', 'person-008'],
+    organizationIds: ['org-010', 'org-011'],
+    locationIds: ['loc-002'],
+    eventIds: ['event-013', 'event-014'],
+    factionIds: ['faction-002', 'faction-003'],
+    highlights: [],
+    comments: [
+      {
+        id: 'comment-031-001',
+        userId: 'user-003',
+        blockIndex: 8,
+        anchorStartOffset: 0,
+        anchorEndOffset: 150,
+        anchorText: 'Open source indicates planned escalation for January 20, including possible march to federal building',
+        content: 'Coordinating with USMS for federal building security posture.',
+        createdAt: '2026-01-18T17:00:00Z',
+        replies: []
+      }
+    ]
   }
 ];

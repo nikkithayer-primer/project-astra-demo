@@ -188,9 +188,9 @@ export const DataService = {
   },
 
   // Themes
-  getSubNarratives: () => dataStore.data?.subNarratives || [],
-  getSubNarrative: (id) => findById('subNarratives', id),
-  getSubNarrativeById: (id) => findById('subNarratives', id),
+  getThemes: () => dataStore.data?.themes || [],
+  getTheme: (id) => findById('themes', id),
+  getThemeById: (id) => findById('themes', id),
 
   // Factions
   getFactions: () => dataStore.data?.factions || [],
@@ -376,8 +376,8 @@ export const DataService = {
   // Narrative Relationships
   // ============================================
 
-  getSubNarrativesForNarrative: (narrativeId) =>
-    dataStore.data.subNarratives.filter(s => s.parentNarrativeId === narrativeId),
+  getThemesForNarrative: (narrativeId) =>
+    dataStore.data.themes.filter(s => s.parentNarrativeId === narrativeId),
 
   getFactionsForNarrative: (narrativeId) => {
     const narrative = dataStore.data.narratives.find(n => n.id === narrativeId);
@@ -401,11 +401,11 @@ export const DataService = {
     resolveRelatedEntities('narratives', narrativeId, 'eventIds', 'events'),
 
   // ============================================
-  // SubNarrative Relationships (same as Narrative)
+  // Theme Relationships (same as Narrative)
   // ============================================
 
-  getFactionsForSubNarrative: (subNarrativeId) => {
-    const sub = dataStore.data.subNarratives.find(s => s.id === subNarrativeId);
+  getFactionsForTheme: (themeId) => {
+    const sub = dataStore.data.themes.find(s => s.id === themeId);
     if (!sub || !sub.factionMentions) return [];
     return Object.entries(sub.factionMentions).map(([factionId, data]) => ({
       faction: dataStore.data.factions.find(f => f.id === factionId),
@@ -413,8 +413,8 @@ export const DataService = {
     })).filter(f => f.faction);
   },
 
-  getParentNarrative: (subNarrativeId) => {
-    const sub = findById('subNarratives', subNarrativeId);
+  getParentNarrative: (themeId) => {
+    const sub = findById('themes', themeId);
     if (!sub) return null;
     return findById('narratives', sub.parentNarrativeId);
   },
@@ -429,8 +429,8 @@ export const DataService = {
     );
   },
 
-  getSubNarrativesForFaction: (factionId) => {
-    return dataStore.data.subNarratives.filter(s =>
+  getThemesForFaction: (factionId) => {
+    return dataStore.data.themes.filter(s =>
       s.factionMentions && s.factionMentions[factionId]
     );
   },
@@ -457,8 +457,8 @@ export const DataService = {
   getNarrativesForLocation: (locationId) => 
     findEntitiesReferencing('narratives', 'locationIds', locationId),
 
-  getSubNarrativesForLocation: (locationId) => 
-    findEntitiesReferencing('subNarratives', 'locationIds', locationId),
+  getThemesForLocation: (locationId) => 
+    findEntitiesReferencing('themes', 'locationIds', locationId),
 
   getEventsForLocation: (locationId) => 
     findEntitiesReferencing('events', 'locationId', locationId, false),
@@ -497,8 +497,8 @@ export const DataService = {
   getNarrativesForEvent: (eventId) => 
     findEntitiesReferencing('narratives', 'eventIds', eventId),
 
-  getSubNarrativesForEvent: (eventId) => 
-    findEntitiesReferencing('subNarratives', 'eventIds', eventId),
+  getThemesForEvent: (eventId) => 
+    findEntitiesReferencing('themes', 'eventIds', eventId),
 
   // ============================================
   // Person Relationships
@@ -507,8 +507,8 @@ export const DataService = {
   getNarrativesForPerson: (personId) => 
     findEntitiesReferencing('narratives', 'personIds', personId),
 
-  getSubNarrativesForPerson: (personId) => 
-    findEntitiesReferencing('subNarratives', 'personIds', personId),
+  getThemesForPerson: (personId) => 
+    findEntitiesReferencing('themes', 'personIds', personId),
 
   /**
    * Get related persons by finding other people who appear in the same narratives.
@@ -567,8 +567,8 @@ export const DataService = {
   getNarrativesForOrganization: (orgId) => 
     findEntitiesReferencing('narratives', 'organizationIds', orgId),
 
-  getSubNarrativesForOrganization: (orgId) => 
-    findEntitiesReferencing('subNarratives', 'organizationIds', orgId),
+  getThemesForOrganization: (orgId) => 
+    findEntitiesReferencing('themes', 'organizationIds', orgId),
 
   /**
    * Get related persons by finding people who appear in the same narratives as this org.
@@ -710,10 +710,10 @@ export const DataService = {
   /**
    * Get documents for a theme
    */
-  getDocumentsForSubNarrative: (subNarrativeId) => {
-    const subNarrative = dataStore.data.subNarratives.find(s => s.id === subNarrativeId);
-    if (!subNarrative) return [];
-    return (subNarrative.documentIds || [])
+  getDocumentsForTheme: (themeId) => {
+    const theme = dataStore.data.themes.find(s => s.id === themeId);
+    if (!theme) return [];
+    return (theme.documentIds || [])
       .map(did => (dataStore.data.documents || []).find(d => d.id === did))
       .filter(Boolean)
       .sort((a, b) => new Date(b.publishedDate) - new Date(a.publishedDate));
@@ -799,11 +799,11 @@ export const DataService = {
   /**
    * Get themes mentioned in a document
    */
-  getSubNarrativesForDocument: (documentId) => {
+  getThemesForDocument: (documentId) => {
     const doc = (dataStore.data.documents || []).find(d => d.id === documentId);
     if (!doc) return [];
-    return (doc.subNarrativeIds || [])
-      .map(sid => dataStore.data.subNarratives.find(s => s.id === sid))
+    return (doc.themeIds || [])
+      .map(sid => dataStore.data.themes.find(s => s.id === sid))
       .filter(Boolean);
   },
 
@@ -1171,7 +1171,7 @@ export const DataService = {
       narratives = narratives.filter(n => statusFilter.includes(n.status || 'new'));
     }
     
-    const subNarratives = dataStore.data.subNarratives.filter(s =>
+    const themes = dataStore.data.themes.filter(s =>
       narratives.some(n => n.id === s.parentNarrativeId)
     );
 
@@ -1206,7 +1206,7 @@ export const DataService = {
 
     return {
       totalNarratives: narratives.length,
-      totalSubNarratives: subNarratives.length,
+      totalThemes: themes.length,
       totalFactions: dataStore.data.factions.length,
       totalLocations: dataStore.data.locations.length,
       totalEvents: events.length,
@@ -1579,8 +1579,8 @@ export const DataService = {
     
     const matchesThemes = (narrative, themeIds) => {
       if (!themeIds || themeIds.length === 0) return null;
-      // Check if any of the narrative's sub-narratives are in the theme scope
-      return themeIds.some(tId => (narrative.subNarrativeIds || []).includes(tId));
+      // Check if any of the narrative's themes are in the theme scope
+      return themeIds.some(tId => (narrative.themeIds || []).includes(tId));
     };
     
     return narratives.filter(narrative => {
@@ -1614,16 +1614,16 @@ export const DataService = {
   /**
    * Get themes (sub-narratives) that match a monitor's scope criteria.
    */
-  getSubNarrativesForMonitor: (monitorId) => {
+  getThemesForMonitor: (monitorId) => {
     const monitor = findById('monitors', monitorId);
-    if (!monitor || monitor.options?.includeSubNarratives === false) return [];
+    if (!monitor || monitor.options?.includeThemes === false) return [];
     
     // Get matched narratives first
     const matchedNarratives = DataService.getNarrativesForMonitor(monitorId);
     const matchedNarrativeIds = new Set(matchedNarratives.map(n => n.id));
     
-    // Get sub-narratives that belong to matched narratives
-    return (dataStore.data.subNarratives || []).filter(sub => 
+    // Get themes that belong to matched narratives
+    return (dataStore.data.themes || []).filter(sub => 
       matchedNarrativeIds.has(sub.parentNarrativeId)
     );
   },
@@ -1718,7 +1718,7 @@ export const DataService = {
   getMonitorMatchedContent: (monitorId) => {
     return {
       narratives: DataService.getNarrativesForMonitor(monitorId),
-      subNarratives: DataService.getSubNarrativesForMonitor(monitorId),
+      themes: DataService.getThemesForMonitor(monitorId),
       events: DataService.getEventsForMonitor(monitorId),
       subEvents: DataService.getSubEventsForMonitor(monitorId),
       alerts: DataService.getAlertsForMonitor(monitorId)
@@ -1976,11 +1976,34 @@ export const DataService = {
     );
   },
 
+  // ============================================
+  // Workspace Methods
+  // ============================================
+
+  getWorkspaces: () => dataStore.data.workspaces || [],
+
+  getWorkspace: (id) => findById('workspaces', id),
+
+  getActiveWorkspaces: () => 
+    (dataStore.data.workspaces || []).filter(w => w.status === 'active'),
+
+  getArchivedWorkspaces: () => 
+    (dataStore.data.workspaces || []).filter(w => w.status === 'archived'),
+
+  getDocumentsForWorkspace: (workspaceId) => {
+    const workspace = findById('workspaces', workspaceId);
+    if (!workspace) return [];
+    return (workspace.documentIds || [])
+      .map(id => findById('documents', id))
+      .filter(Boolean)
+      .sort((a, b) => new Date(b.publishedDate) - new Date(a.publishedDate));
+  },
+
   // Search across all entities
   search: (query) => {
     const results = {
       narratives: [],
-      subNarratives: [],
+      themes: [],
       topics: [],
       factions: [],
       locations: [],
@@ -1999,7 +2022,7 @@ export const DataService = {
       results.narratives = (dataStore.data?.narratives || []).filter(n =>
         n && n.text && n.text.toLowerCase().includes(lowerQuery)
       );
-      results.subNarratives = (dataStore.data?.subNarratives || []).filter(s =>
+      results.themes = (dataStore.data?.themes || []).filter(s =>
         s && s.text && s.text.toLowerCase().includes(lowerQuery)
       );
       results.topics = (dataStore.data?.topics || []).filter(t =>

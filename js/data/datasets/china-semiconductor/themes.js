@@ -1,8 +1,8 @@
 /**
- * Sub-narratives for China Semiconductor dataset
+ * Themes for China Semiconductor dataset
  */
 
-export const subNarratives = [
+export const themes = [
   {
     id: 'sub-001',
     text: 'SMIC multi-patterning technique enables advanced nodes without EUV',

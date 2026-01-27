@@ -176,7 +176,7 @@ export class MonitorEditorModal {
               ${this.renderEntitySection('locations', 'Locations', 'locationIds', DataService.getLocations())}
               ${this.renderEntitySection('events', 'Events', 'eventIds', DataService.getEvents())}
               ${this.renderEntitySection('narratives', 'Narratives', 'narrativeIds', DataService.getNarratives())}
-              ${this.renderEntitySection('themes', 'Themes', 'themeIds', DataService.getSubNarratives())}
+              ${this.renderEntitySection('themes', 'Themes', 'themeIds', DataService.getThemes())}
             </div>
           </div>
         </div>
@@ -399,7 +399,7 @@ export class MonitorEditorModal {
       locationIds: DataService.getLocations(),
       eventIds: DataService.getEvents(),
       narrativeIds: DataService.getNarratives(),
-      themeIds: DataService.getSubNarratives()
+      themeIds: DataService.getThemes()
     };
     
     const entities = entitiesMap[scopeKey] || [];
@@ -447,7 +447,7 @@ export class MonitorEditorModal {
       locationIds: DataService.getLocations(),
       eventIds: DataService.getEvents(),
       narrativeIds: DataService.getNarratives(),
-      themeIds: DataService.getSubNarratives()
+      themeIds: DataService.getThemes()
     };
     
     const sectionId = sectionMap[scopeKey];

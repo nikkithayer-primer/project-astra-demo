@@ -1,9 +1,10 @@
 /**
  * WorkspacesView.js
- * Search results with documents, analysis, and AI chat
+ * List view for saved workspaces with search results and document collections
  */
 
 import { BaseView } from './BaseView.js';
+import { DataService } from '../data/DataService.js';
 
 export class WorkspacesView extends BaseView {
   constructor(container, options = {}) {
@@ -11,71 +12,180 @@ export class WorkspacesView extends BaseView {
   }
 
   async render() {
+    const workspaces = DataService.getWorkspaces();
+    const activeWorkspaces = workspaces.filter(w => w.status === 'active');
+    const archivedWorkspaces = workspaces.filter(w => w.status === 'archived');
+
+    // Build workspace cards
+    const activeCardsHtml = activeWorkspaces.map(w => this.renderWorkspaceCard(w)).join('');
+    const archivedCardsHtml = archivedWorkspaces.map(w => this.renderWorkspaceCard(w)).join('');
+
+    // Build content based on whether we have workspaces
+    let contentHtml;
+    if (workspaces.length === 0) {
+      contentHtml = this.renderEmptyState();
+    } else {
+      contentHtml = `
+        <div class="content-grid">
+          ${activeCardsHtml}
+          ${archivedCardsHtml}
+        </div>
+      `;
+    }
+
     this.container.innerHTML = `
       <div class="view-header">
         <div>
           <h1 class="view-title">Workspaces</h1>
-          <p class="view-subtitle">Search results with documents, analysis, and AI chat</p>
+          <p class="view-subtitle">Saved search results with document collections</p>
         </div>
-        <button class="btn btn-small btn-primary">+ New Workspace</button>
+        <button class="btn btn-small btn-primary" id="create-workspace-btn">+ New Workspace</button>
       </div>
       
-      <div class="content-grid">
-        <div class="card card-half">
-          <div class="card-header">
-            <span class="card-title">Election Integrity 2024</span>
-            <span class="tag">Active</span>
-          </div>
-          <div class="card-body">
-            <p class="text-sm text-secondary mb-md">Search: "election security voting fraud 2024"</p>
-            <div class="flex gap-sm">
-              <span class="badge">847 Documents</span>
-              <span class="badge">12 Narratives</span>
-            </div>
-            <p class="text-xs text-muted mt-md">Last updated 2 hours ago</p>
-          </div>
+      <div class="content-area">
+        ${contentHtml}
+      </div>
+    `;
+
+    // Set up click handlers
+    this.setupEventHandlers();
+  }
+
+  /**
+   * Render a single workspace card
+   * @param {Object} workspace - The workspace object
+   * @returns {string} HTML string
+   */
+  renderWorkspaceCard(workspace) {
+    const docCount = workspace.documentIds?.length || 0;
+    const isArchived = workspace.status === 'archived';
+    const updatedAt = this.formatRelativeTime(workspace.updatedAt);
+    const statusTag = isArchived 
+      ? '<span class="tag tag-neutral">Archived</span>'
+      : '<span class="tag">Active</span>';
+
+    return `
+      <div class="card card-half workspace-card" data-workspace-id="${workspace.id}">
+        <div class="card-header">
+          <span class="card-title">${this.escapeHtml(workspace.name)}</span>
+          ${statusTag}
         </div>
-        
-        <div class="card card-half">
-          <div class="card-header">
-            <span class="card-title">Climate Disinformation</span>
-            <span class="tag">Active</span>
+        <div class="card-body">
+          <p class="text-sm text-secondary mb-md">Search: "${this.escapeHtml(workspace.query)}"</p>
+          ${workspace.description ? `<p class="text-xs text-muted mb-md">${this.escapeHtml(workspace.description)}</p>` : ''}
+          <div class="flex gap-sm">
+            <span class="badge">${docCount} Document${docCount !== 1 ? 's' : ''}</span>
           </div>
-          <div class="card-body">
-            <p class="text-sm text-secondary mb-md">Search: "climate change denial misinformation"</p>
-            <div class="flex gap-sm">
-              <span class="badge">523 Documents</span>
-              <span class="badge">8 Narratives</span>
-            </div>
-            <p class="text-xs text-muted mt-md">Last updated 5 hours ago</p>
-          </div>
+          <p class="text-xs text-muted mt-md">Last updated ${updatedAt}</p>
         </div>
-        
-        <div class="card card-half">
-          <div class="card-header">
-            <span class="card-title">Health Misinformation</span>
-            <span class="tag tag-neutral">Archived</span>
-          </div>
-          <div class="card-body">
-            <p class="text-sm text-secondary mb-md">Search: "vaccine misinformation health claims"</p>
-            <div class="flex gap-sm">
-              <span class="badge">1,204 Documents</span>
-              <span class="badge">24 Narratives</span>
-            </div>
-            <p class="text-xs text-muted mt-md">Archived 3 weeks ago</p>
-          </div>
-        </div>
-        
-        <div class="card card-half">
-          <div class="card-body" style="display: flex; align-items: center; justify-content: center; min-height: 120px;">
-            <div class="empty-state" style="padding: 0;">
-              <div class="empty-state-icon">+</div>
-              <p class="empty-state-text">Create New Workspace</p>
-            </div>
+      </div>
+    `;
+  }
+
+  /**
+   * Render empty state when no workspaces exist
+   * @returns {string} HTML string
+   */
+  renderEmptyState() {
+    return `
+      <div class="card">
+        <div class="card-body" style="padding: var(--space-2xl);">
+          <div style="max-width: 400px; margin: 0 auto; text-align: center;">
+            <svg viewBox="0 0 24 24" width="48" height="48" fill="none" stroke="var(--text-muted)" stroke-width="1.5" style="margin-bottom: var(--space-md);">
+              <rect x="2" y="3" width="20" height="18" rx="2"/>
+              <path d="M8 7h8M8 11h8M8 15h4"/>
+            </svg>
+            <h2 style="font-size: var(--text-lg); font-weight: 500; color: var(--text-primary); margin-bottom: var(--space-sm);">No Workspaces Yet</h2>
+            <p class="text-secondary text-sm mb-lg">Workspaces help you organize search results and track documents related to specific topics.</p>
+            <button class="btn btn-primary" id="empty-create-btn">Create Your First Workspace</button>
           </div>
         </div>
       </div>
     `;
+  }
+
+  /**
+   * Set up click handlers for cards and buttons
+   */
+  setupEventHandlers() {
+    // Workspace card clicks - navigate to detail view
+    const workspaceCards = this.container.querySelectorAll('.workspace-card');
+    workspaceCards.forEach(card => {
+      card.style.cursor = 'pointer';
+      card.addEventListener('click', () => {
+        const workspaceId = card.dataset.workspaceId;
+        window.location.hash = `#/workspace/${workspaceId}`;
+      });
+    });
+
+    // Create workspace button in header
+    const createBtn = this.container.querySelector('#create-workspace-btn');
+    if (createBtn) {
+      createBtn.addEventListener('click', () => {
+        this.handleCreateWorkspace();
+      });
+    }
+
+    // Empty state create button
+    const emptyCreateBtn = this.container.querySelector('#empty-create-btn');
+    if (emptyCreateBtn) {
+      emptyCreateBtn.addEventListener('click', () => {
+        this.handleCreateWorkspace();
+      });
+    }
+  }
+
+  /**
+   * Handle create workspace action
+   * For now, redirect to search (workspace creation will be added later)
+   */
+  handleCreateWorkspace() {
+    // TODO: Implement workspace creation modal
+    // For now, navigate to search
+    window.location.hash = '#/search';
+  }
+
+  /**
+   * Format a date as relative time (e.g., "2 hours ago")
+   * @param {string} isoDate - ISO date string
+   * @returns {string} Formatted relative time
+   */
+  formatRelativeTime(isoDate) {
+    if (!isoDate) return 'unknown';
+    
+    const date = new Date(isoDate);
+    const now = new Date();
+    const diffMs = now - date;
+    const diffMinutes = Math.floor(diffMs / (1000 * 60));
+    const diffHours = Math.floor(diffMs / (1000 * 60 * 60));
+    const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
+    const diffWeeks = Math.floor(diffDays / 7);
+    
+    if (diffMinutes < 1) return 'just now';
+    if (diffMinutes < 60) return `${diffMinutes} minute${diffMinutes !== 1 ? 's' : ''} ago`;
+    if (diffHours < 24) return `${diffHours} hour${diffHours !== 1 ? 's' : ''} ago`;
+    if (diffDays === 1) return 'yesterday';
+    if (diffDays < 7) return `${diffDays} days ago`;
+    if (diffWeeks === 1) return '1 week ago';
+    if (diffWeeks < 4) return `${diffWeeks} weeks ago`;
+    
+    return date.toLocaleDateString('en-US', {
+      month: 'short',
+      day: 'numeric',
+      year: date.getFullYear() !== now.getFullYear() ? 'numeric' : undefined
+    });
+  }
+
+  /**
+   * Escape HTML to prevent XSS
+   * @param {string} text - Text to escape
+   * @returns {string} Escaped text
+   */
+  escapeHtml(text) {
+    if (!text) return '';
+    const div = document.createElement('div');
+    div.textContent = text;
+    return div.innerHTML;
   }
 }
 

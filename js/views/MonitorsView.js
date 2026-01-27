@@ -601,8 +601,8 @@ export class MonitorsView extends BaseView {
         showStatus: true,
         showSparkline: true,
         showVolume: true,
-        showSubNarratives: true,
-        maxSubNarratives: 3,
+        showThemes: true,
+        maxThemes: 3,
         defaultShowDescription: false,
         onItemClick: (n) => {
           window.location.hash = `#/narrative/${n.id}`;

@@ -6,7 +6,7 @@
 export { BaseView } from './BaseView.js';
 export { DashboardView } from './DashboardView.js';
 export { NarrativeView } from './NarrativeView.js';
-export { SubNarrativeView } from './SubNarrativeView.js';
+export { ThemeView } from './ThemeView.js';
 export { FactionView } from './FactionView.js';
 export { LocationView } from './LocationView.js';
 export { EventView } from './EventView.js';

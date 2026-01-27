@@ -1,7 +1,7 @@
 /**
  * BaseItemList.js
  * Base class for list components with sparklines and common functionality
- * Extended by NarrativeList, SubNarrativeList, and TopicList
+ * Extended by NarrativeList, ThemeList, and TopicList
  */
 
 import { BaseComponent } from './BaseComponent.js';

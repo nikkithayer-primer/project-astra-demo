@@ -6,7 +6,7 @@
 
 import { DashboardView } from './views/DashboardView.js';
 import { NarrativeView } from './views/NarrativeView.js';
-import { SubNarrativeView } from './views/SubNarrativeView.js';
+import { ThemeView } from './views/ThemeView.js';
 import { FactionView } from './views/FactionView.js';
 import { LocationView } from './views/LocationView.js';
 import { EventView } from './views/EventView.js';
@@ -19,6 +19,7 @@ import { EditorView } from './views/EditorView.js';
 import { MonitorsView } from './views/MonitorsView.js';
 import { MonitorView } from './views/MonitorView.js';
 import { WorkspacesView } from './views/WorkspacesView.js';
+import { WorkspaceView } from './views/WorkspaceView.js';
 import { SearchView } from './views/SearchView.js';
 import { ProjectsView } from './views/ProjectsView.js';
 import { initStickyHeader, destroyStickyHeader } from './utils/stickyHeader.js';
@@ -389,7 +390,7 @@ export class Router {
 
       case 'subnarrative':
         if (id) {
-          this.currentView = new SubNarrativeView(this.container, id, filterOptions);
+          this.currentView = new ThemeView(this.container, id, filterOptions);
         } else {
           window.location.hash = '#/narratives';
           return;
@@ -501,6 +502,14 @@ export class Router {
         this.currentView = new MonitorsView(this.container, filterOptions);
         break;
 
+      case 'workspace':
+        if (id) {
+          this.currentView = new WorkspaceView(this.container, id, filterOptions);
+        } else {
+          this.currentView = new WorkspacesView(this.container, filterOptions);
+        }
+        break;
+
       case 'workspaces':
         this.currentView = new WorkspacesView(this.container, filterOptions);
         break;
@@ -573,7 +582,8 @@ export class Router {
           (linkRoute === 'entities' && (route === 'person' || route === 'organization')) ||
           (linkRoute === 'documents' && route === 'document') ||
           (linkRoute === 'monitors' && route === 'monitor') ||
-          (linkRoute === 'topics' && route === 'topic')) {
+          (linkRoute === 'topics' && route === 'topic') ||
+          (linkRoute === 'workspaces' && route === 'workspace')) {
         link.classList.add('active');
       }
     });

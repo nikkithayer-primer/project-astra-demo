@@ -289,7 +289,7 @@ export class BaseView {
     if (!hasDocuments) return null;
     
     return [
-      { id: 'dashboard', label: 'Dashboard', href: baseHref },
+      { id: 'dashboard', label: 'Dashboard', href: `${baseHref}?tab=dashboard` },
       { id: 'documents', label: 'Documents', href: `${baseHref}?tab=documents` }
     ];
   }

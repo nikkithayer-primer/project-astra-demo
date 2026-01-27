@@ -12,6 +12,7 @@ import {
   formatPortionMark 
 } from '../utils/classification.js';
 import { renderPortionMark } from './ClassificationBanner.js';
+import { dataStore } from '../data/DataStore.js';
 
 export class DocumentContentRenderer extends BaseComponent {
   constructor(containerId, options = {}) {
@@ -22,6 +23,14 @@ export class DocumentContentRenderer extends BaseComponent {
     });
     this.activeCommentThread = null;
     this._documentClickHandler = null;
+  }
+
+  /**
+   * Check if portion marks should be shown (respects settings)
+   */
+  shouldShowPortionMarks() {
+    const settings = dataStore.getSettings();
+    return this.options.showPortionMarks && settings.showClassification;
   }
 
   formatNumber(num) {
@@ -446,7 +455,7 @@ export class DocumentContentRenderer extends BaseComponent {
     this.container.innerHTML = html;
   }
 
-  renderContentBlocks(blocks, showPortionMarks = this.options.showPortionMarks, highlights = [], comments = []) {
+  renderContentBlocks(blocks, showPortionMarks = this.shouldShowPortionMarks(), highlights = [], comments = []) {
     return blocks.map((block, blockIndex) => {
       const portionMarkHtml = showPortionMarks && block.portionMark 
         ? renderPortionMark(block.portionMark) + ' '
