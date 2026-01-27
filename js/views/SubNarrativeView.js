@@ -101,9 +101,18 @@ export class SubNarrativeView extends BaseView {
   }
 
   fetchSubNarrativeData(subNarrative) {
+    // #region agent log
+    fetch('http://127.0.0.1:7244/ingest/9cc373a4-2b71-4806-8abc-5cae74c1b7ac',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'SubNarrativeView.js:fetchSubNarrativeData',message:'subNarrative input',data:{id:subNarrative?.id,hasFactionMentions:!!subNarrative?.factionMentions,factionMentionKeys:Object.keys(subNarrative?.factionMentions||{}),hasVolumeOverTime:!!subNarrative?.volumeOverTime,volumeOverTimeLength:subNarrative?.volumeOverTime?.length},timestamp:Date.now(),sessionId:'debug-session',hypothesisId:'D'})}).catch(()=>{});
+    // #endregion
     const parentNarrative = DataService.getParentNarrative(this.subNarrativeId);
     const factionData = DataService.getFactionsForSubNarrative(subNarrative.id);
+    // #region agent log
+    fetch('http://127.0.0.1:7244/ingest/9cc373a4-2b71-4806-8abc-5cae74c1b7ac',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'SubNarrativeView.js:fetchSubNarrativeData',message:'factionData result',data:{factionDataLength:factionData?.length,factionDataRaw:factionData},timestamp:Date.now(),sessionId:'debug-session',hypothesisId:'A'})}).catch(()=>{});
+    // #endregion
     const factions = factionData.map(f => f.faction).filter(Boolean);
+    // #region agent log
+    fetch('http://127.0.0.1:7244/ingest/9cc373a4-2b71-4806-8abc-5cae74c1b7ac',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'SubNarrativeView.js:fetchSubNarrativeData',message:'factions after filter',data:{factionsLength:factions?.length,factionIds:factions?.map(f=>f?.id)},timestamp:Date.now(),sessionId:'debug-session',hypothesisId:'A'})}).catch(()=>{});
+    // #endregion
     const factionOverlaps = factions.length > 1
       ? DataService.getFactionOverlapsFor(factions[0]?.id).filter(o =>
           o.factionIds.every(fid => factions.some(f => f.id === fid))
@@ -118,6 +127,9 @@ export class SubNarrativeView extends BaseView {
     const orgIds = subNarrative.organizationIds || [];
     const hasNetwork = personIds.length > 0 || orgIds.length > 0;
 
+    // #region agent log
+    fetch('http://127.0.0.1:7244/ingest/9cc373a4-2b71-4806-8abc-5cae74c1b7ac',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'SubNarrativeView.js:fetchSubNarrativeData',message:'data availability',data:{hasVolumeData,locationsCount:locations?.length,eventsCount:events?.length,personIdsCount:personIds?.length,orgIdsCount:orgIds?.length,hasNetwork,factionsCount:factions?.length},timestamp:Date.now(),sessionId:'debug-session',hypothesisId:'B'})}).catch(()=>{});
+    // #endregion
     return {
       parentNarrative, factionData, factions, factionOverlaps,
       hasVolumeData, locations, events, personIds, orgIds, hasNetwork
@@ -126,6 +138,9 @@ export class SubNarrativeView extends BaseView {
 
   buildCardsHtml(subNarrative, data) {
     const cards = [];
+    // #region agent log
+    fetch('http://127.0.0.1:7244/ingest/9cc373a4-2b71-4806-8abc-5cae74c1b7ac',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'SubNarrativeView.js:buildCardsHtml',message:'card conditions',data:{hasVolumeData:data.hasVolumeData,factionDataLen:data.factionData?.length,factionsLen:data.factions?.length,locationsLen:data.locations?.length,eventsLen:data.events?.length,hasNetwork:data.hasNetwork},timestamp:Date.now(),sessionId:'debug-session',hypothesisId:'C'})}).catch(()=>{});
+    // #endregion
 
     if (data.hasVolumeData) {
       cards.push(CardBuilder.create('Volume by Faction Over Time', 'sub-volume-chart'));
@@ -155,6 +170,9 @@ export class SubNarrativeView extends BaseView {
       }));
     }
 
+    // #region agent log
+    fetch('http://127.0.0.1:7244/ingest/9cc373a4-2b71-4806-8abc-5cae74c1b7ac',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'SubNarrativeView.js:buildCardsHtml',message:'cards built',data:{cardsCount:cards.length,cardsHtmlLength:cards.join('').length},timestamp:Date.now(),sessionId:'debug-session',hypothesisId:'C'})}).catch(()=>{});
+    // #endregion
     return cards.join('');
   }
 

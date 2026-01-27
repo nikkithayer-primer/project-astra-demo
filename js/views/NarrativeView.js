@@ -299,7 +299,7 @@ export class NarrativeView extends BaseView {
     // Themes List
     if (subNarratives.length > 0) {
       this.components.subNarrativeList = new SubNarrativeList('narrative-subnarratives', {
-        onSubNarrativeClick: (s) => {
+        onItemClick: (s) => {
           window.location.hash = `#/subnarrative/${s.id}`;
         }
       });

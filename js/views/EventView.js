@@ -289,7 +289,7 @@ export class EventView extends BaseView {
     if (narratives.length > 0) {
       this.components.narrativeList = new NarrativeList('event-narratives', {
         maxItems: 8,
-        onNarrativeClick: (n) => {
+        onItemClick: (n) => {
           window.location.hash = `#/narrative/${n.id}`;
         }
       });

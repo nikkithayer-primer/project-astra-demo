@@ -1,6 +1,6 @@
 /**
  * WorkspacesView.js
- * Organize your analysis into focused workspaces
+ * Search results with documents, analysis, and AI chat
  */
 
 import { BaseView } from './BaseView.js';
@@ -15,9 +15,9 @@ export class WorkspacesView extends BaseView {
       <div class="view-header">
         <div>
           <h1 class="view-title">Workspaces</h1>
-          <p class="view-subtitle">Organize your analysis into focused workspaces</p>
+          <p class="view-subtitle">Search results with documents, analysis, and AI chat</p>
         </div>
-        <button class="btn btn-primary">+ New Workspace</button>
+        <button class="btn btn-small btn-primary">+ New Workspace</button>
       </div>
       
       <div class="content-grid">
@@ -27,11 +27,10 @@ export class WorkspacesView extends BaseView {
             <span class="tag">Active</span>
           </div>
           <div class="card-body">
-            <p class="text-sm text-secondary mb-md">Tracking narratives related to election security and voting processes.</p>
+            <p class="text-sm text-secondary mb-md">Search: "election security voting fraud 2024"</p>
             <div class="flex gap-sm">
+              <span class="badge">847 Documents</span>
               <span class="badge">12 Narratives</span>
-              <span class="badge">4 Factions</span>
-              <span class="badge">8 Monitors</span>
             </div>
             <p class="text-xs text-muted mt-md">Last updated 2 hours ago</p>
           </div>
@@ -43,11 +42,10 @@ export class WorkspacesView extends BaseView {
             <span class="tag">Active</span>
           </div>
           <div class="card-body">
-            <p class="text-sm text-secondary mb-md">Monitoring false claims about climate science and policy.</p>
+            <p class="text-sm text-secondary mb-md">Search: "climate change denial misinformation"</p>
             <div class="flex gap-sm">
+              <span class="badge">523 Documents</span>
               <span class="badge">8 Narratives</span>
-              <span class="badge">6 Factions</span>
-              <span class="badge">3 Monitors</span>
             </div>
             <p class="text-xs text-muted mt-md">Last updated 5 hours ago</p>
           </div>
@@ -59,11 +57,10 @@ export class WorkspacesView extends BaseView {
             <span class="tag tag-neutral">Archived</span>
           </div>
           <div class="card-body">
-            <p class="text-sm text-secondary mb-md">Historical analysis of health-related false claims.</p>
+            <p class="text-sm text-secondary mb-md">Search: "vaccine misinformation health claims"</p>
             <div class="flex gap-sm">
+              <span class="badge">1,204 Documents</span>
               <span class="badge">24 Narratives</span>
-              <span class="badge">9 Factions</span>
-              <span class="badge">0 Monitors</span>
             </div>
             <p class="text-xs text-muted mt-md">Archived 3 weeks ago</p>
           </div>

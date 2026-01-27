@@ -242,7 +242,7 @@ export class LocationView extends BaseView {
     if (narratives.length > 0) {
       this.components.narrativeList = new NarrativeList('location-narratives', {
         maxItems: 8,
-        onNarrativeClick: (n) => {
+        onItemClick: (n) => {
           window.location.hash = `#/narrative/${n.id}`;
         }
       });

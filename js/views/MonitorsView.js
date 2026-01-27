@@ -13,7 +13,7 @@ import { TimelineVolumeComposite } from '../components/TimelineVolumeComposite.j
 import { VennDiagram } from '../components/VennDiagram.js';
 import { SentimentChart } from '../components/SentimentChart.js';
 import { NetworkGraph } from '../components/NetworkGraph.js';
-import { DocumentList } from '../components/DocumentList.js';
+import { DocumentTable } from '../components/DocumentTable.js';
 import { MapView } from '../components/MapView.js';
 import { CardBuilder } from '../utils/CardBuilder.js';
 import { initAllCardToggles } from '../utils/cardWidthToggle.js';
@@ -532,7 +532,7 @@ export class MonitorsView extends BaseView {
         showSubNarratives: true,
         maxSubNarratives: 3,
         defaultShowDescription: false,
-        onNarrativeClick: (n) => {
+        onItemClick: (n) => {
           window.location.hash = `#/narrative/${n.id}`;
         }
       });
@@ -642,7 +642,7 @@ export class MonitorsView extends BaseView {
         showSparkline: true,
         showVolume: true,
         showDuration: true,
-        onTopicClick: (t) => {
+        onItemClick: (t) => {
           // Topics might not have their own detail page, so we can show documents
           console.log('Topic clicked:', t);
         }
@@ -840,17 +840,16 @@ export class MonitorsView extends BaseView {
       .sort((a, b) => new Date(b.publishedDate) - new Date(a.publishedDate));
     
     if (documents.length > 0) {
-      const docList = new DocumentList(container, {
+      const docTable = new DocumentTable(container, {
+        columns: ['publisherName', 'title', 'excerpt', 'publishedDate'],
         maxItems: 8,
-        showExcerpt: true,
-        showPublisher: true,
-        showDate: true,
+        enableViewerMode: true,
         onDocumentClick: (doc) => {
           window.location.hash = `#/document/${doc.id}`;
         }
       });
-      docList.update({ documents });
-      this.visualizationComponents.push({ monitorId: monitor.id, component: docList, type: 'documents' });
+      docTable.update({ documents });
+      this.visualizationComponents.push({ monitorId: monitor.id, component: docTable, type: 'documents' });
     } else {
       this.showEmptyVisualization(container, 'No documents found');
     }

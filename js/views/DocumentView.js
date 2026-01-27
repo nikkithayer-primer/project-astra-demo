@@ -356,7 +356,7 @@ export class DocumentView extends BaseView {
     if (narratives.length > 0) {
       this.components.narrativeList = new NarrativeList('doc-narratives', {
         maxItems: 10,
-        onNarrativeClick: (n) => {
+        onItemClick: (n) => {
           window.location.hash = `#/narrative/${n.id}`;
         }
       });
@@ -367,7 +367,7 @@ export class DocumentView extends BaseView {
     if (subNarratives.length > 0) {
       this.components.subNarrativeList = new SubNarrativeList('doc-subnarratives', {
         maxItems: 10,
-        onSubNarrativeClick: (s) => {
+        onItemClick: (s) => {
           window.location.hash = `#/subnarrative/${s.id}`;
         }
       });

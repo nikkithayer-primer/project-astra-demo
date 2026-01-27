@@ -48,12 +48,13 @@ export class DashboardView extends BaseView {
     }
 
     this.container.innerHTML = `
-      <div class="page-header page-header-with-stats">
-        <div class="page-header-content">
-          <h1>${datasetName}</h1>
-          <p class="subtitle">${subtitle}</p>
-        </div>
-        <div class="stats-grid">
+      <div class="page-header page-header-with-tabs">
+        <div class="page-header-top-row">
+          <div class="page-header-content">
+            <h1>${datasetName}</h1>
+            <p class="subtitle">${subtitle}</p>
+          </div>
+          <div class="stats-grid">
           <div class="stat-card clickable" data-href="#/narratives">
             <svg class="stat-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.25">
               <path d="M2 2h12v12H2z" rx="1"/>
@@ -111,6 +112,27 @@ export class DashboardView extends BaseView {
             </svg>
             <div class="stat-value">${stats.totalPersons + stats.totalOrganizations}</div>
             <div class="stat-label">Entities</div>
+          </div>
+        </div>
+        </div>
+        <div class="page-header-tabs page-header-filters">
+          <div class="filter-group mission-filter-group">
+            <label for="mission-filter">Mission</label>
+            <select id="mission-filter">
+              <option value="all">All Missions</option>
+            </select>
+          </div>
+          <div class="filter-group time-filter-group">
+            <label>Time Range</label>
+            <div class="time-filter-wrapper">
+              <div id="time-range-filter"></div>
+              <span id="time-range-label" class="time-range-label">All Time</span>
+              <button id="clear-time-filter" class="clear-filter-btn" title="Clear time filter">
+                <svg viewBox="0 0 16 16" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M4 4l8 8M12 4l-8 8"/>
+                </svg>
+              </button>
+            </div>
           </div>
         </div>
       </div>
@@ -284,7 +306,7 @@ export class DashboardView extends BaseView {
     // Top Narratives List
     this.components.narrativeList = new NarrativeList('dashboard-narrative-list', {
       maxItems: 8,
-      onNarrativeClick: (n) => {
+      onItemClick: (n) => {
         window.location.hash = `#/narrative/${n.id}`;
       }
     });
@@ -302,7 +324,7 @@ export class DashboardView extends BaseView {
       this.components.topicList = new TopicList('dashboard-topic-list', {
         maxItems: 6,
         showBulletPoints: false,
-        onTopicClick: (t) => {
+        onItemClick: (t) => {
           window.location.hash = `#/topic/${t.id}`;
         }
       });

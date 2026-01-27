@@ -244,7 +244,7 @@ export class EditorView {
       showSparkline: true,
       showVolume: true,
       showSentiment: false,
-      onNarrativeClick: (narrative) => {
+      onItemClick: (narrative) => {
         this.showNarrativeActions(narrative);
       }
     });

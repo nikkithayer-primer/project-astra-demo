@@ -1,6 +1,6 @@
 /**
  * ProjectsView.js
- * Manage and track your analysis projects
+ * Curated collections of items saved from searches
  */
 
 import { BaseView } from './BaseView.js';
@@ -15,9 +15,9 @@ export class ProjectsView extends BaseView {
       <div class="view-header">
         <div>
           <h1 class="view-title">Projects</h1>
-          <p class="view-subtitle">Manage and track your analysis projects</p>
+          <p class="view-subtitle">Curated collections of items from your searches</p>
         </div>
-        <button class="btn btn-primary">+ New Project</button>
+        <button class="btn btn-small btn-primary">+ New Project</button>
       </div>
       
       <div class="content-area">
@@ -30,7 +30,7 @@ export class ProjectsView extends BaseView {
                   <path d="M3 7V5a2 2 0 012-2h5l2 2"/>
                 </svg>
                 <h2 style="font-size: var(--text-lg); font-weight: 500; color: var(--text-primary); margin-bottom: var(--space-sm);">Projects</h2>
-                <p class="text-secondary text-sm">Projects feature coming soon. This will allow you to organize your analysis work into discrete projects with dedicated resources and collaborators.</p>
+                <p class="text-secondary text-sm">Projects feature coming soon. Save and organize items from your searches into curated collections that you can revisit and build upon over time.</p>
               </div>
             </div>
           </div>

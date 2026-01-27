@@ -42,9 +42,6 @@ class App {
   async init() {
     // Initialize with the currently selected dataset
     this.initializeDataset();
-
-    // Populate mission filter
-    this.populateMissionFilter();
     
     // Initialize dataset switcher
     this.initDatasetSwitcher();
@@ -65,34 +62,16 @@ class App {
     // Show initial page summary
     setTimeout(() => this.updatePageSummary(), 100);
 
-    // Subscribe to data changes
+    // Subscribe to data changes - refresh filters if on dashboard
     this.dataStore.subscribe(() => {
-      this.populateMissionFilter();
-      // Also refresh time filter when data changes
       if (this.router) {
         this.router.refreshTimeFilter();
+        // Re-populate mission filter if on dashboard
+        if (this.router.currentRoute === 'dashboard') {
+          this.router.populateMissionFilter();
+        }
       }
     });
-  }
-
-  /**
-   * Populate mission filter dropdown
-   */
-  populateMissionFilter() {
-    const select = document.getElementById('mission-filter');
-    if (!select) return;
-
-    const missions = DataService.getMissions();
-    const currentValue = select.value;
-
-    select.innerHTML = `
-      <option value="all">All Missions</option>
-      ${missions.map(m => `
-        <option value="${m.id}" ${currentValue === m.id ? 'selected' : ''}>
-          ${m.name}
-        </option>
-      `).join('')}
-    `;
   }
 
   /**
@@ -125,13 +104,9 @@ class App {
     // Update UI indicators
     this.updateDatasetIndicators(datasetId);
     
-    // Repopulate mission filter with new missions
-    this.populateMissionFilter();
-    
-    // Reset the mission filter to 'all'
-    const missionFilter = document.getElementById('mission-filter');
-    if (missionFilter) {
-      missionFilter.value = 'all';
+    // Reset the mission filter state in router
+    if (this.router) {
+      this.router.filters.missionId = 'all';
     }
     
     // Reinitialize router to refresh views

@@ -147,7 +147,7 @@ export class ListView extends BaseView {
         showStatus: true,
         showSparkline: true,
         showVolume: true,
-        onNarrativeClick: (narrative) => {
+        onItemClick: (narrative) => {
           window.location.hash = `#/narrative/${narrative.id}`;
         }
       });

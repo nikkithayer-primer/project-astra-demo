@@ -1194,7 +1194,7 @@ export class DocumentTable extends BaseComponent {
         maxItems: 10,
         showSparkline: false,
         showVolume: false,
-        onNarrativeClick: (n) => {
+        onItemClick: (n) => {
           window.location.hash = `#/narrative/${n.id}`;
         }
       });
@@ -1205,7 +1205,7 @@ export class DocumentTable extends BaseComponent {
     if (subNarratives.length > 0 && document.getElementById('doc-details-themes')) {
       this.detailsThemeList = new SubNarrativeList('doc-details-themes', {
         maxItems: 10,
-        onSubNarrativeClick: (s) => {
+        onItemClick: (s) => {
           window.location.hash = `#/subnarrative/${s.id}`;
         }
       });

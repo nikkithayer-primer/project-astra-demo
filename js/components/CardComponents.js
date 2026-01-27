@@ -317,7 +317,7 @@ export class NarrativeListCard extends BaseCardComponent {
 
     this.component = new NarrativeList(this.containerId, {
       maxItems: this.maxItems,
-      onNarrativeClick: (n) => {
+      onItemClick: (n) => {
         window.location.hash = `#/narrative/${n.id}`;
       }
     });

@@ -284,7 +284,7 @@ export class FactionView extends BaseView {
     if (narratives.length > 0) {
       this.components.narrativeList = new NarrativeList('faction-narratives', {
         maxItems: 8,
-        onNarrativeClick: (n) => {
+        onItemClick: (n) => {
           window.location.hash = `#/narrative/${n.id}`;
         }
       });

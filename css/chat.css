@@ -9,6 +9,11 @@
   margin-left: auto;
 }
 
+/* Chat toggle in navbar */
+.top-navbar .chat-toggle-btn {
+  margin-left: var(--space-md);
+}
+
 .chat-toggle-btn {
   display: flex;
   align-items: center;

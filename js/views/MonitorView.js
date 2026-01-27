@@ -336,7 +336,7 @@ export class MonitorView extends BaseView {
         showSubNarratives: true,
         maxSubNarratives: 3,
         defaultShowDescription: false,
-        onNarrativeClick: (n) => {
+        onItemClick: (n) => {
           window.location.hash = `#/narrative/${n.id}`;
         }
       });
@@ -407,7 +407,7 @@ export class MonitorView extends BaseView {
         showVolume: true,
         showDuration: true,
         showBulletPoints: false,
-        onTopicClick: (t) => {
+        onItemClick: (t) => {
           // Navigate to topic if route exists, otherwise show details
           console.log('Topic clicked:', t.id);
         }

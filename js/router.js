@@ -91,15 +91,6 @@ export class Router {
    */
   init() {
     try {
-      // Set up mission filter listener
-      this.initMissionFilter();
-      
-      // Set up time range filter
-      this.initTimeRangeFilter();
-      
-      // Set up clear time filter button
-      this.initClearTimeFilterButton();
-
       // Navigate to current hash or default to dashboard
       if (!window.location.hash || window.location.hash === '#/') {
         window.location.hash = '#/dashboard';
@@ -111,6 +102,46 @@ export class Router {
       // Try to at least show the dashboard
       window.location.hash = '#/dashboard';
     }
+  }
+
+  /**
+   * Initialize dashboard filters (called after dashboard renders)
+   */
+  initDashboardFilters() {
+    // Set up mission filter listener
+    this.initMissionFilter();
+    
+    // Populate mission filter options
+    this.populateMissionFilter();
+    
+    // Set up time range filter
+    this.initTimeRangeFilter();
+    
+    // Set up clear time filter button
+    this.initClearTimeFilterButton();
+    
+    // Update time range label based on current state
+    this.updateTimeRangeLabel(this.filters.timeRange);
+  }
+
+  /**
+   * Populate mission filter dropdown with available missions
+   */
+  populateMissionFilter() {
+    const select = document.getElementById('mission-filter');
+    if (!select) return;
+
+    const missions = DataService.getMissions();
+    const currentValue = this.filters.missionId || 'all';
+
+    select.innerHTML = `
+      <option value="all">All Missions</option>
+      ${missions.map(m => `
+        <option value="${m.id}" ${currentValue === m.id ? 'selected' : ''}>
+          ${m.name}
+        </option>
+      `).join('')}
+    `;
   }
 
   /**
@@ -319,10 +350,14 @@ export class Router {
       tab: queryParams.tab || 'dashboard' // Default to dashboard tab
     };
 
+    // Track if this is the dashboard route for filter initialization
+    let isDashboard = false;
+
     // Route to appropriate view
     switch (route) {
       case 'dashboard':
         this.currentView = new DashboardView(this.container, filterOptions);
+        isDashboard = true;
         break;
 
       case 'narrative':
@@ -473,6 +508,11 @@ export class Router {
     if (this.currentView && this.currentView.render) {
       try {
         this.currentView.render();
+        
+        // Initialize dashboard filters after render
+        if (isDashboard) {
+          this.initDashboardFilters();
+        }
       } catch (e) {
         console.error(`Router: Error rendering view for route '${route}':`, e);
         this.showErrorPage('Page Error', `An error occurred while loading ${route || 'this page'}.`);
