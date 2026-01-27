@@ -32,14 +32,28 @@ const AVAILABLE_COLUMNS = {
 // Default columns to show
 const DEFAULT_COLUMNS = ['classification', 'documentType', 'publisherName', 'title', 'publishedDate', 'narratives', 'persons'];
 
-// Publisher types with labels
-const PUBLISHER_TYPES = {
-  all: 'All Sources',
-  social: 'Social Media',
-  national_news: 'National News',
-  international_news: 'International News',
+// Document type labels for display (matches what's shown in the Type column)
+const DOCUMENT_TYPE_LABELS = {
+  news_article: 'News Article',
+  social_post: 'Social Post',
+  tiktok: 'TikTok',
   internal: 'Internal'
 };
+
+/**
+ * Get document type options dynamically from actual data
+ * @returns {Object} Map of type keys to labels
+ */
+function getDocumentTypeOptions() {
+  const documents = DataService.getDocuments();
+  const types = new Set(documents.map(d => d.documentType).filter(Boolean));
+  
+  const options = { all: 'All Types' };
+  for (const type of types) {
+    options[type] = DOCUMENT_TYPE_LABELS[type] || type.replace(/_/g, ' ').replace(/\b\w/g, c => c.toUpperCase());
+  }
+  return options;
+}
 
 export class DocumentsView extends BaseView {
   constructor(container, options = {}) {
@@ -50,18 +64,18 @@ export class DocumentsView extends BaseView {
     // Default columns
     this.selectedColumns = [...DEFAULT_COLUMNS];
     
-    // Filter state
-    this.publisherTypeFilter = 'all';
+    // Filter state - filter by document type (matches Type column)
+    this.documentTypeFilter = 'all';
   }
 
   async render() {
     let documents = DataService.getDocuments();
     
-    // Apply publisher type filter
-    if (this.publisherTypeFilter !== 'all') {
+    // Apply document type filter (matches what's shown in the Type column)
+    if (this.documentTypeFilter !== 'all') {
       documents = documents.filter(doc => {
-        const publisher = DataService.getPublisherForDocument(doc.id);
-        return publisher && publisher.type === this.publisherTypeFilter;
+        const docType = doc.documentType || 'news_article';
+        return docType === this.documentTypeFilter;
       });
     }
     
@@ -72,9 +86,10 @@ export class DocumentsView extends BaseView {
       return dateB - dateA;
     });
 
-    // Build publisher type options
-    const publisherTypeOptionsHtml = Object.entries(PUBLISHER_TYPES).map(([key, label]) => {
-      const selected = this.publisherTypeFilter === key ? 'selected' : '';
+    // Build document type options dynamically from actual data
+    const documentTypeOptions = getDocumentTypeOptions();
+    const documentTypeOptionsHtml = Object.entries(documentTypeOptions).map(([key, label]) => {
+      const selected = this.documentTypeFilter === key ? 'selected' : '';
       return `<option value="${key}" ${selected}>${label}</option>`;
     }).join('');
 
@@ -94,11 +109,11 @@ export class DocumentsView extends BaseView {
           <div class="card-header">
             <span class="card-title">All Documents</span>
             <div class="card-header-actions">
-              <!-- Publisher Type Filter -->
+              <!-- Document Type Filter -->
               <div class="filter-control">
-                <label class="filter-label">Source Type</label>
-                <select id="publisher-type-filter" class="filter-select">
-                  ${publisherTypeOptionsHtml}
+                <label class="filter-label">Type</label>
+                <select id="document-type-filter" class="filter-select">
+                  ${documentTypeOptionsHtml}
                 </select>
               </div>
               
@@ -157,11 +172,11 @@ export class DocumentsView extends BaseView {
   }
 
   attachFilterListeners() {
-    // Publisher type filter
-    const publisherTypeSelect = document.getElementById('publisher-type-filter');
-    if (publisherTypeSelect) {
-      publisherTypeSelect.addEventListener('change', (e) => {
-        this.publisherTypeFilter = e.target.value;
+    // Document type filter
+    const documentTypeSelect = document.getElementById('document-type-filter');
+    if (documentTypeSelect) {
+      documentTypeSelect.addEventListener('change', (e) => {
+        this.documentTypeFilter = e.target.value;
         this.render();
       });
     }

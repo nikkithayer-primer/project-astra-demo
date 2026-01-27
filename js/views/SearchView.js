@@ -13,9 +13,32 @@ export class SearchView extends BaseView {
     this.searchQuery = '';
     this.matchCount = 0;
     this.debounceTimer = null;
+    // All repositories selected by default
+    this.selectedRepositories = new Set();
+  }
+
+  /**
+   * Initialize selected repositories from data
+   */
+  initializeRepositories() {
+    const repositories = DataService.getRepositories();
+    // Select all repositories by default
+    this.selectedRepositories = new Set(repositories.map(r => r.id));
+  }
+
+  /**
+   * Get the currently selected repository IDs as an array
+   */
+  getSelectedRepositoryIds() {
+    return Array.from(this.selectedRepositories);
   }
 
   async render() {
+    // Initialize repositories if not already done
+    if (this.selectedRepositories.size === 0) {
+      this.initializeRepositories();
+    }
+
     this.container.innerHTML = `
       <div class="page-header">
         <h1>Search</h1>
@@ -48,6 +71,11 @@ export class SearchView extends BaseView {
             </div>
           </div>
           
+          <div class="search-repositories">
+            <span class="repository-label text-secondary text-sm">Repositories:</span>
+            ${this.renderRepositoryCheckboxes()}
+          </div>
+          
           <div class="search-hint">
             <p class="text-secondary text-sm">Type a query and press <kbd>Enter</kbd> to create a workspace with matching documents.</p>
           </div>
@@ -60,6 +88,31 @@ export class SearchView extends BaseView {
     // Focus the search input
     const input = document.getElementById('search-input');
     if (input) input.focus();
+  }
+
+  /**
+   * Render repository filter checkboxes
+   */
+  renderRepositoryCheckboxes() {
+    const repositories = DataService.getRepositories();
+    if (!repositories || repositories.length === 0) {
+      return '<span class="text-muted text-sm">No repositories available</span>';
+    }
+    
+    return repositories.map(repo => {
+      const isChecked = this.selectedRepositories.has(repo.id);
+      return `
+        <label class="repository-checkbox">
+          <input 
+            type="checkbox" 
+            name="repository" 
+            value="${repo.id}" 
+            ${isChecked ? 'checked' : ''}
+          />
+          ${this.escapeHtml(repo.code)}
+        </label>
+      `;
+    }).join('');
   }
 
   /**
@@ -104,6 +157,21 @@ export class SearchView extends BaseView {
         this.clearSearch();
       });
     }
+
+    // Repository checkbox handlers
+    const repoCheckboxes = this.container.querySelectorAll('input[name="repository"]');
+    repoCheckboxes.forEach(checkbox => {
+      checkbox.addEventListener('change', (e) => {
+        const repoId = e.target.value;
+        if (e.target.checked) {
+          this.selectedRepositories.add(repoId);
+        } else {
+          this.selectedRepositories.delete(repoId);
+        }
+        // Update match count with new repository selection
+        this.updateMatchCount();
+      });
+    });
   }
 
   /**
@@ -133,7 +201,9 @@ export class SearchView extends BaseView {
       return;
     }
 
-    const results = DataService.search(query);
+    const results = DataService.search(query, {
+      repositoryIds: this.getSelectedRepositoryIds()
+    });
     this.matchCount = results.documents.length;
     
     if (countContainer) {
@@ -149,15 +219,25 @@ export class SearchView extends BaseView {
     const query = this.searchQuery.trim();
     if (query.length < 2) return;
 
-    const results = DataService.search(query);
+    const repositoryIds = this.getSelectedRepositoryIds();
+    const results = DataService.search(query, { repositoryIds });
     const documentIds = results.documents.map(d => d.id);
+
+    // Build description including repository filter info
+    const repositories = DataService.getRepositories();
+    const selectedRepos = repositories.filter(r => repositoryIds.includes(r.id));
+    const repoNames = selectedRepos.map(r => r.code).join(', ');
+    const description = repositoryIds.length === repositories.length
+      ? `Search results for "${query}"`
+      : `Search results for "${query}" in ${repoNames}`;
 
     // Create the workspace (even if no documents match)
     const workspaceId = dataStore.createWorkspace({
       name: query,
       query: query,
-      description: `Search results for "${query}"`,
+      description: description,
       documentIds: documentIds,
+      filters: { repositoryIds },
       status: 'active'
     });
 

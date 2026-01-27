@@ -274,7 +274,7 @@ describe('DataStore', () => {
       const narrative = dataStore.data.narratives[0];
       expect(narrative.text).toBe('Test narrative');
       expect(narrative.missionId).toBe('mission-1');
-      expect(narrative.subNarrativeIds).toEqual([]);
+      expect(narrative.themeIds).toEqual([]);
     });
 
     it('updates narrative', () => {
@@ -286,46 +286,46 @@ describe('DataStore', () => {
       expect(dataStore.data.narratives[0].text).toBe('Updated');
     });
 
-    it('deletes narrative and associated sub-narratives', () => {
+    it('deletes narrative and associated themes', () => {
       const narrId = dataStore.createNarrative({ text: 'Test' });
-      dataStore.createSubNarrative({ text: 'Sub', parentNarrativeId: narrId });
+      dataStore.createTheme({ text: 'Theme', parentNarrativeId: narrId });
       
-      expect(dataStore.data.subNarratives.length).toBe(1);
+      expect(dataStore.data.themes.length).toBe(1);
       
       dataStore.deleteNarrative(narrId);
       
       expect(dataStore.data.narratives.length).toBe(0);
-      expect(dataStore.data.subNarratives.length).toBe(0);
+      expect(dataStore.data.themes.length).toBe(0);
     });
   });
 
-  describe('SubNarrative CRUD', () => {
+  describe('Theme CRUD', () => {
     beforeEach(() => {
       dataStore.createNarrative({ text: 'Parent narrative' });
     });
 
-    it('creates sub-narrative and links to parent', () => {
+    it('creates theme and links to parent', () => {
       const parentId = dataStore.data.narratives[0].id;
-      const subId = dataStore.createSubNarrative({
-        text: 'Sub narrative',
+      const themeId = dataStore.createTheme({
+        text: 'Theme',
         parentNarrativeId: parentId
       });
       
-      expect(subId).toMatch(/^sub-/);
-      expect(dataStore.data.narratives[0].subNarrativeIds).toContain(subId);
+      expect(themeId).toMatch(/^sub-/);
+      expect(dataStore.data.narratives[0].themeIds).toContain(themeId);
     });
 
-    it('deletes sub-narrative and removes from parent', () => {
+    it('deletes theme and removes from parent', () => {
       const parentId = dataStore.data.narratives[0].id;
-      const subId = dataStore.createSubNarrative({
-        text: 'Sub',
+      const themeId = dataStore.createTheme({
+        text: 'Theme',
         parentNarrativeId: parentId
       });
       
-      dataStore.deleteSubNarrative(subId);
+      dataStore.deleteTheme(themeId);
       
-      expect(dataStore.data.subNarratives.length).toBe(0);
-      expect(dataStore.data.narratives[0].subNarrativeIds).not.toContain(subId);
+      expect(dataStore.data.themes.length).toBe(0);
+      expect(dataStore.data.narratives[0].themeIds).not.toContain(themeId);
     });
   });
 
@@ -468,7 +468,7 @@ describe('DataStore', () => {
       
       expect(defaults).toHaveProperty('missions');
       expect(defaults).toHaveProperty('narratives');
-      expect(defaults).toHaveProperty('subNarratives');
+      expect(defaults).toHaveProperty('themes');
       expect(defaults).toHaveProperty('factions');
       expect(defaults).toHaveProperty('persons');
       expect(defaults).toHaveProperty('organizations');

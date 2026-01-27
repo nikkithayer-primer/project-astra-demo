@@ -28,7 +28,12 @@ export const publishers = [
   { id: 'pub-x', name: 'X', type: 'social', color: '#000000' },
   { id: 'pub-linkedin', name: 'LinkedIn', type: 'social', color: '#0A66C2' },
   { id: 'pub-weibo', name: 'Weibo', type: 'social', color: '#E6162D' },
-  { id: 'pub-reddit', name: 'Reddit', type: 'social', color: '#FF4500' }
+  { id: 'pub-reddit', name: 'Reddit', type: 'social', color: '#FF4500' },
+  
+  // Internal
+  { id: 'pub-dept-intel', name: 'Intelligence Analysis', type: 'internal', color: null },
+  { id: 'pub-dept-ops', name: 'Operations Division', type: 'internal', color: null },
+  { id: 'pub-dept-econ', name: 'Economic Analysis', type: 'internal', color: null }
 ];
 
 export const publisherCategories = [

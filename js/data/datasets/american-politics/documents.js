@@ -8,6 +8,7 @@ export const documents = [
   {
     id: 'doc-001',
     documentType: 'news_article',
+    repositoryId: 'repo-news',
     classification: 'U',
     title: 'Macron warns of world where "international law is trampled" in Davos speech',
     url: 'https://reuters.com/world/macron-davos-trump-greenland-2026',
@@ -114,6 +115,7 @@ export const documents = [
   {
     id: 'doc-002',
     documentType: 'news_article',
+    repositoryId: 'repo-news',
     classification: 'U',
     title: 'Trump posts private Macron message on social media: "I do not understand what you are doing"',
     url: 'https://cnn.com/politics/trump-macron-greenland-message',
@@ -154,6 +156,7 @@ export const documents = [
   {
     id: 'doc-003',
     documentType: 'news_article',
+    repositoryId: 'repo-news',
     classification: 'U',
     title: 'Von der Leyen calls for "new form of European independence" amid Trump tensions',
     url: 'https://bbc.com/news/world-europe-von-der-leyen-independence',
@@ -195,6 +198,7 @@ export const documents = [
   {
     id: 'doc-004',
     documentType: 'news_article',
+    repositoryId: 'repo-news',
     classification: 'U',
     title: 'Greenland PM: "We demand respect for the world order"',
     url: 'https://guardian.com/world/greenland-pm-trump-response',
@@ -239,6 +243,7 @@ export const documents = [
   {
     id: 'doc-005',
     documentType: 'news_article',
+    repositoryId: 'repo-news',
     classification: 'U',
     title: 'DOJ plans subpoenas for Minnesota AG, governor over ICE protest "obstruction"',
     url: 'https://nytimes.com/2026/01/20/us/politics/doj-minnesota-subpoenas',
@@ -344,6 +349,7 @@ export const documents = [
   {
     id: 'doc-006',
     documentType: 'news_article',
+    repositoryId: 'repo-news',
     classification: 'U',
     title: 'Federal judge rules protesters cannot be arrested without cause, DOJ appeals',
     url: 'https://washingtonpost.com/national/minnesota-ice-ruling-appeal',
@@ -386,6 +392,7 @@ export const documents = [
   {
     id: 'doc-007',
     documentType: 'news_article',
+    repositoryId: 'repo-news',
     classification: 'U',
     title: 'FBI pivots civil rights probe from ICE agent to slain protester Renee Good',
     url: 'https://msnbc.com/news/fbi-renee-good-investigation-pivot',
@@ -435,6 +442,7 @@ export const documents = [
   {
     id: 'doc-008',
     documentType: 'news_article',
+    repositoryId: 'repo-news',
     classification: 'U',
     title: 'Protesters disrupt service at church where ICE official serves as pastor',
     url: 'https://cnn.com/us/minnesota-church-ice-protest',
@@ -477,6 +485,7 @@ export const documents = [
   {
     id: 'doc-009',
     documentType: 'news_article',
+    repositoryId: 'repo-news',
     classification: 'U',
     title: 'AG Bondi announces FACE Act investigation: "Full force of federal law"',
     url: 'https://foxnews.com/politics/bondi-face-act-church-protest',
@@ -519,6 +528,7 @@ export const documents = [
   {
     id: 'doc-010',
     documentType: 'news_article',
+    repositoryId: 'repo-news',
     classification: 'U',
     title: 'DOJ threatens charges against journalist Don Lemon for covering protest',
     url: 'https://guardian.com/media/don-lemon-doj-threat-minnesota',
@@ -561,6 +571,7 @@ export const documents = [
   {
     id: 'doc-011',
     documentType: 'social_post',
+    repositoryId: 'repo-osint',
     classification: 'U',
     title: 'Truth Social post: Trump responds to Minnesota church protest',
     excerpt: 'Former President Trump calls church protesters "professional troublemakers" and demands "LAW AND ORDER" in response to Minnesota demonstration.',
@@ -600,6 +611,7 @@ export const documents = [
   {
     id: 'doc-012',
     documentType: 'news_article',
+    repositoryId: 'repo-news',
     classification: 'U',
     title: 'Former NAACP president: "How can anyone who claims to be Christian condone this?"',
     url: 'https://cnn.com/us/nekima-levy-armstrong-ice-pastor-interview',
@@ -645,6 +657,7 @@ export const documents = [
   {
     id: 'doc-013',
     documentType: 'news_article',
+    repositoryId: 'repo-news',
     classification: 'U',
     title: 'Indiana judge and wife shot at home; suspect at large',
     url: 'https://cnn.com/us/indiana-judge-steven-meyer-shooting',
@@ -686,6 +699,7 @@ export const documents = [
   {
     id: 'doc-014',
     documentType: 'news_article',
+    repositoryId: 'repo-news',
     classification: 'U',
     title: 'Indiana Chief Justice to judges: "Please remain vigilant in your own security"',
     url: 'https://indystar.com/news/indiana-chief-justice-judges-security-warning',
@@ -730,6 +744,7 @@ export const documents = [
   {
     id: 'doc-015',
     documentType: 'news_article',
+    repositoryId: 'repo-news',
     classification: 'U',
     title: 'Judge allows DHS to require week notice for congressional facility inspections',
     url: 'https://politico.com/news/dhs-congressional-inspection-notice-ruling',
@@ -772,6 +787,7 @@ export const documents = [
   {
     id: 'doc-016',
     documentType: 'news_article',
+    repositoryId: 'repo-news',
     classification: 'U',
     title: 'DOJ calls Minnesota lawsuit an "absurdity" that undermines federal supremacy',
     url: 'https://reuters.com/legal/doj-minnesota-lawsuit-response',
@@ -814,6 +830,7 @@ export const documents = [
   {
     id: 'doc-017',
     documentType: 'news_article',
+    repositoryId: 'repo-news',
     classification: 'U',
     title: 'DHS Secretary Noem backtracks: Pepper spray was needed for "law and order"',
     url: 'https://cnn.com/politics/noem-pepper-spray-reversal',
@@ -859,6 +876,7 @@ export const documents = [
   {
     id: 'doc-018',
     documentType: 'news_article',
+    repositoryId: 'repo-news',
     classification: 'U',
     title: 'RFK Jr unveils meat-heavy dietary guidelines: "We are ending the war on saturated fats"',
     url: 'https://nytimes.com/2026/01/18/health/rfk-dietary-guidelines-meat',
@@ -901,6 +919,7 @@ export const documents = [
   {
     id: 'doc-019',
     documentType: 'news_article',
+    repositoryId: 'repo-news',
     classification: 'U',
     title: 'Scientists warn: New meat guidelines would require 100 million acres of farmland',
     url: 'https://guardian.com/environment/meat-guidelines-environmental-impact',
@@ -942,6 +961,7 @@ export const documents = [
   {
     id: 'doc-020',
     documentType: 'news_article',
+    repositoryId: 'repo-news',
     classification: 'U',
     title: 'RFK Jr in 2004: Factory meat industry is "bigger threat than Osama bin Laden"',
     url: 'https://msnbc.com/opinion/rfk-jr-meat-industry-past-quotes',
@@ -985,6 +1005,7 @@ export const documents = [
   {
     id: 'doc-021',
     documentType: 'news_article',
+    repositoryId: 'repo-news',
     classification: 'U',
     title: 'NutriNet-Santé study links sodium nitrite to 32% increased cancer risk',
     url: 'https://bbc.com/news/health-food-preservatives-cancer-study',
@@ -1025,6 +1046,7 @@ export const documents = [
   {
     id: 'doc-022',
     documentType: 'news_article',
+    repositoryId: 'repo-news',
     classification: 'U',
     title: 'Harvard: Ultra-processed foods linked to 45% higher colorectal cancer risk',
     url: 'https://cnn.com/health/harvard-processed-food-cancer-study',
@@ -1066,6 +1088,7 @@ export const documents = [
   {
     id: 'doc-023',
     documentType: 'social_post',
+    repositoryId: 'repo-osint',
     classification: 'U',
     title: 'TikTok: Health news channel covers RFK Jr. confirmation hearings',
     excerpt: 'Health-focused TikTok channel discusses potential changes to FDA food policy under potential HHS Secretary RFK Jr.',
@@ -1110,6 +1133,7 @@ export const documents = [
   {
     id: 'doc-024',
     documentType: 'social_post',
+    repositoryId: 'repo-osint',
     classification: 'U',
     title: 'X post: Immigrant rights group documents ICE raid',
     excerpt: 'Immigration rights advocacy account shares eyewitness reports and calls for community documentation of ICE activities in Minneapolis.',
@@ -1149,6 +1173,7 @@ export const documents = [
   {
     id: 'doc-025',
     documentType: 'social_post',
+    repositoryId: 'repo-osint',
     classification: 'U',
     title: 'Reddit post: Minneapolis resident describes ICE presence in neighborhood',
     excerpt: 'Reddit user shares account of increased ICE vehicle presence and activity in Minneapolis neighborhood.',
@@ -1194,10 +1219,11 @@ export const documents = [
   {
     id: 'doc-026',
     documentType: 'internal',
+    repositoryId: 'repo-edl',
     classification: 'S',
     url: null,
     publishedDate: '2026-01-19T09:00:00Z',
-    publisherId: null,
+    publisherId: 'pub-dept-ops',
     title: 'Situation Assessment: Federal-State Conflict in Minnesota Immigration Enforcement',
     author: 'Domestic Operations Division',
     department: 'Operations Division',
@@ -1273,10 +1299,11 @@ export const documents = [
   {
     id: 'doc-027',
     documentType: 'internal',
+    repositoryId: 'repo-edl',
     classification: 'S',
     url: null,
     publishedDate: '2026-01-21T08:00:00Z',
-    publisherId: null,
+    publisherId: 'pub-dept-intel',
     title: 'Diplomatic Assessment: Greenland Acquisition Rhetoric and Allied Response',
     author: 'European Affairs Division',
     department: 'Intelligence Analysis',
@@ -1334,10 +1361,11 @@ export const documents = [
   {
     id: 'doc-028',
     documentType: 'internal',
+    repositoryId: 'repo-edl',
     classification: 'TS',
     url: null,
     publishedDate: '2026-01-20T06:00:00Z',
-    publisherId: null,
+    publisherId: 'pub-dept-ops',
     title: 'Operational Briefing: Nationwide Immigration Enforcement Surge - Phase II',
     author: 'Operations Command',
     department: 'Operations Division',
@@ -1384,10 +1412,11 @@ export const documents = [
   {
     id: 'doc-029',
     documentType: 'internal',
+    repositoryId: 'repo-edl',
     classification: 'S',
     url: null,
     publishedDate: '2026-01-20T14:00:00Z',
-    publisherId: null,
+    publisherId: 'pub-dept-intel',
     title: 'Threat Assessment: Violence Against Judiciary - Lafayette Incident Analysis',
     author: 'Threat Analysis Unit',
     department: 'Intelligence Analysis',
@@ -1444,10 +1473,11 @@ export const documents = [
   {
     id: 'doc-030',
     documentType: 'internal',
+    repositoryId: 'repo-edl',
     classification: 'U',
     url: null,
     publishedDate: '2026-01-18T10:00:00Z',
-    publisherId: null,
+    publisherId: 'pub-dept-intel',
     title: 'Public Health Analysis: Food Preservative Research and Social Media Narratives',
     author: 'Public Health Monitoring Unit',
     department: 'Intelligence Analysis',
@@ -1494,10 +1524,11 @@ export const documents = [
   {
     id: 'doc-031',
     documentType: 'internal',
+    repositoryId: 'repo-edl',
     classification: 'C',
     url: null,
     publishedDate: '2026-01-18T16:00:00Z',
-    publisherId: null,
+    publisherId: 'pub-dept-intel',
     title: 'Intelligence Summary: Minneapolis Anti-ICE Protest Activity',
     author: 'Civil Unrest Monitoring Unit',
     department: 'Operations Division',

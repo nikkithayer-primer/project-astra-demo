@@ -827,6 +827,33 @@ class DataStore {
   }
 
   // ============================================
+  // Repository CRUD
+  // ============================================
+
+  createRepository(repo) {
+    const id = repo.id || this.generateId('repo');
+    this.data.repositories = this.data.repositories || [];
+    this.data.repositories.push({
+      id,
+      code: repo.code || '',
+      name: repo.name || '',
+      description: repo.description || '',
+      color: repo.color || this.generateColor(),
+      createdAt: new Date().toISOString()
+    });
+    this.save();
+    return id;
+  }
+
+  updateRepository(id, updates) {
+    return this.updateEntity('repositories', id, updates);
+  }
+
+  deleteRepository(id) {
+    return this.deleteEntity('repositories', id);
+  }
+
+  // ============================================
   // Helpers
   // ============================================
 
@@ -886,6 +913,7 @@ class DataStore {
       topics: [],
       publishers: [],
       publisherCategories: [],
+      repositories: [],
       monitors: [],
       alerts: [],
       users: [],

@@ -374,6 +374,41 @@ export const DataService = {
     return publishers.filter(p => p.type === 'international_news');
   },
 
+  // Repositories
+  getRepositories: () => {
+    return dataStore.data.repositories || [];
+  },
+  
+  getRepository: (id) => {
+    return findById('repositories', id);
+  },
+  
+  getRepositoryByCode: (code) => {
+    const repos = dataStore.data.repositories || [];
+    return repos.find(r => r.code === code);
+  },
+  
+  /**
+   * Get documents filtered by repository
+   * @param {string} repositoryId - Repository ID
+   * @returns {Array} Filtered documents
+   */
+  getDocumentsByRepository: (repositoryId) => {
+    return (dataStore.data.documents || []).filter(d => d.repositoryId === repositoryId);
+  },
+  
+  /**
+   * Get documents filtered by multiple repositories
+   * @param {string[]} repositoryIds - Array of repository IDs
+   * @returns {Array} Filtered documents
+   */
+  getDocumentsByRepositories: (repositoryIds) => {
+    if (!repositoryIds || repositoryIds.length === 0) {
+      return dataStore.data.documents || [];
+    }
+    return (dataStore.data.documents || []).filter(d => repositoryIds.includes(d.repositoryId));
+  },
+
   // ============================================
   // Narrative Relationships
   // ============================================
@@ -1966,6 +2001,13 @@ export const DataService = {
     const events = dataStore.data.events || [];
     const includeRelated = monitor.options?.includeRelatedEvents !== false;
     
+    // Get events linked to matched narratives (if scope includes narrativeIds)
+    const matchedNarratives = DataService.getNarrativesForMonitor(monitorId);
+    const narrativeEventIds = new Set();
+    matchedNarratives.forEach(n => {
+      (n.eventIds || []).forEach(eId => narrativeEventIds.add(eId));
+    });
+    
     // Helper to check if event matches a specific entity type
     const matchesEventIds = (event, eventIds) => {
       if (!eventIds || eventIds.length === 0) return null;
@@ -1991,6 +2033,9 @@ export const DataService = {
       // Direct event ID match always applies
       const directMatch = matchesEventIds(event, scope.eventIds);
       if (directMatch === true) return true;
+      
+      // Events linked to matched narratives are included
+      if (narrativeEventIds.has(event.id)) return true;
       
       // If not including related events, only match direct event IDs
       if (!includeRelated) return false;
@@ -2327,7 +2372,14 @@ export const DataService = {
   },
 
   // Search across all entities
-  search: (query) => {
+  /**
+   * Search across all entities
+   * @param {string} query - Search query string
+   * @param {Object} options - Optional search options
+   * @param {string[]} options.repositoryIds - Filter documents to these repositories (empty = all)
+   * @returns {Object} Search results by entity type
+   */
+  search: (query, options = {}) => {
     const results = {
       documents: [],
       narratives: [],
@@ -2344,12 +2396,21 @@ export const DataService = {
       return results;
     }
 
+    const { repositoryIds = [] } = options;
+
     try {
       const lowerQuery = query.toLowerCase();
       const queryTerms = lowerQuery.split(/\s+/).filter(t => t.length > 0);
       
       // Search documents by title, excerpt, and content blocks
-      results.documents = (dataStore.data?.documents || []).filter(doc => {
+      let documents = dataStore.data?.documents || [];
+      
+      // Apply repository filter if specified
+      if (repositoryIds.length > 0) {
+        documents = documents.filter(doc => repositoryIds.includes(doc.repositoryId));
+      }
+      
+      results.documents = documents.filter(doc => {
         if (!doc) return false;
         const titleMatch = doc.title && doc.title.toLowerCase().includes(lowerQuery);
         const excerptMatch = doc.excerpt && doc.excerpt.toLowerCase().includes(lowerQuery);

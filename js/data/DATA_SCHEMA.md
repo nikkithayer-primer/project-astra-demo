@@ -47,6 +47,7 @@ Each entity type uses a specific ID prefix. IDs are generated as `{prefix}-{time
 | Organization | `org-` | `org-1706234567890-abc123def` |
 | Topic | `topic-` | `topic-1706234567890-abc123def` |
 | Document | `doc-` | `doc-1706234567890-abc123def` |
+| Repository | `repo-` | `repo-news`, `repo-osint`, `repo-edl` |
 | Monitor | `monitor-` | `monitor-1706234567890-abc123def` |
 | Workspace | `workspace-` | `workspace-1706234567890-abc123def` |
 | Publisher | `pub-` | `pub-facebook`, `pub-nat-cnn` |
@@ -275,6 +276,7 @@ Source documents (news articles, social posts, internal reports). **Documents ar
   id: string,              // Required. Prefix: 'doc-'
   documentType: enum,      // Required. 'news_article' | 'social_media' | 'internal_report' | 
                            //           'intelligence_report' | 'memo' | 'transcript'
+  repositoryId: string,    // Required. FK to Repository (e.g., 'repo-news', 'repo-osint', 'repo-edl')
   classification: string,  // Optional. 'U' | 'C' | 'S' | 'TS'
   title: string,           // Required. Document title
   url: string,             // Optional. Source URL
@@ -356,29 +358,33 @@ Source documents (news articles, social posts, internal reports). **Documents ar
 
 ### Publisher
 
-Sources that publish documents.
+Sources that publish documents. All documents have a publisher, including internal documents (which use department names as publishers).
 
 ```javascript
 {
   id: string,              // Required. Prefix: 'pub-'
-  name: string,            // Required. Publisher name
-  type: enum,              // Required. 'social' | 'national_news' | 'international_news' | 'internal'
-  parent?: string,         // Optional. Category ID for hierarchical grouping
-  color: string            // Optional. Hex color for charts
+  name: string             // Required. Publisher name
 }
 ```
 
-### PublisherCategory
+### Repository
 
-Groups publishers by type.
+Data repositories that store documents. Each document belongs to exactly one repository. Repositories represent different data sources or collection systems.
 
 ```javascript
 {
-  id: string,              // Required. 'social' | 'national_news' | 'international_news' | 'internal'
+  id: string,              // Required. Prefix: 'repo-'
+  code: string,            // Required. Short uppercase code (e.g., 'NEWS', 'OSINT', 'EDL')
   name: string,            // Required. Display name
-  color: string            // Optional. Hex color
+  description: string,     // Optional. What this repository contains
+  color: string            // Optional. Hex color for UI
 }
 ```
+
+**Default Repositories:**
+- `repo-news` (NEWS) - News articles from external media sources
+- `repo-osint` (OSINT) - Social media posts and open-source intelligence
+- `repo-edl` (EDL) - Internal reports and intelligence documents
 
 ### User
 
@@ -495,6 +501,7 @@ User-defined collections for focused analysis.
 - Narrative → Themes (`theme.parentNarrativeId`)
 - Event → SubEvents (`subEvent.parentEventId`)
 - Event → Location (`event.locationId`)
+- Repository → Documents (`document.repositoryId`)
 - Publisher → Documents (`document.publisherId`)
 - Monitor → Alerts (`alert.monitorId`)
 

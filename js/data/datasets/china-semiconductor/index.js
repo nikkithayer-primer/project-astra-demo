@@ -4,6 +4,7 @@
  */
 
 import { publishers, publisherCategories } from './publishers.js';
+import { repositories } from './repositories.js';
 import { users } from './users.js';
 import { missions } from './missions.js';
 import { narratives } from './narratives.js';
@@ -59,6 +60,7 @@ export const datasetName = 'China Semiconductor';
 export const mockData = {
   publishers,
   publisherCategories,
+  repositories,
   users,
   missions,
   narratives,

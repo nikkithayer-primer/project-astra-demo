@@ -113,16 +113,16 @@ export class TimelineVolumeComposite extends BaseComponent {
       .attr('height', volumeHeight + timelineHeight);
 
     // Create main content group
-    const mainGroup = svg.append('g')
+    this.mainGroup = svg.append('g')
       .attr('transform', `translate(${margin.left}, ${margin.top})`);
 
     // Volume chart group
-    this.volumeGroup = mainGroup.append('g')
+    this.volumeGroup = this.mainGroup.append('g')
       .attr('class', 'volume-group')
       .attr('clip-path', `url(#composite-clip-${this.containerId})`);
 
     // Divider line between charts
-    mainGroup.append('line')
+    this.mainGroup.append('line')
       .attr('class', 'chart-divider')
       .attr('x1', 0)
       .attr('x2', innerWidth)
@@ -132,13 +132,13 @@ export class TimelineVolumeComposite extends BaseComponent {
       .attr('stroke-width', 1);
 
     // Timeline group
-    this.timelineGroup = mainGroup.append('g')
+    this.timelineGroup = this.mainGroup.append('g')
       .attr('class', 'timeline-group')
       .attr('transform', `translate(0, ${volumeHeight})`)
       .attr('clip-path', `url(#composite-clip-${this.containerId})`);
 
     // Shared axis group
-    this.axisGroup = mainGroup.append('g')
+    this.axisGroup = this.mainGroup.append('g')
       .attr('class', 'shared-axis')
       .attr('transform', `translate(0, ${volumeHeight + timelineHeight})`);
 
@@ -153,7 +153,7 @@ export class TimelineVolumeComposite extends BaseComponent {
     svg.call(this.zoom);
 
     // Legend group (below the axis)
-    this.legendGroup = mainGroup.append('g')
+    this.legendGroup = this.mainGroup.append('g')
       .attr('class', 'legend-group')
       .attr('transform', `translate(0, ${volumeHeight + timelineHeight + axisHeight + 10})`);
 
@@ -291,8 +291,8 @@ export class TimelineVolumeComposite extends BaseComponent {
 
     this.volumeGroup.select('.volume-grid path').remove();
 
-    // Y axis
-    this.volumeGroup.append('g')
+    // Y axis - rendered in mainGroup (not volumeGroup) to avoid clip-path clipping
+    this.mainGroup.append('g')
       .attr('class', 'y-axis')
       .call(d3.axisLeft(this.yScale)
         .ticks(4)
@@ -302,8 +302,8 @@ export class TimelineVolumeComposite extends BaseComponent {
       .attr('font-size', '10px')
       .attr('font-family', 'var(--font-sans)');
 
-    this.volumeGroup.selectAll('.y-axis path').attr('stroke', 'var(--border-color)');
-    this.volumeGroup.selectAll('.y-axis line').attr('stroke', 'var(--border-color)');
+    this.mainGroup.selectAll('.y-axis path').attr('stroke', 'var(--border-color)');
+    this.mainGroup.selectAll('.y-axis line').attr('stroke', 'var(--border-color)');
 
     // Area generator
     this.areaGenerator = d3.area()

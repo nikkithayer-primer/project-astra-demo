@@ -7,7 +7,7 @@ vi.mock('../js/data/DataStore.js', () => ({
   dataStore: {
     data: {
       narratives: [],
-      subNarratives: [],
+      themes: [],
       factions: [],
       factionOverlaps: [],
       locations: [],
@@ -38,18 +38,11 @@ describe('DataService', () => {
           text: 'Test narrative one',
           missionId: 'mission-1',
           status: 'new',
-          factionMentions: {
-            'faction-1': { volume: 100, sentiment: 0.5 },
-            'faction-2': { volume: 50, sentiment: -0.3 }
-          },
+          documentIds: ['doc-1', 'doc-2'],
           personIds: ['person-1', 'person-2'],
           organizationIds: ['org-1'],
           locationIds: ['loc-1'],
           eventIds: ['event-1'],
-          volumeOverTime: [
-            { date: '2024-01-01', factionVolumes: { 'faction-1': 10, 'faction-2': 5 } },
-            { date: '2024-01-02', factionVolumes: { 'faction-1': 15, 'faction-2': 8 } }
-          ],
           createdAt: '2024-01-01T10:00:00Z'
         },
         {
@@ -57,21 +50,18 @@ describe('DataService', () => {
           text: 'Test narrative two',
           missionId: 'mission-1',
           status: 'in_progress',
-          factionMentions: { 'faction-1': { volume: 200, sentiment: -0.2 } },
+          documentIds: ['doc-3'],
           personIds: ['person-2', 'person-3'],
           organizationIds: ['org-1', 'org-2'],
           locationIds: ['loc-2'],
           eventIds: ['event-2'],
-          volumeOverTime: [
-            { date: '2024-01-03', factionVolumes: { 'faction-1': 20 } }
-          ],
           createdAt: '2024-01-02T10:00:00Z'
         }
       ],
-      subNarratives: [
+      themes: [
         {
           id: 'sub-1',
-          text: 'Sub narrative',
+          text: 'Theme one',
           parentNarrativeId: 'narr-1',
           factionMentions: { 'faction-1': { volume: 30, sentiment: 0.2 } }
         }
@@ -101,7 +91,38 @@ describe('DataService', () => {
         { id: 'org-2', name: 'Organization Two', affiliatedFactionIds: ['faction-2'] }
       ],
       documents: [
-        { id: 'doc-1', title: 'Document One', publisherId: 'pub-1', publishedDate: '2024-01-01' }
+        { 
+          id: 'doc-1', 
+          title: 'Document One', 
+          publisherId: 'pub-1', 
+          publishedDate: '2024-01-01',
+          narrativeIds: ['narr-1'],
+          factionMentions: {
+            'faction-1': { sentiment: 0.5 },
+            'faction-2': { sentiment: -0.3 }
+          }
+        },
+        { 
+          id: 'doc-2', 
+          title: 'Document Two', 
+          publisherId: 'pub-1', 
+          publishedDate: '2024-01-02',
+          narrativeIds: ['narr-1'],
+          factionMentions: {
+            'faction-1': { sentiment: 0.6 },
+            'faction-2': { sentiment: -0.2 }
+          }
+        },
+        { 
+          id: 'doc-3', 
+          title: 'Document Three', 
+          publisherId: 'pub-1', 
+          publishedDate: '2024-01-03',
+          narrativeIds: ['narr-2'],
+          factionMentions: {
+            'faction-1': { sentiment: -0.2 }
+          }
+        }
       ],
       topics: [
         { id: 'topic-1', headline: 'Topic One', startDate: '2024-01-01', volumeOverTime: [{ date: '2024-01-01', volume: 100 }] }
@@ -356,23 +377,25 @@ describe('DataService', () => {
     it('handles empty/null query', () => {
       expect(DataService.search('')).toEqual({
         narratives: [],
-        subNarratives: [],
+        themes: [],
         topics: [],
         factions: [],
         locations: [],
         events: [],
         persons: [],
-        organizations: []
+        organizations: [],
+        documents: []
       });
       expect(DataService.search(null)).toEqual({
         narratives: [],
-        subNarratives: [],
+        themes: [],
         topics: [],
         factions: [],
         locations: [],
         events: [],
         persons: [],
-        organizations: []
+        organizations: [],
+        documents: []
       });
     });
   });
@@ -398,15 +421,15 @@ describe('DataService', () => {
     });
   });
 
-  describe('getSubNarrativesForNarrative', () => {
-    it('returns sub-narratives for a parent narrative', () => {
-      const result = DataService.getSubNarrativesForNarrative('narr-1');
+  describe('getThemesForNarrative', () => {
+    it('returns themes for a parent narrative', () => {
+      const result = DataService.getThemesForNarrative('narr-1');
       expect(result.length).toBe(1);
       expect(result[0].id).toBe('sub-1');
     });
 
-    it('returns empty array for narrative without sub-narratives', () => {
-      const result = DataService.getSubNarrativesForNarrative('narr-2');
+    it('returns empty array for narrative without themes', () => {
+      const result = DataService.getThemesForNarrative('narr-2');
       expect(result.length).toBe(0);
     });
   });

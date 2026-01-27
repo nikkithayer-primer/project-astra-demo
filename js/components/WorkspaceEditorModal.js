@@ -291,14 +291,17 @@ export class WorkspaceEditorModal {
         });
       }
 
+      // Save callback reference before closing (close() resets it to null)
+      const callback = this.onSaveCallback;
+
       // Close modal
       this.close();
 
       // Call success callback with workspace object
-      if (this.onSaveCallback && workspaceId) {
+      if (callback && workspaceId) {
         // Fetch the full workspace to pass to callback
         const workspace = (dataStore.data.workspaces || []).find(w => w.id === workspaceId);
-        this.onSaveCallback(workspace || { id: workspaceId });
+        callback(workspace || { id: workspaceId });
       }
     } catch (error) {
       console.error('Error saving workspace:', error);

@@ -8,6 +8,7 @@ export const documents = [
   {
     id: 'doc-001',
     documentType: 'news_article',
+    repositoryId: 'repo-news',
     classification: 'U',
     title: 'SMIC confirms 5nm chip mass production using DUV multi-patterning',
     url: 'https://semiengi.com/smic-5nm-duv-breakthrough-2026',
@@ -70,6 +71,7 @@ export const documents = [
   {
     id: 'doc-002',
     documentType: 'news_article',
+    repositoryId: 'repo-news',
     classification: 'U',
     title: 'China\'s SMIC achieves advanced chip production without EUV machines',
     url: 'https://scmp.com/tech/smic-5nm-no-euv-2026',
@@ -102,6 +104,7 @@ export const documents = [
   {
     id: 'doc-003',
     documentType: 'news_article',
+    repositoryId: 'repo-news',
     classification: 'U',
     title: 'Analysis: SMIC\'s 5nm achievement and what it means for export controls',
     url: 'https://semianalysis.com/smic-5nm-analysis',
@@ -144,6 +147,7 @@ export const documents = [
   {
     id: 'doc-004',
     documentType: 'news_article',
+    repositoryId: 'repo-news',
     classification: 'U',
     title: 'SMIC breakthrough raises questions about US chip strategy',
     url: 'https://bloomberg.com/smic-breakthrough-us-strategy',
@@ -176,6 +180,7 @@ export const documents = [
   {
     id: 'doc-005',
     documentType: 'news_article',
+    repositoryId: 'repo-news',
     classification: 'U',
     title: 'Netherlands expands ASML export restrictions to advanced DUV systems',
     url: 'https://reuters.com/netherlands-asml-duv-restrictions',
@@ -231,6 +236,7 @@ export const documents = [
   {
     id: 'doc-006',
     documentType: 'news_article',
+    repositoryId: 'repo-news',
     classification: 'U',
     title: 'ASML warns China restrictions will cut $2.5B from annual revenue',
     url: 'https://ft.com/asml-china-revenue-warning',
@@ -264,6 +270,7 @@ export const documents = [
   {
     id: 'doc-007',
     documentType: 'news_article',
+    repositoryId: 'repo-news',
     classification: 'U',
     title: 'Raimondo defends expanded chip controls as necessary for national security',
     url: 'https://wsj.com/raimondo-chip-controls-defense',
@@ -297,6 +304,7 @@ export const documents = [
   {
     id: 'doc-008',
     documentType: 'news_article',
+    repositoryId: 'repo-news',
     classification: 'U',
     title: 'BIS updates Entity List with new Chinese semiconductor firms',
     url: 'https://commerce.gov/bis-entity-list-update-jan-2026',
@@ -330,6 +338,7 @@ export const documents = [
   {
     id: 'doc-009',
     documentType: 'news_article',
+    repositoryId: 'repo-news',
     classification: 'U',
     title: 'China launches $47 billion semiconductor fund in biggest push yet',
     url: 'https://bloomberg.com/china-big-fund-iii-47-billion',
@@ -385,6 +394,7 @@ export const documents = [
   {
     id: 'doc-010',
     documentType: 'news_article',
+    repositoryId: 'repo-news',
     classification: 'U',
     title: 'State Council approves Big Fund III priorities: packaging, equipment, EDA',
     url: 'https://caixin.com/big-fund-iii-state-council-approval',
@@ -418,6 +428,7 @@ export const documents = [
   {
     id: 'doc-011',
     documentType: 'news_article',
+    repositoryId: 'repo-news',
     classification: 'U',
     title: 'Analysis: Can China\'s Big Fund III overcome export control barriers?',
     url: 'https://ft.com/china-big-fund-analysis',
@@ -451,6 +462,7 @@ export const documents = [
   {
     id: 'doc-012',
     documentType: 'news_article',
+    repositoryId: 'repo-news',
     classification: 'U',
     title: 'Huawei stockpiles billions in chip equipment ahead of sanctions',
     url: 'https://bloomberg.com/huawei-equipment-stockpile-sanctions',
@@ -494,6 +506,7 @@ export const documents = [
   {
     id: 'doc-013',
     documentType: 'news_article',
+    repositoryId: 'repo-news',
     classification: 'U',
     title: 'US probes whether Huawei used intermediaries to evade chip controls',
     url: 'https://wsj.com/huawei-intermediaries-investigation',
@@ -527,6 +540,7 @@ export const documents = [
   {
     id: 'doc-014',
     documentType: 'news_article',
+    repositoryId: 'repo-news',
     classification: 'U',
     title: 'Huawei denies sanctions violations, calls reports "speculation"',
     url: 'https://scmp.com/huawei-denies-sanctions-violations',
@@ -560,6 +574,7 @@ export const documents = [
   {
     id: 'doc-015',
     documentType: 'news_article',
+    repositoryId: 'repo-news',
     classification: 'U',
     title: 'YMTC 232-layer NAND matches Samsung in performance tests',
     url: 'https://anandtech.com/ymtc-232-layer-nand-benchmark',
@@ -593,6 +608,7 @@ export const documents = [
   {
     id: 'doc-016',
     documentType: 'news_article',
+    repositoryId: 'repo-news',
     classification: 'U',
     title: 'TechInsights finds YMTC chips in consumer devices despite blacklist',
     url: 'https://techinsights.com/ymtc-chips-consumer-devices',
@@ -648,6 +664,7 @@ export const documents = [
   {
     id: 'doc-017',
     documentType: 'news_article',
+    repositoryId: 'repo-news',
     classification: 'U',
     title: 'How YMTC chips are reaching global markets despite US sanctions',
     url: 'https://bloomberg.com/ymtc-global-supply-chain-analysis',
@@ -681,6 +698,7 @@ export const documents = [
   {
     id: 'doc-018',
     documentType: 'news_article',
+    repositoryId: 'repo-news',
     classification: 'U',
     title: 'Empyrean announces EDA tools supporting 14nm chip design',
     url: 'https://xinhua.com/empyrean-eda-14nm-announcement',
@@ -713,6 +731,7 @@ export const documents = [
   {
     id: 'doc-019',
     documentType: 'news_article',
+    repositoryId: 'repo-news',
     classification: 'U',
     title: 'Huada Jiutian targets 7nm EDA capability within two years',
     url: 'https://caixin.com/huada-jiutian-7nm-roadmap',
@@ -745,6 +764,7 @@ export const documents = [
   {
     id: 'doc-020',
     documentType: 'news_article',
+    repositoryId: 'repo-news',
     classification: 'U',
     title: 'TSMC Arizona fab delays push production start to late 2025',
     url: 'https://reuters.com/tsmc-arizona-delay-2025',
@@ -787,6 +807,7 @@ export const documents = [
   {
     id: 'doc-021',
     documentType: 'news_article',
+    repositoryId: 'repo-news',
     classification: 'U',
     title: 'TSMC CEO addresses Arizona challenges: "Different work culture"',
     url: 'https://nikkei.com/tsmc-arizona-work-culture',
@@ -819,6 +840,7 @@ export const documents = [
   {
     id: 'doc-022',
     documentType: 'news_article',
+    repositoryId: 'repo-news',
     classification: 'U',
     title: 'Arizona unions file grievances against TSMC management practices',
     url: 'https://bloomberg.com/tsmc-arizona-union-grievances',
@@ -851,6 +873,7 @@ export const documents = [
   {
     id: 'doc-023',
     documentType: 'social_post',
+    repositoryId: 'repo-osint',
     classification: 'U',
     title: 'X thread: Tech analyst breaks down SMIC 5nm achievement',
     excerpt: 'Thread analyzing SMIC\'s 5nm breakthrough, noting impressive engineering but questioning economic viability vs TSMC\'s EUV process.',
@@ -889,6 +912,7 @@ export const documents = [
   {
     id: 'doc-024',
     documentType: 'social_post',
+    repositoryId: 'repo-osint',
     classification: 'U',
     title: 'LinkedIn post: Industry executive reflects on SMIC achievement',
     excerpt: 'Semiconductor executive shares balanced perspective on SMIC\'s 5nm announcement, recognizing technical achievement while questioning economics and policy effectiveness.',
@@ -927,6 +951,7 @@ export const documents = [
   {
     id: 'doc-025',
     documentType: 'social_post',
+    repositoryId: 'repo-osint',
     classification: 'U',
     title: 'Weibo post: Chinese tech blogger celebrates SMIC 5nm success',
     excerpt: 'Viral Weibo post celebrating SMIC\'s 5nm achievement as proof of Chinese technological self-reliance in face of Western restrictions.',
@@ -965,6 +990,7 @@ export const documents = [
   {
     id: 'doc-026',
     documentType: 'social_post',
+    repositoryId: 'repo-osint',
     classification: 'U',
     title: 'Reddit discussion: Are US chip export controls backfiring?',
     excerpt: 'Reddit thread questioning effectiveness of US export controls, citing SMIC, YMTC, and massive Chinese investment as potential evidence of unintended acceleration.',
@@ -1006,6 +1032,7 @@ export const documents = [
   {
     id: 'doc-027',
     documentType: 'social_post',
+    repositoryId: 'repo-osint',
     classification: 'U',
     title: 'X post: National security analyst defends export controls',
     excerpt: 'Policy hawk argues SMIC\'s 5nm achievement doesn\'t undermine export controls, citing cost and yield disadvantages that make Chinese chips uncompetitive.',
@@ -1046,6 +1073,7 @@ export const documents = [
   {
     id: 'doc-028',
     documentType: 'social_post',
+    repositoryId: 'repo-osint',
     classification: 'U',
     title: 'LinkedIn post: ASML\'s $2.5B China revenue hit analyzed',
     excerpt: 'Financial analyst breaks down ASML\'s Q4 guidance update and the impact of expanded China export restrictions on semiconductor equipment market.',
@@ -1085,6 +1113,7 @@ export const documents = [
   {
     id: 'doc-029',
     documentType: 'social_post',
+    repositoryId: 'repo-osint',
     classification: 'U',
     title: 'X post: Huawei Mate 70 teardown confirms SMIC 5nm chip',
     excerpt: 'Tech analyst shares teardown photos confirming Kirin 9100 chip manufactured by SMIC using 5nm process inside Huawei\'s latest flagship.',
@@ -1123,6 +1152,7 @@ export const documents = [
   {
     id: 'doc-030',
     documentType: 'social_post',
+    repositoryId: 'repo-osint',
     classification: 'U',
     title: 'Reddit AMA: TSMC Arizona worker shares insider perspective',
     excerpt: 'TSMC Arizona employee offers candid view of fab construction challenges, cultural clashes, and morale in Reddit AMA.',
@@ -1166,10 +1196,11 @@ export const documents = [
   {
     id: 'doc-031',
     documentType: 'internal',
+    repositoryId: 'repo-edl',
     classification: 'S',
     url: null,
     publishedDate: '2026-01-16T08:00:00Z',
-    publisherId: null,
+    publisherId: 'pub-dept-intel',
     title: 'Technical Assessment: SMIC 5nm DUV Multi-Patterning Capability',
     author: 'Semiconductor Analysis Division',
     department: 'Technical Intelligence',
@@ -1275,10 +1306,11 @@ export const documents = [
   {
     id: 'doc-032',
     documentType: 'internal',
+    repositoryId: 'repo-edl',
     classification: 'S',
     url: null,
     publishedDate: '2026-01-18T14:00:00Z',
-    publisherId: null,
+    publisherId: 'pub-dept-intel',
     title: 'Export Controls Effectiveness Review: Semiconductor Equipment Restrictions',
     author: 'Policy Analysis Division',
     department: 'Policy Analysis',
@@ -1380,10 +1412,11 @@ export const documents = [
   {
     id: 'doc-033',
     documentType: 'internal',
+    repositoryId: 'repo-edl',
     classification: 'U',
     url: null,
     publishedDate: '2026-01-19T10:00:00Z',
-    publisherId: null,
+    publisherId: 'pub-dept-econ',
     title: 'Investment Analysis: China National IC Fund Phase III',
     author: 'Economic Analysis Division',
     department: 'Economic Intelligence',
@@ -1485,10 +1518,11 @@ export const documents = [
   {
     id: 'doc-034',
     documentType: 'internal',
+    repositoryId: 'repo-edl',
     classification: 'S',
     url: null,
     publishedDate: '2026-01-19T16:00:00Z',
-    publisherId: null,
+    publisherId: 'pub-dept-intel',
     title: 'Supply Chain Analysis: YMTC Memory Chips in Global Consumer Electronics',
     author: 'Supply Chain Intelligence Division',
     department: 'Supply Chain Analysis',
@@ -1590,10 +1624,11 @@ export const documents = [
   {
     id: 'doc-035',
     documentType: 'internal',
+    repositoryId: 'repo-edl',
     classification: 'U',
     url: null,
     publishedDate: '2026-01-17T15:00:00Z',
-    publisherId: null,
+    publisherId: 'pub-dept-ops',
     title: 'Operations Assessment: TSMC Arizona Fab Construction and Workforce Challenges',
     author: 'Industrial Analysis Division',
     department: 'Industrial Intelligence',

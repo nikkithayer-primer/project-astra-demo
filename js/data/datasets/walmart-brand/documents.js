@@ -8,6 +8,7 @@ export const documents = [
   {
     id: 'doc-001',
     documentType: 'social_post',
+    repositoryId: 'repo-osint',
     classification: 'U',
     title: 'TikTok: Customer detained at Walmart self-checkout',
     excerpt: 'Viral TikTok video showing a customer being detained by Walmart loss prevention after an honest self-checkout mistake. Video has over 8 million views.',
@@ -33,11 +34,10 @@ export const documents = [
     organizationIds: ['org-001'],
     locationIds: ['loc-002'],
     eventIds: ['event-001'],
+    factionIds: ['faction-001', 'faction-004'],
     factionMentions: {
-      'faction-001': { sentiment: -0.82 },
-      'faction-002': { sentiment: -0.71 },
-      'faction-004': { sentiment: 0.08 },
-      'faction-005': { sentiment: -0.35 }
+      'faction-001': { sentiment: -0.85 },
+      'faction-004': { sentiment: -0.72 }
     },
     metrics: { views: 8500000, likes: 425000, shares: 185000, comments: 78000, platform: 'tiktok' },
     highlights: [
@@ -75,6 +75,7 @@ export const documents = [
   {
     id: 'doc-002',
     documentType: 'social_post',
+    repositoryId: 'repo-osint',
     classification: 'U',
     title: 'Reddit thread: Walmart self-checkout experiences',
     excerpt: 'Popular Reddit thread with thousands of comments about negative self-checkout experiences at Walmart.',
@@ -100,11 +101,10 @@ export const documents = [
     organizationIds: ['org-001'],
     locationIds: [],
     eventIds: [],
+    factionIds: ['faction-001', 'faction-004'],
     factionMentions: {
-      'faction-001': { sentiment: -0.79 },
-      'faction-002': { sentiment: -0.73 },
-      'faction-004': { sentiment: -0.12 },
-      'faction-005': { sentiment: -0.33 }
+      'faction-001': { sentiment: -0.78 },
+      'faction-004': { sentiment: -0.65 }
     },
     metrics: { likes: 15420, comments: 2850, platform: 'reddit' },
     highlights: [],
@@ -113,6 +113,7 @@ export const documents = [
   {
     id: 'doc-003',
     documentType: 'news_article',
+    repositoryId: 'repo-news',
     classification: 'U',
     title: 'Class-Action Lawsuit Filed Against Walmart Over Self-Checkout Detentions',
     excerpt: 'Texas law firm files class-action lawsuit alleging Walmart systematically detains innocent customers at self-checkout.',
@@ -135,11 +136,10 @@ export const documents = [
     organizationIds: ['org-001', 'org-002'],
     locationIds: ['loc-002'],
     eventIds: ['event-002'],
+    factionIds: ['faction-001', 'faction-004'],
     factionMentions: {
-      'faction-001': { sentiment: -0.84 },
-      'faction-002': { sentiment: -0.69 },
-      'faction-004': { sentiment: 0.05 },
-      'faction-005': { sentiment: -0.36 }
+      'faction-001': { sentiment: -0.68 },
+      'faction-004': { sentiment: -0.55 }
     },
     metrics: { shares: 12500 },
     highlights: [
@@ -170,6 +170,7 @@ export const documents = [
   {
     id: 'doc-004',
     documentType: 'news_article',
+    repositoryId: 'repo-news',
     classification: 'U',
     title: 'Walmart Announces Plan to Add Staffed Checkout Lanes at 500 Stores',
     excerpt: 'In response to customer complaints, Walmart announces plans to increase staffed checkout options.',
@@ -192,11 +193,10 @@ export const documents = [
     organizationIds: ['org-001'],
     locationIds: ['loc-001'],
     eventIds: ['event-003'],
+    factionIds: ['faction-001', 'faction-004'],
     factionMentions: {
-      'faction-001': { sentiment: -0.80 },
-      'faction-002': { sentiment: -0.74 },
-      'faction-004': { sentiment: -0.08 },
-      'faction-005': { sentiment: -0.37 }
+      'faction-001': { sentiment: -0.25 },
+      'faction-004': { sentiment: 0.15 }
     },
     metrics: { shares: 5800 },
     highlights: [],
@@ -207,6 +207,7 @@ export const documents = [
   {
     id: 'doc-005',
     documentType: 'social_post',
+    repositoryId: 'repo-osint',
     classification: 'U',
     title: 'X post: Photos of empty Walmart grocery aisles',
     excerpt: 'Viral X post showing photos of completely empty grocery aisles at a Chicago-area Walmart.',
@@ -232,10 +233,9 @@ export const documents = [
     organizationIds: ['org-001'],
     locationIds: ['loc-004'],
     eventIds: ['event-004'],
+    factionIds: ['faction-001'],
     factionMentions: {
-      'faction-001': { sentiment: -0.72 },
-      'faction-005': { sentiment: -0.42 },
-      'faction-006': { sentiment: 0.35 }
+      'faction-001': { sentiment: -0.82 }
     },
     metrics: { views: 2500000, likes: 45000, shares: 18500, comments: 8200, platform: 'x' },
     highlights: [],
@@ -244,6 +244,7 @@ export const documents = [
   {
     id: 'doc-006',
     documentType: 'social_post',
+    repositoryId: 'repo-osint',
     classification: 'U',
     title: 'Facebook group discussion: Walmart inventory problems',
     excerpt: 'Discussion in local community Facebook group about ongoing inventory issues at nearby Walmart.',
@@ -268,10 +269,9 @@ export const documents = [
     organizationIds: ['org-001', 'org-003'],
     locationIds: [],
     eventIds: [],
+    factionIds: ['faction-001'],
     factionMentions: {
-      'faction-001': { sentiment: -0.69 },
-      'faction-005': { sentiment: -0.40 },
-      'faction-006': { sentiment: 0.36 }
+      'faction-001': { sentiment: -0.68 }
     },
     metrics: { likes: 458, comments: 127, shares: 35, platform: 'facebook' },
     highlights: [],
@@ -280,6 +280,7 @@ export const documents = [
   {
     id: 'doc-007',
     documentType: 'news_article',
+    repositoryId: 'repo-news',
     classification: 'U',
     title: 'Analysis: Walmart\'s Inventory Management System Shows Cracks',
     excerpt: 'Retail Dive analysis examines why Walmart stores are experiencing persistent out-of-stock issues.',
@@ -302,10 +303,10 @@ export const documents = [
     organizationIds: ['org-001', 'org-014', 'org-015'],
     locationIds: [],
     eventIds: ['event-005'],
+    factionIds: ['faction-001', 'faction-005'],
     factionMentions: {
-      'faction-001': { sentiment: -0.74 },
-      'faction-005': { sentiment: -0.43 },
-      'faction-006': { sentiment: 0.33 }
+      'faction-001': { sentiment: -0.58 },
+      'faction-005': { sentiment: -0.42 }
     },
     metrics: { shares: 3200 },
     highlights: [
@@ -326,6 +327,7 @@ export const documents = [
   {
     id: 'doc-008',
     documentType: 'social_post',
+    repositoryId: 'repo-osint',
     classification: 'U',
     title: 'TikTok: Walmart employee shows empty department',
     excerpt: 'Employee TikTok showing them working alone in a department meant for 4+ workers.',
@@ -351,10 +353,10 @@ export const documents = [
     organizationIds: ['org-001'],
     locationIds: [],
     eventIds: ['event-006'],
+    factionIds: ['faction-002', 'faction-003'],
     factionMentions: {
-      'faction-002': { sentiment: -0.78 },
-      'faction-003': { sentiment: -0.81 },
-      'faction-004': { sentiment: 0.55 }
+      'faction-002': { sentiment: -0.85 },
+      'faction-003': { sentiment: -0.78 }
     },
     metrics: { views: 5200000, likes: 385000, shares: 125000, comments: 42000, platform: 'tiktok' },
     highlights: [],
@@ -363,6 +365,7 @@ export const documents = [
   {
     id: 'doc-009',
     documentType: 'social_post',
+    repositoryId: 'repo-osint',
     classification: 'U',
     title: 'Reddit: Current Walmart employees share staffing concerns',
     excerpt: 'Reddit thread where current Walmart employees discuss understaffing challenges.',
@@ -388,10 +391,10 @@ export const documents = [
     organizationIds: ['org-001'],
     locationIds: [],
     eventIds: [],
+    factionIds: ['faction-002', 'faction-003'],
     factionMentions: {
-      'faction-002': { sentiment: -0.76 },
-      'faction-003': { sentiment: -0.83 },
-      'faction-004': { sentiment: 0.53 }
+      'faction-002': { sentiment: -0.80 },
+      'faction-003': { sentiment: -0.75 }
     },
     metrics: { likes: 8750, comments: 1420, platform: 'reddit' },
     highlights: [],
@@ -400,6 +403,7 @@ export const documents = [
   {
     id: 'doc-010',
     documentType: 'news_article',
+    repositoryId: 'repo-news',
     classification: 'U',
     title: 'UFCW Launches #RespectWalmartWorkers Campaign',
     excerpt: 'United Food and Commercial Workers union announces new campaign highlighting worker conditions at Walmart.',
@@ -422,10 +426,10 @@ export const documents = [
     organizationIds: ['org-001', 'org-005', 'org-006'],
     locationIds: ['loc-006'],
     eventIds: ['event-007'],
+    factionIds: ['faction-002', 'faction-003'],
     factionMentions: {
-      'faction-002': { sentiment: -0.80 },
-      'faction-003': { sentiment: -0.79 },
-      'faction-004': { sentiment: 0.57 }
+      'faction-002': { sentiment: 0.72 },
+      'faction-003': { sentiment: 0.68 }
     },
     metrics: { shares: 4500 },
     highlights: [
@@ -456,6 +460,7 @@ export const documents = [
   {
     id: 'doc-011',
     documentType: 'news_article',
+    repositoryId: 'repo-news',
     classification: 'U',
     title: 'Walmart Responds to Worker Complaints, Highlights Benefits',
     excerpt: 'Walmart corporate issues statement responding to viral worker complaints.',
@@ -478,11 +483,10 @@ export const documents = [
     organizationIds: ['org-001'],
     locationIds: ['loc-001'],
     eventIds: [],
+    factionIds: ['faction-002', 'faction-005'],
     factionMentions: {
-      'faction-002': { sentiment: -0.77 },
-      'faction-003': { sentiment: -0.84 },
-      'faction-004': { sentiment: 0.54 },
-      'faction-005': { sentiment: 0.10 }
+      'faction-002': { sentiment: 0.35 },
+      'faction-005': { sentiment: 0.45 }
     },
     metrics: { shares: 2800 },
     highlights: [],
@@ -493,6 +497,7 @@ export const documents = [
   {
     id: 'doc-012',
     documentType: 'news_article',
+    repositoryId: 'repo-news',
     classification: 'U',
     title: 'FDA Recalls Walmart Great Value Frozen Vegetables Over Listeria Concerns',
     excerpt: 'FDA announces recall of Great Value frozen vegetables due to potential Listeria contamination.',
@@ -515,11 +520,10 @@ export const documents = [
     organizationIds: ['org-001', 'org-007'],
     locationIds: ['loc-007'],
     eventIds: ['event-008'],
+    factionIds: ['faction-001', 'faction-004'],
     factionMentions: {
       'faction-001': { sentiment: -0.75 },
-      'faction-004': { sentiment: -0.05 },
-      'faction-005': { sentiment: -0.32 },
-      'faction-006': { sentiment: 0.25 }
+      'faction-004': { sentiment: -0.62 }
     },
     metrics: { shares: 8500 },
     highlights: [
@@ -557,6 +561,7 @@ export const documents = [
   {
     id: 'doc-013',
     documentType: 'news_article',
+    repositoryId: 'repo-news',
     classification: 'U',
     title: 'Great Value Recall Expands to 15 Products',
     excerpt: 'FDA expands Great Value recall to additional product lines.',
@@ -579,11 +584,10 @@ export const documents = [
     organizationIds: ['org-001', 'org-007'],
     locationIds: ['loc-007'],
     eventIds: ['event-009'],
+    factionIds: ['faction-001', 'faction-004'],
     factionMentions: {
-      'faction-001': { sentiment: -0.73 },
-      'faction-004': { sentiment: 0.02 },
-      'faction-005': { sentiment: -0.30 },
-      'faction-006': { sentiment: 0.27 }
+      'faction-001': { sentiment: -0.82 },
+      'faction-004': { sentiment: -0.70 }
     },
     metrics: { shares: 12200 },
     highlights: [
@@ -602,6 +606,7 @@ export const documents = [
   {
     id: 'doc-014',
     documentType: 'news_article',
+    repositoryId: 'repo-news',
     classification: 'U',
     title: 'Consumer Reports Demands Stricter Private-Label Quality Controls',
     excerpt: 'Consumer advocacy group calls for enhanced quality control measures for store-brand products.',
@@ -624,11 +629,9 @@ export const documents = [
     organizationIds: ['org-001', 'org-008'],
     locationIds: [],
     eventIds: ['event-010'],
+    factionIds: ['faction-004'],
     factionMentions: {
-      'faction-001': { sentiment: -0.77 },
-      'faction-004': { sentiment: 0.12 },
-      'faction-005': { sentiment: -0.33 },
-      'faction-006': { sentiment: 0.24 }
+      'faction-004': { sentiment: -0.58 }
     },
     metrics: { shares: 5400 },
     highlights: [],
@@ -639,6 +642,7 @@ export const documents = [
   {
     id: 'doc-015',
     documentType: 'social_post',
+    repositoryId: 'repo-osint',
     classification: 'U',
     title: 'TikTok: Walmart vs Aldi price comparison',
     excerpt: 'Viral TikTok showing item-by-item price comparison between Walmart and Aldi.',
@@ -664,10 +668,10 @@ export const documents = [
     organizationIds: ['org-001', 'org-010'],
     locationIds: [],
     eventIds: [],
+    factionIds: ['faction-001', 'faction-006'],
     factionMentions: {
-      'faction-001': { sentiment: -0.75 },
-      'faction-002': { sentiment: -0.45 },
-      'faction-006': { sentiment: 0.58 }
+      'faction-001': { sentiment: -0.72 },
+      'faction-006': { sentiment: 0.65 }
     },
     metrics: { views: 4800000, likes: 325000, shares: 185000, comments: 52000, platform: 'tiktok' },
     highlights: [],
@@ -676,6 +680,7 @@ export const documents = [
   {
     id: 'doc-016',
     documentType: 'social_post',
+    repositoryId: 'repo-osint',
     classification: 'U',
     title: 'X thread: Is Walmart still the low-price leader?',
     excerpt: 'Twitter thread analyzing whether Walmart still offers competitive prices.',
@@ -702,10 +707,10 @@ export const documents = [
     organizationIds: ['org-001', 'org-010', 'org-011', 'org-004'],
     locationIds: [],
     eventIds: [],
+    factionIds: ['faction-001', 'faction-006'],
     factionMentions: {
-      'faction-001': { sentiment: -0.74 },
-      'faction-002': { sentiment: -0.43 },
-      'faction-006': { sentiment: 0.60 }
+      'faction-001': { sentiment: -0.68 },
+      'faction-006': { sentiment: 0.55 }
     },
     metrics: { views: 1850000, likes: 42000, shares: 18500, comments: 5200, platform: 'x' },
     highlights: [],
@@ -714,6 +719,7 @@ export const documents = [
   {
     id: 'doc-017',
     documentType: 'news_article',
+    repositoryId: 'repo-news',
     classification: 'U',
     title: 'Analysis: Walmart Kept Pandemic Price Increases Despite Falling Costs',
     excerpt: 'WSJ analysis shows Walmart retained elevated prices even as wholesale costs declined.',
@@ -736,11 +742,10 @@ export const documents = [
     organizationIds: ['org-001'],
     locationIds: [],
     eventIds: ['event-011'],
+    factionIds: ['faction-001', 'faction-005'],
     factionMentions: {
-      'faction-001': { sentiment: -0.76 },
-      'faction-002': { sentiment: -0.47 },
-      'faction-005': { sentiment: -0.11 },
-      'faction-006': { sentiment: 0.57 }
+      'faction-001': { sentiment: -0.65 },
+      'faction-005': { sentiment: -0.48 }
     },
     metrics: { shares: 8200 },
     highlights: [
@@ -773,6 +778,7 @@ export const documents = [
   {
     id: 'doc-018',
     documentType: 'news_article',
+    repositoryId: 'repo-news',
     classification: 'U',
     title: 'Target Achieves 98% On-Time Delivery Rate',
     excerpt: 'Target announces industry-leading delivery performance metrics.',
@@ -794,10 +800,10 @@ export const documents = [
     organizationIds: ['org-003'],
     locationIds: [],
     eventIds: ['event-012'],
+    factionIds: ['faction-005', 'faction-006'],
     factionMentions: {
-      'faction-004': { sentiment: -0.55 },
-      'faction-005': { sentiment: -0.38 },
-      'faction-006': { sentiment: 0.75 }
+      'faction-005': { sentiment: 0.25 },
+      'faction-006': { sentiment: 0.78 }
     },
     metrics: { shares: 3800 },
     highlights: [],
@@ -806,6 +812,7 @@ export const documents = [
   {
     id: 'doc-019',
     documentType: 'news_article',
+    repositoryId: 'repo-news',
     classification: 'U',
     title: 'Amazon Expands Sub-24-Hour Delivery to 85% of US',
     excerpt: 'Amazon announces major expansion of rapid delivery coverage.',
@@ -828,10 +835,10 @@ export const documents = [
     organizationIds: ['org-004'],
     locationIds: ['loc-008'],
     eventIds: ['event-013'],
+    factionIds: ['faction-005', 'faction-006'],
     factionMentions: {
-      'faction-004': { sentiment: -0.53 },
-      'faction-005': { sentiment: -0.40 },
-      'faction-006': { sentiment: 0.77 }
+      'faction-005': { sentiment: 0.18 },
+      'faction-006': { sentiment: 0.82 }
     },
     metrics: { shares: 5600 },
     highlights: [],
@@ -840,6 +847,7 @@ export const documents = [
   {
     id: 'doc-020',
     documentType: 'social_post',
+    repositoryId: 'repo-osint',
     classification: 'U',
     title: 'Reddit discussion: Comparing delivery services',
     excerpt: 'Reddit thread comparing Walmart, Amazon, and Target delivery experiences.',
@@ -865,11 +873,10 @@ export const documents = [
     organizationIds: ['org-001', 'org-004'],
     locationIds: [],
     eventIds: [],
+    factionIds: ['faction-001', 'faction-006'],
     factionMentions: {
-      'faction-001': { sentiment: -0.13 },
-      'faction-004': { sentiment: -0.56 },
-      'faction-005': { sentiment: -0.37 },
-      'faction-006': { sentiment: 0.73 }
+      'faction-001': { sentiment: -0.75 },
+      'faction-006': { sentiment: 0.62 }
     },
     metrics: { likes: 4280, comments: 892, platform: 'reddit' },
     highlights: [],
@@ -880,6 +887,7 @@ export const documents = [
   {
     id: 'doc-021',
     documentType: 'news_article',
+    repositoryId: 'repo-news',
     classification: 'U',
     title: 'Missouri Town Faces "Food Desert" After Walmart Closure Announcement',
     excerpt: 'Small Missouri town will have no grocery stores after Walmart announces closure.',
@@ -902,10 +910,9 @@ export const documents = [
     organizationIds: ['org-001', 'org-013'],
     locationIds: ['loc-009'],
     eventIds: ['event-014'],
+    factionIds: ['faction-001'],
     factionMentions: {
-      'faction-001': { sentiment: -0.85 },
-      'faction-003': { sentiment: -0.75 },
-      'faction-004': { sentiment: -0.30 }
+      'faction-001': { sentiment: -0.88 }
     },
     metrics: { shares: 15200 },
     highlights: [
@@ -943,6 +950,7 @@ export const documents = [
   {
     id: 'doc-022',
     documentType: 'social_post',
+    repositoryId: 'repo-osint',
     classification: 'U',
     title: 'Facebook: Rural community organizes protest',
     excerpt: 'Local Facebook group organizes protest against Walmart store closure.',
@@ -968,10 +976,9 @@ export const documents = [
     organizationIds: ['org-001'],
     locationIds: ['loc-009'],
     eventIds: ['event-014'],
+    factionIds: ['faction-001'],
     factionMentions: {
-      'faction-001': { sentiment: -0.83 },
-      'faction-003': { sentiment: -0.76 },
-      'faction-004': { sentiment: -0.32 }
+      'faction-001': { sentiment: -0.92 }
     },
     metrics: { likes: 3850, comments: 1245, shares: 2180, platform: 'facebook' },
     highlights: [],
@@ -980,6 +987,7 @@ export const documents = [
   {
     id: 'doc-023',
     documentType: 'news_article',
+    repositoryId: 'repo-news',
     classification: 'U',
     title: 'Local Politicians Call for Walmart to Maintain Rural Stores',
     excerpt: 'State legislators urge Walmart to consider community impact of store closures.',
@@ -1002,10 +1010,9 @@ export const documents = [
     organizationIds: ['org-001', 'org-013'],
     locationIds: ['loc-009', 'loc-010'],
     eventIds: [],
+    factionIds: ['faction-001'],
     factionMentions: {
-      'faction-001': { sentiment: -0.87 },
-      'faction-003': { sentiment: -0.73 },
-      'faction-004': { sentiment: -0.33 }
+      'faction-001': { sentiment: -0.72 }
     },
     metrics: { shares: 4800 },
     highlights: [

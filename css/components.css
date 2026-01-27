@@ -1725,6 +1725,21 @@
   color: var(--text-muted);
 }
 
+.search-repositories {
+  display: flex;
+  align-items: center;
+  gap: var(--space-md);
+  margin-top: var(--space-md);
+}
+
+.repository-checkbox {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-xs);
+  cursor: pointer;
+  font-size: var(--text-sm);
+}
+
 .search-hint {
   margin-top: var(--space-lg);
   text-align: center;
