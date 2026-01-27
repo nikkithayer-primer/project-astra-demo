@@ -6,6 +6,7 @@
 
 import { BaseComponent } from './BaseComponent.js';
 import { Sparkline } from './Sparkline.js';
+import { DataService } from '../data/DataService.js';
 
 export class BaseItemList extends BaseComponent {
   constructor(containerId, options = {}) {
@@ -89,23 +90,49 @@ export class BaseItemList extends BaseComponent {
   }
 
   /**
-   * Calculate total volume from factionMentions
+   * Calculate total volume from documents (or legacy factionMentions)
    * Override in subclass if volume is calculated differently
    * @param {Object} item - The data item
    * @returns {number}
    */
   calculateVolume(item) {
+    // Use document-based aggregation for narratives/themes
+    if (item.id?.startsWith('narr-')) {
+      const factionMentions = DataService.getAggregateFactionMentionsForNarrative(item.id);
+      return Object.values(factionMentions)
+        .reduce((sum, f) => sum + (f.volume || 0), 0);
+    }
+    if (item.id?.startsWith('sub-')) {
+      const factionMentions = DataService.getAggregateFactionMentionsForTheme(item.id);
+      return Object.values(factionMentions)
+        .reduce((sum, f) => sum + (f.volume || 0), 0);
+    }
+    // Fallback for legacy data or other item types
     return Object.values(item.factionMentions || {})
       .reduce((sum, f) => sum + (f.volume || 0), 0);
   }
 
   /**
-   * Get sparkline values from an item's volumeOverTime
+   * Get sparkline values from documents (or legacy volumeOverTime)
    * Override in subclass if data structure is different
    * @param {Object} item - The data item
    * @returns {number[]}
    */
   getSparklineValues(item) {
+    // Use document-based aggregation for narratives/themes
+    if (item.id?.startsWith('narr-')) {
+      const volumeOverTime = DataService.getVolumeOverTimeForNarrative(item.id);
+      return volumeOverTime.map(d =>
+        Object.values(d.factionVolumes || {}).reduce((a, b) => a + b, 0)
+      );
+    }
+    if (item.id?.startsWith('sub-')) {
+      const volumeOverTime = DataService.getVolumeOverTimeForTheme(item.id);
+      return volumeOverTime.map(d =>
+        Object.values(d.factionVolumes || {}).reduce((a, b) => a + b, 0)
+      );
+    }
+    // Fallback for legacy data or other item types
     if (!item.volumeOverTime || !item.volumeOverTime.length) return [];
     return item.volumeOverTime.map(d =>
       Object.values(d.factionVolumes || {}).reduce((a, b) => a + b, 0)

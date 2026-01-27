@@ -260,7 +260,7 @@
               <rect x="1" y="11" width="14" height="3" rx="0.5"/>
             </svg> Narrative List
           </a></li>
-          <li><a href="#subnarrative-list" class="nav-link" data-target="subnarrative-list">
+          <li><a href="#theme-list" class="nav-link" data-target="theme-list">
             <svg class="nav-icon" viewBox="0 0 16 16" fill="none" stroke="var(--text-secondary)" stroke-width="1">
               <rect x="1" y="2" width="14" height="2.5" rx="0.5"/>
               <rect x="3" y="6" width="12" height="2.5" rx="0.5"/>
@@ -301,13 +301,6 @@
               <path d="M10 1v3h3"/>
               <path d="M5 7h6M5 9h6M5 11h4"/>
             </svg> Document Content
-          </a></li>
-          <li><a href="#document-list" class="nav-link" data-target="document-list">
-            <svg class="nav-icon" viewBox="0 0 16 16" fill="none" stroke="var(--text-secondary)" stroke-width="1">
-              <rect x="1" y="2" width="14" height="3" rx="0.5"/>
-              <rect x="1" y="6.5" width="14" height="3" rx="0.5"/>
-              <rect x="1" y="11" width="14" height="3" rx="0.5"/>
-            </svg> Document List
           </a></li>
         </ul>
       </div>
@@ -589,21 +582,21 @@ list.update({
       </div>
     </section>
 
-    <!-- Theme List (SubNarrativeList) -->
-    <section id="subnarrative-list" class="component-section">
+    <!-- Theme List -->
+    <section id="theme-list" class="component-section">
       <h2 class="section-title">Theme List</h2>
       <p class="section-description">List of themes (sub-narratives) with sentiment badges and sparklines. Themes are more specific messaging patterns within a broader narrative.</p>
       <div class="demo-container">
-        <div id="subnarrative-list-demo"></div>
+        <div id="theme-list-demo"></div>
         <div class="code-block">
-          <pre><span class="key">const</span> list = <span class="key">new</span> SubNarrativeList(<span class="string">'container'</span>, {
+          <pre><span class="key">const</span> list = <span class="key">new</span> ThemeList(<span class="string">'container'</span>, {
   maxItems: <span class="number">10</span>,
   showSparkline: <span class="number">true</span>,
   defaultShowDescription: <span class="number">false</span>,
-  onSubNarrativeClick: (theme) => console.log(theme)
+  onItemClick: (theme) => console.log(theme)
 });
 list.update({
-  subNarratives: [
+  themes: [
     { 
       id: <span class="string">'1'</span>, 
       text: <span class="string">'Voting machines are compromised'</span>, 
@@ -714,39 +707,6 @@ renderer.update({
   },
   highlights: [...],  <span class="comment">// Optional user highlights</span>
   comments: [...]     <span class="comment">// Optional comments</span>
-});</pre>
-        </div>
-      </div>
-    </section>
-
-    <!-- Document List -->
-    <section id="document-list" class="component-section">
-      <h2 class="section-title">Document List</h2>
-      <p class="section-description">Simplified list view of documents with publication info and external links. Supports multiple document types and classification badges.</p>
-      <div class="demo-container">
-        <div id="document-list-demo"></div>
-        <div class="code-block">
-          <pre><span class="key">const</span> list = <span class="key">new</span> DocumentList(<span class="string">'container'</span>, {
-  maxItems: <span class="number">10</span>,
-  showExcerpt: <span class="number">true</span>,
-  showPublisher: <span class="number">true</span>,
-  showDate: <span class="number">true</span>,
-  showType: <span class="number">false</span>,
-  showClassification: <span class="number">true</span>,
-  onDocumentClick: (doc) => console.log(doc)
-});
-list.update({
-  documents: [
-    { 
-      id: <span class="string">'1'</span>,
-      title: <span class="string">'Document Title'</span>,
-      url: <span class="string">'https://example.com'</span>,
-      publisherId: <span class="string">'pub1'</span>,
-      publishedDate: <span class="string">'2025-01-15'</span>,
-      excerpt: <span class="string">'Document excerpt...'</span>,
-      classification: <span class="string">'U'</span>
-    }
-  ]
 });</pre>
         </div>
       </div>
@@ -863,12 +823,11 @@ list.update({
     import { MapView } from './js/components/MapView.js';
     import { FactionCards } from './js/components/FactionCards.js';
     import { NarrativeList } from './js/components/NarrativeList.js';
-    import { SubNarrativeList } from './js/components/SubNarrativeList.js';
+    import { ThemeList } from './js/components/ThemeList.js';
     import { DocumentTable } from './js/components/DocumentTable.js';
     import { ColumnFilter } from './js/components/ColumnFilter.js';
     import { TimeRangeFilter } from './js/components/TimeRangeFilter.js';
     import { DocumentContentRenderer } from './js/components/DocumentContentRenderer.js';
-    import { DocumentList } from './js/components/DocumentList.js';
     import { ClassificationBanner, renderClassificationBadge, renderPortionMark } from './js/components/ClassificationBanner.js';
     import { TopicList } from './js/components/TopicList.js';
     import { DataService } from './js/data/DataService.js';
@@ -1197,15 +1156,15 @@ list.update({
       ]
     });
 
-    // Initialize Theme List (SubNarrativeList)
-    const subNarrativeList = new SubNarrativeList(document.getElementById('subnarrative-list-demo'), {
+    // Initialize Theme List (ThemeList)
+    const themeList = new ThemeList(document.getElementById('theme-list-demo'), {
       maxItems: 5,
       showSparkline: true,
       defaultShowDescription: false,
-      onSubNarrativeClick: (theme) => console.log('Clicked theme:', theme)
+      onItemClick: (theme) => console.log('Clicked theme:', theme)
     });
-    subNarrativeList.update({
-      subNarratives: [
+    themeList.update({
+      themes: [
         {
           id: 'sn1',
           text: 'Voting machines can be hacked remotely',
@@ -1589,66 +1548,6 @@ list.update({
         const docType = btn.dataset.docType;
         documentContentRenderer.update({ document: demoDocuments[docType] });
       });
-    });
-
-    // ========================================
-    // Document List Demo
-    // ========================================
-    
-    const documentList = new DocumentList(document.getElementById('document-list-demo'), {
-      maxItems: 5,
-      showExcerpt: true,
-      showPublisher: true,
-      showDate: true,
-      showType: true,
-      showClassification: true,
-      onDocumentClick: (doc) => console.log('Clicked document:', doc)
-    });
-    
-    documentList.update({
-      documents: [
-        {
-          id: 'd1',
-          documentType: 'news_article',
-          title: 'State officials debunk viral voting machine claims',
-          url: 'https://example.com/officials-debunk',
-          publisherId: 's4',
-          publishedDate: '2025-01-14T14:15:00Z',
-          excerpt: 'Election officials from multiple states have issued statements refuting viral claims about voting machine vulnerabilities...',
-          classification: 'U'
-        },
-        {
-          id: 'd2',
-          documentType: 'social_post',
-          title: null,
-          url: 'https://x.com/ElectionWatch2025/status/1234567890',
-          publisherId: 's1',
-          publishedDate: '2025-01-15T10:30:00Z',
-          author: { username: '@ElectionWatch2025', displayName: 'Election Watch' },
-          content: 'THREAD: We tracked 47 voting machine claims over 72 hours...',
-          classification: 'U'
-        },
-        {
-          id: 'd3',
-          documentType: 'internal',
-          title: 'Weekly Threat Assessment - Election Security',
-          url: null,
-          publisherId: null,
-          publishedDate: '2025-01-16T09:00:00Z',
-          excerpt: 'This week saw a significant increase in coordinated inauthentic behavior targeting election infrastructure claims.',
-          classification: 'S'
-        },
-        {
-          id: 'd4',
-          documentType: 'news_article',
-          title: 'Fact-check: No evidence of widespread mail-in ballot fraud',
-          url: 'https://example.com/fact-check-mail',
-          publisherId: 's4',
-          publishedDate: '2025-01-12T16:45:00Z',
-          excerpt: 'Claims about fraudulent mail-in ballots continue to circulate despite lack of supporting evidence...',
-          classification: 'CUI'
-        }
-      ]
     });
 
     // ========================================

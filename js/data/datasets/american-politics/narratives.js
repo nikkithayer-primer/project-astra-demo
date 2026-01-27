@@ -11,39 +11,10 @@ export const narratives = [
     status: 'in_progress',
     sentiment: -0.58,
     themeIds: ['sub-006', 'sub-007'],
-    factionMentions: {
-      'faction-005': { volume: 450, sentiment: -0.68 },
-      'faction-006': { volume: 180, sentiment: -0.42 }
-    },
-    publisherVolumes: {
-      'pub-tiktok': { volume: 220, sentiment: -0.52 },
-      'pub-instagram': { volume: 125, sentiment: -0.45 },
-      'pub-facebook': { volume: 95, sentiment: -0.38 },
-      'pub-x': { volume: 85, sentiment: -0.58 },
-      'pub-reddit': { volume: 45, sentiment: -0.62 },
-      'pub-nat-cnn': { volume: 25, sentiment: -0.48 },
-      'pub-nat-nyt': { volume: 18, sentiment: -0.42 }
-    },
-    factionSources: {
-      'faction-005': { 'pub-facebook': 75, 'pub-x': 65, 'pub-tiktok': 140, 'pub-instagram': 85, 'pub-reddit': 35, 'pub-nat-nyt': 18, 'pub-nat-cnn': 20, 'pub-int-guardian': 12 },
-      'faction-006': { 'pub-tiktok': 80, 'pub-instagram': 40, 'pub-facebook': 20, 'pub-x': 20, 'pub-reddit': 10, 'pub-nat-cnn': 5, 'pub-int-bbc': 5 }
-    },
     personIds: [],
     organizationIds: ['org-003', 'org-004'],
     locationIds: [],
     eventIds: [],
-    volumeOverTime: [
-      { date: '2026-01-07', factionVolumes: { 'faction-005': 45, 'faction-006': 20 }, publisherVolumes: { 'pub-tiktok': 28, 'pub-instagram': 16, 'pub-facebook': 12, 'pub-x': 8, 'pub-nat-cnn': 3 } },
-      { date: '2026-01-08', factionVolumes: { 'faction-005': 65, 'faction-006': 28 }, publisherVolumes: { 'pub-tiktok': 38, 'pub-instagram': 22, 'pub-facebook': 18, 'pub-x': 12, 'pub-nat-cnn': 5 } },
-      { date: '2026-01-09', factionVolumes: { 'faction-005': 85, 'faction-006': 35 }, publisherVolumes: { 'pub-tiktok': 52, 'pub-instagram': 28, 'pub-facebook': 22, 'pub-x': 15, 'pub-reddit': 8 } },
-      { date: '2026-01-10', factionVolumes: { 'faction-005': 95, 'faction-006': 42 }, publisherVolumes: { 'pub-tiktok': 58, 'pub-instagram': 32, 'pub-facebook': 25, 'pub-x': 18, 'pub-reddit': 10 } },
-      { date: '2026-01-11', factionVolumes: { 'faction-005': 78, 'faction-006': 32 }, publisherVolumes: { 'pub-tiktok': 45, 'pub-instagram': 26, 'pub-facebook': 20, 'pub-x': 14, 'pub-reddit': 8 } },
-      { date: '2026-01-12', factionVolumes: { 'faction-005': 72, 'faction-006': 28 }, publisherVolumes: { 'pub-tiktok': 42, 'pub-instagram': 24, 'pub-facebook': 18, 'pub-x': 12, 'pub-reddit': 6 } },
-      { date: '2026-01-13', factionVolumes: { 'faction-005': 68, 'faction-006': 25 }, publisherVolumes: { 'pub-tiktok': 38, 'pub-instagram': 22, 'pub-facebook': 16, 'pub-x': 12, 'pub-reddit': 6 } },
-      { date: '2026-01-14', factionVolumes: { 'faction-005': 82, 'faction-006': 38 }, publisherVolumes: { 'pub-tiktok': 48, 'pub-instagram': 28, 'pub-facebook': 22, 'pub-x': 16, 'pub-reddit': 8 } },
-      { date: '2026-01-15', factionVolumes: { 'faction-005': 75, 'faction-006': 32 }, publisherVolumes: { 'pub-tiktok': 44, 'pub-instagram': 25, 'pub-facebook': 19, 'pub-x': 14, 'pub-reddit': 7 } },
-      { date: '2026-01-16', factionVolumes: { 'faction-005': 70, 'faction-006': 28 }, publisherVolumes: { 'pub-tiktok': 40, 'pub-instagram': 22, 'pub-facebook': 18, 'pub-x': 12, 'pub-reddit': 6 } }
-    ],
     documentIds: ['doc-021', 'doc-022', 'doc-023'],
     createdAt: '2026-01-07T00:00:00Z'
   },
@@ -55,31 +26,10 @@ export const narratives = [
     status: 'in_progress',
     sentiment: -0.52,
     themeIds: ['sub-009', 'sub-010', 'sub-011'],
-    factionMentions: {
-      'faction-001': { volume: 180, sentiment: 0.62 },
-      'faction-002': { volume: 120, sentiment: -0.74 }
-    },
-    publisherVolumes: {
-      'pub-x': { volume: 145, sentiment: -0.38 },
-      'pub-facebook': { volume: 85, sentiment: -0.42 },
-      'pub-tiktok': { volume: 40, sentiment: -0.35 },
-      'pub-nat-cnn': { volume: 28, sentiment: -0.55 },
-      'pub-nat-fox': { volume: 32, sentiment: 0.48 },
-      'pub-int-bbc': { volume: 45, sentiment: -0.28 },
-      'pub-int-reuters': { volume: 38, sentiment: -0.12 },
-      'pub-int-guardian': { volume: 22, sentiment: -0.58 }
-    },
-    factionSources: {
-      'faction-001': { 'pub-x': 80, 'pub-facebook': 45, 'pub-tiktok': 20, 'pub-nat-fox': 30, 'pub-nat-cnn': 5 },
-      'faction-002': { 'pub-x': 65, 'pub-facebook': 40, 'pub-tiktok': 20, 'pub-nat-cnn': 23, 'pub-int-bbc': 30, 'pub-int-guardian': 20 }
-    },
     personIds: ['person-003', 'person-004', 'person-005', 'person-006'],
     organizationIds: ['org-008', 'org-009'],
     locationIds: ['loc-005', 'loc-006', 'loc-001'],
     eventIds: ['event-006', 'event-007', 'event-008', 'event-009'],
-    volumeOverTime: [
-      { date: '2026-01-20', factionVolumes: { 'faction-001': 180, 'faction-002': 120 }, publisherVolumes: { 'pub-x': 145, 'pub-facebook': 85, 'pub-tiktok': 40, 'pub-nat-cnn': 28, 'pub-nat-fox': 32, 'pub-int-bbc': 45, 'pub-int-reuters': 38, 'pub-int-guardian': 22 } }
-    ],
     documentIds: ['doc-001', 'doc-002', 'doc-003', 'doc-004'],
     createdAt: '2026-01-20T00:00:00Z'
   },
@@ -91,42 +41,10 @@ export const narratives = [
     status: 'under_investigation',
     sentiment: -0.68,
     themeIds: ['sub-012', 'sub-013', 'sub-014', 'sub-015'],
-    factionMentions: {
-      'faction-001': { volume: 160, sentiment: 0.72 },
-      'faction-002': { volume: 140, sentiment: -0.81 },
-      'faction-003': { volume: 185, sentiment: -0.85 },
-      'faction-004': { volume: 95, sentiment: 0.65 }
-    },
-    publisherVolumes: {
-      'pub-x': { volume: 220, sentiment: -0.55 },
-      'pub-facebook': { volume: 145, sentiment: -0.48 },
-      'pub-tiktok': { volume: 95, sentiment: -0.62 },
-      'pub-instagram': { volume: 65, sentiment: -0.58 },
-      'pub-reddit': { volume: 55, sentiment: -0.72 },
-      'pub-nat-cnn': { volume: 42, sentiment: -0.45 },
-      'pub-nat-fox': { volume: 38, sentiment: 0.68 },
-      'pub-nat-msnbc': { volume: 35, sentiment: -0.72 },
-      'pub-int-bbc': { volume: 18, sentiment: -0.22 },
-      'pub-int-reuters': { volume: 15, sentiment: -0.08 }
-    },
-    factionSources: {
-      'faction-001': { 'pub-x': 70, 'pub-facebook': 45, 'pub-nat-fox': 35, 'pub-reddit': 10 },
-      'faction-002': { 'pub-x': 55, 'pub-facebook': 40, 'pub-tiktok': 25, 'pub-nat-cnn': 15, 'pub-nat-msnbc': 20 },
-      'faction-003': { 'pub-x': 80, 'pub-tiktok': 60, 'pub-instagram': 50, 'pub-facebook': 45, 'pub-reddit': 35, 'pub-nat-cnn': 20, 'pub-nat-msnbc': 15 },
-      'faction-004': { 'pub-x': 35, 'pub-facebook': 25, 'pub-nat-fox': 25, 'pub-reddit': 10 }
-    },
     personIds: ['person-007', 'person-008', 'person-003'],
     organizationIds: ['org-010', 'org-011', 'org-012'],
     locationIds: ['loc-002', 'loc-001'],
     eventIds: ['event-010', 'event-011', 'event-012', 'event-013', 'event-014'],
-    volumeOverTime: [
-      { date: '2026-01-15', factionVolumes: { 'faction-001': 40, 'faction-002': 35, 'faction-003': 80, 'faction-004': 25 }, publisherVolumes: { 'pub-x': 60, 'pub-facebook': 35, 'pub-tiktok': 40, 'pub-instagram': 25, 'pub-nat-cnn': 10, 'pub-nat-fox': 8 } },
-      { date: '2026-01-16', factionVolumes: { 'faction-001': 55, 'faction-002': 50, 'faction-003': 95, 'faction-004': 35 }, publisherVolumes: { 'pub-x': 85, 'pub-facebook': 50, 'pub-tiktok': 55, 'pub-instagram': 30, 'pub-nat-cnn': 15, 'pub-nat-fox': 12, 'pub-nat-msnbc': 10 } },
-      { date: '2026-01-17', factionVolumes: { 'faction-001': 70, 'faction-002': 65, 'faction-003': 110, 'faction-004': 45 }, publisherVolumes: { 'pub-x': 105, 'pub-facebook': 65, 'pub-tiktok': 60, 'pub-instagram': 35, 'pub-reddit': 25, 'pub-nat-cnn': 20, 'pub-nat-fox': 18, 'pub-nat-msnbc': 15 } },
-      { date: '2026-01-18', factionVolumes: { 'faction-001': 90, 'faction-002': 80, 'faction-003': 130, 'faction-004': 55 }, publisherVolumes: { 'pub-x': 130, 'pub-facebook': 85, 'pub-tiktok': 70, 'pub-instagram': 45, 'pub-reddit': 35, 'pub-nat-cnn': 28, 'pub-nat-fox': 25, 'pub-nat-msnbc': 22 } },
-      { date: '2026-01-19', factionVolumes: { 'faction-001': 120, 'faction-002': 100, 'faction-003': 150, 'faction-004': 70 }, publisherVolumes: { 'pub-x': 165, 'pub-facebook': 110, 'pub-tiktok': 80, 'pub-instagram': 55, 'pub-reddit': 45, 'pub-nat-cnn': 35, 'pub-nat-fox': 32, 'pub-nat-msnbc': 28 } },
-      { date: '2026-01-20', factionVolumes: { 'faction-001': 160, 'faction-002': 140, 'faction-003': 185, 'faction-004': 95 }, publisherVolumes: { 'pub-x': 220, 'pub-facebook': 145, 'pub-tiktok': 95, 'pub-instagram': 65, 'pub-reddit': 55, 'pub-nat-cnn': 42, 'pub-nat-fox': 38, 'pub-nat-msnbc': 35, 'pub-int-bbc': 18, 'pub-int-reuters': 15 } }
-    ],
     documentIds: ['doc-005', 'doc-006', 'doc-007', 'doc-025'],
     createdAt: '2026-01-15T00:00:00Z'
   },
@@ -138,34 +56,10 @@ export const narratives = [
     status: 'under_investigation',
     sentiment: -0.72,
     themeIds: ['sub-016', 'sub-017'],
-    factionMentions: {
-      'faction-001': { volume: 45, sentiment: -0.35 },
-      'faction-002': { volume: 38, sentiment: -0.68 },
-      'faction-004': { volume: 85, sentiment: -0.58 }
-    },
-    publisherVolumes: {
-      'pub-x': { volume: 95, sentiment: -0.62 },
-      'pub-facebook': { volume: 72, sentiment: -0.55 },
-      'pub-reddit': { volume: 28, sentiment: -0.48 },
-      'pub-nat-cnn': { volume: 18, sentiment: -0.42 },
-      'pub-nat-fox': { volume: 22, sentiment: -0.38 },
-      'pub-nat-nyt': { volume: 12, sentiment: -0.35 },
-      'pub-int-bbc': { volume: 8, sentiment: -0.28 },
-      'pub-int-reuters': { volume: 10, sentiment: -0.22 }
-    },
-    factionSources: {
-      'faction-001': { 'pub-x': 20, 'pub-facebook': 15, 'pub-nat-fox': 18, 'pub-reddit': 5 },
-      'faction-002': { 'pub-x': 18, 'pub-facebook': 12, 'pub-nat-cnn': 10, 'pub-reddit': 8 },
-      'faction-004': { 'pub-x': 45, 'pub-facebook': 35, 'pub-nat-fox': 15, 'pub-nat-cnn': 8, 'pub-reddit': 12 }
-    },
     personIds: ['person-009', 'person-010', 'person-011'],
     organizationIds: ['org-013', 'org-014', 'org-015'],
     locationIds: ['loc-007'],
     eventIds: ['event-015', 'event-016'],
-    volumeOverTime: [
-      { date: '2026-01-19', factionVolumes: { 'faction-001': 25, 'faction-002': 20, 'faction-004': 55 }, publisherVolumes: { 'pub-x': 55, 'pub-facebook': 40, 'pub-reddit': 15, 'pub-nat-cnn': 10, 'pub-nat-fox': 12 } },
-      { date: '2026-01-20', factionVolumes: { 'faction-001': 45, 'faction-002': 38, 'faction-004': 85 }, publisherVolumes: { 'pub-x': 95, 'pub-facebook': 72, 'pub-reddit': 28, 'pub-nat-cnn': 18, 'pub-nat-fox': 22, 'pub-nat-nyt': 12, 'pub-int-bbc': 8, 'pub-int-reuters': 10 } }
-    ],
     documentIds: ['doc-013', 'doc-014'],
     createdAt: '2026-01-19T00:00:00Z'
   },
@@ -177,40 +71,10 @@ export const narratives = [
     status: 'in_progress',
     sentiment: -0.58,
     themeIds: ['sub-018', 'sub-019', 'sub-020', 'sub-021'],
-    factionMentions: {
-      'faction-001': { volume: 280, sentiment: 0.68 },
-      'faction-002': { volume: 195, sentiment: -0.72 },
-      'faction-003': { volume: 245, sentiment: -0.78 },
-      'faction-004': { volume: 125, sentiment: 0.62 }
-    },
-    publisherVolumes: {
-      'pub-x': { volume: 385, sentiment: -0.42 },
-      'pub-facebook': { volume: 210, sentiment: -0.48 },
-      'pub-tiktok': { volume: 165, sentiment: -0.55 },
-      'pub-instagram': { volume: 95, sentiment: -0.52 },
-      'pub-reddit': { volume: 78, sentiment: -0.62 },
-      'pub-nat-cnn': { volume: 55, sentiment: -0.38 },
-      'pub-nat-fox': { volume: 72, sentiment: 0.72 },
-      'pub-nat-msnbc': { volume: 48, sentiment: -0.68 },
-      'pub-nat-nyt': { volume: 28, sentiment: -0.32 },
-      'pub-int-bbc': { volume: 22, sentiment: -0.18 },
-      'pub-int-reuters': { volume: 18, sentiment: -0.12 }
-    },
-    factionSources: {
-      'faction-001': { 'pub-x': 120, 'pub-facebook': 75, 'pub-nat-fox': 68, 'pub-reddit': 15, 'pub-tiktok': 25 },
-      'faction-002': { 'pub-x': 85, 'pub-facebook': 55, 'pub-tiktok': 45, 'pub-nat-cnn': 30, 'pub-nat-msnbc': 35, 'pub-reddit': 25 },
-      'faction-003': { 'pub-x': 130, 'pub-tiktok': 85, 'pub-instagram': 70, 'pub-facebook': 60, 'pub-reddit': 35, 'pub-nat-cnn': 20, 'pub-nat-msnbc': 12 },
-      'faction-004': { 'pub-x': 50, 'pub-facebook': 35, 'pub-nat-fox': 45, 'pub-reddit': 10 }
-    },
     personIds: ['person-003', 'person-012', 'person-013', 'person-014', 'person-015', 'person-016', 'person-019', 'person-020'],
     organizationIds: ['org-010', 'org-011', 'org-016', 'org-017', 'org-018', 'org-019'],
     locationIds: ['loc-008', 'loc-002', 'loc-001'],
     eventIds: ['event-017', 'event-018', 'event-019', 'event-020'],
-    volumeOverTime: [
-      { date: '2026-01-19', factionVolumes: { 'faction-001': 95, 'faction-002': 70, 'faction-003': 110, 'faction-004': 45 }, publisherVolumes: { 'pub-x': 145, 'pub-facebook': 85, 'pub-tiktok': 70, 'pub-instagram': 40, 'pub-reddit': 30, 'pub-nat-cnn': 22, 'pub-nat-fox': 28 } },
-      { date: '2026-01-20', factionVolumes: { 'faction-001': 185, 'faction-002': 125, 'faction-003': 165, 'faction-004': 85 }, publisherVolumes: { 'pub-x': 280, 'pub-facebook': 155, 'pub-tiktok': 120, 'pub-instagram': 72, 'pub-reddit': 58, 'pub-nat-cnn': 42, 'pub-nat-fox': 55, 'pub-nat-msnbc': 35 } },
-      { date: '2026-01-21', factionVolumes: { 'faction-001': 280, 'faction-002': 195, 'faction-003': 245, 'faction-004': 125 }, publisherVolumes: { 'pub-x': 385, 'pub-facebook': 210, 'pub-tiktok': 165, 'pub-instagram': 95, 'pub-reddit': 78, 'pub-nat-cnn': 55, 'pub-nat-fox': 72, 'pub-nat-msnbc': 48, 'pub-nat-nyt': 28, 'pub-int-bbc': 22, 'pub-int-reuters': 18 } }
-    ],
     documentIds: ['doc-008', 'doc-009', 'doc-010', 'doc-011', 'doc-012', 'doc-024'],
     createdAt: '2026-01-19T00:00:00Z'
   },
@@ -222,37 +86,10 @@ export const narratives = [
     status: 'new',
     sentiment: -0.48,
     themeIds: ['sub-022', 'sub-023', 'sub-024'],
-    factionMentions: {
-      'faction-001': { volume: 145, sentiment: 0.72 },
-      'faction-002': { volume: 165, sentiment: -0.78 },
-      'faction-003': { volume: 125, sentiment: -0.72 },
-      'faction-004': { volume: 85, sentiment: 0.58 }
-    },
-    publisherVolumes: {
-      'pub-x': { volume: 185, sentiment: -0.38 },
-      'pub-facebook': { volume: 125, sentiment: -0.42 },
-      'pub-reddit': { volume: 55, sentiment: -0.58 },
-      'pub-nat-cnn': { volume: 38, sentiment: -0.45 },
-      'pub-nat-fox': { volume: 45, sentiment: 0.68 },
-      'pub-nat-nyt': { volume: 32, sentiment: -0.38 },
-      'pub-nat-wapo': { volume: 28, sentiment: -0.42 },
-      'pub-int-guardian': { volume: 22, sentiment: -0.52 },
-      'pub-int-bbc': { volume: 18, sentiment: -0.28 },
-      'pub-int-reuters': { volume: 15, sentiment: -0.15 }
-    },
-    factionSources: {
-      'faction-001': { 'pub-x': 65, 'pub-facebook': 45, 'pub-nat-fox': 42, 'pub-reddit': 12 },
-      'faction-002': { 'pub-x': 70, 'pub-facebook': 48, 'pub-nat-cnn': 25, 'pub-nat-nyt': 22, 'pub-nat-wapo': 20, 'pub-reddit': 28 },
-      'faction-003': { 'pub-x': 55, 'pub-facebook': 38, 'pub-reddit': 18, 'pub-nat-cnn': 12, 'pub-int-guardian': 15 },
-      'faction-004': { 'pub-x': 35, 'pub-facebook': 28, 'pub-nat-fox': 25, 'pub-reddit': 8 }
-    },
     personIds: ['person-007', 'person-017', 'person-018', 'person-021', 'person-022', 'person-023', 'person-024', 'person-025'],
     organizationIds: ['org-010', 'org-011', 'org-017', 'org-020', 'org-021'],
     locationIds: ['loc-002', 'loc-008', 'loc-009'],
     eventIds: ['event-021', 'event-022', 'event-023', 'event-024', 'event-025'],
-    volumeOverTime: [
-      { date: '2026-01-20', factionVolumes: { 'faction-001': 145, 'faction-002': 165, 'faction-003': 125, 'faction-004': 85 }, publisherVolumes: { 'pub-x': 185, 'pub-facebook': 125, 'pub-reddit': 55, 'pub-nat-cnn': 38, 'pub-nat-fox': 45, 'pub-nat-nyt': 32, 'pub-nat-wapo': 28, 'pub-int-guardian': 22, 'pub-int-bbc': 18, 'pub-int-reuters': 15 } }
-    ],
     documentIds: ['doc-006', 'doc-015', 'doc-016', 'doc-017'],
     createdAt: '2026-01-20T00:00:00Z'
   },
@@ -264,37 +101,10 @@ export const narratives = [
     status: 'new',
     sentiment: -0.55,
     themeIds: ['sub-025', 'sub-026', 'sub-027'],
-    factionMentions: {
-      'faction-001': { volume: 125, sentiment: 0.58 },
-      'faction-005': { volume: 195, sentiment: -0.78 },
-      'faction-006': { volume: 165, sentiment: -0.85 }
-    },
-    publisherVolumes: {
-      'pub-x': { volume: 175, sentiment: -0.48 },
-      'pub-facebook': { volume: 135, sentiment: -0.42 },
-      'pub-tiktok': { volume: 145, sentiment: -0.55 },
-      'pub-instagram': { volume: 95, sentiment: -0.52 },
-      'pub-reddit': { volume: 68, sentiment: -0.62 },
-      'pub-nat-cnn': { volume: 28, sentiment: -0.45 },
-      'pub-nat-fox': { volume: 35, sentiment: 0.55 },
-      'pub-nat-nyt': { volume: 22, sentiment: -0.52 },
-      'pub-int-guardian': { volume: 32, sentiment: -0.68 },
-      'pub-int-bbc': { volume: 18, sentiment: -0.38 }
-    },
-    factionSources: {
-      'faction-001': { 'pub-x': 55, 'pub-facebook': 42, 'pub-nat-fox': 32, 'pub-tiktok': 25, 'pub-reddit': 12 },
-      'faction-005': { 'pub-x': 72, 'pub-facebook': 55, 'pub-tiktok': 65, 'pub-instagram': 48, 'pub-reddit': 35, 'pub-nat-cnn': 18, 'pub-int-guardian': 25 },
-      'faction-006': { 'pub-tiktok': 85, 'pub-instagram': 62, 'pub-x': 58, 'pub-facebook': 45, 'pub-reddit': 28, 'pub-int-guardian': 22 }
-    },
     personIds: ['person-026', 'person-003'],
     organizationIds: ['org-022', 'org-023'],
     locationIds: ['loc-001'],
     eventIds: ['event-026'],
-    volumeOverTime: [
-      { date: '2026-01-18', factionVolumes: { 'faction-001': 45, 'faction-005': 75, 'faction-006': 65 }, publisherVolumes: { 'pub-x': 65, 'pub-facebook': 48, 'pub-tiktok': 55, 'pub-instagram': 35, 'pub-reddit': 25 } },
-      { date: '2026-01-19', factionVolumes: { 'faction-001': 85, 'faction-005': 135, 'faction-006': 115 }, publisherVolumes: { 'pub-x': 120, 'pub-facebook': 92, 'pub-tiktok': 105, 'pub-instagram': 68, 'pub-reddit': 48, 'pub-nat-cnn': 18, 'pub-nat-fox': 22 } },
-      { date: '2026-01-20', factionVolumes: { 'faction-001': 125, 'faction-005': 195, 'faction-006': 165 }, publisherVolumes: { 'pub-x': 175, 'pub-facebook': 135, 'pub-tiktok': 145, 'pub-instagram': 95, 'pub-reddit': 68, 'pub-nat-cnn': 28, 'pub-nat-fox': 35, 'pub-nat-nyt': 22, 'pub-int-guardian': 32, 'pub-int-bbc': 18 } }
-    ],
     documentIds: ['doc-018', 'doc-019', 'doc-020'],
     createdAt: '2026-01-18T00:00:00Z'
   }

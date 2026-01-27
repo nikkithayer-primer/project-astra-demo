@@ -384,12 +384,11 @@ class DataStore {
       missionId: narrative.missionId || null,
       sentiment: narrative.sentiment || 'neutral',
       themeIds: [],
-      factionMentions: narrative.factionMentions || {},
       personIds: narrative.personIds || [],
       organizationIds: narrative.organizationIds || [],
       locationIds: narrative.locationIds || [],
       eventIds: narrative.eventIds || [],
-      volumeOverTime: narrative.volumeOverTime || this.generateInitialVolume(),
+      documentIds: narrative.documentIds || [],  // Source of truth for volume/factions
       createdAt: new Date().toISOString()
     });
     this.save();
@@ -426,12 +425,11 @@ class DataStore {
       text: theme.text,
       parentNarrativeId: theme.parentNarrativeId,
       sentiment: theme.sentiment || 'neutral',
-      factionMentions: theme.factionMentions || {},
       personIds: theme.personIds || [],
       organizationIds: theme.organizationIds || [],
       locationIds: theme.locationIds || [],
       eventIds: theme.eventIds || [],
-      volumeOverTime: theme.volumeOverTime || this.generateInitialVolume(),
+      documentIds: theme.documentIds || [],  // Source of truth for volume/factions
       createdAt: new Date().toISOString()
     });
 
@@ -832,20 +830,7 @@ class DataStore {
   // Helpers
   // ============================================
 
-  generateInitialVolume() {
-    const days = 14;
-    const data = [];
-    const now = new Date();
-    for (let i = days; i >= 0; i--) {
-      const date = new Date(now);
-      date.setDate(date.getDate() - i);
-      data.push({
-        date: date.toISOString().split('T')[0],
-        factionVolumes: {}
-      });
-    }
-    return data;
-  }
+  // generateInitialVolume removed - volume is now computed from documents
 
   generateColor() {
     // Cohesive data visualization palette - optimized for charts and stacked areas

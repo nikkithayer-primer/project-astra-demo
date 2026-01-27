@@ -127,11 +127,13 @@ export const DataService = {
    */
   narrativeHasActivityInRange: (narrative, timeRange) => {
     if (!timeRange) return true;
-    if (!narrative.volumeOverTime || !narrative.volumeOverTime.length) {
+    // Check documents linked to this narrative
+    const volumeOverTime = DataService.getVolumeOverTimeForNarrative(narrative.id);
+    if (!volumeOverTime || !volumeOverTime.length) {
       // Check createdAt as fallback
       return DataService.isDateInRange(narrative.createdAt, timeRange);
     }
-    return narrative.volumeOverTime.some(entry => DataService.isDateInRange(entry.date, timeRange));
+    return volumeOverTime.some(entry => DataService.isDateInRange(entry.date, timeRange));
   },
 
   // ============================================
@@ -380,9 +382,10 @@ export const DataService = {
     dataStore.data.themes.filter(s => s.parentNarrativeId === narrativeId),
 
   getFactionsForNarrative: (narrativeId) => {
-    const narrative = dataStore.data.narratives.find(n => n.id === narrativeId);
-    if (!narrative || !narrative.factionMentions) return [];
-    return Object.entries(narrative.factionMentions).map(([factionId, data]) => ({
+    // Use document-based aggregation to get faction data
+    const factionMentions = DataService.getAggregateFactionMentionsForNarrative(narrativeId);
+    if (!factionMentions || Object.keys(factionMentions).length === 0) return [];
+    return Object.entries(factionMentions).map(([factionId, data]) => ({
       faction: dataStore.data.factions.find(f => f.id === factionId),
       ...data
     })).filter(f => f.faction);
@@ -405,9 +408,10 @@ export const DataService = {
   // ============================================
 
   getFactionsForTheme: (themeId) => {
-    const sub = dataStore.data.themes.find(s => s.id === themeId);
-    if (!sub || !sub.factionMentions) return [];
-    return Object.entries(sub.factionMentions).map(([factionId, data]) => ({
+    // Use document-based aggregation to get faction data
+    const factionMentions = DataService.getAggregateFactionMentionsForTheme(themeId);
+    if (!factionMentions || Object.keys(factionMentions).length === 0) return [];
+    return Object.entries(factionMentions).map(([factionId, data]) => ({
       faction: dataStore.data.factions.find(f => f.id === factionId),
       ...data
     })).filter(f => f.faction);
@@ -424,15 +428,17 @@ export const DataService = {
   // ============================================
 
   getNarrativesForFaction: (factionId) => {
-    return dataStore.data.narratives.filter(n =>
-      n.factionMentions && n.factionMentions[factionId]
-    );
+    return dataStore.data.narratives.filter(n => {
+      const factionMentions = DataService.getAggregateFactionMentionsForNarrative(n.id);
+      return factionMentions && factionMentions[factionId];
+    });
   },
 
   getThemesForFaction: (factionId) => {
-    return dataStore.data.themes.filter(s =>
-      s.factionMentions && s.factionMentions[factionId]
-    );
+    return dataStore.data.themes.filter(s => {
+      const factionMentions = DataService.getAggregateFactionMentionsForTheme(s.id);
+      return factionMentions && factionMentions[factionId];
+    });
   },
 
   getRelatedFactions: (factionId) => 
@@ -764,22 +770,14 @@ export const DataService = {
   },
 
   /**
-   * Get documents for a faction (via narratives the faction is engaged with)
+   * Get documents that mention a faction (directly from document factionMentions)
    */
   getDocumentsForFaction: (factionId) => {
     const documents = dataStore.data.documents || [];
-    const narratives = dataStore.data.narratives || [];
     
-    // Find narratives this faction is engaged with
-    const factionNarrativeIds = new Set(
-      narratives
-        .filter(n => n.factionMentions && n.factionMentions[factionId])
-        .map(n => n.id)
-    );
-    
-    // Return documents that belong to those narratives
+    // Return documents that mention this faction
     return documents
-      .filter(d => (d.narrativeIds || []).some(nId => factionNarrativeIds.has(nId)))
+      .filter(d => d.factionMentions && d.factionMentions[factionId])
       .sort((a, b) => new Date(b.publishedDate) - new Date(a.publishedDate));
   },
 
@@ -1175,14 +1173,12 @@ export const DataService = {
       narratives.some(n => n.id === s.parentNarrativeId)
     );
 
-    // Calculate total volume for each narrative (filtered by time range)
+    // Calculate total volume for each narrative from documents (filtered by time range)
     const narrativesWithVolume = narratives.map(n => {
-      const filteredVolume = DataService.filterVolumeByTimeRange(n.volumeOverTime, timeRange);
-      const totalVolume = timeRange && filteredVolume.length > 0
-        ? filteredVolume.reduce((sum, entry) => {
-            return sum + Object.values(entry.factionVolumes || {}).reduce((s, v) => s + v, 0);
-          }, 0)
-        : Object.values(n.factionMentions || {}).reduce((sum, f) => sum + (f.volume || 0), 0);
+      const volumeOverTime = DataService.getVolumeOverTimeForNarrative(n.id, timeRange);
+      const totalVolume = volumeOverTime.reduce((sum, entry) => {
+        return sum + Object.values(entry.factionVolumes || {}).reduce((s, v) => s + v, 0);
+      }, 0);
       
       return { ...n, totalVolume };
     });
@@ -1220,6 +1216,7 @@ export const DataService = {
   },
 
   // Aggregate volume over time across multiple narratives (with time range and status support)
+  // Uses document-based aggregation
   getAggregateVolumeOverTime: (missionId = null, timeRange = null, statusFilter = null) => {
     let narratives = DataService.getNarratives(missionId);
     
@@ -1232,7 +1229,8 @@ export const DataService = {
     const dateMap = new Map();
 
     narratives.forEach(n => {
-      const volumeData = DataService.filterVolumeByTimeRange(n.volumeOverTime, timeRange);
+      // Get volume from documents linked to this narrative
+      const volumeData = DataService.getVolumeOverTimeForNarrative(n.id, timeRange);
       volumeData.forEach(entry => {
         if (!dateMap.has(entry.date)) {
           dateMap.set(entry.date, {});
@@ -1252,7 +1250,335 @@ export const DataService = {
     return { dates, series, factions };
   },
 
+  // ============================================
+  // Document-Based Aggregation Methods
+  // ============================================
+  // These methods compute volume and sentiment from documents (source of truth)
+  // rather than from pre-computed values on narratives.
+
+  /**
+   * Get aggregate faction mentions for a narrative from its linked documents.
+   * Volume = count of documents mentioning the faction.
+   * Sentiment = average of document sentiments.
+   * @param {string} narrativeId - The narrative ID
+   * @returns {Object} { factionId: { volume, sentiment } }
+   */
+  getAggregateFactionMentionsForNarrative: (narrativeId) => {
+    const narrative = dataStore.data.narratives.find(n => n.id === narrativeId);
+    if (!narrative || !narrative.documentIds) return {};
+    
+    const documents = (narrative.documentIds || [])
+      .map(id => dataStore.data.documents.find(d => d.id === id))
+      .filter(Boolean);
+    
+    const factionStats = new Map();
+    
+    documents.forEach(doc => {
+      Object.entries(doc.factionMentions || {}).forEach(([factionId, data]) => {
+        if (!factionStats.has(factionId)) {
+          factionStats.set(factionId, { count: 0, sentimentSum: 0 });
+        }
+        const stats = factionStats.get(factionId);
+        stats.count += 1;
+        stats.sentimentSum += data.sentiment || 0;
+      });
+    });
+    
+    const result = {};
+    factionStats.forEach((stats, factionId) => {
+      result[factionId] = {
+        volume: stats.count,
+        sentiment: stats.count > 0 ? stats.sentimentSum / stats.count : 0
+      };
+    });
+    
+    return result;
+  },
+
+  /**
+   * Get volume over time for a narrative from its linked documents.
+   * Groups documents by publishedDate and counts per faction/publisher.
+   * @param {string} narrativeId - The narrative ID
+   * @param {Object} timeRange - Optional { start, end } date range
+   * @returns {Array} [{ date, factionVolumes, publisherVolumes }, ...]
+   */
+  getVolumeOverTimeForNarrative: (narrativeId, timeRange = null) => {
+    const narrative = dataStore.data.narratives.find(n => n.id === narrativeId);
+    if (!narrative || !narrative.documentIds) return [];
+    
+    let documents = (narrative.documentIds || [])
+      .map(id => dataStore.data.documents.find(d => d.id === id))
+      .filter(Boolean);
+    
+    // Apply time range filter if provided
+    if (timeRange) {
+      documents = documents.filter(doc => 
+        doc.publishedDate && DataService.isDateInRange(doc.publishedDate, timeRange)
+      );
+    }
+    
+    const dateMap = new Map();
+    
+    documents.forEach(doc => {
+      if (!doc.publishedDate) return;
+      const date = doc.publishedDate.split('T')[0]; // Extract YYYY-MM-DD
+      
+      if (!dateMap.has(date)) {
+        dateMap.set(date, { factionVolumes: {}, publisherVolumes: {} });
+      }
+      const dayData = dateMap.get(date);
+      
+      // Count toward each faction this doc mentions
+      Object.keys(doc.factionMentions || {}).forEach(factionId => {
+        dayData.factionVolumes[factionId] = (dayData.factionVolumes[factionId] || 0) + 1;
+      });
+      
+      // Count toward publisher
+      if (doc.publisherId) {
+        dayData.publisherVolumes[doc.publisherId] = (dayData.publisherVolumes[doc.publisherId] || 0) + 1;
+      }
+    });
+    
+    // Convert to sorted array
+    const dates = [...dateMap.keys()].sort();
+    return dates.map(date => ({
+      date,
+      factionVolumes: dateMap.get(date).factionVolumes,
+      publisherVolumes: dateMap.get(date).publisherVolumes
+    }));
+  },
+
+  /**
+   * Get which publishers each faction appears in for a narrative.
+   * @param {string} narrativeId - The narrative ID
+   * @returns {Object} { factionId: { publisherId: count, ... }, ... }
+   */
+  getFactionSourcesForNarrative: (narrativeId) => {
+    const narrative = dataStore.data.narratives.find(n => n.id === narrativeId);
+    if (!narrative || !narrative.documentIds) return {};
+    
+    const documents = (narrative.documentIds || [])
+      .map(id => dataStore.data.documents.find(d => d.id === id))
+      .filter(Boolean);
+    
+    const factionSources = new Map();
+    
+    documents.forEach(doc => {
+      if (!doc.publisherId) return;
+      
+      Object.keys(doc.factionMentions || {}).forEach(factionId => {
+        if (!factionSources.has(factionId)) {
+          factionSources.set(factionId, {});
+        }
+        const sources = factionSources.get(factionId);
+        sources[doc.publisherId] = (sources[doc.publisherId] || 0) + 1;
+      });
+    });
+    
+    const result = {};
+    factionSources.forEach((sources, factionId) => {
+      result[factionId] = sources;
+    });
+    
+    return result;
+  },
+
+  /**
+   * Get aggregate publisher volumes for a narrative from its linked documents.
+   * @param {string} narrativeId - The narrative ID
+   * @returns {Object} { publisherId: { volume, sentiment }, ... }
+   */
+  getAggregatePublisherVolumesForNarrative: (narrativeId) => {
+    const narrative = dataStore.data.narratives.find(n => n.id === narrativeId);
+    if (!narrative || !narrative.documentIds) return {};
+    
+    const documents = (narrative.documentIds || [])
+      .map(id => dataStore.data.documents.find(d => d.id === id))
+      .filter(Boolean);
+    
+    const publisherStats = new Map();
+    
+    documents.forEach(doc => {
+      if (!doc.publisherId) return;
+      
+      if (!publisherStats.has(doc.publisherId)) {
+        publisherStats.set(doc.publisherId, { count: 0, sentimentSum: 0, sentimentCount: 0 });
+      }
+      const stats = publisherStats.get(doc.publisherId);
+      stats.count += 1;
+      
+      // Average sentiment across all factions in this doc for this publisher
+      const factionSentiments = Object.values(doc.factionMentions || {})
+        .map(f => f.sentiment)
+        .filter(s => typeof s === 'number');
+      if (factionSentiments.length > 0) {
+        const avgSentiment = factionSentiments.reduce((a, b) => a + b, 0) / factionSentiments.length;
+        stats.sentimentSum += avgSentiment;
+        stats.sentimentCount += 1;
+      }
+    });
+    
+    const result = {};
+    publisherStats.forEach((stats, publisherId) => {
+      result[publisherId] = {
+        volume: stats.count,
+        sentiment: stats.sentimentCount > 0 ? stats.sentimentSum / stats.sentimentCount : 0
+      };
+    });
+    
+    return result;
+  },
+
+  /**
+   * Get aggregate volume over time from documents across narratives.
+   * This is the document-based version of getAggregateVolumeOverTime.
+   * @param {string} missionId - Optional mission ID filter
+   * @param {Object} timeRange - Optional { start, end } date range
+   * @param {Array} statusFilter - Optional array of narrative statuses
+   * @returns {Object} { dates, series, factions }
+   */
+  getAggregateVolumeOverTimeFromDocs: (missionId = null, timeRange = null, statusFilter = null) => {
+    let narratives = DataService.getNarratives(missionId);
+    
+    // Apply status filter if provided
+    if (statusFilter && statusFilter.length > 0) {
+      narratives = narratives.filter(n => statusFilter.includes(n.status || 'new'));
+    }
+    
+    // Collect all document IDs from filtered narratives
+    const allDocIds = new Set();
+    narratives.forEach(n => {
+      (n.documentIds || []).forEach(id => allDocIds.add(id));
+    });
+    
+    // Get documents
+    let documents = [...allDocIds]
+      .map(id => dataStore.data.documents.find(d => d.id === id))
+      .filter(Boolean);
+    
+    // Apply time range filter
+    if (timeRange) {
+      documents = documents.filter(doc => 
+        doc.publishedDate && DataService.isDateInRange(doc.publishedDate, timeRange)
+      );
+    }
+    
+    const factions = dataStore.data.factions;
+    const dateMap = new Map();
+    
+    documents.forEach(doc => {
+      if (!doc.publishedDate) return;
+      const date = doc.publishedDate.split('T')[0];
+      
+      if (!dateMap.has(date)) {
+        dateMap.set(date, {});
+      }
+      const dayData = dateMap.get(date);
+      
+      Object.keys(doc.factionMentions || {}).forEach(factionId => {
+        dayData[factionId] = (dayData[factionId] || 0) + 1;
+      });
+    });
+    
+    const dates = [...dateMap.keys()].sort();
+    const series = factions.map(f =>
+      dates.map(date => (dateMap.get(date) || {})[f.id] || 0)
+    );
+    
+    return { dates, series, factions };
+  },
+
+  /**
+   * Get aggregate faction mentions for a theme from its linked documents.
+   * @param {string} themeId - The theme ID
+   * @returns {Object} { factionId: { volume, sentiment } }
+   */
+  getAggregateFactionMentionsForTheme: (themeId) => {
+    const theme = dataStore.data.themes.find(t => t.id === themeId);
+    if (!theme || !theme.documentIds) return {};
+    
+    const documents = (theme.documentIds || [])
+      .map(id => dataStore.data.documents.find(d => d.id === id))
+      .filter(Boolean);
+    
+    const factionStats = new Map();
+    
+    documents.forEach(doc => {
+      Object.entries(doc.factionMentions || {}).forEach(([factionId, data]) => {
+        if (!factionStats.has(factionId)) {
+          factionStats.set(factionId, { count: 0, sentimentSum: 0 });
+        }
+        const stats = factionStats.get(factionId);
+        stats.count += 1;
+        stats.sentimentSum += data.sentiment || 0;
+      });
+    });
+    
+    const result = {};
+    factionStats.forEach((stats, factionId) => {
+      result[factionId] = {
+        volume: stats.count,
+        sentiment: stats.count > 0 ? stats.sentimentSum / stats.count : 0
+      };
+    });
+    
+    return result;
+  },
+
+  /**
+   * Get volume over time for a theme from its linked documents.
+   * @param {string} themeId - The theme ID
+   * @param {Object} timeRange - Optional { start, end } date range
+   * @returns {Array} [{ date, factionVolumes, publisherVolumes }, ...]
+   */
+  getVolumeOverTimeForTheme: (themeId, timeRange = null) => {
+    const theme = dataStore.data.themes.find(t => t.id === themeId);
+    if (!theme || !theme.documentIds) return [];
+    
+    let documents = (theme.documentIds || [])
+      .map(id => dataStore.data.documents.find(d => d.id === id))
+      .filter(Boolean);
+    
+    if (timeRange) {
+      documents = documents.filter(doc => 
+        doc.publishedDate && DataService.isDateInRange(doc.publishedDate, timeRange)
+      );
+    }
+    
+    const dateMap = new Map();
+    
+    documents.forEach(doc => {
+      if (!doc.publishedDate) return;
+      const date = doc.publishedDate.split('T')[0];
+      
+      if (!dateMap.has(date)) {
+        dateMap.set(date, { factionVolumes: {}, publisherVolumes: {} });
+      }
+      const dayData = dateMap.get(date);
+      
+      Object.keys(doc.factionMentions || {}).forEach(factionId => {
+        dayData.factionVolumes[factionId] = (dayData.factionVolumes[factionId] || 0) + 1;
+      });
+      
+      if (doc.publisherId) {
+        dayData.publisherVolumes[doc.publisherId] = (dayData.publisherVolumes[doc.publisherId] || 0) + 1;
+      }
+    });
+    
+    const dates = [...dateMap.keys()].sort();
+    return dates.map(date => ({
+      date,
+      factionVolumes: dateMap.get(date).factionVolumes,
+      publisherVolumes: dateMap.get(date).publisherVolumes
+    }));
+  },
+
+  // ============================================
+  // End of Document-Based Aggregation Methods
+  // ============================================
+
   // Aggregate faction sentiments across all narratives (weighted by volume)
+  // Uses document-based aggregation
   getAggregateFactionSentiments: (missionId = null, timeRange = null, statusFilter = null) => {
     let narratives = DataService.getNarratives(missionId);
     
@@ -1274,9 +1600,10 @@ export const DataService = {
       factionStats.set(f.id, { totalVolume: 0, weightedSentiment: 0 });
     });
     
-    // Aggregate volume and sentiment across narratives
+    // Aggregate volume and sentiment across narratives from documents
     narratives.forEach(n => {
-      Object.entries(n.factionMentions || {}).forEach(([factionId, data]) => {
+      const factionMentions = DataService.getAggregateFactionMentionsForNarrative(n.id);
+      Object.entries(factionMentions).forEach(([factionId, data]) => {
         const stats = factionStats.get(factionId);
         if (stats && data.volume && typeof data.sentiment === 'number') {
           stats.totalVolume += data.volume;
@@ -1360,9 +1687,10 @@ export const DataService = {
       .slice(0, limit);
   },
 
-  // Calculate total volume for a narrative
+  // Calculate total volume for a narrative from documents
   getNarrativeTotalVolume: (narrative) => {
-    return Object.values(narrative.factionMentions || {})
+    const factionMentions = DataService.getAggregateFactionMentionsForNarrative(narrative.id);
+    return Object.values(factionMentions)
       .reduce((sum, f) => sum + (f.volume || 0), 0);
   },
 
@@ -1371,24 +1699,26 @@ export const DataService = {
   // ============================================
 
   getPublishersForNarrative: (narrativeId) => {
-    const narrative = dataStore.data.narratives.find(n => n.id === narrativeId);
-    if (!narrative || !narrative.publisherVolumes) return [];
+    // Use document-based aggregation
+    const publisherVolumes = DataService.getAggregatePublisherVolumesForNarrative(narrativeId);
+    if (!publisherVolumes || Object.keys(publisherVolumes).length === 0) return [];
     
     const publishers = dataStore.data.publishers || [];
-    return Object.entries(narrative.publisherVolumes).map(([publisherId, data]) => {
+    return Object.entries(publisherVolumes).map(([publisherId, data]) => {
       const publisher = publishers.find(p => p.id === publisherId);
       return publisher ? { publisher, ...data } : null;
     }).filter(Boolean);
   },
 
   getFactionPublishersForNarrative: (narrativeId) => {
-    const narrative = dataStore.data.narratives.find(n => n.id === narrativeId);
-    if (!narrative || !narrative.factionPublishers) return [];
+    // Use document-based aggregation
+    const factionSources = DataService.getFactionSourcesForNarrative(narrativeId);
+    if (!factionSources || Object.keys(factionSources).length === 0) return [];
     
     const factions = dataStore.data.factions;
     const publishers = dataStore.data.publishers || [];
     
-    return Object.entries(narrative.factionPublishers).map(([factionId, publisherCounts]) => {
+    return Object.entries(factionSources).map(([factionId, publisherCounts]) => {
       const faction = factions.find(f => f.id === factionId);
       if (!faction) return null;
       
@@ -1402,58 +1732,47 @@ export const DataService = {
   },
 
   getPublisherVolumeOverTime: (narrativeId) => {
-    const narrative = dataStore.data.narratives.find(n => n.id === narrativeId);
-    if (!narrative || !narrative.volumeOverTime) return { dates: [], series: [], publishers: [] };
+    // Use document-based aggregation
+    const volumeOverTime = DataService.getVolumeOverTimeForNarrative(narrativeId);
+    if (!volumeOverTime || volumeOverTime.length === 0) return { dates: [], series: [], publishers: [] };
     
     const publishers = dataStore.data.publishers || [];
     const allPublisherIds = new Set();
     
     // Collect all publisher IDs present in the time series
-    narrative.volumeOverTime.forEach(entry => {
+    volumeOverTime.forEach(entry => {
       Object.keys(entry.publisherVolumes || {}).forEach(id => allPublisherIds.add(id));
     });
     
     const publisherIds = [...allPublisherIds];
     const relevantPublishers = publisherIds.map(id => publishers.find(p => p.id === id)).filter(Boolean);
     
-    const dates = narrative.volumeOverTime.map(e => e.date);
+    const dates = volumeOverTime.map(e => e.date);
     const series = relevantPublishers.map(publisher => 
-      narrative.volumeOverTime.map(entry => (entry.publisherVolumes || {})[publisher.id] || 0)
+      volumeOverTime.map(entry => (entry.publisherVolumes || {})[publisher.id] || 0)
     );
     
     return { dates, series, publishers: relevantPublishers };
   },
 
   // Aggregate publisher volumes across multiple narratives (with time range support)
+  // Uses document-based aggregation
   getAggregatePublisherVolumes: (missionId = null, timeRange = null) => {
     const narratives = DataService.getNarratives(missionId, timeRange);
     const publishers = dataStore.data.publishers || [];
     const publisherTotals = {};
     
     narratives.forEach(n => {
-      // If time range specified, calculate from volumeOverTime
-      if (timeRange && n.volumeOverTime) {
-        const filteredVolume = DataService.filterVolumeByTimeRange(n.volumeOverTime, timeRange);
-        filteredVolume.forEach(entry => {
-          Object.entries(entry.publisherVolumes || {}).forEach(([publisherId, vol]) => {
-            if (!publisherTotals[publisherId]) {
-              publisherTotals[publisherId] = { volume: 0, sentimentCounts: { positive: 0, neutral: 0, negative: 0 } };
-            }
-            publisherTotals[publisherId].volume += vol;
-          });
-        });
-      } else {
-        // Use aggregate publisherVolumes
-        Object.entries(n.publisherVolumes || {}).forEach(([publisherId, data]) => {
+      // Get volume from documents linked to this narrative
+      const volumeOverTime = DataService.getVolumeOverTimeForNarrative(n.id, timeRange);
+      volumeOverTime.forEach(entry => {
+        Object.entries(entry.publisherVolumes || {}).forEach(([publisherId, vol]) => {
           if (!publisherTotals[publisherId]) {
             publisherTotals[publisherId] = { volume: 0, sentimentCounts: { positive: 0, neutral: 0, negative: 0 } };
           }
-          publisherTotals[publisherId].volume += data.volume || 0;
-          if (data.sentiment) {
-            publisherTotals[publisherId].sentimentCounts[data.sentiment]++;
-          }
+          publisherTotals[publisherId].volume += vol;
         });
-      }
+      });
     });
     
     return Object.entries(publisherTotals).map(([publisherId, totals]) => {
@@ -1463,6 +1782,7 @@ export const DataService = {
   },
 
   // Aggregate publisher volumes over time (with time range and status support)
+  // Uses document-based aggregation
   getAggregatePublisherVolumeOverTime: (missionId = null, timeRange = null, statusFilter = null) => {
     let narratives = DataService.getNarratives(missionId);
     
@@ -1475,7 +1795,8 @@ export const DataService = {
     const dateMap = new Map();
 
     narratives.forEach(n => {
-      const volumeData = DataService.filterVolumeByTimeRange(n.volumeOverTime, timeRange);
+      // Get volume from documents linked to this narrative
+      const volumeData = DataService.getVolumeOverTimeForNarrative(n.id, timeRange);
       volumeData.forEach(entry => {
         if (!dateMap.has(entry.date)) {
           dateMap.set(entry.date, {});
@@ -1559,7 +1880,9 @@ export const DataService = {
     
     const matchesFactions = (narrative, factionIds) => {
       if (!factionIds || factionIds.length === 0) return null;
-      return factionIds.some(fId => narrative.factionMentions && narrative.factionMentions[fId]);
+      // Check document-level faction mentions
+      const factionMentions = DataService.getAggregateFactionMentionsForNarrative(narrative.id);
+      return factionIds.some(fId => factionMentions && factionMentions[fId]);
     };
     
     const matchesLocations = (narrative, locationIds) => {
@@ -1868,14 +2191,16 @@ export const DataService = {
 
   /**
    * Get all factions engaged with narratives matching a monitor's scope.
-   * Returns factions with aggregated sentiment and volume.
+   * Returns factions with aggregated sentiment and volume from documents.
    */
   getFactionsForMonitor: (monitorId) => {
     const narratives = DataService.getNarrativesForMonitor(monitorId);
     const factionStats = new Map();
     
+    // Aggregate faction data from documents linked to each narrative
     narratives.forEach(n => {
-      Object.entries(n.factionMentions || {}).forEach(([factionId, data]) => {
+      const factionMentions = DataService.getAggregateFactionMentionsForNarrative(n.id);
+      Object.entries(factionMentions).forEach(([factionId, data]) => {
         if (!factionStats.has(factionId)) {
           factionStats.set(factionId, { totalVolume: 0, weightedSentiment: 0 });
         }
@@ -1922,15 +2247,17 @@ export const DataService = {
 
   /**
    * Get aggregated volume over time for narratives matching a monitor's scope.
-   * Groups by faction for chart display.
+   * Groups by faction for chart display. Uses document-based aggregation.
    */
   getAggregateVolumeForMonitor: (monitorId) => {
     const narratives = DataService.getNarrativesForMonitor(monitorId);
     const factions = dataStore.data.factions || [];
     const dateMap = new Map();
     
+    // Aggregate volume from documents linked to each narrative
     narratives.forEach(n => {
-      (n.volumeOverTime || []).forEach(entry => {
+      const volumeOverTime = DataService.getVolumeOverTimeForNarrative(n.id);
+      volumeOverTime.forEach(entry => {
         if (!dateMap.has(entry.date)) {
           dateMap.set(entry.date, {});
         }
@@ -2002,6 +2329,7 @@ export const DataService = {
   // Search across all entities
   search: (query) => {
     const results = {
+      documents: [],
       narratives: [],
       themes: [],
       topics: [],
@@ -2018,6 +2346,19 @@ export const DataService = {
 
     try {
       const lowerQuery = query.toLowerCase();
+      const queryTerms = lowerQuery.split(/\s+/).filter(t => t.length > 0);
+      
+      // Search documents by title, excerpt, and content blocks
+      results.documents = (dataStore.data?.documents || []).filter(doc => {
+        if (!doc) return false;
+        const titleMatch = doc.title && doc.title.toLowerCase().includes(lowerQuery);
+        const excerptMatch = doc.excerpt && doc.excerpt.toLowerCase().includes(lowerQuery);
+        const contentMatch = Array.isArray(doc.contentBlocks) && doc.contentBlocks.some(
+          block => block.content && block.content.toLowerCase().includes(lowerQuery)
+        );
+        const transcriptMatch = doc.transcription && doc.transcription.toLowerCase().includes(lowerQuery);
+        return titleMatch || excerptMatch || contentMatch || transcriptMatch;
+      }).sort((a, b) => new Date(b.publishedDate) - new Date(a.publishedDate));
       
       results.narratives = (dataStore.data?.narratives || []).filter(n =>
         n && n.text && n.text.toLowerCase().includes(lowerQuery)

@@ -5,6 +5,7 @@
 
 import { BaseView } from './BaseView.js';
 import { DataService } from '../data/DataService.js';
+import { dataStore } from '../data/DataStore.js';
 import { PageHeader } from '../utils/PageHeader.js';
 import { CardBuilder } from '../utils/CardBuilder.js';
 import { NarrativeList } from '../components/NarrativeList.js';
@@ -15,6 +16,7 @@ import { Timeline } from '../components/Timeline.js';
 import { NetworkGraph } from '../components/NetworkGraph.js';
 import { DocumentTable } from '../components/DocumentTable.js';
 import { ColumnFilter } from '../components/ColumnFilter.js';
+import { getWorkspaceEditor } from '../components/WorkspaceEditorModal.js';
 import { initAllCardToggles } from '../utils/cardWidthToggle.js';
 import { renderEntityList } from '../utils/entityRenderer.js';
 
@@ -77,9 +79,31 @@ export class WorkspaceView extends BaseView {
     const tabsConfig = hasDocuments ? this.getTabsConfig(baseHref, true) : null;
 
     // Status badge
-    const statusBadge = workspace.status === 'archived'
+    const isArchived = workspace.status === 'archived';
+    const statusBadge = isArchived
       ? '<span class="badge badge-status-paused">Archived</span>'
       : '<span class="badge badge-status-active">Active</span>';
+
+    // Action buttons for header
+    const archiveBtnLabel = isArchived ? 'Restore' : 'Archive';
+    const archiveBtnIcon = isArchived
+      ? '<path d="M3 10h10l-3-3M3 10l3 3M13 6v8H3V6"/>'  // Restore icon
+      : '<path d="M3 5h10M4 5v9h8V5M6 8v3M10 8v3"/>';    // Archive icon
+    
+    const actionsHtml = `
+      <button class="btn btn-small btn-secondary" id="workspace-edit-btn">
+        <svg viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.5">
+          <path d="M11.5 2.5l2 2M2 11l-.5 3.5L5 14l9-9-2-2-10 10z"/>
+        </svg>
+        Edit
+      </button>
+      <button class="btn btn-small btn-secondary" id="workspace-archive-btn">
+        <svg viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.5">
+          ${archiveBtnIcon}
+        </svg>
+        ${archiveBtnLabel}
+      </button>
+    `;
 
     const headerHtml = PageHeader.render({
       breadcrumbs: [
@@ -91,6 +115,7 @@ export class WorkspaceView extends BaseView {
       badge: statusBadge,
       subtitle: subtitleParts,
       description: workspace.description,
+      actions: actionsHtml,
       tabs: tabsConfig,
       activeTab: activeTab
     });
@@ -123,6 +148,9 @@ export class WorkspaceView extends BaseView {
 
     // Initialize drag-and-drop for cards
     this.initDragDrop();
+
+    // Set up action button handlers
+    this.setupActionButtons(workspace);
   }
 
   /**
@@ -161,9 +189,10 @@ export class WorkspaceView extends BaseView {
     const locations = [...locationIds].map(id => DataService.getLocation(id)).filter(Boolean);
     const events = [...eventIds].map(id => DataService.getEvent(id)).filter(Boolean);
 
-    // Get factions from narratives (via factionMentions)
+    // Get factions from narratives using document-based aggregation
     narratives.forEach(n => {
-      Object.keys(n.factionMentions || {}).forEach(fId => factionIds.add(fId));
+      const factionMentions = DataService.getAggregateFactionMentionsForNarrative(n.id);
+      Object.keys(factionMentions).forEach(fId => factionIds.add(fId));
     });
     const factions = this.calculateFactionSentiment(narratives, [...factionIds]);
 
@@ -185,7 +214,7 @@ export class WorkspaceView extends BaseView {
   }
 
   /**
-   * Calculate aggregated faction sentiment from narratives
+   * Calculate aggregated faction sentiment from narratives using document-based aggregation
    */
   calculateFactionSentiment(narratives, factionIds) {
     const factionStats = new Map();
@@ -195,9 +224,10 @@ export class WorkspaceView extends BaseView {
       factionStats.set(fId, { totalVolume: 0, weightedSentiment: 0 });
     });
     
-    // Aggregate volume and sentiment across narratives
+    // Aggregate volume and sentiment across narratives using document data
     narratives.forEach(n => {
-      Object.entries(n.factionMentions || {}).forEach(([factionId, data]) => {
+      const factionMentions = DataService.getAggregateFactionMentionsForNarrative(n.id);
+      Object.entries(factionMentions).forEach(([factionId, data]) => {
         const stats = factionStats.get(factionId);
         if (stats && data.volume && typeof data.sentiment === 'number') {
           stats.totalVolume += data.volume;
@@ -566,6 +596,38 @@ export class WorkspaceView extends BaseView {
         }
       });
     });
+  }
+
+  /**
+   * Set up action button handlers (Edit, Archive)
+   */
+  setupActionButtons(workspace) {
+    // Edit button
+    const editBtn = this.container.querySelector('#workspace-edit-btn');
+    if (editBtn) {
+      editBtn.addEventListener('click', () => {
+        const editor = getWorkspaceEditor();
+        editor.openEdit(workspace, (updatedWorkspace) => {
+          // Re-render the view with updated data
+          this.render();
+        });
+      });
+    }
+
+    // Archive/Restore button
+    const archiveBtn = this.container.querySelector('#workspace-archive-btn');
+    if (archiveBtn) {
+      archiveBtn.addEventListener('click', () => {
+        const isArchived = workspace.status === 'archived';
+        const newStatus = isArchived ? 'active' : 'archived';
+        
+        // Update workspace status (auto-save)
+        dataStore.updateWorkspace(workspace.id, { status: newStatus });
+        
+        // Re-render to reflect the change
+        this.render();
+      });
+    }
   }
 }
 

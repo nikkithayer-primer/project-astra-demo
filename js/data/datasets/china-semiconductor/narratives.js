@@ -11,39 +11,10 @@ export const narratives = [
     status: 'in_progress',
     sentiment: 0.42,
     themeIds: ['sub-001', 'sub-002', 'sub-003'],
-    factionMentions: {
-      'faction-001': { volume: 520, sentiment: 0.78 },
-      'faction-002': { volume: 380, sentiment: -0.65 },
-      'faction-003': { volume: 290, sentiment: 0.15 }
-    },
-    publisherVolumes: {
-      'pub-semiengi': { volume: 85, sentiment: 0.12 },
-      'pub-eetimes': { volume: 72, sentiment: 0.08 },
-      'pub-scmp': { volume: 145, sentiment: 0.55 },
-      'pub-xinhua': { volume: 120, sentiment: 0.82 },
-      'pub-bloomberg': { volume: 95, sentiment: -0.15 },
-      'pub-reuters': { volume: 88, sentiment: -0.08 },
-      'pub-x': { volume: 185, sentiment: 0.25 },
-      'pub-linkedin': { volume: 65, sentiment: 0.18 }
-    },
-    factionSources: {
-      'faction-001': { 'pub-xinhua': 110, 'pub-scmp': 95, 'pub-cgtn': 85, 'pub-weibo': 120, 'pub-x': 75, 'pub-globaltimes': 35 },
-      'faction-002': { 'pub-wsj': 65, 'pub-bloomberg': 80, 'pub-x': 95, 'pub-reuters': 55, 'pub-ft': 45, 'pub-linkedin': 40 },
-      'faction-003': { 'pub-semiengi': 75, 'pub-eetimes': 68, 'pub-anandtech': 52, 'pub-bloomberg': 45, 'pub-linkedin': 50 }
-    },
     personIds: ['person-001', 'person-002', 'person-003'],
     organizationIds: ['org-001', 'org-002', 'org-003'],
     locationIds: ['loc-001', 'loc-002'],
     eventIds: ['event-001', 'event-002'],
-    volumeOverTime: [
-      { date: '2026-01-14', factionVolumes: { 'faction-001': 85, 'faction-002': 62, 'faction-003': 48 }, publisherVolumes: { 'pub-xinhua': 25, 'pub-scmp': 28, 'pub-bloomberg': 18, 'pub-x': 35, 'pub-semiengi': 15 } },
-      { date: '2026-01-15', factionVolumes: { 'faction-001': 120, 'faction-002': 95, 'faction-003': 72 }, publisherVolumes: { 'pub-xinhua': 35, 'pub-scmp': 42, 'pub-bloomberg': 28, 'pub-x': 55, 'pub-semiengi': 22 } },
-      { date: '2026-01-16', factionVolumes: { 'faction-001': 185, 'faction-002': 145, 'faction-003': 98 }, publisherVolumes: { 'pub-xinhua': 52, 'pub-scmp': 58, 'pub-bloomberg': 42, 'pub-x': 82, 'pub-semiengi': 35 } },
-      { date: '2026-01-17', factionVolumes: { 'faction-001': 265, 'faction-002': 198, 'faction-003': 135 }, publisherVolumes: { 'pub-xinhua': 72, 'pub-scmp': 78, 'pub-bloomberg': 55, 'pub-x': 105, 'pub-semiengi': 48 } },
-      { date: '2026-01-18', factionVolumes: { 'faction-001': 345, 'faction-002': 265, 'faction-003': 185 }, publisherVolumes: { 'pub-xinhua': 88, 'pub-scmp': 98, 'pub-bloomberg': 68, 'pub-x': 135, 'pub-semiengi': 62 } },
-      { date: '2026-01-19', factionVolumes: { 'faction-001': 425, 'faction-002': 315, 'faction-003': 235 }, publisherVolumes: { 'pub-xinhua': 102, 'pub-scmp': 118, 'pub-bloomberg': 78, 'pub-x': 158, 'pub-semiengi': 72 } },
-      { date: '2026-01-20', factionVolumes: { 'faction-001': 520, 'faction-002': 380, 'faction-003': 290 }, publisherVolumes: { 'pub-xinhua': 120, 'pub-scmp': 145, 'pub-bloomberg': 95, 'pub-x': 185, 'pub-semiengi': 85 } }
-    ],
     documentIds: ['doc-001', 'doc-002', 'doc-003', 'doc-004'],
     createdAt: '2026-01-14T00:00:00Z'
   },
@@ -55,40 +26,10 @@ export const narratives = [
     status: 'in_progress',
     sentiment: -0.48,
     themeIds: ['sub-004', 'sub-005', 'sub-006'],
-    factionMentions: {
-      'faction-001': { volume: 385, sentiment: -0.82 },
-      'faction-002': { volume: 445, sentiment: 0.72 },
-      'faction-004': { volume: 220, sentiment: -0.68 },
-      'faction-006': { volume: 165, sentiment: -0.45 }
-    },
-    publisherVolumes: {
-      'pub-bloomberg': { volume: 125, sentiment: -0.22 },
-      'pub-reuters': { volume: 115, sentiment: -0.18 },
-      'pub-wsj': { volume: 98, sentiment: 0.35 },
-      'pub-ft': { volume: 88, sentiment: -0.12 },
-      'pub-xinhua': { volume: 165, sentiment: -0.85 },
-      'pub-globaltimes': { volume: 142, sentiment: -0.92 },
-      'pub-x': { volume: 245, sentiment: -0.35 },
-      'pub-linkedin': { volume: 78, sentiment: -0.25 }
-    },
-    factionSources: {
-      'faction-001': { 'pub-xinhua': 145, 'pub-globaltimes': 125, 'pub-cgtn': 85, 'pub-weibo': 95, 'pub-x': 65 },
-      'faction-002': { 'pub-wsj': 85, 'pub-bloomberg': 75, 'pub-x': 125, 'pub-reuters': 65, 'pub-ft': 55 },
-      'faction-004': { 'pub-xinhua': 45, 'pub-cgtn': 38, 'pub-globaltimes': 52, 'pub-scmp': 48, 'pub-x': 37 },
-      'faction-006': { 'pub-bloomberg': 55, 'pub-reuters': 48, 'pub-nikkei': 35, 'pub-ft': 27 }
-    },
     personIds: ['person-004', 'person-005', 'person-006', 'person-007'],
     organizationIds: ['org-002', 'org-004', 'org-005', 'org-006'],
     locationIds: ['loc-003', 'loc-004', 'loc-005'],
     eventIds: ['event-003', 'event-004', 'event-005'],
-    volumeOverTime: [
-      { date: '2026-01-12', factionVolumes: { 'faction-001': 95, 'faction-002': 125, 'faction-004': 55, 'faction-006': 42 }, publisherVolumes: { 'pub-bloomberg': 32, 'pub-reuters': 28, 'pub-xinhua': 42, 'pub-x': 62 } },
-      { date: '2026-01-13', factionVolumes: { 'faction-001': 145, 'faction-002': 185, 'faction-004': 85, 'faction-006': 68 }, publisherVolumes: { 'pub-bloomberg': 48, 'pub-reuters': 42, 'pub-xinhua': 65, 'pub-x': 95 } },
-      { date: '2026-01-14', factionVolumes: { 'faction-001': 215, 'faction-002': 265, 'faction-004': 125, 'faction-006': 98 }, publisherVolumes: { 'pub-bloomberg': 68, 'pub-reuters': 62, 'pub-xinhua': 95, 'pub-x': 138 } },
-      { date: '2026-01-15', factionVolumes: { 'faction-001': 285, 'faction-002': 345, 'faction-004': 165, 'faction-006': 128 }, publisherVolumes: { 'pub-bloomberg': 88, 'pub-reuters': 82, 'pub-xinhua': 125, 'pub-x': 178 } },
-      { date: '2026-01-16', factionVolumes: { 'faction-001': 345, 'faction-002': 405, 'faction-004': 195, 'faction-006': 148 }, publisherVolumes: { 'pub-bloomberg': 108, 'pub-reuters': 98, 'pub-xinhua': 148, 'pub-x': 218 } },
-      { date: '2026-01-17', factionVolumes: { 'faction-001': 385, 'faction-002': 445, 'faction-004': 220, 'faction-006': 165 }, publisherVolumes: { 'pub-bloomberg': 125, 'pub-reuters': 115, 'pub-xinhua': 165, 'pub-x': 245 } }
-    ],
     documentIds: ['doc-005', 'doc-006', 'doc-007', 'doc-008'],
     createdAt: '2026-01-12T00:00:00Z'
   },
@@ -100,38 +41,10 @@ export const narratives = [
     status: 'new',
     sentiment: 0.35,
     themeIds: ['sub-007', 'sub-008', 'sub-009'],
-    factionMentions: {
-      'faction-001': { volume: 425, sentiment: 0.85 },
-      'faction-002': { volume: 285, sentiment: -0.55 },
-      'faction-003': { volume: 195, sentiment: 0.22 },
-      'faction-005': { volume: 145, sentiment: 0.65 }
-    },
-    publisherVolumes: {
-      'pub-xinhua': { volume: 185, sentiment: 0.92 },
-      'pub-caixin': { volume: 145, sentiment: 0.75 },
-      'pub-scmp': { volume: 125, sentiment: 0.58 },
-      'pub-bloomberg': { volume: 115, sentiment: -0.25 },
-      'pub-reuters': { volume: 98, sentiment: -0.18 },
-      'pub-ft': { volume: 85, sentiment: -0.22 },
-      'pub-x': { volume: 165, sentiment: 0.28 },
-      'pub-weibo': { volume: 142, sentiment: 0.82 }
-    },
-    factionSources: {
-      'faction-001': { 'pub-xinhua': 165, 'pub-caixin': 125, 'pub-cgtn': 95, 'pub-weibo': 135, 'pub-scmp': 85 },
-      'faction-002': { 'pub-wsj': 72, 'pub-bloomberg': 85, 'pub-x': 78, 'pub-reuters': 50 },
-      'faction-003': { 'pub-semiengi': 52, 'pub-eetimes': 45, 'pub-bloomberg': 48, 'pub-ft': 50 },
-      'faction-005': { 'pub-caixin': 55, 'pub-scmp': 48, 'pub-bloomberg': 42 }
-    },
     personIds: ['person-008', 'person-009', 'person-010'],
     organizationIds: ['org-007', 'org-008', 'org-009'],
     locationIds: ['loc-002', 'loc-006'],
     eventIds: ['event-006', 'event-007'],
-    volumeOverTime: [
-      { date: '2026-01-17', factionVolumes: { 'faction-001': 145, 'faction-002': 98, 'faction-003': 65, 'faction-005': 48 }, publisherVolumes: { 'pub-xinhua': 62, 'pub-caixin': 48, 'pub-bloomberg': 38, 'pub-x': 55 } },
-      { date: '2026-01-18', factionVolumes: { 'faction-001': 265, 'faction-002': 175, 'faction-003': 125, 'faction-005': 92 }, publisherVolumes: { 'pub-xinhua': 115, 'pub-caixin': 92, 'pub-bloomberg': 72, 'pub-x': 105 } },
-      { date: '2026-01-19', factionVolumes: { 'faction-001': 345, 'faction-002': 235, 'faction-003': 165, 'faction-005': 125 }, publisherVolumes: { 'pub-xinhua': 152, 'pub-caixin': 125, 'pub-bloomberg': 95, 'pub-x': 138 } },
-      { date: '2026-01-20', factionVolumes: { 'faction-001': 425, 'faction-002': 285, 'faction-003': 195, 'faction-005': 145 }, publisherVolumes: { 'pub-xinhua': 185, 'pub-caixin': 145, 'pub-bloomberg': 115, 'pub-x': 165 } }
-    ],
     documentIds: ['doc-009', 'doc-010', 'doc-011'],
     createdAt: '2026-01-17T00:00:00Z'
   },
@@ -143,38 +56,10 @@ export const narratives = [
     status: 'under_investigation',
     sentiment: -0.52,
     themeIds: ['sub-010', 'sub-011'],
-    factionMentions: {
-      'faction-001': { volume: 285, sentiment: -0.72 },
-      'faction-002': { volume: 365, sentiment: 0.68 },
-      'faction-003': { volume: 165, sentiment: -0.15 },
-      'faction-006': { volume: 125, sentiment: -0.48 }
-    },
-    publisherVolumes: {
-      'pub-bloomberg': { volume: 145, sentiment: -0.35 },
-      'pub-wsj': { volume: 132, sentiment: 0.42 },
-      'pub-reuters': { volume: 115, sentiment: -0.22 },
-      'pub-xinhua': { volume: 95, sentiment: -0.78 },
-      'pub-scmp': { volume: 88, sentiment: -0.45 },
-      'pub-x': { volume: 178, sentiment: -0.38 },
-      'pub-linkedin': { volume: 65, sentiment: -0.28 }
-    },
-    factionSources: {
-      'faction-001': { 'pub-xinhua': 85, 'pub-scmp': 72, 'pub-cgtn': 58, 'pub-weibo': 70 },
-      'faction-002': { 'pub-wsj': 115, 'pub-bloomberg': 95, 'pub-x': 105, 'pub-reuters': 50 },
-      'faction-003': { 'pub-semiengi': 48, 'pub-eetimes': 42, 'pub-bloomberg': 45, 'pub-linkedin': 30 },
-      'faction-006': { 'pub-bloomberg': 42, 'pub-reuters': 38, 'pub-nikkei': 28, 'pub-ft': 17 }
-    },
     personIds: ['person-011', 'person-012', 'person-005'],
     organizationIds: ['org-010', 'org-002', 'org-011', 'org-012'],
     locationIds: ['loc-001', 'loc-004'],
     eventIds: ['event-008', 'event-009'],
-    volumeOverTime: [
-      { date: '2026-01-15', factionVolumes: { 'faction-001': 95, 'faction-002': 125, 'faction-003': 55, 'faction-006': 42 }, publisherVolumes: { 'pub-bloomberg': 48, 'pub-wsj': 45, 'pub-xinhua': 32, 'pub-x': 58 } },
-      { date: '2026-01-16', factionVolumes: { 'faction-001': 145, 'faction-002': 195, 'faction-003': 85, 'faction-006': 65 }, publisherVolumes: { 'pub-bloomberg': 75, 'pub-wsj': 72, 'pub-xinhua': 48, 'pub-x': 92 } },
-      { date: '2026-01-17', factionVolumes: { 'faction-001': 195, 'faction-002': 265, 'faction-003': 115, 'faction-006': 88 }, publisherVolumes: { 'pub-bloomberg': 105, 'pub-wsj': 98, 'pub-xinhua': 68, 'pub-x': 128 } },
-      { date: '2026-01-18', factionVolumes: { 'faction-001': 245, 'faction-002': 325, 'faction-003': 145, 'faction-006': 108 }, publisherVolumes: { 'pub-bloomberg': 128, 'pub-wsj': 118, 'pub-xinhua': 82, 'pub-x': 158 } },
-      { date: '2026-01-19', factionVolumes: { 'faction-001': 285, 'faction-002': 365, 'faction-003': 165, 'faction-006': 125 }, publisherVolumes: { 'pub-bloomberg': 145, 'pub-wsj': 132, 'pub-xinhua': 95, 'pub-x': 178 } }
-    ],
     documentIds: ['doc-012', 'doc-013', 'doc-014'],
     createdAt: '2026-01-15T00:00:00Z'
   },
@@ -186,37 +71,10 @@ export const narratives = [
     status: 'in_progress',
     sentiment: -0.38,
     themeIds: ['sub-012', 'sub-013'],
-    factionMentions: {
-      'faction-001': { volume: 195, sentiment: 0.55 },
-      'faction-002': { volume: 275, sentiment: -0.72 },
-      'faction-003': { volume: 185, sentiment: 0.25 },
-      'faction-006': { volume: 145, sentiment: -0.55 }
-    },
-    publisherVolumes: {
-      'pub-semiengi': { volume: 95, sentiment: 0.18 },
-      'pub-eetimes': { volume: 85, sentiment: 0.12 },
-      'pub-bloomberg': { volume: 115, sentiment: -0.45 },
-      'pub-wsj': { volume: 98, sentiment: -0.52 },
-      'pub-scmp': { volume: 78, sentiment: 0.35 },
-      'pub-x': { volume: 165, sentiment: -0.28 },
-      'pub-reddit': { volume: 88, sentiment: 0.22 }
-    },
-    factionSources: {
-      'faction-001': { 'pub-scmp': 65, 'pub-xinhua': 55, 'pub-weibo': 75 },
-      'faction-002': { 'pub-wsj': 85, 'pub-bloomberg': 78, 'pub-x': 82, 'pub-reuters': 30 },
-      'faction-003': { 'pub-semiengi': 82, 'pub-eetimes': 72, 'pub-anandtech': 31 },
-      'faction-006': { 'pub-bloomberg': 52, 'pub-nikkei': 45, 'pub-reuters': 48 }
-    },
     personIds: ['person-013', 'person-014'],
     organizationIds: ['org-013', 'org-014', 'org-015'],
     locationIds: ['loc-007', 'loc-004'],
     eventIds: ['event-010', 'event-011'],
-    volumeOverTime: [
-      { date: '2026-01-16', factionVolumes: { 'faction-001': 65, 'faction-002': 92, 'faction-003': 62, 'faction-006': 48 }, publisherVolumes: { 'pub-semiengi': 32, 'pub-bloomberg': 38, 'pub-x': 55 } },
-      { date: '2026-01-17', factionVolumes: { 'faction-001': 115, 'faction-002': 165, 'faction-003': 115, 'faction-006': 88 }, publisherVolumes: { 'pub-semiengi': 58, 'pub-bloomberg': 72, 'pub-x': 98 } },
-      { date: '2026-01-18', factionVolumes: { 'faction-001': 155, 'faction-002': 225, 'faction-003': 152, 'faction-006': 118 }, publisherVolumes: { 'pub-semiengi': 78, 'pub-bloomberg': 95, 'pub-x': 135 } },
-      { date: '2026-01-19', factionVolumes: { 'faction-001': 195, 'faction-002': 275, 'faction-003': 185, 'faction-006': 145 }, publisherVolumes: { 'pub-semiengi': 95, 'pub-bloomberg': 115, 'pub-x': 165 } }
-    ],
     documentIds: ['doc-015', 'doc-016', 'doc-017'],
     createdAt: '2026-01-16T00:00:00Z'
   },
@@ -228,36 +86,10 @@ export const narratives = [
     status: 'new',
     sentiment: 0.28,
     themeIds: ['sub-014', 'sub-015'],
-    factionMentions: {
-      'faction-001': { volume: 245, sentiment: 0.82 },
-      'faction-002': { volume: 165, sentiment: -0.48 },
-      'faction-003': { volume: 215, sentiment: 0.35 },
-      'faction-005': { volume: 125, sentiment: 0.72 }
-    },
-    publisherVolumes: {
-      'pub-semiengi': { volume: 115, sentiment: 0.28 },
-      'pub-eetimes': { volume: 98, sentiment: 0.22 },
-      'pub-xinhua': { volume: 135, sentiment: 0.85 },
-      'pub-caixin': { volume: 95, sentiment: 0.68 },
-      'pub-scmp': { volume: 78, sentiment: 0.52 },
-      'pub-x': { volume: 145, sentiment: 0.32 },
-      'pub-linkedin': { volume: 72, sentiment: 0.42 }
-    },
-    factionSources: {
-      'faction-001': { 'pub-xinhua': 115, 'pub-caixin': 82, 'pub-scmp': 65, 'pub-weibo': 85 },
-      'faction-002': { 'pub-wsj': 55, 'pub-bloomberg': 48, 'pub-x': 62 },
-      'faction-003': { 'pub-semiengi': 95, 'pub-eetimes': 82, 'pub-linkedin': 38 },
-      'faction-005': { 'pub-caixin': 45, 'pub-scmp': 38, 'pub-xinhua': 42 }
-    },
     personIds: ['person-015', 'person-016'],
     organizationIds: ['org-016', 'org-017', 'org-018', 'org-019'],
     locationIds: ['loc-002', 'loc-008'],
     eventIds: ['event-012'],
-    volumeOverTime: [
-      { date: '2026-01-18', factionVolumes: { 'faction-001': 85, 'faction-002': 58, 'faction-003': 75, 'faction-005': 42 }, publisherVolumes: { 'pub-semiengi': 38, 'pub-xinhua': 45, 'pub-x': 48 } },
-      { date: '2026-01-19', factionVolumes: { 'faction-001': 165, 'faction-002': 115, 'faction-003': 148, 'faction-005': 85 }, publisherVolumes: { 'pub-semiengi': 78, 'pub-xinhua': 92, 'pub-x': 98 } },
-      { date: '2026-01-20', factionVolumes: { 'faction-001': 245, 'faction-002': 165, 'faction-003': 215, 'faction-005': 125 }, publisherVolumes: { 'pub-semiengi': 115, 'pub-xinhua': 135, 'pub-x': 145 } }
-    ],
     documentIds: ['doc-018', 'doc-019'],
     createdAt: '2026-01-18T00:00:00Z'
   },
@@ -269,39 +101,10 @@ export const narratives = [
     status: 'in_progress',
     sentiment: -0.42,
     themeIds: ['sub-016', 'sub-017'],
-    factionMentions: {
-      'faction-001': { volume: 145, sentiment: 0.45 },
-      'faction-002': { volume: 225, sentiment: -0.35 },
-      'faction-005': { volume: 185, sentiment: -0.58 },
-      'faction-006': { volume: 165, sentiment: -0.48 }
-    },
-    publisherVolumes: {
-      'pub-bloomberg': { volume: 135, sentiment: -0.38 },
-      'pub-reuters': { volume: 118, sentiment: -0.32 },
-      'pub-wsj': { volume: 105, sentiment: -0.28 },
-      'pub-ft': { volume: 88, sentiment: -0.35 },
-      'pub-nikkei': { volume: 95, sentiment: -0.42 },
-      'pub-scmp': { volume: 72, sentiment: 0.38 },
-      'pub-x': { volume: 185, sentiment: -0.45 },
-      'pub-linkedin': { volume: 78, sentiment: -0.32 }
-    },
-    factionSources: {
-      'faction-001': { 'pub-scmp': 65, 'pub-globaltimes': 48, 'pub-x': 32 },
-      'faction-002': { 'pub-wsj': 75, 'pub-bloomberg': 82, 'pub-x': 68 },
-      'faction-005': { 'pub-bloomberg': 62, 'pub-nikkei': 78, 'pub-ft': 45 },
-      'faction-006': { 'pub-bloomberg': 55, 'pub-reuters': 62, 'pub-nikkei': 48 }
-    },
     personIds: ['person-017', 'person-018', 'person-019'],
     organizationIds: ['org-020', 'org-021'],
     locationIds: ['loc-009', 'loc-010'],
     eventIds: ['event-013', 'event-014'],
-    volumeOverTime: [
-      { date: '2026-01-14', factionVolumes: { 'faction-001': 48, 'faction-002': 75, 'faction-005': 62, 'faction-006': 55 }, publisherVolumes: { 'pub-bloomberg': 45, 'pub-wsj': 35, 'pub-x': 62 } },
-      { date: '2026-01-15', factionVolumes: { 'faction-001': 72, 'faction-002': 115, 'faction-005': 95, 'faction-006': 85 }, publisherVolumes: { 'pub-bloomberg': 68, 'pub-wsj': 55, 'pub-x': 95 } },
-      { date: '2026-01-16', factionVolumes: { 'faction-001': 98, 'faction-002': 155, 'faction-005': 128, 'faction-006': 115 }, publisherVolumes: { 'pub-bloomberg': 92, 'pub-wsj': 72, 'pub-x': 128 } },
-      { date: '2026-01-17', factionVolumes: { 'faction-001': 125, 'faction-002': 192, 'faction-005': 158, 'faction-006': 142 }, publisherVolumes: { 'pub-bloomberg': 115, 'pub-wsj': 88, 'pub-x': 158 } },
-      { date: '2026-01-18', factionVolumes: { 'faction-001': 145, 'faction-002': 225, 'faction-005': 185, 'faction-006': 165 }, publisherVolumes: { 'pub-bloomberg': 135, 'pub-wsj': 105, 'pub-x': 185 } }
-    ],
     documentIds: ['doc-020', 'doc-021', 'doc-022'],
     createdAt: '2026-01-14T00:00:00Z'
   }

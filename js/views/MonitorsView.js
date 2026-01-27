@@ -784,16 +784,16 @@ export class MonitorsView extends BaseView {
 
   /**
    * Render Faction Overlaps visualization
+   * Uses document-based aggregation to identify involved factions
    */
   renderFactionOverlapsVisualization(monitor, container) {
     const narratives = monitor.matchedNarratives;
     
-    // Get factions involved in the matched narratives
+    // Get factions involved in the matched narratives from document aggregation
     const factionIds = new Set();
     narratives.forEach(n => {
-      if (n.factionMentions) {
-        Object.keys(n.factionMentions).forEach(fId => factionIds.add(fId));
-      }
+      const factionMentions = DataService.getAggregateFactionMentionsForNarrative(n.id);
+      Object.keys(factionMentions).forEach(fId => factionIds.add(fId));
     });
     
     const factions = [...factionIds].map(id => DataService.getFaction(id)).filter(Boolean);
@@ -819,25 +819,25 @@ export class MonitorsView extends BaseView {
 
   /**
    * Render Faction Sentiment visualization
+   * Uses document-based aggregation for volume and sentiment
    */
   renderFactionSentimentVisualization(monitor, container) {
     const narratives = monitor.matchedNarratives;
     
-    // Aggregate faction sentiments from matched narratives
+    // Aggregate faction sentiments from documents linked to matched narratives
     const factionStats = new Map();
     narratives.forEach(n => {
-      if (n.factionMentions) {
-        Object.entries(n.factionMentions).forEach(([factionId, data]) => {
-          if (!factionStats.has(factionId)) {
-            factionStats.set(factionId, { totalVolume: 0, weightedSentiment: 0 });
-          }
-          const stats = factionStats.get(factionId);
-          if (data.volume && typeof data.sentiment === 'number') {
-            stats.totalVolume += data.volume;
-            stats.weightedSentiment += data.sentiment * data.volume;
-          }
-        });
-      }
+      const factionMentions = DataService.getAggregateFactionMentionsForNarrative(n.id);
+      Object.entries(factionMentions).forEach(([factionId, data]) => {
+        if (!factionStats.has(factionId)) {
+          factionStats.set(factionId, { totalVolume: 0, weightedSentiment: 0 });
+        }
+        const stats = factionStats.get(factionId);
+        if (data.volume && typeof data.sentiment === 'number') {
+          stats.totalVolume += data.volume;
+          stats.weightedSentiment += data.sentiment * data.volume;
+        }
+      });
     });
     
     const factions = [...factionStats.entries()]
@@ -952,14 +952,16 @@ export class MonitorsView extends BaseView {
   }
 
   /**
-   * Aggregate volume data from multiple narratives
+   * Aggregate volume data from multiple narratives using document-based aggregation
    */
   aggregateVolumeData(narratives) {
     const factions = DataService.getFactions();
     const dateMap = new Map();
     
+    // Aggregate volume over time from each narrative's documents
     narratives.forEach(n => {
-      (n.volumeOverTime || []).forEach(entry => {
+      const volumeOverTime = DataService.getVolumeOverTimeForNarrative(n.id);
+      volumeOverTime.forEach(entry => {
         if (!dateMap.has(entry.date)) {
           dateMap.set(entry.date, {});
         }

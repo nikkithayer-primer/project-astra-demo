@@ -423,14 +423,7 @@ describe('DataStore', () => {
     });
   });
 
-  describe('generateInitialVolume', () => {
-    it('generates 15 days of volume data', () => {
-      const volume = dataStore.generateInitialVolume();
-      expect(volume.length).toBe(15);
-      expect(volume[0]).toHaveProperty('date');
-      expect(volume[0]).toHaveProperty('factionVolumes');
-    });
-  });
+  // generateInitialVolume tests removed - volume is now computed from documents
 
   describe('export and import', () => {
     it('exports data as JSON string', () => {

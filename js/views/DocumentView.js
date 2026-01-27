@@ -373,7 +373,7 @@ export class DocumentView extends BaseView {
       this.components.themeList = new ThemeList('doc-themes', {
         maxItems: 10,
         onItemClick: (s) => {
-          window.location.hash = `#/subnarrative/${s.id}`;
+          window.location.hash = `#/theme/${s.id}`;
         }
       });
       this.components.themeList.update({ themes });

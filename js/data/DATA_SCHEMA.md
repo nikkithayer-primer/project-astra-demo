@@ -1,0 +1,602 @@
+# Project Astra Data Schema Reference
+
+This document defines the complete data model for the Primer Intelligence Dashboard.
+When creating or modifying data types, use this schema reference to ensure correct field names, types, and relationships.
+
+---
+
+## Data Architecture: Document-Centric Model
+
+This system follows an **ingest-first, document-centric** architecture that mirrors a real intelligence pipeline:
+
+```
+Documents (ingested, each has extracted entities + factions)
+    ↓ aggregation
+Narratives, Themes, Topics (derived from document clusters)
+```
+
+**Key principle:** Documents are the atomic unit of measurement. Faction volume, sentiment, and publisher breakdowns are **computed by aggregating across documents**, not stored as hand-crafted values on narratives.
+
+### What Gets Extracted Per Document (Ingest)
+- People, Organizations, Locations, Events mentioned
+- Factions detected and their sentiment in this document
+- Publisher source
+
+### What Gets Computed (Aggregation via DataService)
+- Narrative/Theme faction data → count docs per faction, average sentiment
+- Volume over time → group docs by date, count per faction/publisher
+- Faction sources → group by (faction, publisher), count docs
+
+See **DataService Aggregation Methods** section below for implementation details.
+
+---
+
+## Entity ID Conventions
+
+Each entity type uses a specific ID prefix. IDs are generated as `{prefix}-{timestamp}-{random}`.
+
+| Entity | Prefix | Example |
+|--------|--------|---------|
+| Mission | `mission-` | `mission-1706234567890-abc123def` |
+| Narrative | `narr-` | `narr-1706234567890-abc123def` |
+| Theme | `sub-` | `sub-1706234567890-abc123def` |
+| Faction | `faction-` | `faction-1706234567890-abc123def` |
+| Location | `loc-` | `loc-1706234567890-abc123def` |
+| Event | `event-` | `event-1706234567890-abc123def` |
+| Person | `person-` | `person-1706234567890-abc123def` |
+| Organization | `org-` | `org-1706234567890-abc123def` |
+| Topic | `topic-` | `topic-1706234567890-abc123def` |
+| Document | `doc-` | `doc-1706234567890-abc123def` |
+| Monitor | `monitor-` | `monitor-1706234567890-abc123def` |
+| Workspace | `workspace-` | `workspace-1706234567890-abc123def` |
+| Publisher | `pub-` | `pub-facebook`, `pub-nat-cnn` |
+| User | `user-` | `user-001` |
+| Alert | `alert-` | `alert-001` |
+
+---
+
+## Core Intelligence Model
+
+### Mission
+
+Top-level organizational unit grouping related narratives.
+
+```javascript
+{
+  id: string,              // Required. Prefix: 'mission-'
+  name: string,            // Required. Mission name
+  description: string,     // Optional. Mission details
+  color: string,           // Optional. Hex color for UI (auto-generated if not provided)
+  createdAt: datetime,     // Auto-generated
+  updatedAt: datetime      // Auto-updated
+}
+```
+
+### Narrative
+
+Disinformation or propaganda narrative being tracked. Faction engagement data is **computed from linked documents**, not stored on the narrative.
+
+```javascript
+{
+  id: string,              // Required. Prefix: 'narr-'
+  missionId: string,       // Required. FK to Mission
+  text: string,            // Required. Short title identifying the narrative
+  description: string,     // Optional. Detailed description
+  status: enum,            // Optional. 'new' | 'in_progress' | 'under_investigation' | 'resolved'
+  sentiment: number,       // Optional. -1.0 to 1.0 (editorial/manual assessment)
+  themeIds: string[],      // Auto-managed. FKs to Theme
+  personIds: string[],         // Optional. FKs to Person
+  organizationIds: string[],   // Optional. FKs to Organization
+  locationIds: string[],       // Optional. FKs to Location
+  eventIds: string[],          // Optional. FKs to Event
+  documentIds: string[],       // Required. FKs to Document (source of truth for volume)
+  createdAt: datetime,
+  updatedAt: datetime
+}
+```
+
+**Computed via DataService** (not stored on narrative):
+- `factionMentions` → `DataService.getAggregateFactionMentionsForNarrative(narrativeId)`
+- `publisherVolumes` → `DataService.getAggregatePublisherVolumesForNarrative(narrativeId)`
+- `factionSources` → `DataService.getFactionSourcesForNarrative(narrativeId)`
+- `volumeOverTime` → `DataService.getVolumeOverTimeForNarrative(narrativeId)`
+
+### Theme
+
+Sub-components or variations of a parent narrative. Like narratives, faction data is **computed from linked documents**.
+
+```javascript
+{
+  id: string,              // Required. Prefix: 'sub-'
+  parentNarrativeId: string, // Required. FK to Narrative
+  text: string,            // Required. Theme title
+  sentiment: number,       // Optional. -1.0 to 1.0 (editorial/manual assessment)
+  personIds: string[],
+  organizationIds: string[],
+  locationIds: string[],
+  eventIds: string[],
+  documentIds: string[],   // Required. FKs to Document (source of truth for volume)
+  createdAt: datetime,
+  updatedAt: datetime
+}
+```
+
+**Computed via DataService** (same pattern as Narrative):
+- `factionMentions` → `DataService.getAggregateFactionMentionsForTheme(themeId)`
+- `volumeOverTime` → `DataService.getVolumeOverTimeForTheme(themeId)`
+
+### Faction
+
+Groups pushing specific narratives or viewpoints.
+
+```javascript
+{
+  id: string,              // Required. Prefix: 'faction-'
+  name: string,            // Required. Faction name
+  color: string,           // Optional. Hex color (auto-generated)
+  relatedFactionIds: string[], // Optional. FKs to related Factions
+  memberCount: number,     // Optional. Estimated members
+  affiliatedPersonIds: string[],       // Optional. FKs to Person
+  affiliatedOrganizationIds: string[], // Optional. FKs to Organization
+  createdAt: datetime,
+  updatedAt: datetime
+}
+```
+
+### FactionOverlap
+
+Represents overlapping membership between factions. No ID prefix (identified by factionIds tuple).
+
+```javascript
+{
+  factionIds: string[],    // Required. Two faction IDs
+  overlapSize: number,     // Optional. Shared member count
+  sharedSentiment: {       // Optional. Shared sentiment by narrative
+    [narrativeId]: number  // -1.0 to 1.0
+  }
+}
+```
+
+### Location
+
+Geographic locations referenced in narratives.
+
+```javascript
+{
+  id: string,              // Required. Prefix: 'loc-'
+  name: string,            // Required. Location name
+  type: enum,              // Optional. 'country' | 'region' | 'city' | 'facility' | 'virtual' | 'general'
+  coordinates: {           // Optional.
+    lat: number,
+    lng: number
+  },
+  createdAt: datetime,
+  updatedAt: datetime
+}
+```
+
+### Event
+
+Significant events referenced by narratives.
+
+```javascript
+{
+  id: string,              // Required. Prefix: 'event-'
+  text: string,            // Required. Event title/description
+  date: datetime,          // Required. ISO 8601 timestamp
+  parentEventId: string,   // Optional. FK to parent Event (for sub-events)
+  subEventIds: string[],   // Auto-managed. FKs to child Events
+  locationId: string,      // Optional. FK to Location
+  personIds: string[],     // Optional. FKs to Person
+  organizationIds: string[], // Optional. FKs to Organization
+  createdAt: datetime,
+  updatedAt: datetime
+}
+```
+
+### Person
+
+Individuals mentioned in narratives.
+
+```javascript
+{
+  id: string,              // Required. Prefix: 'person-'
+  name: string,            // Required. Person's name
+  type: enum,              // Optional. 'politician' | 'executive' | 'government_official' | 
+                           //           'judge' | 'analyst' | 'journalist' | 'activist' | 
+                           //           'labor_leader' | 'civilian' | 'employee' | 'legal_professional' | 'general'
+  imageUrl: string,        // Optional. Path to profile image
+  affiliatedOrganizationId: string, // Optional. FK to primary Organization
+  affiliatedFactionIds: string[],   // Optional. FKs to Faction
+  relatedLocationIds: string[],     // Optional. FKs to Location
+  relatedEventIds: string[],        // Optional. FKs to Event
+  documentIds: string[],            // Optional. FKs to Document
+  factionSentiment: {      // Optional. How factions view this person
+    [factionId]: number    // -1.0 (negative) to 1.0 (positive)
+  },
+  createdAt: datetime,
+  updatedAt: datetime
+}
+```
+
+### Organization
+
+Organizations mentioned in narratives.
+
+```javascript
+{
+  id: string,              // Required. Prefix: 'org-'
+  name: string,            // Required. Organization name
+  type: enum,              // Optional. 'corporation' | 'government' | 'political' | 'judicial' | 
+                           //           'nonprofit' | 'union' | 'media' | 'research' | 'religious' | 
+                           //           'financial' | 'law_enforcement' | 'military' | 'general'
+  imageUrl: string,        // Optional. Path to logo
+  affiliatedFactionIds: string[],   // Optional. FKs to Faction
+  relatedLocationIds: string[],     // Optional. FKs to Location
+  documentIds: string[],            // Optional. FKs to Document
+  factionSentiment: {      // Optional. How factions view this org
+    [factionId]: number    // -1.0 to 1.0
+  },
+  createdAt: datetime,
+  updatedAt: datetime
+}
+```
+
+---
+
+## Document & Collaboration Model
+
+### Topic
+
+Aggregated story clusters from documents.
+
+```javascript
+{
+  id: string,              // Required. Prefix: 'topic-'
+  headline: string,        // Required. Main headline
+  bulletPoints: string[],  // Optional. Key summary points
+  documentIds: string[],   // Optional. FKs to Document
+  startDate: string,       // Optional. ISO date 'YYYY-MM-DD'
+  endDate: string,         // Optional. ISO date (null if ongoing)
+  volumeOverTime: [        // Optional. Daily volume
+    { date: string, volume: number }
+  ],
+  createdAt: datetime,
+  updatedAt: datetime
+}
+```
+
+### Document
+
+Source documents (news articles, social posts, internal reports). **Documents are the source of truth for faction volume and sentiment.**
+
+```javascript
+{
+  id: string,              // Required. Prefix: 'doc-'
+  documentType: enum,      // Required. 'news_article' | 'social_media' | 'internal_report' | 
+                           //           'intelligence_report' | 'memo' | 'transcript'
+  classification: string,  // Optional. 'U' | 'C' | 'S' | 'TS'
+  title: string,           // Required. Document title
+  url: string,             // Optional. Source URL
+  publishedDate: datetime, // Required. When published (used for volume over time)
+  publisherId: string,     // Required. FK to Publisher (used for publisher volume)
+  author: string,          // Optional. Author name
+  excerpt: string,         // Optional. Short excerpt
+  headerImage: {           // Optional.
+    url: string,
+    caption: string
+  },
+  contentBlocks: [         // Optional. Structured content
+    {
+      type: 'paragraph' | 'heading' | 'quote' | 'image' | 'list',
+      content: string,
+      imageUrl?: string,
+      caption?: string,
+      portionMark?: {
+        classification: string,
+        handling: string
+      }
+    }
+  ],
+  
+  // Entity extractions (from ingest)
+  narrativeIds: string[],      // Optional. FKs to Narrative
+  themeIds: string[],          // Optional. FKs to Theme
+  personIds: string[],         // Optional. FKs to Person
+  organizationIds: string[],   // Optional. FKs to Organization
+  locationIds: string[],       // Optional. FKs to Location
+  eventIds: string[],          // Optional. FKs to Event
+  
+  // Faction extraction (from ingest) - SOURCE OF TRUTH for volume/sentiment
+  factionMentions: {           // Required. Which factions this document relates to
+    [factionId]: {
+      sentiment: number        // -1.0 to 1.0, how this doc portrays this faction
+    }
+  },
+  
+  metrics: {               // Optional.
+    shares: number
+  },
+  highlights: [            // Optional. User highlights
+    {
+      id: string,
+      userId: string,
+      blockIndex: number,
+      startOffset: number,
+      endOffset: number,
+      highlightedText: string,
+      createdAt: datetime
+    }
+  ],
+  comments: [              // Optional. User comments
+    {
+      id: string,
+      userId: string,
+      blockIndex: number,
+      anchorStartOffset: number,
+      anchorEndOffset: number,
+      anchorText: string,
+      content: string,
+      createdAt: datetime,
+      replies: [
+        {
+          id: string,
+          userId: string,
+          content: string,
+          createdAt: datetime
+        }
+      ]
+    }
+  ],
+  createdAt: datetime
+}
+```
+
+**Volume = document count.** Each document mentioning a faction counts as 1 unit of volume for that faction on that date.
+
+### Publisher
+
+Sources that publish documents.
+
+```javascript
+{
+  id: string,              // Required. Prefix: 'pub-'
+  name: string,            // Required. Publisher name
+  type: enum,              // Required. 'social' | 'national_news' | 'international_news' | 'internal'
+  parent?: string,         // Optional. Category ID for hierarchical grouping
+  color: string            // Optional. Hex color for charts
+}
+```
+
+### PublisherCategory
+
+Groups publishers by type.
+
+```javascript
+{
+  id: string,              // Required. 'social' | 'national_news' | 'international_news' | 'internal'
+  name: string,            // Required. Display name
+  color: string            // Optional. Hex color
+}
+```
+
+### User
+
+System users for collaboration features.
+
+```javascript
+{
+  id: string,              // Required. Prefix: 'user-'
+  name: string,            // Required. Display name
+  email: string,           // Required.
+  role: string,            // Optional. User role
+  avatarUrl: string        // Optional. Profile image
+}
+```
+
+---
+
+## Monitor & Alert System
+
+### Monitor
+
+Automated tracking configuration for entities and conditions.
+
+```javascript
+{
+  id: string,              // Required. Prefix: 'monitor-'
+  name: string,            // Required. Monitor name
+  description: string,     // Optional. What this monitor tracks
+  scope: {                 // Required. What entities to watch
+    personIds: string[],
+    organizationIds: string[],
+    factionIds: string[],
+    locationIds: string[],
+    eventIds: string[],
+    narrativeIds: string[],
+    themeIds: string[],
+    logic: 'AND' | 'OR'    // How to combine scope conditions
+  },
+  options: {               // Optional. Additional settings
+    includeSubEvents: boolean,
+    includeThemes: boolean,
+    includeRelatedEvents: boolean
+  },
+  triggers: {              // Optional. What conditions generate alerts
+    newNarrative: boolean,
+    newEvent: boolean,
+    volumeSpike: {
+      threshold: number,
+      timeWindow: string   // e.g. '24h', '12h'
+    },
+    sentimentShift: {
+      threshold: number,
+      direction: 'positive' | 'negative' | 'any'
+    },
+    factionEngagement: {
+      factionIds: string[],
+      threshold: number
+    }
+  },
+  enabled: boolean,        // Required. Is monitor active?
+  lastTriggered: datetime, // Auto-managed.
+  createdAt: datetime,
+  updatedAt: datetime
+}
+```
+
+### Alert
+
+Generated when monitor conditions are met.
+
+```javascript
+{
+  id: string,              // Required. Prefix: 'alert-'
+  monitorId: string,       // Required. FK to Monitor
+  type: enum,              // Required. 'volume_spike' | 'new_event' | 'new_narrative' | 
+                           //           'sentiment_shift' | 'faction_engagement'
+  title: string,           // Required. Alert title
+  description: string,     // Optional. Alert details
+  severity: enum,          // Required. 'critical' | 'high' | 'medium' | 'low'
+  triggeredAt: datetime,   // Required. When alert was generated
+  acknowledged: boolean,   // Required. Has user acknowledged?
+  relatedNarrativeIds: string[],
+  relatedThemeIds: string[],
+  relatedEventIds: string[],
+  relatedSubEventIds: string[],
+  metadata: object         // Type-specific data (threshold, actualValue, etc.)
+}
+```
+
+### Workspace
+
+User-defined collections for focused analysis.
+
+```javascript
+{
+  id: string,              // Required. Prefix: 'workspace-'
+  name: string,            // Required. Workspace name
+  query: string,           // Optional. Search query
+  description: string,     // Optional. Workspace purpose
+  documentIds: string[],   // Optional. FKs to Document
+  filters: object,         // Optional. Saved filter state
+  status: enum,            // Optional. 'active' | 'archived'
+  createdAt: datetime,
+  updatedAt: datetime
+}
+```
+
+---
+
+## Relationship Map
+
+### One-to-Many (FK on child)
+- Mission → Narratives (`narrative.missionId`)
+- Narrative → Themes (`theme.parentNarrativeId`)
+- Event → SubEvents (`subEvent.parentEventId`)
+- Event → Location (`event.locationId`)
+- Publisher → Documents (`document.publisherId`)
+- Monitor → Alerts (`alert.monitorId`)
+
+### Many-to-Many (Array fields)
+- Narrative ↔ Person (`narrative.personIds`, `person.documentIds`)
+- Narrative ↔ Organization (`narrative.organizationIds`)
+- Narrative ↔ Location (`narrative.locationIds`)
+- Narrative ↔ Event (`narrative.eventIds`)
+- Narrative ↔ Document (`narrative.documentIds`, `document.narrativeIds`)
+- Theme ↔ Person/Organization/Location/Event (same pattern)
+- Event ↔ Person (`event.personIds`)
+- Event ↔ Organization (`event.organizationIds`)
+- Person ↔ Faction (`person.affiliatedFactionIds`, `faction.affiliatedPersonIds`)
+- Person ↔ Location (`person.relatedLocationIds`)
+- Organization ↔ Faction (`organization.affiliatedFactionIds`, `faction.affiliatedOrganizationIds`)
+- Organization ↔ Location (`organization.relatedLocationIds`)
+- Topic ↔ Document (`topic.documentIds`)
+- Monitor → Person/Organization/Faction/Location/Event/Narrative/Theme (via `scope`)
+
+---
+
+## DataStore Methods
+
+CRUD operations are available in `js/data/DataStore.js`:
+
+```javascript
+// Generic methods
+dataStore.createEntity(collection, prefix, data, defaults)
+dataStore.updateEntity(collection, id, updates)
+dataStore.deleteEntity(collection, id, cleanupFn)
+dataStore.findEntity(collection, id)
+
+// Entity-specific methods
+dataStore.createMission(mission)
+dataStore.createNarrative(narrative)
+dataStore.createTheme(theme)
+dataStore.createFaction(faction)
+dataStore.createLocation(location)
+dataStore.createEvent(event)
+dataStore.createPerson(person)
+dataStore.createOrganization(org)
+dataStore.createTopic(topic)
+dataStore.createDocument(doc)
+dataStore.createMonitor(monitor)
+dataStore.createWorkspace(workspace)
+
+// Update and delete follow pattern: updateX(id, updates), deleteX(id)
+```
+
+---
+
+## DataService Aggregation Methods
+
+Faction volume, sentiment, and breakdowns are computed from documents:
+
+```javascript
+import { DataService } from './js/data/DataService.js';
+
+// Get faction volume + sentiment for a narrative (aggregated from docs)
+const factionMentions = DataService.getAggregateFactionMentionsForNarrative(narrativeId);
+// Returns: { 'faction-001': { volume: 16, sentiment: 0.58 }, ... }
+
+// Get volume over time (docs grouped by date)
+const volumeOverTime = DataService.getVolumeOverTimeForNarrative(narrativeId);
+// Returns: [{ date: '2026-01-20', factionVolumes: { 'faction-001': 8 }, publisherVolumes: { 'pub-x': 6 } }, ...]
+
+// Get which publishers each faction appears in
+const factionSources = DataService.getFactionSourcesForNarrative(narrativeId);
+// Returns: { 'faction-001': { 'pub-x': 8, 'pub-facebook': 4 }, ... }
+
+// Get publisher volume breakdown
+const publisherVolumes = DataService.getAggregatePublisherVolumesForNarrative(narrativeId);
+// Returns: { 'pub-x': { volume: 12, sentiment: -0.35 }, ... }
+
+// Aggregate across mission or all narratives
+const missionVolume = DataService.getAggregateVolumeOverTime(missionId);
+const allVolume = DataService.getAggregateVolumeOverTime(); // all missions
+```
+
+### Aggregation Logic
+
+**Volume** = count of documents per faction/publisher per time period
+
+**Sentiment** = average of document sentiments, weighted equally:
+```javascript
+sentiment = sum(doc.factionMentions[factionId].sentiment) / count
+```
+
+---
+
+## Sample Data Location
+
+Dataset files are in `js/data/datasets/{dataset-name}/`:
+- `entities.js` - Persons and Organizations
+- `narratives.js` - Narratives
+- `themes.js` - Themes
+- `factions.js` - Factions and FactionOverlaps
+- `locations.js` - Locations
+- `events.js` - Events
+- `documents.js` - **Source of truth for faction volume/sentiment**
+- `publishers.js` - Publishers and PublisherCategories
+- `monitors.js` - Monitors and Alerts
+- `missions.js` - Missions
+- `topics.js` - Topics
+- `users.js` - Users

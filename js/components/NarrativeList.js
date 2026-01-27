@@ -71,10 +71,11 @@ export class NarrativeList extends BaseItemList {
   }
 
   /**
-   * Calculate volume for a subnarrative
+   * Calculate volume for a theme using document-based aggregation
    */
   calculateThemeVolume(theme) {
-    return Object.values(theme.factionMentions || {})
+    const factionMentions = DataService.getAggregateFactionMentionsForTheme(theme.id);
+    return Object.values(factionMentions)
       .reduce((sum, f) => sum + (f.volume || 0), 0);
   }
 
@@ -258,7 +259,7 @@ export class NarrativeList extends BaseItemList {
       subItem.addEventListener('click', (e) => {
         e.stopPropagation();
         const subId = subItem.dataset.id;
-        window.location.hash = `#/subnarrative/${subId}`;
+        window.location.hash = `#/theme/${subId}`;
       });
     });
   }

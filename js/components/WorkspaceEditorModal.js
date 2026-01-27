@@ -79,6 +79,22 @@ export class WorkspaceEditorModal {
     const docCountText = docCount > 0 
       ? `<span class="badge">${docCount} document${docCount !== 1 ? 's' : ''} selected</span>`
       : '';
+    const isEditMode = !!this.editingWorkspace;
+
+    // Search Query field only shown in create mode
+    const queryFieldHtml = !isEditMode ? `
+      <div class="form-group">
+        <label class="form-label" for="workspace-query">Search Query</label>
+        <input 
+          type="text" 
+          id="workspace-query" 
+          class="form-input" 
+          placeholder="e.g., pricing controversy customer complaints"
+          value="${this.escapeHtml(this.formState.query)}"
+        />
+        <p class="form-hint">Keywords used to find relevant documents</p>
+      </div>
+    ` : '';
 
     this.modalContent.innerHTML = `
       <div class="modal-header">
@@ -96,22 +112,10 @@ export class WorkspaceEditorModal {
               class="form-input" 
               placeholder="e.g., Q1 Campaign Analysis"
               value="${this.escapeHtml(this.formState.name)}"
-              autofocus
             />
           </div>
           
-          <!-- Search Query -->
-          <div class="form-group">
-            <label class="form-label" for="workspace-query">Search Query</label>
-            <input 
-              type="text" 
-              id="workspace-query" 
-              class="form-input" 
-              placeholder="e.g., pricing controversy customer complaints"
-              value="${this.escapeHtml(this.formState.query)}"
-            />
-            <p class="form-hint">Keywords used to find relevant documents</p>
-          </div>
+          ${queryFieldHtml}
           
           <!-- Description -->
           <div class="form-group">
@@ -140,18 +144,24 @@ export class WorkspaceEditorModal {
       </div>
     `;
 
+    // Blur any currently focused element to prevent autofocus conflicts
+    if (document.activeElement) {
+      document.activeElement.blur();
+    }
+
     // Show modal
-    this.modalContainer.classList.add('active');
+    this.modalContainer.classList.remove('hidden');
+    this.modalContent.classList.add('workspace-editor-modal');
     document.body.style.overflow = 'hidden';
 
     // Set up event listeners
     this.setupEventListeners();
 
-    // Focus the name input
+    // Focus the name input after a short delay
     setTimeout(() => {
       const nameInput = document.getElementById('workspace-name');
       if (nameInput) nameInput.focus();
-    }, 100);
+    }, 50);
   }
 
   /**
@@ -259,19 +269,20 @@ export class WorkspaceEditorModal {
     }
 
     try {
-      let workspace;
+      let workspaceId;
       
       if (this.editingWorkspace) {
         // Update existing workspace
-        workspace = dataStore.updateWorkspace(this.editingWorkspace.id, {
+        dataStore.updateWorkspace(this.editingWorkspace.id, {
           name: name,
           query: this.formState.query.trim(),
           description: this.formState.description.trim(),
           documentIds: this.formState.documentIds
         });
+        workspaceId = this.editingWorkspace.id;
       } else {
-        // Create new workspace
-        workspace = dataStore.createWorkspace({
+        // Create new workspace - returns the ID
+        workspaceId = dataStore.createWorkspace({
           name: name,
           query: this.formState.query.trim(),
           description: this.formState.description.trim(),
@@ -283,9 +294,11 @@ export class WorkspaceEditorModal {
       // Close modal
       this.close();
 
-      // Call success callback
-      if (this.onSaveCallback) {
-        this.onSaveCallback(workspace);
+      // Call success callback with workspace object
+      if (this.onSaveCallback && workspaceId) {
+        // Fetch the full workspace to pass to callback
+        const workspace = (dataStore.data.workspaces || []).find(w => w.id === workspaceId);
+        this.onSaveCallback(workspace || { id: workspaceId });
       }
     } catch (error) {
       console.error('Error saving workspace:', error);
@@ -334,7 +347,7 @@ export class WorkspaceEditorModal {
 
     // Hide modal
     if (this.modalContainer) {
-      this.modalContainer.classList.remove('active');
+      this.modalContainer.classList.add('hidden');
     }
     document.body.style.overflow = '';
 

@@ -33,13 +33,14 @@ export const PageHeader = {
       badge,
       description,
       descriptionLink,
+      actions,
       tabs,
       activeTab
     } = config;
 
     const breadcrumbHtml = this.renderBreadcrumbs(breadcrumbs);
     const iconHtml = this.renderIcon(icon, iconColor, imageUrl, imageAlt);
-    const titleRowHtml = this.renderTitleRow(title, iconHtml, badge);
+    const titleRowHtml = this.renderTitleRow(title, iconHtml, badge, actions);
     const subtitleHtml = subtitle ? `<p class="subtitle">${subtitle}</p>` : '';
     const descriptionHtml = this.renderDescription(description, descriptionLink);
     const tabsHtml = this.renderTabs(tabs, activeTab);
@@ -104,18 +105,22 @@ export const PageHeader = {
   },
 
   /**
-   * Render title row with optional badge
+   * Render title row with optional badge and actions
    * @param {string} title - Page title
    * @param {string} iconHtml - Icon HTML
    * @param {string} badge - Badge HTML
+   * @param {string} actions - Actions HTML (buttons, etc.)
    * @returns {string} Title row HTML
    */
-  renderTitleRow(title, iconHtml, badge) {
-    if (badge) {
+  renderTitleRow(title, iconHtml, badge, actions) {
+    if (badge || actions) {
       return `
         <div class="page-title-row">
-          <h1>${iconHtml}${title}</h1>
-          ${badge}
+          <div class="page-title-left">
+            <h1>${iconHtml}${title}</h1>
+            ${badge || ''}
+          </div>
+          ${actions ? `<div class="page-title-actions">${actions}</div>` : ''}
         </div>
       `;
     }

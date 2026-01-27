@@ -110,8 +110,9 @@ export class ThemeView extends BaseView {
         )
       : [];
 
-    // Check data availability for each section
-    const hasVolumeData = theme.volumeOverTime && theme.volumeOverTime.length > 0 && factions.length > 0;
+    // Check data availability for each section - use document-based aggregation
+    const volumeOverTime = DataService.getVolumeOverTimeForTheme(theme.id);
+    const hasVolumeData = volumeOverTime.length > 0 && factions.length > 0;
     const locations = (theme.locationIds || []).map(lid => DataService.getLocation(lid)).filter(Boolean);
     const events = (theme.eventIds || []).map(eid => DataService.getEvent(eid)).filter(Boolean);
     const personIds = theme.personIds || [];
@@ -120,7 +121,7 @@ export class ThemeView extends BaseView {
 
     return {
       parentNarrative, factionData, factions, factionOverlaps,
-      hasVolumeData, locations, events, personIds, orgIds, hasNetwork
+      volumeOverTime, hasVolumeData, locations, events, personIds, orgIds, hasNetwork
     };
   }
 
@@ -161,14 +162,14 @@ export class ThemeView extends BaseView {
   async initializeComponents() {
     const {
       theme, factionData, factions, factionOverlaps,
-      hasVolumeData, locations, events, personIds, orgIds
+      volumeOverTime, hasVolumeData, locations, events, personIds, orgIds
     } = this._prefetchedData;
 
-    // Volume Over Time Chart
+    // Volume Over Time Chart - uses document-based aggregation
     if (hasVolumeData) {
-      const dates = theme.volumeOverTime.map(d => d.date);
+      const dates = volumeOverTime.map(d => d.date);
       const series = factions.map(f =>
-        theme.volumeOverTime.map(d => (d.factionVolumes || {})[f.id] || 0)
+        volumeOverTime.map(d => (d.factionVolumes || {})[f.id] || 0)
       );
 
       this.components.volumeChart = new StackedAreaChart('sub-volume-chart', {

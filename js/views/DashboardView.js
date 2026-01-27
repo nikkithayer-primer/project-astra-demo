@@ -63,7 +63,7 @@ export class DashboardView extends BaseView {
             <div class="stat-value">${stats.totalNarratives}</div>
             <div class="stat-label">Narratives</div>
           </div>
-          <div class="stat-card clickable" data-href="#/subnarratives">
+          <div class="stat-card clickable" data-href="#/themes">
             <svg class="stat-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.25">
               <path d="M3 3h10v10H3z" rx="1"/>
               <path d="M5 6h6M5 9h4"/>

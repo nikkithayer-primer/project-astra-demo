@@ -21,6 +21,7 @@ import { WorkspacesView } from './views/WorkspacesView.js';
 import { WorkspaceView } from './views/WorkspaceView.js';
 import { SearchView } from './views/SearchView.js';
 import { ProjectsView } from './views/ProjectsView.js';
+import { TopicView } from './views/TopicView.js';
 import { initStickyHeader, destroyStickyHeader } from './utils/stickyHeader.js';
 import { TimeRangeFilter } from './components/TimeRangeFilter.js';
 import { DataService } from './data/DataService.js';
@@ -387,7 +388,7 @@ export class Router {
         this.currentView = new ListView(this.container, 'narratives', filterOptions);
         break;
 
-      case 'subnarrative':
+      case 'theme':
         if (id) {
           this.currentView = new ThemeView(this.container, id, filterOptions);
         } else {
@@ -395,6 +396,11 @@ export class Router {
           return;
         }
         break;
+
+      case 'themes':
+        // Themes are shown as part of narratives list
+        window.location.hash = '#/narratives';
+        return;
 
       case 'faction':
         if (id) {
@@ -467,6 +473,14 @@ export class Router {
 
       case 'topics':
         this.currentView = new ListView(this.container, 'topics', filterOptions);
+        break;
+
+      case 'topic':
+        if (id) {
+          this.currentView = new TopicView(this.container, id, filterOptions);
+        } else {
+          this.currentView = new ListView(this.container, 'topics', filterOptions);
+        }
         break;
 
       case 'data-model':

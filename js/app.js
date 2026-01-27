@@ -630,11 +630,11 @@ class App {
     const now = new Date();
     const oneDayAgo = new Date(now.getTime() - 24 * 60 * 60 * 1000);
     
-    // Filter narratives with activity in the last 24 hours
+    // Filter narratives with activity in the last 24 hours using document-based aggregation
     const recentNarratives = narratives.filter(n => {
-      // Check volumeOverTime for recent dates
-      if (n.volumeOverTime && n.volumeOverTime.length > 0) {
-        return n.volumeOverTime.some(entry => {
+      const volumeOverTime = DataService.getVolumeOverTimeForNarrative(n.id);
+      if (volumeOverTime && volumeOverTime.length > 0) {
+        return volumeOverTime.some(entry => {
           const entryDate = new Date(entry.date);
           return entryDate >= oneDayAgo;
         });
@@ -646,12 +646,14 @@ class App {
       return false;
     });
     
-    // Calculate total volume for each recent narrative
+    // Calculate total volume for each recent narrative using document aggregation
     const narrativesWithVolume = recentNarratives.map(n => {
-      const totalVolume = Object.values(n.factionMentions || {})
+      const factionMentions = DataService.getAggregateFactionMentionsForNarrative(n.id);
+      const volumeOverTime = DataService.getVolumeOverTimeForNarrative(n.id);
+      const totalVolume = Object.values(factionMentions)
         .reduce((sum, f) => sum + (f.volume || 0), 0);
       const themes = DataService.getThemesForNarrative(n.id);
-      return { ...n, totalVolume, themes };
+      return { ...n, totalVolume, volumeOverTime, themes };
     });
     
     // Sort by volume (highest first)
@@ -692,7 +694,7 @@ class App {
         listHtml += `<div class="chat-themes-list">`;
         n.themes.slice(0, 3).forEach(theme => {
           const themeTitle = this.escapeHtml(theme.title || theme.text?.substring(0, 50) + '...');
-          listHtml += `<a href="#/subnarrative/${theme.id}" class="chat-theme-link">`;
+          listHtml += `<a href="#/theme/${theme.id}" class="chat-theme-link">`;
           listHtml += `<svg viewBox="0 0 16 16" width="10" height="10" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M4 0v12h8"/></svg>`;
           listHtml += `<span>${themeTitle}</span>`;
           listHtml += `</a>`;

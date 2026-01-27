@@ -290,7 +290,8 @@ export class ListView extends BaseView {
         iconType: 'narratives',
         route: 'narrative',
         getSubtitle: (item) => {
-          const volume = Object.values(item.factionMentions || {})
+          const factionMentions = DataService.getAggregateFactionMentionsForNarrative(item.id);
+          const volume = Object.values(factionMentions)
             .reduce((sum, f) => sum + (f.volume || 0), 0);
           return `${volume.toLocaleString()} mentions`;
         },

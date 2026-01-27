@@ -150,10 +150,11 @@ export class NarrativeView extends BaseView {
         )
       : [];
 
-    // Volume/Timeline data
+    // Volume/Timeline data - computed from documents
     const events = DataService.getEventsForNarrative(narrative.id);
     const allEvents = events.flatMap(e => [e, ...DataService.getSubEventsForEvent(e.id)]);
-    const hasVolumeData = narrative.volumeOverTime && narrative.volumeOverTime.length > 0 && factions.length > 0;
+    const volumeOverTime = DataService.getVolumeOverTimeForNarrative(narrative.id);
+    const hasVolumeData = volumeOverTime.length > 0 && factions.length > 0;
     const publisherVolumeTime = DataService.getPublisherVolumeOverTime(narrative.id);
     const hasPublisherData = publisherVolumeTime.dates.length > 0 && publisherVolumeTime.publishers.length > 0;
     const hasVolumeTimeline = hasVolumeData || hasPublisherData || allEvents.length > 0;
@@ -178,7 +179,7 @@ export class NarrativeView extends BaseView {
 
     return {
       themes, factionData, factions, factionOverlaps,
-      events, allEvents, hasVolumeData, publisherVolumeTime, hasPublisherData, hasVolumeTimeline,
+      events, allEvents, volumeOverTime, hasVolumeData, publisherVolumeTime, hasPublisherData, hasVolumeTimeline,
       locations, mapLocations, personIds, orgIds, hasNetwork, documents
     };
   }
@@ -252,7 +253,7 @@ export class NarrativeView extends BaseView {
   async initializeComponents() {
     const {
       narrative, themes, factionData, factions, factionOverlaps,
-      allEvents, hasVolumeData, publisherVolumeTime, hasPublisherData,
+      allEvents, volumeOverTime, hasVolumeData, publisherVolumeTime, hasPublisherData,
       mapLocations, personIds, orgIds, documents
     } = this._prefetchedData;
 
@@ -300,19 +301,19 @@ export class NarrativeView extends BaseView {
     if (themes.length > 0) {
       this.components.themeList = new ThemeList('narrative-themes', {
         onItemClick: (s) => {
-          window.location.hash = `#/subnarrative/${s.id}`;
+          window.location.hash = `#/theme/${s.id}`;
         }
       });
       this.components.themeList.update({ themes });
     }
 
-    // Volume & Events Chart (half-width)
+    // Volume & Events Chart (half-width) - uses document-based aggregation
     if (hasVolumeData || hasPublisherData || allEvents.length > 0) {
       let volumeData = null;
       if (hasVolumeData) {
-        const dates = narrative.volumeOverTime.map(d => d.date);
+        const dates = volumeOverTime.map(d => d.date);
         const series = factions.map(f =>
-          narrative.volumeOverTime.map(d => (d.factionVolumes || {})[f.id] || 0)
+          volumeOverTime.map(d => (d.factionVolumes || {})[f.id] || 0)
         );
         volumeData = { dates, series, factions };
       }

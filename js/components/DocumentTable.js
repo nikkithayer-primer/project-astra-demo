@@ -103,7 +103,7 @@ const COLUMN_CONFIG = {
     idField: 'themeIds',
     getValue: (doc) => (doc.themeIds || []).length,
     getEntities: (doc) => (doc.themeIds || []).map(id => DataService.getTheme(id)).filter(Boolean),
-    route: 'subnarrative',
+    route: 'theme',
     displayField: 'text'
   },
   events: {
@@ -1224,7 +1224,7 @@ export class DocumentTable extends BaseComponent {
       this.detailsThemeList = new ThemeList('doc-details-themes', {
         maxItems: 10,
         onItemClick: (s) => {
-          window.location.hash = `#/subnarrative/${s.id}`;
+          window.location.hash = `#/theme/${s.id}`;
         }
       });
       this.detailsThemeList.update({ themes });
