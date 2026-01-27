@@ -49,7 +49,7 @@ const DEFAULT_MONITOR_VISUALIZATIONS = {
   'Pricing Perception Monitor': 'faction_sentiment',
   'Employee Experience Tracker': 'documents',
   'Self Checkout Complaints': 'volume',
-  'Product Availability Issues': 'topics',
+  'Product Availability Issues': 'volume',
   'Product Safety Alerts': 'narratives',
   'Competitor Activity Tracker': 'topics'
 };
@@ -155,6 +155,49 @@ export class MonitorsView extends BaseView {
   }
 
   /**
+   * Get all scope entity names for a monitor (not condensed)
+   * Returns an array of entity names
+   */
+  getScopeEntityNames(monitor) {
+    const scope = monitor.scope || {};
+    const entities = [];
+    
+    // Collect all entity names from the scope
+    if (scope.personIds?.length) {
+      scope.personIds.forEach(id => {
+        const person = DataService.getPerson(id);
+        if (person) entities.push(person.name);
+      });
+    }
+    if (scope.organizationIds?.length) {
+      scope.organizationIds.forEach(id => {
+        const org = DataService.getOrganization(id);
+        if (org) entities.push(org.name);
+      });
+    }
+    if (scope.factionIds?.length) {
+      scope.factionIds.forEach(id => {
+        const faction = DataService.getFaction(id);
+        if (faction) entities.push(faction.name);
+      });
+    }
+    if (scope.narrativeIds?.length) {
+      scope.narrativeIds.forEach(id => {
+        const narrative = DataService.getNarrative(id);
+        if (narrative) entities.push(narrative.text);
+      });
+    }
+    if (scope.locationIds?.length) {
+      scope.locationIds.forEach(id => {
+        const location = DataService.getLocation(id);
+        if (location) entities.push(location.name);
+      });
+    }
+    
+    return entities;
+  }
+
+  /**
    * Build the visualization type dropdown HTML
    */
   buildVisualizationDropdown(monitorId) {
@@ -205,10 +248,14 @@ export class MonitorsView extends BaseView {
       const containerId = `monitor-viz-${monitor.id}`;
       const scopeLogic = monitor.scope?.logic || 'OR';
       
+      // Get all scope entity names (not condensed)
+      const scopeEntities = this.getScopeEntityNames(monitor);
+      
       return {
         ...monitor,
         scopeType,
         scopeLabel,
+        scopeEntities,
         scopeIcon: this.getScopeIcon(scopeType),
         triggerLabels,
         matchedNarratives,
@@ -233,15 +280,37 @@ export class MonitorsView extends BaseView {
           `).join('')
         : '<div class="monitor-no-alerts">No recent alerts</div>';
       
-      // Build subtitle with trigger info and paused status
-      let subtitle = monitor.enabled && monitor.lastTriggeredFormatted
-        ? `Triggered ${monitor.lastTriggeredFormatted}`
-        : !monitor.enabled ? 'Paused' : '';
-      
-      // Add logic badge and match count to subtitle
+      // Build tooltip content with monitor metadata
       const logicBadge = `<span class="logic-badge logic-${monitor.scopeLogic.toLowerCase()}">${monitor.scopeLogic}</span>`;
-      const matchCount = `<span class="match-count">${monitor.matchedNarratives.length} match${monitor.matchedNarratives.length !== 1 ? 'es' : ''}</span>`;
-      subtitle = `${logicBadge}${matchCount}${subtitle ? ' • ' + subtitle : ''}`;
+      const lastTriggeredText = monitor.enabled && monitor.lastTriggeredFormatted
+        ? monitor.lastTriggeredFormatted
+        : !monitor.enabled ? 'Paused' : 'Never';
+      
+      // Build scope entities list or show "All" if empty
+      const scopeEntitiesHtml = monitor.scopeEntities.length > 0
+        ? `<ul class="card-title-tooltip-list">${monitor.scopeEntities.map(name => `<li>${name}</li>`).join('')}</ul>`
+        : 'All';
+      
+      const tooltipHtml = `
+        <div class="card-title-tooltip">
+          <div class="card-title-tooltip-row">
+            <span class="card-title-tooltip-label">Logic</span>
+            <span class="card-title-tooltip-value">${logicBadge}</span>
+          </div>
+          <div class="card-title-tooltip-row">
+            <span class="card-title-tooltip-label">Matches</span>
+            <span class="card-title-tooltip-value">${monitor.matchedNarratives.length}</span>
+          </div>
+          <div class="card-title-tooltip-row card-title-tooltip-row-scope">
+            <span class="card-title-tooltip-label">Scope</span>
+            <span class="card-title-tooltip-value">${scopeEntitiesHtml}</span>
+          </div>
+          <div class="card-title-tooltip-row">
+            <span class="card-title-tooltip-label">Last triggered</span>
+            <span class="card-title-tooltip-value">${lastTriggeredText}</span>
+          </div>
+        </div>
+      `;
       
       // Build actions HTML with visualization dropdown, edit button, and description toggle
       const descToggleId = `desc-toggle-${monitor.id}`;
@@ -268,18 +337,17 @@ export class MonitorsView extends BaseView {
         <div class="monitor-viz-container" id="${monitor.containerId}"></div>
       `;
       
-      // Use CardBuilder to create the card
+      // Use CardBuilder to create the card (no subtitle - moved to tooltip)
       let cardHtml = CardBuilder.create(monitor.name, `monitor-body-${monitor.id}`, {
         noPadding: true,
         halfWidth: true,
-        subtitle: subtitle,
         actions: actionsHtml
       });
       
-      // Make the title clickable - wrap in anchor tag
+      // Wrap the title with tooltip container
       cardHtml = cardHtml.replace(
         `<h2 class="card-title">${monitor.name}</h2>`,
-        `<h2 class="card-title"><a href="#/monitor/${monitor.id}" class="card-title-link">${monitor.name}</a></h2>`
+        `<h2 class="card-title"><span class="card-title-with-tooltip"><a href="#/monitor/${monitor.id}" class="card-title-link">${monitor.name}</a>${tooltipHtml}</span></h2>`
       );
       
       // Insert the card body content into the generated card
@@ -456,9 +524,13 @@ export class MonitorsView extends BaseView {
     // Setup visualization dropdown handlers
     this.setupVisualizationDropdowns(enrichedMonitors);
     
-    // Initialize card width toggles for all monitor cards
+    // Initialize card width toggles for all monitor cards (default to half width)
     const monitorsGrid = this.container.querySelector('.monitors-grid');
-    initAllCardToggles(monitorsGrid, 'monitors');
+    const defaultWidths = {};
+    enrichedMonitors.forEach((_, index) => {
+      defaultWidths[index] = 'half';
+    });
+    initAllCardToggles(monitorsGrid, 'monitors', defaultWidths);
     
     // Store enriched monitors for later use
     this.enrichedMonitors = enrichedMonitors;
@@ -642,13 +714,25 @@ export class MonitorsView extends BaseView {
         showSparkline: true,
         showVolume: true,
         showDuration: true,
+        showBulletPoints: false,
         onItemClick: (t) => {
-          // Topics might not have their own detail page, so we can show documents
-          console.log('Topic clicked:', t);
+          window.location.hash = `#/topic/${t.id}`;
         }
       });
       topicList.update({ topics });
       this.visualizationComponents.push({ monitorId: monitor.id, component: topicList, type: 'topics' });
+      
+      // Store reference for description toggle (bullet points)
+      this.descriptionToggles.set(monitor.id, topicList);
+      
+      // Set up description toggle handler for topics
+      const descToggle = document.getElementById(`desc-toggle-${monitor.id}`);
+      if (descToggle) {
+        descToggle.addEventListener('click', () => {
+          const isShowing = topicList.toggleBulletPoints();
+          descToggle.classList.toggle('active', isShowing);
+        });
+      }
     } else {
       this.showEmptyVisualization(container, 'No topics found');
     }

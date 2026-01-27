@@ -15,14 +15,12 @@ export const CardBuilder = {
    * @param {boolean} [options.fullWidth] - Make card full-width
    * @param {string} [options.actions] - HTML for card header actions
    * @param {string} [options.bodyClass] - Additional classes for card body
-   * @param {boolean} [options.draggable] - Enable drag handle (default: true)
    * @param {string} [options.subtitle] - Optional subtitle text (e.g., "Triggered 6 days ago")
    * @param {string} [options.content] - Optional HTML content to insert into card body
    * @returns {string} Card HTML string
    */
   create(title, containerId, options = {}) {
     const countLabel = options.count !== undefined ? ` (${options.count})` : '';
-    const showDragHandle = options.draggable !== false;
     
     const bodyClasses = [
       'card-body',
@@ -36,39 +34,18 @@ export const CardBuilder = {
       options.fullWidth ? 'card-full-width' : ''
     ].filter(Boolean).join(' ');
     
-    const dragHandle = showDragHandle ? this.dragHandle() : '';
     const subtitleHtml = options.subtitle ? `<span class="card-subtitle">${options.subtitle}</span>` : '';
     const bodyContent = options.content || '';
     
     return `
       <div class="${cardClasses}" data-card-id="${containerId}">
         <div class="card-header">
-          ${dragHandle}
           <h2 class="card-title">${title}${countLabel}</h2>
           ${subtitleHtml}
           <div class="card-header-actions">${options.actions || ''}</div>
         </div>
         <div class="${bodyClasses}" id="${containerId}">${bodyContent}</div>
       </div>
-    `;
-  },
-
-  /**
-   * Create drag handle HTML
-   * @returns {string} Drag handle HTML
-   */
-  dragHandle() {
-    return `
-      <button class="card-drag-handle" title="Drag to reorder" aria-label="Drag to reorder card">
-        <svg viewBox="0 0 16 16" width="14" height="14" fill="currentColor">
-          <circle cx="5" cy="3" r="1.5"/>
-          <circle cx="11" cy="3" r="1.5"/>
-          <circle cx="5" cy="8" r="1.5"/>
-          <circle cx="11" cy="8" r="1.5"/>
-          <circle cx="5" cy="13" r="1.5"/>
-          <circle cx="11" cy="13" r="1.5"/>
-        </svg>
-      </button>
     `;
   },
 

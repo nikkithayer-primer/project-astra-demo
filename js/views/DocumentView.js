@@ -275,6 +275,8 @@ export class DocumentView extends BaseView {
     const typeInfo = getDocumentTypeInfo(docType);
     const showTitle = hasTitle(docType);
     const isSocial = isSocialMedia(docType);
+    
+    const dateValue = doc.publishedDate;
 
     // Publisher badge with color (or neutral for internal)
     const publisherHtml = publisher ? `
@@ -314,6 +316,9 @@ export class DocumentView extends BaseView {
       </div>
     ` : '';
 
+    // Support both excerpt and summary field names
+    const excerptValue = doc.excerpt || doc.summary;
+
     return `
       <div class="page-header">
         ${breadcrumbsHtml}
@@ -321,11 +326,11 @@ export class DocumentView extends BaseView {
           ${publisherHtml}
           ${typeBadgeHtml}
           ${classificationBadgeHtml}
-          <span class="document-date-detail">${this.formatDate(doc.publishedDate)}</span>
+          <span class="document-date-detail">${this.formatDate(dateValue)}</span>
         </div>
         ${showTitle && doc.title ? `<h1>${doc.title}</h1>` : socialHeaderHtml}
-        ${showTitle && doc.excerpt ? `
-          <p class="document-excerpt-detail">${doc.excerpt}</p>
+        ${showTitle && excerptValue ? `
+          <p class="document-excerpt-detail">${excerptValue}</p>
         ` : ''}
         ${actionButtonHtml}
       </div>

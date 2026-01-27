@@ -408,8 +408,7 @@ export class MonitorView extends BaseView {
         showDuration: true,
         showBulletPoints: false,
         onItemClick: (t) => {
-          // Navigate to topic if route exists, otherwise show details
-          console.log('Topic clicked:', t.id);
+          window.location.hash = `#/topic/${t.id}`;
         }
       });
       this.components.topicList.update({ topics });

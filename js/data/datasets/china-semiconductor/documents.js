@@ -11,10 +11,10 @@ export const documents = [
     title: 'SMIC confirms 5nm chip mass production using DUV multi-patterning',
     url: 'https://semiengi.com/smic-5nm-duv-breakthrough-2026',
     publishedDate: '2026-01-15T08:30:00Z',
-    sourceId: 'src-semiengi',
+    publisherId: 'pub-semiengi',
     author: 'Mark Liu',
     excerpt: 'SMIC has confirmed it is mass producing 5nm chips using advanced multi-patterning techniques with DUV lithography, marking a significant milestone for Chinese semiconductor manufacturing.',
-    heroImage: {
+    headerImage: {
       url: 'img/placeholders/image-placeholder.svg',
       caption: 'SMIC semiconductor fabrication facility'
     },
@@ -27,7 +27,38 @@ export const documents = [
     personIds: ['person-001', 'person-002'],
     organizationIds: ['org-001'],
     locationIds: ['loc-001'],
-    eventIds: ['event-001']
+    eventIds: ['event-001'],
+    highlights: [
+      {
+        id: 'highlight-101',
+        userId: 'user-001',
+        blockIndex: 0,
+        startOffset: 0,
+        endOffset: 142,
+        highlightedText: 'Semiconductor Manufacturing International Corporation (SMIC) has confirmed it has achieved mass production of 5nm chips using deep ultraviolet (DUV)',
+        createdAt: '2026-01-15T10:00:00Z'
+      }
+    ],
+    comments: [
+      {
+        id: 'comment-101',
+        userId: 'user-001',
+        blockIndex: 0,
+        anchorStartOffset: 0,
+        anchorEndOffset: 142,
+        anchorText: 'Semiconductor Manufacturing International Corporation (SMIC) has confirmed it has achieved mass production of 5nm chips using deep ultraviolet (DUV)',
+        content: 'Key development. This confirms the rumors we\'ve been tracking for months.',
+        createdAt: '2026-01-15T10:15:00Z',
+        replies: [
+          {
+            id: 'reply-101',
+            userId: 'user-002',
+            content: 'Agreed. Need to validate with our technical sources.',
+            createdAt: '2026-01-15T10:45:00Z'
+          }
+        ]
+      }
+    ]
   },
   // News Article - SCMP report
   {
@@ -36,7 +67,7 @@ export const documents = [
     title: 'China\'s SMIC achieves advanced chip production without EUV machines',
     url: 'https://scmp.com/tech/smic-5nm-no-euv-2026',
     publishedDate: '2026-01-16T06:00:00Z',
-    sourceId: 'src-scmp',
+    publisherId: 'pub-scmp',
     author: 'Che Pan',
     excerpt: 'In a major breakthrough, SMIC has demonstrated the ability to produce 5nm chips without access to ASML\'s extreme ultraviolet lithography systems, though at lower yields.',
     narrativeIds: ['narr-001'],
@@ -44,7 +75,9 @@ export const documents = [
     personIds: ['person-001'],
     organizationIds: ['org-001'],
     locationIds: ['loc-001'],
-    eventIds: ['event-001']
+    eventIds: ['event-001'],
+    highlights: [],
+    comments: []
   },
   // News Article - SemiAnalysis
   {
@@ -53,7 +86,7 @@ export const documents = [
     title: 'Analysis: SMIC\'s 5nm achievement and what it means for export controls',
     url: 'https://semianalysis.com/smic-5nm-analysis',
     publishedDate: '2026-01-17T10:00:00Z',
-    sourceId: 'src-semiengi',
+    publisherId: 'pub-semiengi',
     author: 'Dylan Patel',
     excerpt: 'SemiAnalysis deep-dive into SMIC\'s technical approach reveals innovative multi-patterning but significant cost and yield penalties compared to EUV-based production.',
     narrativeIds: ['narr-001'],
@@ -61,7 +94,19 @@ export const documents = [
     personIds: ['person-003'],
     organizationIds: ['org-001', 'org-023'],
     locationIds: [],
-    eventIds: []
+    eventIds: [],
+    highlights: [
+      {
+        id: 'highlight-102',
+        userId: 'user-003',
+        blockIndex: 0,
+        startOffset: 0,
+        endOffset: 85,
+        highlightedText: 'SemiAnalysis deep-dive into SMIC\'s technical approach reveals innovative multi-patterning',
+        createdAt: '2026-01-17T12:00:00Z'
+      }
+    ],
+    comments: []
   },
   // News Article - Bloomberg
   {
@@ -70,7 +115,7 @@ export const documents = [
     title: 'SMIC breakthrough raises questions about US chip strategy',
     url: 'https://bloomberg.com/smic-breakthrough-us-strategy',
     publishedDate: '2026-01-18T14:00:00Z',
-    sourceId: 'src-bloomberg',
+    publisherId: 'pub-bloomberg',
     author: 'Ian King',
     excerpt: 'SMIC\'s unexpected advancement has sparked debate in Washington about the efficacy of semiconductor export controls and whether they are achieving their intended goals.',
     narrativeIds: ['narr-001'],
@@ -78,7 +123,9 @@ export const documents = [
     personIds: ['person-003', 'person-005'],
     organizationIds: ['org-001', 'org-005'],
     locationIds: ['loc-004'],
-    eventIds: []
+    eventIds: [],
+    highlights: [],
+    comments: []
   },
   // News Article - Reuters ASML
   {
@@ -87,7 +134,7 @@ export const documents = [
     title: 'Netherlands expands ASML export restrictions to advanced DUV systems',
     url: 'https://reuters.com/netherlands-asml-duv-restrictions',
     publishedDate: '2026-01-12T15:00:00Z',
-    sourceId: 'src-reuters',
+    publisherId: 'pub-reuters',
     author: 'Toby Sterling',
     excerpt: 'The Dutch government has announced expanded export controls blocking ASML from shipping advanced deep ultraviolet lithography systems to China.',
     narrativeIds: ['narr-002'],
@@ -95,7 +142,31 @@ export const documents = [
     personIds: ['person-007', 'person-004'],
     organizationIds: ['org-002', 'org-004'],
     locationIds: ['loc-005'],
-    eventIds: ['event-003']
+    eventIds: ['event-003'],
+    highlights: [
+      {
+        id: 'highlight-103',
+        userId: 'user-002',
+        blockIndex: 0,
+        startOffset: 0,
+        endOffset: 138,
+        highlightedText: 'The Dutch government has announced expanded export controls blocking ASML from shipping advanced deep ultraviolet lithography systems to China.',
+        createdAt: '2026-01-12T17:00:00Z'
+      }
+    ],
+    comments: [
+      {
+        id: 'comment-102',
+        userId: 'user-002',
+        blockIndex: 0,
+        anchorStartOffset: 0,
+        anchorEndOffset: 138,
+        anchorText: 'The Dutch government has announced expanded export controls blocking ASML from shipping advanced deep ultraviolet lithography systems to China.',
+        content: 'This expands restrictions beyond EUV to include advanced DUV. Significant escalation.',
+        createdAt: '2026-01-12T17:30:00Z',
+        replies: []
+      }
+    ]
   },
   // News Article - FT ASML
   {
@@ -104,7 +175,7 @@ export const documents = [
     title: 'ASML warns China restrictions will cut $2.5B from annual revenue',
     url: 'https://ft.com/asml-china-revenue-warning',
     publishedDate: '2026-01-15T17:00:00Z',
-    sourceId: 'src-ft',
+    publisherId: 'pub-ft',
     author: 'Peggy Hollinger',
     excerpt: 'ASML CEO Peter Wennink told investors that expanded China export restrictions will reduce the company\'s annual revenue by approximately $2.5 billion.',
     narrativeIds: ['narr-002'],
@@ -112,7 +183,9 @@ export const documents = [
     personIds: ['person-004'],
     organizationIds: ['org-002'],
     locationIds: ['loc-003'],
-    eventIds: ['event-004']
+    eventIds: ['event-004'],
+    highlights: [],
+    comments: []
   },
   // News Article - WSJ Raimondo
   {
@@ -121,7 +194,7 @@ export const documents = [
     title: 'Raimondo defends expanded chip controls as necessary for national security',
     url: 'https://wsj.com/raimondo-chip-controls-defense',
     publishedDate: '2026-01-14T12:00:00Z',
-    sourceId: 'src-wsj',
+    publisherId: 'pub-wsj',
     author: 'Yuka Hayashi',
     excerpt: 'Commerce Secretary Gina Raimondo defended the administration\'s expanded semiconductor export controls, calling them essential to maintaining US technological leadership.',
     narrativeIds: ['narr-002'],
@@ -129,7 +202,9 @@ export const documents = [
     personIds: ['person-005', 'person-006'],
     organizationIds: ['org-005'],
     locationIds: ['loc-004'],
-    eventIds: []
+    eventIds: [],
+    highlights: [],
+    comments: []
   },
   // News Article - BIS Entity List
   {
@@ -138,7 +213,7 @@ export const documents = [
     title: 'BIS updates Entity List with new Chinese semiconductor firms',
     url: 'https://commerce.gov/bis-entity-list-update-jan-2026',
     publishedDate: '2026-01-13T10:00:00Z',
-    sourceId: 'src-reuters',
+    publisherId: 'pub-reuters',
     author: 'Reuters Staff',
     excerpt: 'The Bureau of Industry and Security has added 15 new Chinese companies to the Entity List, expanding restrictions on semiconductor technology transfers.',
     narrativeIds: ['narr-002'],
@@ -146,7 +221,9 @@ export const documents = [
     personIds: ['person-005'],
     organizationIds: ['org-005', 'org-006'],
     locationIds: ['loc-004'],
-    eventIds: []
+    eventIds: [],
+    highlights: [],
+    comments: []
   },
   // News Article - Big Fund III
   {
@@ -155,7 +232,7 @@ export const documents = [
     title: 'China launches $47 billion semiconductor fund in biggest push yet',
     url: 'https://bloomberg.com/china-big-fund-iii-47-billion',
     publishedDate: '2026-01-17T11:00:00Z',
-    sourceId: 'src-bloomberg',
+    publisherId: 'pub-bloomberg',
     author: 'Debby Wu',
     excerpt: 'China has unveiled the third phase of its National IC Fund with 340 billion yuan ($47 billion), the largest semiconductor investment tranche in its history.',
     narrativeIds: ['narr-003'],
@@ -163,7 +240,31 @@ export const documents = [
     personIds: ['person-008', 'person-009'],
     organizationIds: ['org-007'],
     locationIds: ['loc-006'],
-    eventIds: ['event-006']
+    eventIds: ['event-006'],
+    highlights: [
+      {
+        id: 'highlight-104',
+        userId: 'user-001',
+        blockIndex: 0,
+        startOffset: 0,
+        endOffset: 155,
+        highlightedText: 'China has unveiled the third phase of its National IC Fund with 340 billion yuan ($47 billion), the largest semiconductor investment tranche in its history.',
+        createdAt: '2026-01-17T13:00:00Z'
+      }
+    ],
+    comments: [
+      {
+        id: 'comment-103',
+        userId: 'user-001',
+        blockIndex: 0,
+        anchorStartOffset: 0,
+        anchorEndOffset: 155,
+        anchorText: 'China has unveiled the third phase of its National IC Fund with 340 billion yuan ($47 billion), the largest semiconductor investment tranche in its history.',
+        content: 'This dwarfs our CHIPS Act funding. Scale of commitment is notable.',
+        createdAt: '2026-01-17T13:30:00Z',
+        replies: []
+      }
+    ]
   },
   // News Article - Caixin State Council
   {
@@ -172,7 +273,7 @@ export const documents = [
     title: 'State Council approves Big Fund III priorities: packaging, equipment, EDA',
     url: 'https://caixin.com/big-fund-iii-state-council-approval',
     publishedDate: '2026-01-18T16:00:00Z',
-    sourceId: 'src-caixin',
+    publisherId: 'pub-caixin',
     author: 'Caixin Tech',
     excerpt: 'China\'s State Council has approved investment guidelines for the Big Fund III, prioritizing advanced packaging, semiconductor equipment, and EDA software development.',
     narrativeIds: ['narr-003'],
@@ -180,7 +281,9 @@ export const documents = [
     personIds: ['person-010', 'person-008'],
     organizationIds: ['org-007', 'org-008', 'org-009'],
     locationIds: ['loc-006'],
-    eventIds: ['event-007']
+    eventIds: ['event-007'],
+    highlights: [],
+    comments: []
   },
   // News Article - FT Big Fund analysis
   {
@@ -189,7 +292,7 @@ export const documents = [
     title: 'Analysis: Can China\'s Big Fund III overcome export control barriers?',
     url: 'https://ft.com/china-big-fund-analysis',
     publishedDate: '2026-01-19T09:00:00Z',
-    sourceId: 'src-ft',
+    publisherId: 'pub-ft',
     author: 'Kathrin Hille',
     excerpt: 'Analysts debate whether China\'s massive new semiconductor investment fund can achieve technological breakthroughs without access to cutting-edge foreign equipment.',
     narrativeIds: ['narr-003'],
@@ -197,7 +300,9 @@ export const documents = [
     personIds: [],
     organizationIds: ['org-007'],
     locationIds: [],
-    eventIds: []
+    eventIds: [],
+    highlights: [],
+    comments: []
   },
   // News Article - Huawei stockpile
   {
@@ -206,7 +311,7 @@ export const documents = [
     title: 'Huawei stockpiles billions in chip equipment ahead of sanctions',
     url: 'https://bloomberg.com/huawei-equipment-stockpile-sanctions',
     publishedDate: '2026-01-15T12:30:00Z',
-    sourceId: 'src-bloomberg',
+    publisherId: 'pub-bloomberg',
     author: 'Debby Wu',
     excerpt: 'Huawei has accumulated billions of dollars worth of semiconductor manufacturing equipment in warehouses across China, anticipating expanded US export restrictions.',
     narrativeIds: ['narr-004'],
@@ -214,7 +319,19 @@ export const documents = [
     personIds: ['person-011', 'person-012'],
     organizationIds: ['org-010'],
     locationIds: ['loc-001'],
-    eventIds: ['event-008']
+    eventIds: ['event-008'],
+    highlights: [
+      {
+        id: 'highlight-105',
+        userId: 'user-002',
+        blockIndex: 0,
+        startOffset: 0,
+        endOffset: 162,
+        highlightedText: 'Huawei has accumulated billions of dollars worth of semiconductor manufacturing equipment in warehouses across China, anticipating expanded US export restrictions.',
+        createdAt: '2026-01-15T14:00:00Z'
+      }
+    ],
+    comments: []
   },
   // News Article - WSJ Huawei investigation
   {
@@ -223,7 +340,7 @@ export const documents = [
     title: 'US probes whether Huawei used intermediaries to evade chip controls',
     url: 'https://wsj.com/huawei-intermediaries-investigation',
     publishedDate: '2026-01-17T14:30:00Z',
-    sourceId: 'src-wsj',
+    publisherId: 'pub-wsj',
     author: 'Kate O\'Keeffe',
     excerpt: 'US Commerce Department has opened an investigation into whether Huawei circumvented export controls by acquiring equipment through third-party intermediaries.',
     narrativeIds: ['narr-004'],
@@ -231,7 +348,9 @@ export const documents = [
     personIds: ['person-005', 'person-011'],
     organizationIds: ['org-005', 'org-010', 'org-003', 'org-011'],
     locationIds: ['loc-004', 'loc-001'],
-    eventIds: ['event-009']
+    eventIds: ['event-009'],
+    highlights: [],
+    comments: []
   },
   // News Article - SCMP Huawei response
   {
@@ -240,7 +359,7 @@ export const documents = [
     title: 'Huawei denies sanctions violations, calls reports "speculation"',
     url: 'https://scmp.com/huawei-denies-sanctions-violations',
     publishedDate: '2026-01-18T08:00:00Z',
-    sourceId: 'src-scmp',
+    publisherId: 'pub-scmp',
     author: 'Iris Deng',
     excerpt: 'Huawei has issued a statement denying any violations of US export controls, dismissing reports of stockpiling as "speculation and conjecture."',
     narrativeIds: ['narr-004'],
@@ -248,7 +367,9 @@ export const documents = [
     personIds: ['person-011'],
     organizationIds: ['org-010', 'org-005', 'org-012'],
     locationIds: ['loc-001'],
-    eventIds: []
+    eventIds: [],
+    highlights: [],
+    comments: []
   },
   // News Article - YMTC benchmark
   {
@@ -257,7 +378,7 @@ export const documents = [
     title: 'YMTC 232-layer NAND matches Samsung in performance tests',
     url: 'https://anandtech.com/ymtc-232-layer-nand-benchmark',
     publishedDate: '2026-01-16T11:30:00Z',
-    sourceId: 'src-anandtech',
+    publisherId: 'pub-anandtech',
     author: 'Ryan Smith',
     excerpt: 'Independent testing reveals YMTC\'s 232-layer 3D NAND flash memory delivers performance comparable to Samsung\'s latest offerings in key metrics.',
     narrativeIds: ['narr-005'],
@@ -265,7 +386,9 @@ export const documents = [
     personIds: ['person-013'],
     organizationIds: ['org-013'],
     locationIds: ['loc-007'],
-    eventIds: ['event-010']
+    eventIds: ['event-010'],
+    highlights: [],
+    comments: []
   },
   // News Article - TechInsights YMTC
   {
@@ -274,7 +397,7 @@ export const documents = [
     title: 'TechInsights finds YMTC chips in consumer devices despite blacklist',
     url: 'https://techinsights.com/ymtc-chips-consumer-devices',
     publishedDate: '2026-01-18T09:30:00Z',
-    sourceId: 'src-semiengi',
+    publisherId: 'pub-semiengi',
     author: 'Dan Hutcheson',
     excerpt: 'Research firm TechInsights has identified YMTC memory chips in consumer electronics from multiple brands, raising questions about Entity List enforcement.',
     narrativeIds: ['narr-005'],
@@ -282,7 +405,31 @@ export const documents = [
     personIds: ['person-013', 'person-014'],
     organizationIds: ['org-013', 'org-014', 'org-015'],
     locationIds: ['loc-007', 'loc-004'],
-    eventIds: ['event-010', 'event-011']
+    eventIds: ['event-010', 'event-011'],
+    highlights: [
+      {
+        id: 'highlight-106',
+        userId: 'user-003',
+        blockIndex: 0,
+        startOffset: 0,
+        endOffset: 166,
+        highlightedText: 'Research firm TechInsights has identified YMTC memory chips in consumer electronics from multiple brands, raising questions about Entity List enforcement.',
+        createdAt: '2026-01-18T11:00:00Z'
+      }
+    ],
+    comments: [
+      {
+        id: 'comment-104',
+        userId: 'user-003',
+        blockIndex: 0,
+        anchorStartOffset: 0,
+        anchorEndOffset: 166,
+        anchorText: 'Research firm TechInsights has identified YMTC memory chips in consumer electronics from multiple brands, raising questions about Entity List enforcement.',
+        content: 'This highlights enforcement gaps. YMTC chips are reaching global markets despite restrictions.',
+        createdAt: '2026-01-18T11:30:00Z',
+        replies: []
+      }
+    ]
   },
   // News Article - YMTC supply chain
   {
@@ -291,7 +438,7 @@ export const documents = [
     title: 'How YMTC chips are reaching global markets despite US sanctions',
     url: 'https://bloomberg.com/ymtc-global-supply-chain-analysis',
     publishedDate: '2026-01-19T13:00:00Z',
-    sourceId: 'src-bloomberg',
+    publisherId: 'pub-bloomberg',
     author: 'Vlad Savov',
     excerpt: 'Analysis reveals YMTC memory chips are entering global supply chains through complex networks that make end-to-end tracking difficult for regulators.',
     narrativeIds: ['narr-005'],
@@ -299,7 +446,9 @@ export const documents = [
     personIds: ['person-014'],
     organizationIds: ['org-013', 'org-015', 'org-024'],
     locationIds: ['loc-004'],
-    eventIds: ['event-011']
+    eventIds: ['event-011'],
+    highlights: [],
+    comments: []
   },
   // News Article - Xinhua Empyrean
   {
@@ -308,7 +457,7 @@ export const documents = [
     title: 'Empyrean announces EDA tools supporting 14nm chip design',
     url: 'https://xinhua.com/empyrean-eda-14nm-announcement',
     publishedDate: '2026-01-19T10:30:00Z',
-    sourceId: 'src-xinhua',
+    publisherId: 'pub-xinhua',
     author: 'Xinhua Staff',
     excerpt: 'Empyrean Technology has announced its EDA software suite now fully supports 14nm chip design, marking significant progress in Chinese design tool development.',
     narrativeIds: ['narr-006'],
@@ -316,7 +465,9 @@ export const documents = [
     personIds: ['person-015'],
     organizationIds: ['org-016', 'org-018', 'org-019'],
     locationIds: ['loc-002'],
-    eventIds: ['event-012']
+    eventIds: ['event-012'],
+    highlights: [],
+    comments: []
   },
   // News Article - Huada Jiutian
   {
@@ -325,7 +476,7 @@ export const documents = [
     title: 'Huada Jiutian targets 7nm EDA capability within two years',
     url: 'https://caixin.com/huada-jiutian-7nm-roadmap',
     publishedDate: '2026-01-20T08:00:00Z',
-    sourceId: 'src-caixin',
+    publisherId: 'pub-caixin',
     author: 'Caixin Tech',
     excerpt: 'Huada Jiutian has outlined an aggressive roadmap to develop EDA tools capable of supporting 7nm chip design within the next two years.',
     narrativeIds: ['narr-006'],
@@ -333,7 +484,9 @@ export const documents = [
     personIds: ['person-016'],
     organizationIds: ['org-017'],
     locationIds: ['loc-008'],
-    eventIds: []
+    eventIds: [],
+    highlights: [],
+    comments: []
   },
   // News Article - TSMC delays
   {
@@ -342,7 +495,7 @@ export const documents = [
     title: 'TSMC Arizona fab delays push production start to late 2025',
     url: 'https://reuters.com/tsmc-arizona-delay-2025',
     publishedDate: '2026-01-14T08:30:00Z',
-    sourceId: 'src-reuters',
+    publisherId: 'pub-reuters',
     author: 'Yimou Lee',
     excerpt: 'TSMC has confirmed its Arizona fabrication facility will not begin production until late 2025, a significant delay from the original 2024 target.',
     narrativeIds: ['narr-007'],
@@ -350,7 +503,19 @@ export const documents = [
     personIds: ['person-017', 'person-018'],
     organizationIds: ['org-020'],
     locationIds: ['loc-009'],
-    eventIds: ['event-013']
+    eventIds: ['event-013'],
+    highlights: [
+      {
+        id: 'highlight-107',
+        userId: 'user-004',
+        blockIndex: 0,
+        startOffset: 0,
+        endOffset: 147,
+        highlightedText: 'TSMC has confirmed its Arizona fabrication facility will not begin production until late 2025, a significant delay from the original 2024 target.',
+        createdAt: '2026-01-14T10:00:00Z'
+      }
+    ],
+    comments: []
   },
   // News Article - Nikkei TSMC culture
   {
@@ -359,7 +524,7 @@ export const documents = [
     title: 'TSMC CEO addresses Arizona challenges: "Different work culture"',
     url: 'https://nikkei.com/tsmc-arizona-work-culture',
     publishedDate: '2026-01-16T07:00:00Z',
-    sourceId: 'src-nikkei',
+    publisherId: 'pub-nikkei',
     author: 'Cheng Ting-Fang',
     excerpt: 'TSMC CEO C.C. Wei acknowledged challenges at the Arizona fab, citing differences in work culture and the need to adapt management approaches.',
     narrativeIds: ['narr-007'],
@@ -367,7 +532,9 @@ export const documents = [
     personIds: ['person-017'],
     organizationIds: ['org-020'],
     locationIds: ['loc-009', 'loc-010'],
-    eventIds: ['event-013']
+    eventIds: ['event-013'],
+    highlights: [],
+    comments: []
   },
   // News Article - Arizona unions
   {
@@ -376,7 +543,7 @@ export const documents = [
     title: 'Arizona unions file grievances against TSMC management practices',
     url: 'https://bloomberg.com/tsmc-arizona-union-grievances',
     publishedDate: '2026-01-17T11:00:00Z',
-    sourceId: 'src-bloomberg',
+    publisherId: 'pub-bloomberg',
     author: 'Ian King',
     excerpt: 'The Arizona Building and Construction Trades Council has filed formal grievances against TSMC, citing concerns about management practices and worker treatment.',
     narrativeIds: ['narr-007'],
@@ -384,7 +551,9 @@ export const documents = [
     personIds: ['person-019'],
     organizationIds: ['org-020', 'org-021'],
     locationIds: ['loc-009'],
-    eventIds: ['event-014']
+    eventIds: ['event-014'],
+    highlights: [],
+    comments: []
   },
   // X/Twitter - Tech analyst thread on SMIC
   {
@@ -392,7 +561,7 @@ export const documents = [
     documentType: 'social_post',
     url: 'https://x.com/chipcuriosity/status/1881234567890123',
     publishedDate: '2026-01-16T14:22:00Z',
-    sourceId: 'src-x',
+    publisherId: 'pub-x',
     author: {
       username: '@chipcuriosity',
       displayName: 'Chip Curiosity',
@@ -409,7 +578,9 @@ export const documents = [
     personIds: [],
     organizationIds: ['org-001'],
     locationIds: [],
-    eventIds: []
+    eventIds: [],
+    highlights: [],
+    comments: []
   },
   // LinkedIn - Industry executive post
   {
@@ -417,7 +588,7 @@ export const documents = [
     documentType: 'social_post',
     url: 'https://linkedin.com/posts/semiconductorexec_smic-china-semiconductor-activity',
     publishedDate: '2026-01-17T09:15:00Z',
-    sourceId: 'src-linkedin',
+    publisherId: 'pub-linkedin',
     author: {
       username: 'michael-chen-semiconductor',
       displayName: 'Michael Chen',
@@ -434,7 +605,9 @@ export const documents = [
     personIds: [],
     organizationIds: ['org-001'],
     locationIds: [],
-    eventIds: []
+    eventIds: [],
+    highlights: [],
+    comments: []
   },
   // Weibo - Chinese tech celebration post
   {
@@ -442,7 +615,7 @@ export const documents = [
     documentType: 'social_post',
     url: 'https://weibo.com/u/7234567890/post/12345678',
     publishedDate: '2026-01-15T19:45:00Z',
-    sourceId: 'src-weibo',
+    publisherId: 'pub-weibo',
     author: {
       username: '科技前沿观察',
       displayName: 'Tech Frontier Observer',
@@ -459,7 +632,9 @@ export const documents = [
     personIds: [],
     organizationIds: ['org-001', 'org-010'],
     locationIds: ['loc-001'],
-    eventIds: ['event-002']
+    eventIds: ['event-002'],
+    highlights: [],
+    comments: []
   },
   // Reddit - Export controls discussion
   {
@@ -467,7 +642,7 @@ export const documents = [
     documentType: 'social_post',
     url: 'https://reddit.com/r/hardware/comments/xyz789/export_controls_backfiring',
     publishedDate: '2026-01-18T22:30:00Z',
-    sourceId: 'src-reddit',
+    publisherId: 'pub-reddit',
     author: {
       username: 'u/silicon_skeptic',
       displayName: 'silicon_skeptic',
@@ -484,7 +659,9 @@ export const documents = [
     personIds: [],
     organizationIds: ['org-001', 'org-005'],
     locationIds: [],
-    eventIds: []
+    eventIds: [],
+    highlights: [],
+    comments: []
   },
   // X/Twitter - Policy hawk perspective
   {
@@ -492,7 +669,7 @@ export const documents = [
     documentType: 'social_post',
     url: 'https://x.com/nationalsecuritywatch/status/1881345678901234',
     publishedDate: '2026-01-19T11:42:00Z',
-    sourceId: 'src-x',
+    publisherId: 'pub-x',
     author: {
       username: '@nationalsecuritywatch',
       displayName: 'National Security Watch',
@@ -509,7 +686,9 @@ export const documents = [
     personIds: [],
     organizationIds: ['org-005'],
     locationIds: ['loc-004'],
-    eventIds: []
+    eventIds: [],
+    highlights: [],
+    comments: []
   },
   // LinkedIn - ASML impact discussion
   {
@@ -517,7 +696,7 @@ export const documents = [
     documentType: 'social_post',
     url: 'https://linkedin.com/posts/semiconductor-analyst_asml-china-exportcontrols-activity',
     publishedDate: '2026-01-16T08:30:00Z',
-    sourceId: 'src-linkedin',
+    publisherId: 'pub-linkedin',
     author: {
       username: 'jennifer-williams-analyst',
       displayName: 'Jennifer Williams, CFA',
@@ -534,7 +713,9 @@ export const documents = [
     personIds: ['person-004'],
     organizationIds: ['org-002'],
     locationIds: ['loc-003'],
-    eventIds: ['event-004']
+    eventIds: ['event-004'],
+    highlights: [],
+    comments: []
   },
   // X/Twitter - Huawei Mate 70 teardown
   {
@@ -542,7 +723,7 @@ export const documents = [
     documentType: 'social_post',
     url: 'https://x.com/techanalyst_cn/status/1881456789012345',
     publishedDate: '2026-01-18T16:20:00Z',
-    sourceId: 'src-x',
+    publisherId: 'pub-x',
     author: {
       username: '@techanalyst_cn',
       displayName: 'CN Tech Analysis',
@@ -562,7 +743,9 @@ export const documents = [
     personIds: [],
     organizationIds: ['org-001', 'org-010'],
     locationIds: [],
-    eventIds: ['event-002']
+    eventIds: ['event-002'],
+    highlights: [],
+    comments: []
   },
   // Reddit - TSMC Arizona worker perspective
   {
@@ -570,7 +753,7 @@ export const documents = [
     documentType: 'social_post',
     url: 'https://reddit.com/r/semiconductors/comments/abc123/tsmc_arizona_worker_ama',
     publishedDate: '2026-01-17T19:00:00Z',
-    sourceId: 'src-reddit',
+    publisherId: 'pub-reddit',
     author: {
       username: 'u/az_chipworker',
       displayName: 'az_chipworker',
@@ -587,7 +770,9 @@ export const documents = [
     personIds: [],
     organizationIds: ['org-020'],
     locationIds: ['loc-009'],
-    eventIds: ['event-013']
+    eventIds: ['event-013'],
+    highlights: [],
+    comments: []
   },
 
   // ============================================
@@ -601,7 +786,7 @@ export const documents = [
     classification: 'S',
     url: null,
     publishedDate: '2026-01-16T08:00:00Z',
-    sourceId: null,
+    publisherId: null,
     title: 'Technical Assessment: SMIC 5nm DUV Multi-Patterning Capability',
     author: 'Semiconductor Analysis Division',
     department: 'Technical Intelligence',
@@ -706,7 +891,7 @@ export const documents = [
     classification: 'S',
     url: null,
     publishedDate: '2026-01-18T14:00:00Z',
-    sourceId: null,
+    publisherId: null,
     title: 'Export Controls Effectiveness Review: Semiconductor Equipment Restrictions',
     author: 'Policy Analysis Division',
     department: 'Policy Analysis',
@@ -806,7 +991,7 @@ export const documents = [
     classification: 'U',
     url: null,
     publishedDate: '2026-01-19T10:00:00Z',
-    sourceId: null,
+    publisherId: null,
     title: 'Investment Analysis: China National IC Fund Phase III',
     author: 'Economic Analysis Division',
     department: 'Economic Intelligence',
@@ -906,7 +1091,7 @@ export const documents = [
     classification: 'S',
     url: null,
     publishedDate: '2026-01-19T16:00:00Z',
-    sourceId: null,
+    publisherId: null,
     title: 'Supply Chain Analysis: YMTC Memory Chips in Global Consumer Electronics',
     author: 'Supply Chain Intelligence Division',
     department: 'Supply Chain Analysis',
@@ -1006,7 +1191,7 @@ export const documents = [
     classification: 'U',
     url: null,
     publishedDate: '2026-01-17T15:00:00Z',
-    sourceId: null,
+    publisherId: null,
     title: 'Operations Assessment: TSMC Arizona Fab Construction and Workforce Challenges',
     author: 'Industrial Analysis Division',
     department: 'Industrial Intelligence',

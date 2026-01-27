@@ -96,6 +96,30 @@
   border-bottom: 1px solid var(--border-subtle);
 }
 
+/* Draggable card header styling */
+.drag-drop-enabled .card-header {
+  cursor: grab;
+  user-select: none;
+}
+
+.drag-drop-enabled .card-header:active {
+  cursor: grabbing;
+}
+
+/* Restore pointer cursor for interactive elements in header */
+.drag-drop-enabled .card-header button,
+.drag-drop-enabled .card-header input,
+.drag-drop-enabled .card-header select,
+.drag-drop-enabled .card-header a,
+.drag-drop-enabled .card-header .view-toggle,
+.drag-drop-enabled .card-header .card-header-actions {
+  cursor: pointer;
+}
+
+.drag-drop-enabled .card-header input {
+  cursor: text;
+}
+
 .card-title {
   font-size: var(--text-sm);
   font-weight: 500;
@@ -110,6 +134,129 @@
 
 .card-title-link:hover {
   color: var(--accent-primary);
+}
+
+/* Card Title with Tooltip */
+.card-title-with-tooltip {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+}
+
+.card-title-tooltip {
+  position: absolute;
+  top: calc(100% + 8px);
+  left: 0;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius);
+  padding: var(--space-sm) var(--space-md);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  z-index: 1000;
+  min-width: 200px;
+  max-width: 280px;
+  font-size: var(--text-xs);
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.15s, visibility 0.15s;
+  pointer-events: none;
+}
+
+.card-title-with-tooltip:hover .card-title-tooltip {
+  opacity: 1;
+  visibility: visible;
+}
+
+/* Tooltip arrow pointing up */
+.card-title-tooltip::before {
+  content: '';
+  position: absolute;
+  bottom: 100%;
+  left: 16px;
+  border: 6px solid transparent;
+  border-bottom-color: var(--border-color);
+}
+
+.card-title-tooltip::after {
+  content: '';
+  position: absolute;
+  bottom: 100%;
+  left: 16px;
+  border: 5px solid transparent;
+  border-bottom-color: var(--bg-secondary);
+  margin-left: 1px;
+}
+
+/* Tooltip content rows */
+.card-title-tooltip-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: var(--space-md);
+  padding: var(--space-xs) 0;
+}
+
+.card-title-tooltip-row:first-child {
+  padding-top: 0;
+}
+
+.card-title-tooltip-row:last-child {
+  padding-bottom: 0;
+}
+
+.card-title-tooltip-row + .card-title-tooltip-row {
+  border-top: 1px solid var(--border-subtle);
+}
+
+.card-title-tooltip-label {
+  color: var(--text-muted);
+  flex-shrink: 0;
+}
+
+.card-title-tooltip-value {
+  color: var(--text-primary);
+  text-align: right;
+  font-weight: 500;
+}
+
+/* Support for badges in tooltip */
+.card-title-tooltip .logic-badge {
+  font-size: 10px;
+  padding: 1px 5px;
+}
+
+/* Entity list in tooltip */
+.card-title-tooltip-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  text-align: right;
+}
+
+.card-title-tooltip-list li {
+  padding: 2px 0;
+  color: var(--text-primary);
+  font-weight: 500;
+}
+
+.card-title-tooltip-list li:first-child {
+  padding-top: 0;
+}
+
+.card-title-tooltip-list li:last-child {
+  padding-bottom: 0;
+}
+
+/* Scope row with list needs different alignment */
+.card-title-tooltip-row-scope {
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--space-xs);
+}
+
+.card-title-tooltip-row-scope .card-title-tooltip-value {
+  text-align: left;
+  width: 100%;
 }
 
 .card-subtitle {
@@ -3035,42 +3182,52 @@
   }
 }
 
-/* Card Width Toggle Button */
-.card-width-toggle {
+/* Card Resize Handle - Corner resize control */
+.card-resize-handle {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  width: 20px;
+  height: 20px;
+  padding: 0;
+  background: transparent;
+  border: none;
+  border-radius: var(--border-radius) 0 var(--border-radius) 0;
+  color: var(--text-muted);
+  cursor: nwse-resize;
+  opacity: 0;
+  transition: opacity 0.15s, color 0.15s, background 0.15s;
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 24px;
-  height: 24px;
-  padding: 0;
-  background: transparent;
-  border: 1px solid transparent;
-  border-radius: var(--border-radius);
-  color: var(--text-muted);
-  cursor: pointer;
-  transition: background 0.1s, border-color 0.1s, color 0.1s;
-  flex-shrink: 0;
 }
 
-.card-width-toggle:hover {
-  background: var(--bg-hover);
-  border-color: var(--border-subtle);
+.card {
+  position: relative;
+}
+
+.card:hover .card-resize-handle {
+  opacity: 0.5;
+}
+
+.card-resize-handle:hover {
+  opacity: 1 !important;
   color: var(--text-secondary);
+  background: var(--bg-hover);
 }
 
-.card-width-toggle:active {
-  background: var(--bg-secondary);
+.card-resize-handle:active {
+  color: var(--accent-primary);
 }
 
-.card-width-toggle svg {
-  width: 14px;
-  height: 14px;
-  stroke-width: 1.5;
+.card-resize-handle svg {
+  width: 10px;
+  height: 10px;
 }
 
-/* Hide toggle on mobile since all cards are full width */
+/* Hide resize handle on mobile since all cards are full width */
 @media (max-width: 900px) {
-  .card-width-toggle {
+  .card-resize-handle {
     display: none;
   }
 }
@@ -4876,44 +5033,6 @@
    Card Drag & Drop
    ============================================ */
 
-/* Drag handle button */
-.card-drag-handle {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 20px;
-  height: 20px;
-  padding: 0;
-  margin-right: var(--space-xs);
-  background: transparent;
-  border: none;
-  border-radius: var(--border-radius);
-  color: var(--text-muted);
-  cursor: grab;
-  opacity: 0;
-  transition: opacity 0.15s ease, color 0.15s ease, background 0.15s ease;
-  flex-shrink: 0;
-}
-
-.card:hover .card-drag-handle,
-.card-drag-handle:focus {
-  opacity: 1;
-}
-
-.card-drag-handle:hover {
-  color: var(--text-secondary);
-  background: var(--bg-hover);
-}
-
-.card-drag-handle:active {
-  cursor: grabbing;
-  color: var(--text-primary);
-}
-
-.card-drag-handle svg {
-  pointer-events: none;
-}
-
 /* Card being dragged */
 .card.card-dragging {
   box-shadow: 0 12px 40px rgba(0, 0, 0, 0.3), 0 4px 12px rgba(0, 0, 0, 0.2);
@@ -4923,10 +5042,8 @@
   pointer-events: none;
 }
 
-.card.card-dragging .card-drag-handle {
-  opacity: 1;
+.card.card-dragging .card-header {
   cursor: grabbing;
-  color: var(--accent-primary);
 }
 
 /* Placeholder for drop position */
@@ -4982,28 +5099,24 @@ body.dragging-active * {
   min-height: 100px;
 }
 
-/* Mobile: Always show drag handle */
-@media (max-width: 900px) {
-  .card-drag-handle {
-    opacity: 0.5;
-  }
-  
-  .card:hover .card-drag-handle {
-    opacity: 1;
-  }
-}
-
-/* Touch device optimizations */
+/* Touch device optimizations for dragging */
 @media (hover: none) and (pointer: coarse) {
-  .card-drag-handle {
-    opacity: 0.7;
-    width: 28px;
-    height: 28px;
+  .drag-drop-enabled .card-header {
+    /* On touch devices, indicate draggability more clearly */
+    position: relative;
   }
   
-  .card-drag-handle svg {
-    width: 18px;
-    height: 18px;
+  .drag-drop-enabled .card-header::after {
+    content: '';
+    position: absolute;
+    left: 50%;
+    top: 2px;
+    transform: translateX(-50%);
+    width: 32px;
+    height: 4px;
+    background: var(--border-color);
+    border-radius: 2px;
+    opacity: 0.5;
   }
 }
 
@@ -5196,4 +5309,177 @@ body.dragging-active * {
   .vertical-timeline-separator {
     padding-left: 40px;
   }
+}
+
+/* ============================================
+   Settings Modal
+   ============================================ */
+
+.settings-modal {
+  min-width: 420px;
+}
+
+.settings-section {
+  margin-bottom: var(--space-lg);
+}
+
+.settings-section-title {
+  font-size: var(--text-sm);
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: var(--space-md);
+  padding-bottom: var(--space-sm);
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.settings-row {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--space-lg);
+  padding: var(--space-md) 0;
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.settings-row:last-child {
+  border-bottom: none;
+}
+
+.settings-label {
+  flex: 1;
+  min-width: 0;
+}
+
+.settings-label-text {
+  display: block;
+  font-size: var(--text-sm);
+  font-weight: 500;
+  color: var(--text-primary);
+}
+
+.settings-label-description {
+  display: block;
+  font-size: var(--text-xs);
+  color: var(--text-muted);
+  margin-top: var(--space-xs);
+  line-height: 1.4;
+}
+
+.settings-select {
+  min-width: 140px;
+  padding: var(--space-sm) var(--space-md);
+  background: var(--bg-tertiary);
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius);
+  color: var(--text-primary);
+  font-size: var(--text-sm);
+  font-family: var(--font-sans);
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.settings-select:hover {
+  border-color: var(--border-medium);
+}
+
+.settings-select:focus {
+  outline: none;
+  border-color: var(--accent-primary);
+}
+
+/* Toggle Switch */
+.toggle-switch {
+  position: relative;
+  display: inline-block;
+  width: 44px;
+  height: 24px;
+  flex-shrink: 0;
+}
+
+.toggle-switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.toggle-slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: var(--bg-tertiary);
+  border: 1px solid var(--border-color);
+  border-radius: 24px;
+  transition: background-color 0.2s, border-color 0.2s;
+}
+
+.toggle-slider:before {
+  position: absolute;
+  content: "";
+  height: 18px;
+  width: 18px;
+  left: 2px;
+  bottom: 2px;
+  background-color: var(--text-secondary);
+  border-radius: 50%;
+  transition: transform 0.2s, background-color 0.2s;
+}
+
+.toggle-switch input:checked + .toggle-slider {
+  background-color: var(--accent-primary);
+  border-color: var(--accent-primary);
+}
+
+.toggle-switch input:checked + .toggle-slider:before {
+  background-color: white;
+  transform: translateX(20px);
+}
+
+.toggle-switch input:focus + .toggle-slider {
+  box-shadow: 0 0 0 2px var(--accent-muted);
+}
+
+/* Modal Footer */
+.modal-footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--space-sm);
+  padding: var(--space-md) var(--space-lg);
+  border-top: 1px solid var(--border-subtle);
+  margin-top: var(--space-md);
+}
+
+/* Avatar Menu Item (button style) */
+.avatar-menu-item {
+  display: flex;
+  align-items: center;
+  gap: var(--space-md);
+  width: 100%;
+  padding: var(--space-sm) var(--space-lg);
+  background: transparent;
+  border: none;
+  color: var(--text-secondary);
+  font-size: var(--text-sm);
+  font-family: var(--font-sans);
+  cursor: pointer;
+  text-align: left;
+  transition: background 0.1s, color 0.1s;
+}
+
+.avatar-menu-item:hover {
+  background: var(--bg-hover);
+  color: var(--text-primary);
+}
+
+.avatar-menu-item .nav-icon {
+  width: 14px;
+  height: 14px;
+  flex-shrink: 0;
+}
+
+/* Hidden utility class */
+.nav-link.hidden {
+  display: none !important;
 }

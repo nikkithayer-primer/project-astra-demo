@@ -9,6 +9,7 @@ class DataStore {
     this.storageKey = 'narrativeOS_data';
     this.datasetKey = 'narrativeOS_currentDataset';
     this.datasetNameKey = 'narrativeOS_currentDatasetName';
+    this.settingsKey = 'narrativeOS_settings';
     this.listeners = new Set();
     
     // Safely read from localStorage with fallbacks
@@ -22,6 +23,61 @@ class DataStore {
     }
     
     this.data = this.load();
+    this.settings = this.loadSettings();
+  }
+
+  // ============================================
+  // Settings Management
+  // ============================================
+
+  /**
+   * Load settings from localStorage
+   * @returns {Object} Settings object
+   */
+  loadSettings() {
+    try {
+      const stored = localStorage.getItem(this.settingsKey);
+      if (stored) {
+        return { ...this.getDefaultSettings(), ...JSON.parse(stored) };
+      }
+    } catch (e) {
+      console.error('DataStore: Failed to load settings:', e);
+    }
+    return this.getDefaultSettings();
+  }
+
+  /**
+   * Get default settings
+   * @returns {Object} Default settings object
+   */
+  getDefaultSettings() {
+    return {
+      dashboardEnabled: true,
+      defaultStartPage: 'dashboard', // 'dashboard' or 'monitors'
+      defaultViewTab: 'dashboard'    // 'dashboard' or 'documents'
+    };
+  }
+
+  /**
+   * Get current settings
+   * @returns {Object} Current settings
+   */
+  getSettings() {
+    return { ...this.settings };
+  }
+
+  /**
+   * Update settings
+   * @param {Object} updates - Settings to update
+   */
+  updateSettings(updates) {
+    this.settings = { ...this.settings, ...updates };
+    try {
+      localStorage.setItem(this.settingsKey, JSON.stringify(this.settings));
+    } catch (e) {
+      console.error('DataStore: Failed to save settings:', e);
+    }
+    this.notifyListeners();
   }
 
   // ============================================
@@ -736,7 +792,7 @@ class DataStore {
     this.data.documents.push({
       id,
       type: doc.type || 'social_media',
-      source: doc.source || '',
+      publisherId: doc.publisherId || '',
       content: doc.content || '',
       sentiment: doc.sentiment || 'neutral',
       narrativeIds: doc.narrativeIds || [],
@@ -823,9 +879,7 @@ class DataStore {
       publisherCategories: [],
       monitors: [],
       alerts: [],
-      users: [],
-      sources: [],
-      sourceCategories: []
+      users: []
     };
   }
 }

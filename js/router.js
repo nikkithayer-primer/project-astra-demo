@@ -24,6 +24,7 @@ import { ProjectsView } from './views/ProjectsView.js';
 import { initStickyHeader, destroyStickyHeader } from './utils/stickyHeader.js';
 import { TimeRangeFilter } from './components/TimeRangeFilter.js';
 import { DataService } from './data/DataService.js';
+import { dataStore } from './data/DataStore.js';
 import { formatDate } from './utils/formatters.js';
 
 export class Router {
@@ -91,16 +92,22 @@ export class Router {
    */
   init() {
     try {
-      // Navigate to current hash or default to dashboard
+      // Get default page from settings
+      const settings = dataStore.getSettings();
+      const defaultPage = settings.dashboardEnabled 
+        ? settings.defaultStartPage 
+        : 'monitors';
+      
+      // Navigate to current hash or default based on settings
       if (!window.location.hash || window.location.hash === '#/') {
-        window.location.hash = '#/dashboard';
+        window.location.hash = `#/${defaultPage}`;
       } else {
         this.handleRoute();
       }
     } catch (e) {
       console.error('Router: Error during initialization:', e);
-      // Try to at least show the dashboard
-      window.location.hash = '#/dashboard';
+      // Try to at least show monitors as fallback
+      window.location.hash = '#/monitors';
     }
   }
 
@@ -343,11 +350,14 @@ export class Router {
       console.error('Router: Error updating nav links:', e);
     }
 
+    // Get settings for default tab
+    const settings = dataStore.getSettings();
+    
     // Common options with filters
     const filterOptions = {
       missionId: this.filters.missionId || 'all',
       timeRange: this.filters.timeRange,
-      tab: queryParams.tab || 'dashboard' // Default to dashboard tab
+      tab: queryParams.tab || settings.defaultViewTab || 'dashboard' // Use settings default tab
     };
 
     // Track if this is the dashboard route for filter initialization
@@ -356,6 +366,11 @@ export class Router {
     // Route to appropriate view
     switch (route) {
       case 'dashboard':
+        // Redirect to monitors if dashboard is disabled
+        if (!settings.dashboardEnabled) {
+          window.location.hash = '#/monitors';
+          return;
+        }
         this.currentView = new DashboardView(this.container, filterOptions);
         isDashboard = true;
         break;
@@ -499,8 +514,11 @@ export class Router {
         break;
 
       default:
-        // Default to dashboard
-        window.location.hash = '#/dashboard';
+        // Default to start page based on settings
+        const defaultPage = settings.dashboardEnabled 
+          ? settings.defaultStartPage 
+          : 'monitors';
+        window.location.hash = `#/${defaultPage}`;
         return;
     }
 

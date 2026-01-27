@@ -65,8 +65,12 @@ export class DocumentsView extends BaseView {
       });
     }
     
-    // Sort by published date descending by default
-    documents.sort((a, b) => new Date(b.publishedDate) - new Date(a.publishedDate));
+    // Sort by published date descending by default (support both field names)
+    documents.sort((a, b) => {
+      const dateA = new Date(a.publishedDate);
+      const dateB = new Date(b.publishedDate);
+      return dateB - dateA;
+    });
 
     // Build publisher type options
     const publisherTypeOptionsHtml = Object.entries(PUBLISHER_TYPES).map(([key, label]) => {

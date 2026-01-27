@@ -399,7 +399,7 @@ export class DocumentContentRenderer extends BaseComponent {
 
     const contentHtml = contentBlocks.length > 0 
       ? this.renderContentBlocks(contentBlocks, this.options.showPortionMarks, highlights, comments)
-      : (doc.excerpt ? `<p class="news-article-paragraph">${this.escapeHtml(doc.excerpt)}</p>` : '');
+      : ((doc.excerpt || doc.summary) ? `<p class="news-article-paragraph">${this.escapeHtml(doc.excerpt || doc.summary)}</p>` : '');
 
     const html = `
       <div class="news-article">
@@ -425,7 +425,7 @@ export class DocumentContentRenderer extends BaseComponent {
 
     const contentHtml = contentBlocks.length > 0 
       ? this.renderContentBlocks(contentBlocks, true, highlights, comments)
-      : (doc.excerpt ? `<p class="internal-document-paragraph">${this.escapeHtml(doc.excerpt)}</p>` : '');
+      : ((doc.excerpt || doc.summary) ? `<p class="internal-document-paragraph">${this.escapeHtml(doc.excerpt || doc.summary)}</p>` : '');
 
     const html = `
       <div class="internal-document">
@@ -433,7 +433,7 @@ export class DocumentContentRenderer extends BaseComponent {
           ${doc.department ? `<div class="internal-document-department">${doc.department}</div>` : ''}
           <div class="internal-document-meta">
             ${doc.author ? `<span>Author: ${doc.author}</span>` : ''}
-            ${doc.publishedDate ? `<span>${this.formatDate(doc.publishedDate)}</span>` : ''}
+            ${(doc.publishedDate) ? `<span>${this.formatDate(doc.publishedDate)}</span>` : ''}
           </div>
         </div>
         

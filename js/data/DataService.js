@@ -332,29 +332,17 @@ export const DataService = {
     );
   },
 
-  // Publishers (with fallback to sources for backward compatibility)
-  // Some datasets use 'publishers' while others use 'sources'
+  // Publishers
   getPublishers: () => {
-    // Prefer publishers, fall back to sources
-    if (dataStore.data.publishers && dataStore.data.publishers.length > 0) {
-      return dataStore.data.publishers;
-    }
-    return dataStore.data.sources || [];
+    return dataStore.data.publishers || [];
   },
   
   getPublisher: (id) => {
-    // Check publishers first, then sources
-    const publisher = findById('publishers', id);
-    if (publisher) return publisher;
-    return findById('sources', id);
+    return findById('publishers', id);
   },
   
   getPublisherCategories: () => {
-    // Prefer publisherCategories, fall back to sourceCategories
-    if (dataStore.data.publisherCategories && dataStore.data.publisherCategories.length > 0) {
-      return dataStore.data.publisherCategories;
-    }
-    return dataStore.data.sourceCategories || [];
+    return dataStore.data.publisherCategories || [];
   },
   
   getPublishersByType: (type) => {
@@ -865,17 +853,12 @@ export const DataService = {
 
   /**
    * Get the publisher for a document
-   * Handles both 'publisherId' and 'sourceId' field names for backward compatibility
    */
   getPublisherForDocument: (documentId) => {
     const doc = (dataStore.data.documents || []).find(d => d.id === documentId);
-    if (!doc) return null;
+    if (!doc || !doc.publisherId) return null;
     
-    // Check publisherId first, then sourceId
-    const publisherId = doc.publisherId || doc.sourceId;
-    if (!publisherId) return null;
-    
-    return DataService.getPublisher(publisherId);
+    return DataService.getPublisher(doc.publisherId);
   },
 
   // ============================================

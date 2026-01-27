@@ -15,15 +15,17 @@ export class VennDiagram extends BaseComponent {
   }
 
   /**
-   * Override resize to update both dimensions and recenter
+   * Override resize to update width only
+   * NOTE: Height stays fixed to prevent resize feedback loops
    */
   resize() {
     if (this.container) {
-      this.options.width = this.container.clientWidth;
-      const newHeight = this.container.clientHeight;
-      if (newHeight > 0) {
-        this.options.height = newHeight;
+      const newWidth = this.container.clientWidth;
+      if (newWidth === this.options.width) {
+        // No width change, skip re-render
+        return this;
       }
+      this.options.width = newWidth;
       if (this.data) {
         this.render();
       }

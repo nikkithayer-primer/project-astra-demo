@@ -78,7 +78,10 @@ const COLUMN_CONFIG = {
     width: '120px',
     minWidth: '110px',
     sortable: true,
-    getValue: (doc) => doc.publishedDate ? new Date(doc.publishedDate).getTime() : 0
+    getValue: (doc) => {
+      const dateValue = doc.publishedDate;
+      return dateValue ? new Date(dateValue).getTime() : 0;
+    }
   },
   narratives: {
     label: 'Narratives',
@@ -286,13 +289,12 @@ export class DocumentTable extends BaseComponent {
   }
 
   /**
-   * Get the publisher/source ID from a document
-   * Handles both 'publisherId' and 'sourceId' field names
+   * Get the publisher ID from a document
    * @param {Object} doc - The document object
-   * @returns {string|null} The publisher or source ID
+   * @returns {string|null} The publisher ID
    */
   getDocPublisherId(doc) {
-    return doc?.publisherId || doc?.sourceId || null;
+    return doc?.publisherId || null;
   }
 
   getPublisherName(publisherId) {
@@ -470,9 +472,10 @@ export class DocumentTable extends BaseComponent {
   }
 
   renderExcerptCell(doc) {
+    const excerptValue = doc.excerpt || doc.summary;
     return `
       <td class="doc-col-excerpt">
-        ${doc.excerpt ? `<span class="doc-excerpt-text">${this.truncateText(doc.excerpt, 150)}</span>` : '<span class="doc-empty-cell">—</span>'}
+        ${excerptValue ? `<span class="doc-excerpt-text">${this.truncateText(excerptValue, 150)}</span>` : '<span class="doc-empty-cell">—</span>'}
       </td>
     `;
   }
@@ -497,7 +500,8 @@ export class DocumentTable extends BaseComponent {
   }
 
   renderDateCell(doc) {
-    const formatted = this.formatDate(doc.publishedDate);
+    const dateValue = doc.publishedDate;
+    const formatted = this.formatDate(dateValue);
     return `
       <td class="doc-col-publishedDate">
         <span class="doc-date">${formatted.date}</span>

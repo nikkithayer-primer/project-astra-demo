@@ -55,6 +55,12 @@ class App {
 
     // Initialize dropdown navigation
     this.initDropdowns();
+    
+    // Initialize settings modal
+    this.initSettingsModal();
+    
+    // Update navigation based on settings
+    this.updateNavigationForSettings();
 
     // Update chat summary on route changes
     window.addEventListener('hashchange', () => this.updatePageSummary());
@@ -71,6 +77,8 @@ class App {
           this.router.populateMissionFilter();
         }
       }
+      // Update navigation when settings change
+      this.updateNavigationForSettings();
     });
   }
 
@@ -254,6 +262,129 @@ class App {
         resolve(true);
       };
     });
+  }
+
+  /**
+   * Initialize settings modal trigger
+   */
+  initSettingsModal() {
+    const settingsBtn = document.getElementById('open-settings');
+    if (settingsBtn) {
+      settingsBtn.addEventListener('click', (e) => {
+        e.preventDefault();
+        // Close the avatar dropdown
+        const dropdown = settingsBtn.closest('.nav-dropdown');
+        if (dropdown) dropdown.classList.remove('open');
+        this.showSettingsModal();
+      });
+    }
+  }
+
+  /**
+   * Show the settings modal
+   */
+  showSettingsModal() {
+    const settings = this.dataStore.getSettings();
+    
+    this.showModal(`
+      <div class="modal-header">
+        <h2 class="modal-title">Settings</h2>
+        <button class="modal-close" onclick="window.app.closeModal()">×</button>
+      </div>
+      <div class="modal-body settings-modal">
+        <div class="settings-section">
+          <h3 class="settings-section-title">Navigation</h3>
+          
+          <div class="settings-row">
+            <div class="settings-label">
+              <span class="settings-label-text">Enable Dashboard Page</span>
+              <span class="settings-label-description">Show Dashboard in navigation. When disabled, Monitors becomes the default start page.</span>
+            </div>
+            <label class="toggle-switch">
+              <input type="checkbox" id="setting-dashboard-enabled" ${settings.dashboardEnabled ? 'checked' : ''}>
+              <span class="toggle-slider"></span>
+            </label>
+          </div>
+          
+          <div class="settings-row" id="start-page-row" ${!settings.dashboardEnabled ? 'style="display:none"' : ''}>
+            <div class="settings-label">
+              <span class="settings-label-text">Default Start Page</span>
+              <span class="settings-label-description">Page to show when opening the app</span>
+            </div>
+            <select id="setting-start-page" class="settings-select">
+              <option value="dashboard" ${settings.defaultStartPage === 'dashboard' ? 'selected' : ''}>Dashboard</option>
+              <option value="monitors" ${settings.defaultStartPage === 'monitors' ? 'selected' : ''}>Monitors</option>
+            </select>
+          </div>
+          
+          <div class="settings-row">
+            <div class="settings-label">
+              <span class="settings-label-text">Default View Tab</span>
+              <span class="settings-label-description">Tab to show when navigating to detail pages (narratives, factions, etc.)</span>
+            </div>
+            <select id="setting-default-tab" class="settings-select">
+              <option value="dashboard" ${settings.defaultViewTab === 'dashboard' ? 'selected' : ''}>Dashboard</option>
+              <option value="documents" ${settings.defaultViewTab === 'documents' ? 'selected' : ''}>Documents</option>
+            </select>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" onclick="window.app.closeModal()">Cancel</button>
+        <button class="btn btn-primary" id="save-settings">Save Changes</button>
+      </div>
+    `);
+    
+    // Handle dashboard toggle showing/hiding start page option
+    const dashboardToggle = document.getElementById('setting-dashboard-enabled');
+    const startPageRow = document.getElementById('start-page-row');
+    
+    dashboardToggle?.addEventListener('change', () => {
+      if (dashboardToggle.checked) {
+        startPageRow.style.display = '';
+      } else {
+        startPageRow.style.display = 'none';
+      }
+    });
+    
+    // Handle save
+    document.getElementById('save-settings')?.addEventListener('click', () => {
+      this.saveSettings();
+    });
+  }
+
+  /**
+   * Save settings from the modal
+   */
+  saveSettings() {
+    const dashboardEnabled = document.getElementById('setting-dashboard-enabled')?.checked ?? true;
+    const defaultStartPage = document.getElementById('setting-start-page')?.value || 'dashboard';
+    const defaultViewTab = document.getElementById('setting-default-tab')?.value || 'dashboard';
+    
+    this.dataStore.updateSettings({
+      dashboardEnabled,
+      defaultStartPage: dashboardEnabled ? defaultStartPage : 'monitors',
+      defaultViewTab
+    });
+    
+    this.closeModal();
+    this.showToast('Settings saved', 'success');
+  }
+
+  /**
+   * Update navigation based on settings
+   */
+  updateNavigationForSettings() {
+    const settings = this.dataStore.getSettings();
+    const dashboardLink = document.querySelector('.nav-link[href="#/dashboard"]');
+    
+    if (dashboardLink) {
+      if (settings.dashboardEnabled) {
+        dashboardLink.classList.remove('hidden');
+      } else {
+        dashboardLink.classList.add('hidden');
+      }
+    }
   }
 
   /**

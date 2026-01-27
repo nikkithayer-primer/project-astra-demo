@@ -23,33 +23,32 @@ export class NetworkGraph extends BaseComponent {
 
   /**
    * Override resize to recenter nodes within new dimensions
+   * NOTE: Only width is updated from container; height remains fixed to prevent resize loops
    */
   resize() {
     if (this.container && this.data) {
       const oldWidth = this.options.width;
       const oldHeight = this.options.height;
       
-      // Update dimensions
-      this.options.width = this.container.clientWidth;
-      const newHeight = this.container.clientHeight;
-      if (newHeight > 0) {
-        this.options.height = newHeight;
+      // Only update width from container - height stays fixed to prevent resize feedback loop
+      // (SVG renders into container, so reading container height would cause infinite growth)
+      const newWidth = this.container.clientWidth;
+      if (newWidth === oldWidth) {
+        // No width change, skip re-render
+        return this;
       }
+      this.options.width = newWidth;
       
-      // Recenter existing node positions proportionally
-      if (this.data.nodes && oldWidth > 0 && oldHeight > 0) {
+      // Recenter existing node positions proportionally (only for width changes)
+      if (this.data.nodes && oldWidth > 0) {
         const widthRatio = this.options.width / oldWidth;
-        const heightRatio = this.options.height / oldHeight;
         const oldCenterX = oldWidth / 2;
-        const oldCenterY = oldHeight / 2;
         const newCenterX = this.options.width / 2;
-        const newCenterY = this.options.height / 2;
         
         this.data.nodes.forEach(node => {
-          if (node.x !== undefined && node.y !== undefined) {
-            // Translate node position relative to new center
+          if (node.x !== undefined) {
+            // Translate node x position relative to new center
             node.x = newCenterX + (node.x - oldCenterX) * widthRatio;
-            node.y = newCenterY + (node.y - oldCenterY) * heightRatio;
           }
         });
       }

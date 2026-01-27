@@ -3,7 +3,7 @@
  * Assembles all entity files and exports the complete mockData object
  */
 
-import { sources, sourceCategories } from './sources.js';
+import { publishers, publisherCategories } from './publishers.js';
 import { users } from './users.js';
 import { missions } from './missions.js';
 import { narratives } from './narratives.js';
@@ -20,8 +20,8 @@ export const datasetId = 'china-semiconductor';
 export const datasetName = 'China Semiconductor';
 
 export const mockData = {
-  sources,
-  sourceCategories,
+  publishers,
+  publisherCategories,
   users,
   missions,
   narratives,

@@ -8,8 +8,10 @@ export class DragDropManager {
   constructor(options = {}) {
     this.containerSelector = options.containerSelector || '.content-grid';
     this.cardSelector = options.cardSelector || '.card';
-    this.handleSelector = options.handleSelector || '.card-drag-handle';
+    this.handleSelector = options.handleSelector || '.card-header';
     this.storageKey = options.storageKey || 'card-order';
+    // Elements that should not trigger dragging when clicked
+    this.excludeSelectors = 'button, input, select, textarea, a, .view-toggle, .card-header-actions, [data-no-drag]';
     
     this.draggedElement = null;
     this.placeholder = null;
@@ -81,9 +83,12 @@ export class DragDropManager {
   }
 
   /**
-   * Handle mouse down on drag handle
+   * Handle mouse down on drag handle (card header)
    */
   handleMouseDown(e) {
+    // Don't drag if clicking on interactive elements
+    if (e.target.closest(this.excludeSelectors)) return;
+    
     const handle = e.target.closest(this.handleSelector);
     if (!handle) return;
     
@@ -95,9 +100,12 @@ export class DragDropManager {
   }
 
   /**
-   * Handle touch start on drag handle
+   * Handle touch start on drag handle (card header)
    */
   handleTouchStart(e) {
+    // Don't drag if touching interactive elements
+    if (e.target.closest(this.excludeSelectors)) return;
+    
     const handle = e.target.closest(this.handleSelector);
     if (!handle) return;
     

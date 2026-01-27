@@ -1,19 +1,22 @@
 /**
  * cardWidthToggle.js
  * Utility for managing card half/full width toggle with localStorage persistence
+ * Uses a corner resize handle for intuitive resizing
  */
 
 const STORAGE_KEY = 'narrativeos-card-widths';
 
-// SVG icons for the toggle button
+// SVG icons for the resize handle
 const ICONS = {
-  // Arrow pointing outward (expand to full)
-  expand: `<svg viewBox="0 0 16 16" fill="none" stroke="currentColor">
-    <path d="M10 2h4v4M6 14H2v-4M14 2L9 7M2 14l5-5"/>
-  </svg>`,
-  // Arrow pointing inward (collapse to half)
-  collapse: `<svg viewBox="0 0 16 16" fill="none" stroke="currentColor">
-    <path d="M6 2H2v4M10 14h4v-4M2 2l5 5M14 14l-5-5"/>
+  // Diagonal resize icon (used for both states, tooltip indicates action)
+  resize: `<svg viewBox="0 0 12 12" fill="currentColor">
+    <path d="M10 2L2 10M10 6L6 10M10 10L10 10"/>
+    <circle cx="10" cy="2" r="1.5"/>
+    <circle cx="6" cy="6" r="1.5"/>
+    <circle cx="2" cy="10" r="1.5"/>
+    <circle cx="10" cy="6" r="1.5"/>
+    <circle cx="6" cy="10" r="1.5"/>
+    <circle cx="10" cy="10" r="1.5"/>
   </svg>`
 };
 
@@ -53,25 +56,26 @@ function getInitialWidth(cardId, defaultWidth = 'full') {
 }
 
 /**
- * Create a toggle button element
+ * Create a resize handle element for the card corner
  * @param {boolean} isHalf - Current state (true = half width)
  */
-function createToggleButton(isHalf) {
-  const button = document.createElement('button');
-  button.className = 'card-width-toggle';
-  button.type = 'button';
-  button.title = isHalf ? 'Expand to full width' : 'Collapse to half width';
-  button.innerHTML = isHalf ? ICONS.expand : ICONS.collapse;
-  return button;
+function createResizeHandle(isHalf) {
+  const handle = document.createElement('button');
+  handle.className = 'card-resize-handle';
+  handle.type = 'button';
+  handle.title = isHalf ? 'Expand to full width' : 'Collapse to half width';
+  handle.setAttribute('aria-label', handle.title);
+  handle.innerHTML = ICONS.resize;
+  return handle;
 }
 
 /**
  * Toggle card width and update UI
  * @param {HTMLElement} card - The card element
- * @param {HTMLElement} button - The toggle button
+ * @param {HTMLElement} handle - The resize handle
  * @param {string} cardId - Unique identifier for storage
  */
-function toggleCardWidth(card, button, cardId) {
+function toggleCardWidth(card, handle, cardId) {
   const isCurrentlyHalf = card.classList.contains('card-half') || card.classList.contains('card-half-width');
   
   // Remove all width classes to prevent conflicts
@@ -80,14 +84,14 @@ function toggleCardWidth(card, button, cardId) {
   if (isCurrentlyHalf) {
     // Expand to full
     card.classList.add('card-full');
-    button.innerHTML = ICONS.collapse;
-    button.title = 'Collapse to half width';
+    handle.title = 'Collapse to half width';
+    handle.setAttribute('aria-label', handle.title);
     storeWidth(cardId, false);
   } else {
     // Collapse to half
     card.classList.add('card-half');
-    button.innerHTML = ICONS.expand;
-    button.title = 'Expand to full width';
+    handle.title = 'Expand to full width';
+    handle.setAttribute('aria-label', handle.title);
     storeWidth(cardId, true);
   }
   
@@ -96,16 +100,13 @@ function toggleCardWidth(card, button, cardId) {
 }
 
 /**
- * Initialize a card with width toggle functionality
+ * Initialize a card with width toggle functionality using a corner resize handle
  * @param {HTMLElement} card - The card element
  * @param {string} cardId - Unique identifier for the card (for storage)
  * @param {string} defaultWidth - Default width: 'half' or 'full'
  */
 export function initCardWidthToggle(card, cardId, defaultWidth = 'full') {
   if (!card) return;
-  
-  const header = card.querySelector('.card-header');
-  if (!header) return;
   
   // Check if card has a pre-set width class (e.g., card-half-width from HTML)
   const hasPresetHalf = card.classList.contains('card-half-width');
@@ -124,27 +125,17 @@ export function initCardWidthToggle(card, cardId, defaultWidth = 'full') {
   card.classList.remove('card-half', 'card-half-width', 'card-full', 'card-full-width');
   card.classList.add(isHalf ? 'card-half' : 'card-full');
   
-  // Create toggle button
-  const button = createToggleButton(isHalf);
-  
-  // Check if there's already an actions container, or create one
-  let actionsContainer = header.querySelector('.card-header-actions');
-  if (!actionsContainer) {
-    actionsContainer = document.createElement('div');
-    actionsContainer.className = 'card-header-actions';
-    header.appendChild(actionsContainer);
-  }
-  
-  // Append toggle button to end of actions (so it's on the right)
-  actionsContainer.appendChild(button);
+  // Create resize handle and append to card (not header)
+  const handle = createResizeHandle(isHalf);
+  card.appendChild(handle);
   
   // Add click handler
-  button.addEventListener('click', (e) => {
+  handle.addEventListener('click', (e) => {
     e.stopPropagation();
-    toggleCardWidth(card, button, cardId);
+    toggleCardWidth(card, handle, cardId);
   });
   
-  return button;
+  return handle;
 }
 
 /**

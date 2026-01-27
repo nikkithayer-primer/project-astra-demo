@@ -35,6 +35,8 @@ export class BaseComponent {
     this.data = null;
     this.svg = null;
     this._resizeHandler = null;
+    this._resizeObserver = null;
+    this._resizeTimeout = null;
   }
 
   /**
@@ -88,9 +90,25 @@ export class BaseComponent {
   }
 
   /**
-   * Enable auto-resize on window resize
+   * Enable auto-resize on window resize and container resize
+   * Uses ResizeObserver for accurate container size detection (handles CSS transitions)
    */
   enableAutoResize() {
+    // Use ResizeObserver for container size changes (more accurate, handles CSS transitions)
+    if (!this._resizeObserver && this.container) {
+      this._resizeObserver = new ResizeObserver((entries) => {
+        // Debounce rapid resize events
+        if (this._resizeTimeout) {
+          clearTimeout(this._resizeTimeout);
+        }
+        this._resizeTimeout = setTimeout(() => {
+          this.resize();
+        }, 50);
+      });
+      this._resizeObserver.observe(this.container);
+    }
+    
+    // Also listen for window resize as fallback
     if (!this._resizeHandler) {
       this._resizeHandler = () => this.resize();
       window.addEventListener('resize', this._resizeHandler);
@@ -102,6 +120,14 @@ export class BaseComponent {
    * Disable auto-resize
    */
   disableAutoResize() {
+    if (this._resizeObserver) {
+      this._resizeObserver.disconnect();
+      this._resizeObserver = null;
+    }
+    if (this._resizeTimeout) {
+      clearTimeout(this._resizeTimeout);
+      this._resizeTimeout = null;
+    }
     if (this._resizeHandler) {
       window.removeEventListener('resize', this._resizeHandler);
       this._resizeHandler = null;
