@@ -1343,6 +1343,23 @@
   margin-top: var(--space-xs);
 }
 
+.form-error-message {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  padding: var(--space-sm) var(--space-md);
+  margin-bottom: var(--space-md);
+  background: rgba(220, 38, 38, 0.1);
+  border: 1px solid var(--status-high);
+  border-radius: var(--border-radius);
+  color: var(--status-high);
+  font-size: var(--text-sm);
+}
+
+.form-error-message svg {
+  flex-shrink: 0;
+}
+
 .form-row {
   display: flex;
   gap: var(--space-md);

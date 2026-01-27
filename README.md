@@ -10,7 +10,6 @@ A web-based intelligence dashboard for tracking narratives, factions, events, an
 - **Interactive Visualizations**: Network graphs, timelines, maps, and charts powered by D3.js
 - **Document Viewer**: View and annotate documents with highlights and comments
 - **Multiple Datasets**: Switch between different analysis datasets (American Politics, China Semiconductor, Walmart Brand)
-- **Data Editor**: CRUD interface for managing all entity types
 
 ## Getting Started
 
@@ -68,7 +67,6 @@ project-astra/
 │   ├── forms.css           # Form elements
 │   ├── chat.css            # Chat panel styles
 │   ├── components.css      # Visualization components
-│   ├── editor.css          # Data editor styles
 │   ├── monitors.css        # Monitors view styles
 │   └── utilities.css       # Utility classes
 ├── js/
@@ -123,7 +121,6 @@ The app uses hash-based routing (`#/narrative/123`) for SPA navigation without a
 - `#/factions`, `#/faction/:id` - Faction views
 - `#/entities`, `#/person/:id`, `#/organization/:id` - Entity views
 - `#/documents`, `#/document/:id` - Document views
-- `#/editor` - Data editor
 
 ### Component Lifecycle
 

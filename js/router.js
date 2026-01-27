@@ -15,7 +15,6 @@ import { OrganizationView } from './views/OrganizationView.js';
 import { DocumentView } from './views/DocumentView.js';
 import { DocumentsView } from './views/DocumentsView.js';
 import { ListView } from './views/ListView.js';
-import { EditorView } from './views/EditorView.js';
 import { MonitorsView } from './views/MonitorsView.js';
 import { MonitorView } from './views/MonitorView.js';
 import { WorkspacesView } from './views/WorkspacesView.js';
@@ -468,10 +467,6 @@ export class Router {
 
       case 'topics':
         this.currentView = new ListView(this.container, 'topics', filterOptions);
-        break;
-
-      case 'editor':
-        this.currentView = new EditorView(this.container);
         break;
 
       case 'data-model':

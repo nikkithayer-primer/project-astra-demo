@@ -5,6 +5,7 @@
 
 import { BaseView } from './BaseView.js';
 import { DataService } from '../data/DataService.js';
+import { getWorkspaceEditor } from '../components/WorkspaceEditorModal.js';
 
 export class WorkspacesView extends BaseView {
   constructor(container, options = {}) {
@@ -137,12 +138,13 @@ export class WorkspacesView extends BaseView {
 
   /**
    * Handle create workspace action
-   * For now, redirect to search (workspace creation will be added later)
    */
   handleCreateWorkspace() {
-    // TODO: Implement workspace creation modal
-    // For now, navigate to search
-    window.location.hash = '#/search';
+    const editor = getWorkspaceEditor();
+    editor.openCreate((newWorkspace) => {
+      // Navigate to the new workspace
+      window.location.hash = `#/workspace/${newWorkspace.id}`;
+    });
   }
 
   /**
