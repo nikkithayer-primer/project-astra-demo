@@ -1,15 +1,16 @@
 /**
  * NarrativeList.js
- * List of narratives with sparklines and collapsible subnarratives
+ * List of narratives with sparklines, status icons, and collapsible subnarratives
+ * Extends BaseItemList for common list functionality
  */
 
-import { BaseComponent } from './BaseComponent.js';
+import { BaseItemList } from './BaseItemList.js';
 import { Sparkline } from './Sparkline.js';
 import { getSourceViewer } from './SourceViewerModal.js';
 import { formatStatus } from '../utils/formatters.js';
 import { DataService } from '../data/DataService.js';
 
-export class NarrativeList extends BaseComponent {
+export class NarrativeList extends BaseItemList {
   constructor(containerId, options = {}) {
     super(containerId, {
       maxItems: 10,
@@ -22,50 +23,32 @@ export class NarrativeList extends BaseComponent {
       defaultShowDescription: false,
       ...options
     });
-    this.sparklines = [];
-    this.showDescription = this.options.defaultShowDescription;
-    this.expandedNarratives = new Set();
   }
 
-  toggleExpanded(narrativeId) {
-    if (this.expandedNarratives.has(narrativeId)) {
-      this.expandedNarratives.delete(narrativeId);
-    } else {
-      this.expandedNarratives.add(narrativeId);
-    }
-    this.render();
+  /**
+   * Get items from data
+   */
+  getItems() {
+    return this.data?.narratives || [];
   }
 
-  formatDate(dateString) {
-    if (!dateString) return '';
-    const date = new Date(dateString);
-    return date.toLocaleDateString('en-US', {
-      month: 'short',
-      day: 'numeric',
-      year: 'numeric'
-    });
+  /**
+   * Get empty state message
+   */
+  getEmptyMessage() {
+    return 'No narratives found';
   }
 
-  formatSentiment(sentiment) {
-    const value = typeof sentiment === 'number' ? sentiment : 0;
-    if (value <= -0.6) return 'Very Negative';
-    if (value <= -0.2) return 'Negative';
-    if (value < 0.2) return 'Neutral';
-    if (value < 0.6) return 'Positive';
-    return 'Very Positive';
+  /**
+   * Get item CSS class
+   */
+  getItemClass(item) {
+    return 'narrative-item-wrapper';
   }
 
-  toggleDescription() {
-    this.showDescription = !this.showDescription;
-    this.render();
-    return this.showDescription;
-  }
-
-  setShowDescription(show) {
-    this.showDescription = show;
-    this.render();
-  }
-
+  /**
+   * Get status icon SVG
+   */
   getStatusIcon(status) {
     const icons = {
       new: `<svg class="status-icon status-icon-new" viewBox="0 0 16 16" fill="currentColor" stroke="none">
@@ -87,237 +70,199 @@ export class NarrativeList extends BaseComponent {
     return icons[status] || icons.new;
   }
 
-  render() {
-    this.clear();
-    this.sparklines.forEach(s => s.destroy());
-    this.sparklines = [];
-
-    if (!this.data || !this.data.narratives || !this.data.narratives.length) {
-      this.showEmptyState('No narratives found');
-      return;
-    }
-
-    const list = document.createElement('ul');
-    list.className = 'narrative-list';
-
-    const items = this.data.narratives.slice(0, this.options.maxItems);
-
-    // Track sparkline indices for both narratives and subnarratives
-    let sparklineIndex = 0;
-
-    items.forEach((narrative, i) => {
-      const totalVolume = this.calculateTotalVolume(narrative);
-      const status = narrative.status || 'new';
-      
-      // Get subnarratives for this narrative
-      const subNarratives = this.options.showSubNarratives 
-        ? DataService.getSubNarrativesForNarrative(narrative.id)
-        : [];
-      const hasSubNarratives = subNarratives.length > 0;
-      const isExpanded = this.expandedNarratives.has(narrative.id);
-
-      const item = document.createElement('li');
-      item.className = 'narrative-item-wrapper';
-      item.dataset.id = narrative.id;
-
-      // Build originated date for display
-      const originatedDate = narrative.createdAt ? this.formatDate(narrative.createdAt) : '';
-
-      item.innerHTML = `
-        <div class="narrative-item${hasSubNarratives ? ' has-subnarratives' : ''}${isExpanded ? ' expanded' : ''}">
-          ${this.options.showStatus ? `
-            <div class="narrative-status-column" title="${formatStatus(status)}">
-              ${this.getStatusIcon(status)}
-            </div>
-          ` : ''}
-          <div class="narrative-content">
-            <div class="narrative-title-row">
-              <span class="narrative-text">${narrative.text}</span>
-            </div>
-            ${this.showDescription ? `
-              ${originatedDate ? `<p class="narrative-originated">Originated: ${originatedDate}</p>` : ''}
-              ${narrative.description ? `
-                <p class="narrative-description">
-                  ${narrative.description}
-                  <a href="#" class="source-link" data-id="${narrative.id}" data-type="narrative">View source</a>
-                </p>
-              ` : ''}
-            ` : ''}
-            ${hasSubNarratives ? `
-              <button class="narrative-expand-toggle" data-narrative-id="${narrative.id}" title="${isExpanded ? 'Collapse' : 'Expand'} themes">
-                <svg class="tree-icon" viewBox="0 0 16 16" width="14" height="14" fill="currentColor" stroke="currentColor" stroke-width="1">
-                  <circle cx="4" cy="8" r="2"/>
-                  <circle cx="12" cy="4" r="1.5"/>
-                  <circle cx="12" cy="12" r="1.5"/>
-                  <path d="M6 8h3M9 4v8" fill="none"/>
-                </svg>
-                <span class="subnarrative-count">${subNarratives.length}</span>
-                <svg class="chevron-icon" viewBox="0 0 16 16" width="10" height="10" fill="none" stroke="currentColor" stroke-width="2">
-                  <path d="M6 4l4 4-4 4"/>
-                </svg>
-              </button>
-            ` : ''}
-          </div>
-          <div class="narrative-meta">
-            ${this.options.showVolume ? `
-              <span class="narrative-volume">${this.formatNumber(totalVolume)}</span>
-            ` : ''}
-            ${this.options.showSparkline ? `
-              <div class="sparkline-container" data-sparkline-index="${sparklineIndex}"></div>
-            ` : ''}
-          </div>
-        </div>
-        ${hasSubNarratives && isExpanded ? `
-          <ul class="subnarrative-nested-list">
-            ${subNarratives.slice(0, this.options.maxSubNarratives).map((sub, si) => {
-              const subVolume = this.calculateSubNarrativeVolume(sub);
-              sparklineIndex++;
-              
-              // Build originated date for subnarrative
-              const subOriginatedDate = sub.createdAt ? this.formatDate(sub.createdAt) : '';
-              
-              return `
-                <li class="subnarrative-nested-item" data-id="${sub.id}">
-                  <div class="subnarrative-indent">
-                    <svg viewBox="0 0 16 16" width="12" height="12" fill="none" stroke="currentColor" stroke-width="1.25">
-                      <path d="M4 0v12h8"/>
-                    </svg>
-                  </div>
-                  <div class="subnarrative-content">
-                    <span class="subnarrative-text">${sub.text}</span>
-                    <span class="badge badge-${this.getSentimentClass(sub.sentiment)}">${this.formatSentiment(sub.sentiment)}</span>
-                    ${this.showDescription ? `
-                      ${subOriginatedDate ? `<p class="narrative-originated">Originated: ${subOriginatedDate}</p>` : ''}
-                      ${sub.description ? `<p class="narrative-description">${sub.description}</p>` : ''}
-                    ` : ''}
-                  </div>
-                  <div class="subnarrative-meta">
-                    <span class="subnarrative-volume">${this.formatNumber(subVolume)}</span>
-                    ${this.options.showSparkline ? `
-                      <div class="sparkline-container" data-sparkline-index="${sparklineIndex}"></div>
-                    ` : ''}
-                  </div>
-                </li>
-              `;
-            }).join('')}
-            ${subNarratives.length > this.options.maxSubNarratives ? `
-              <li class="subnarrative-more">
-                +${subNarratives.length - this.options.maxSubNarratives} more themes
-              </li>
-            ` : ''}
-          </ul>
-        ` : ''}
-      `;
-
-      sparklineIndex++;
-
-      // Handle narrative item click (navigate to detail)
-      const narrativeItem = item.querySelector('.narrative-item');
-      narrativeItem.addEventListener('click', (e) => {
-        // Don't navigate if clicking the source link or expand toggle
-        if (e.target.classList.contains('source-link') || 
-            e.target.closest('.narrative-expand-toggle')) {
-          return;
-        }
-        if (this.options.onNarrativeClick) {
-          this.options.onNarrativeClick(narrative);
-        }
-      });
-
-      // Handle expand toggle click
-      const expandToggle = item.querySelector('.narrative-expand-toggle');
-      if (expandToggle) {
-        expandToggle.addEventListener('click', (e) => {
-          e.preventDefault();
-          e.stopPropagation();
-          this.toggleExpanded(narrative.id);
-        });
-      }
-
-      // Handle source link click
-      const sourceLink = item.querySelector('.source-link');
-      if (sourceLink) {
-        sourceLink.addEventListener('click', (e) => {
-          e.preventDefault();
-          e.stopPropagation();
-          getSourceViewer().open(narrative, 'narrative');
-        });
-      }
-
-      // Handle subnarrative clicks
-      const subItems = item.querySelectorAll('.subnarrative-nested-item');
-      subItems.forEach((subItem) => {
-        subItem.addEventListener('click', (e) => {
-          e.stopPropagation();
-          const subId = subItem.dataset.id;
-          window.location.hash = `#/subnarrative/${subId}`;
-        });
-      });
-
-      list.appendChild(item);
-    });
-
-    this.container.appendChild(list);
-
-    // Render sparklines after DOM update
-    if (this.options.showSparkline) {
-      requestAnimationFrame(() => {
-        const containers = this.container.querySelectorAll('.sparkline-container');
-        
-        // Build a flat list of all items with sparklines (narratives + expanded subnarratives)
-        const sparklineData = [];
-        items.forEach((narrative) => {
-          sparklineData.push({
-            volumeOverTime: narrative.volumeOverTime,
-            sentiment: narrative.sentiment
-          });
-          
-          if (this.options.showSubNarratives && this.expandedNarratives.has(narrative.id)) {
-            const subNarratives = DataService.getSubNarrativesForNarrative(narrative.id);
-            subNarratives.slice(0, this.options.maxSubNarratives).forEach((sub) => {
-              sparklineData.push({
-                volumeOverTime: sub.volumeOverTime,
-                sentiment: sub.sentiment
-              });
-            });
-          }
-        });
-
-        containers.forEach((container, idx) => {
-          const data = sparklineData[idx];
-          if (data && data.volumeOverTime && data.volumeOverTime.length) {
-            const sparkline = new Sparkline(container, {
-              width: 80,
-              height: 24,
-              color: this.getSentimentColor(data.sentiment),
-              sentiment: data.sentiment
-            });
-            const values = data.volumeOverTime.map(d =>
-              Object.values(d.factionVolumes || {}).reduce((a, b) => a + b, 0)
-            );
-            sparkline.update(values);
-            this.sparklines.push(sparkline);
-          }
-        });
-      });
-    }
-  }
-
+  /**
+   * Calculate volume for a subnarrative
+   */
   calculateSubNarrativeVolume(subNarrative) {
     return Object.values(subNarrative.factionMentions || {})
       .reduce((sum, f) => sum + (f.volume || 0), 0);
   }
 
-  calculateTotalVolume(narrative) {
-    return Object.values(narrative.factionMentions || {})
-      .reduce((sum, f) => sum + (f.volume || 0), 0);
+  /**
+   * Render a single narrative item's content
+   */
+  renderItemContent(item, sparklineIndex) {
+    const totalVolume = this.calculateVolume(item);
+    const status = item.status || 'new';
+    
+    // Get subnarratives for this narrative
+    const subNarratives = this.options.showSubNarratives 
+      ? DataService.getSubNarrativesForNarrative(item.id)
+      : [];
+    const hasSubNarratives = subNarratives.length > 0;
+    const isExpanded = this.isExpanded(item.id);
+
+    // Build originated date for display
+    const originatedDate = item.createdAt ? this.formatDate(item.createdAt) : '';
+
+    // Track sparkline index for subnarratives
+    let subSparklineIndex = sparklineIndex + 1;
+
+    return `
+      <div class="narrative-item${hasSubNarratives ? ' has-subnarratives' : ''}${isExpanded ? ' expanded' : ''}" data-id="${item.id}">
+        ${this.options.showStatus ? `
+          <div class="narrative-status-column" title="${formatStatus(status)}">
+            ${this.getStatusIcon(status)}
+          </div>
+        ` : ''}
+        <div class="narrative-content">
+          <div class="narrative-title-row">
+            <span class="narrative-text">${this.getItemTitle(item)}</span>
+          </div>
+          ${this.showDescription ? `
+            ${originatedDate ? `<p class="narrative-originated">Originated: ${originatedDate}</p>` : ''}
+            ${item.description ? `
+              <p class="narrative-description">
+                ${item.description}
+                <a href="#" class="source-link" data-id="${item.id}" data-type="narrative">View source</a>
+              </p>
+            ` : ''}
+          ` : ''}
+          ${hasSubNarratives ? `
+            <button class="narrative-expand-toggle" data-narrative-id="${item.id}" title="${isExpanded ? 'Collapse' : 'Expand'} themes">
+              <svg class="tree-icon" viewBox="0 0 16 16" width="14" height="14" fill="currentColor" stroke="currentColor" stroke-width="1">
+                <circle cx="4" cy="8" r="2"/>
+                <circle cx="12" cy="4" r="1.5"/>
+                <circle cx="12" cy="12" r="1.5"/>
+                <path d="M6 8h3M9 4v8" fill="none"/>
+              </svg>
+              <span class="subnarrative-count">${subNarratives.length}</span>
+              <svg class="chevron-icon" viewBox="0 0 16 16" width="10" height="10" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M6 4l4 4-4 4"/>
+              </svg>
+            </button>
+          ` : ''}
+        </div>
+        <div class="narrative-meta">
+          ${this.options.showVolume ? `
+            <span class="narrative-volume">${this.formatNumber(totalVolume)}</span>
+          ` : ''}
+          ${this.options.showSparkline ? `
+            <div class="sparkline-container" data-sparkline-index="${sparklineIndex}"></div>
+          ` : ''}
+        </div>
+      </div>
+      ${hasSubNarratives && isExpanded ? `
+        <ul class="subnarrative-nested-list">
+          ${subNarratives.slice(0, this.options.maxSubNarratives).map((sub) => {
+            const subVolume = this.calculateSubNarrativeVolume(sub);
+            const subOriginatedDate = sub.createdAt ? this.formatDate(sub.createdAt) : '';
+            const currentSubIndex = subSparklineIndex++;
+            
+            return `
+              <li class="subnarrative-nested-item" data-id="${sub.id}">
+                <div class="subnarrative-indent">
+                  <svg viewBox="0 0 16 16" width="12" height="12" fill="none" stroke="currentColor" stroke-width="1.25">
+                    <path d="M4 0v12h8"/>
+                  </svg>
+                </div>
+                <div class="subnarrative-content">
+                  <span class="subnarrative-text">${sub.text}</span>
+                  <span class="badge badge-${this.getSentimentClass(sub.sentiment)}">${this.formatSentiment(sub.sentiment)}</span>
+                  ${this.showDescription ? `
+                    ${subOriginatedDate ? `<p class="narrative-originated">Originated: ${subOriginatedDate}</p>` : ''}
+                    ${sub.description ? `<p class="narrative-description">${sub.description}</p>` : ''}
+                  ` : ''}
+                </div>
+                <div class="subnarrative-meta">
+                  <span class="subnarrative-volume">${this.formatNumber(subVolume)}</span>
+                  ${this.options.showSparkline ? `
+                    <div class="sparkline-container" data-sparkline-index="${currentSubIndex}"></div>
+                  ` : ''}
+                </div>
+              </li>
+            `;
+          }).join('')}
+          ${subNarratives.length > this.options.maxSubNarratives ? `
+            <li class="subnarrative-more">
+              +${subNarratives.length - this.options.maxSubNarratives} more themes
+            </li>
+          ` : ''}
+        </ul>
+      ` : ''}
+    `;
   }
 
-  destroy() {
-    this.sparklines.forEach(s => s.destroy());
-    this.sparklines = [];
-    super.destroy();
+  /**
+   * Get next sparkline index (account for subnarratives)
+   */
+  getNextSparklineIndex(item, currentIndex) {
+    let nextIndex = currentIndex + 1;
+    
+    // If expanded, add indices for subnarratives
+    if (this.options.showSubNarratives && this.isExpanded(item.id)) {
+      const subNarratives = DataService.getSubNarrativesForNarrative(item.id);
+      nextIndex += Math.min(subNarratives.length, this.options.maxSubNarratives);
+    }
+    
+    return nextIndex;
   }
+
+  /**
+   * Get sparkline data including subnarratives
+   */
+  getSparklineData(items) {
+    const data = [];
+    
+    items.forEach((narrative) => {
+      // Add narrative sparkline data
+      data.push({
+        values: this.getSparklineValues(narrative),
+        color: this.getSparklineColor(narrative),
+        sentiment: narrative.sentiment
+      });
+      
+      // Add subnarrative sparkline data if expanded
+      if (this.options.showSubNarratives && this.isExpanded(narrative.id)) {
+        const subNarratives = DataService.getSubNarrativesForNarrative(narrative.id);
+        subNarratives.slice(0, this.options.maxSubNarratives).forEach((sub) => {
+          data.push({
+            values: this.getSparklineValues(sub),
+            color: this.getSparklineColor(sub),
+            sentiment: sub.sentiment
+          });
+        });
+      }
+    });
+    
+    return data;
+  }
+
+  /**
+   * Set up additional handlers
+   */
+  setupAdditionalHandlers(element, item) {
+    // Handle expand toggle click
+    const expandToggle = element.querySelector('.narrative-expand-toggle');
+    if (expandToggle) {
+      expandToggle.addEventListener('click', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        this.toggleExpanded(item.id);
+      });
+    }
+
+    // Handle source link click
+    const sourceLink = element.querySelector('.source-link');
+    if (sourceLink) {
+      sourceLink.addEventListener('click', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        getSourceViewer().open(item, 'narrative');
+      });
+    }
+
+    // Handle subnarrative clicks
+    const subItems = element.querySelectorAll('.subnarrative-nested-item');
+    subItems.forEach((subItem) => {
+      subItem.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const subId = subItem.dataset.id;
+        window.location.hash = `#/subnarrative/${subId}`;
+      });
+    });
+  }
+
 }
 
 export default NarrativeList;

@@ -6,16 +6,61 @@
 import { BaseView } from './BaseView.js';
 import { DataService } from '../data/DataService.js';
 import { NarrativeList } from '../components/NarrativeList.js';
+import { TopicList } from '../components/TopicList.js';
+import { Timeline } from '../components/Timeline.js';
+import { StackedAreaChart } from '../components/StackedAreaChart.js';
+import { TimelineVolumeComposite } from '../components/TimelineVolumeComposite.js';
+import { VennDiagram } from '../components/VennDiagram.js';
+import { SentimentChart } from '../components/SentimentChart.js';
+import { NetworkGraph } from '../components/NetworkGraph.js';
+import { DocumentList } from '../components/DocumentList.js';
+import { MapView } from '../components/MapView.js';
 import { CardBuilder } from '../utils/CardBuilder.js';
 import { initAllCardToggles } from '../utils/cardWidthToggle.js';
 import { getMonitorEditor } from '../components/MonitorEditorModal.js';
 
+// Available visualization types for monitors
+const VISUALIZATION_TYPES = [
+  { id: 'narratives', label: 'Narratives' },
+  { id: 'events', label: 'Events' },
+  { id: 'volume', label: 'Narrative volume over time' },
+  { id: 'volume_events', label: 'Volume over time with events' },
+  { id: 'topics', label: 'Topics' },
+  { id: 'locations', label: 'Locations' },
+  { id: 'faction_overlaps', label: 'Faction overlaps' },
+  { id: 'faction_sentiment', label: 'Faction sentiment' },
+  { id: 'network_graph', label: 'People & orgs network graph' },
+  { id: 'documents', label: 'Documents' }
+];
+
+// Default visualization type for each monitor (by name)
+const DEFAULT_MONITOR_VISUALIZATIONS = {
+  'Immigration Enforcement Activity': 'volume_events',
+  'Public Health Policy': 'narratives',
+  'Trump Administration Actions': 'faction_sentiment',
+  'Judicial Safety Watch': 'topics',
+  'US-European Orgs': 'network_graph',
+  'SMIC Technology Progress': 'faction_overlaps',
+  'Chinese Investment Watch': 'volume_events',
+  'Export Controls Impact': 'faction_sentiment',
+  'Huawei Sanctions Monitoring': 'narratives',
+  'Supply Chain and Manufacturing': 'topics',
+  'Store Closure Impact': 'locations',
+  'Pricing Perception Monitor': 'faction_sentiment',
+  'Employee Experience Tracker': 'documents',
+  'Self Checkout Complaints': 'volume',
+  'Product Availability Issues': 'topics',
+  'Product Safety Alerts': 'narratives',
+  'Competitor Activity Tracker': 'topics'
+};
+
 export class MonitorsView extends BaseView {
   constructor(container, options = {}) {
     super(container, options);
-    this.narrativeListComponents = [];
+    this.visualizationComponents = []; // Store all active visualization components
     this.descriptionToggles = new Map(); // Map of containerId -> NarrativeList
     this.monitorEditor = null;
+    this.monitorVisualizationTypes = new Map(); // Map of monitorId -> selected visualization type
   }
 
   /**
@@ -109,9 +154,45 @@ export class MonitorsView extends BaseView {
     return classes[type] || 'default';
   }
 
+  /**
+   * Build the visualization type dropdown HTML
+   */
+  buildVisualizationDropdown(monitorId) {
+    const currentType = this.monitorVisualizationTypes.get(monitorId) || 'narratives';
+    const currentLabel = VISUALIZATION_TYPES.find(v => v.id === currentType)?.label || 'Narratives';
+    
+    const optionsHtml = VISUALIZATION_TYPES.map(v => `
+      <div class="viz-dropdown-option${v.id === currentType ? ' active' : ''}" data-viz-type="${v.id}">
+        ${v.label}
+      </div>
+    `).join('');
+    
+    return `
+      <div class="monitor-viz-dropdown" data-monitor-id="${monitorId}">
+        <button class="monitor-viz-dropdown-trigger">
+          <span class="viz-dropdown-label">${currentLabel}</span>
+          <svg class="viz-dropdown-arrow" viewBox="0 0 16 16" width="12" height="12" fill="none" stroke="currentColor" stroke-width="1.5">
+            <path d="M4 6l4 4 4-4"/>
+          </svg>
+        </button>
+        <div class="monitor-viz-dropdown-menu">
+          ${optionsHtml}
+        </div>
+      </div>
+    `;
+  }
+
   async render() {
     // Load monitors from DataService
     const monitors = DataService.getMonitors();
+    
+    // Initialize default visualization types for monitors (only if not already set)
+    monitors.forEach(monitor => {
+      if (!this.monitorVisualizationTypes.has(monitor.id)) {
+        const defaultViz = DEFAULT_MONITOR_VISUALIZATIONS[monitor.name] || 'narratives';
+        this.monitorVisualizationTypes.set(monitor.id, defaultViz);
+      }
+    });
     
     // Build enriched monitor data with computed fields
     const enrichedMonitors = monitors.map(monitor => {
@@ -119,8 +200,9 @@ export class MonitorsView extends BaseView {
       const scopeLabel = DataService.getMonitorScopeLabel(monitor.id);
       const triggerLabels = DataService.getMonitorTriggerLabels(monitor.id);
       const matchedNarratives = DataService.getNarrativesForMonitor(monitor.id);
+      const matchedEvents = DataService.getEventsForMonitor(monitor.id);
       const alerts = DataService.getAlertsForMonitor(monitor.id);
-      const containerId = `monitor-narratives-${monitor.id}`;
+      const containerId = `monitor-viz-${monitor.id}`;
       const scopeLogic = monitor.scope?.logic || 'OR';
       
       return {
@@ -130,6 +212,7 @@ export class MonitorsView extends BaseView {
         scopeIcon: this.getScopeIcon(scopeType),
         triggerLabels,
         matchedNarratives,
+        matchedEvents,
         alerts,
         containerId,
         scopeLogic,
@@ -160,7 +243,7 @@ export class MonitorsView extends BaseView {
       const matchCount = `<span class="match-count">${monitor.matchedNarratives.length} match${monitor.matchedNarratives.length !== 1 ? 'es' : ''}</span>`;
       subtitle = `${logicBadge}${matchCount}${subtitle ? ' • ' + subtitle : ''}`;
       
-      // Build actions HTML with edit button and description toggle
+      // Build actions HTML with visualization dropdown, edit button, and description toggle
       const descToggleId = `desc-toggle-${monitor.id}`;
       const editBtnHtml = `
         <button class="monitor-edit-btn" data-monitor-id="${monitor.id}" title="Edit monitor">
@@ -169,7 +252,7 @@ export class MonitorsView extends BaseView {
           </svg>
         </button>
       `;
-      const actionsHtml = editBtnHtml + CardBuilder.descriptionToggle(descToggleId);
+      const actionsHtml = this.buildVisualizationDropdown(monitor.id) + editBtnHtml + CardBuilder.descriptionToggle(descToggleId);
       
       // Content for the card body
       const cardBodyContent = `
@@ -182,16 +265,22 @@ export class MonitorsView extends BaseView {
             ${alertsHtml}
           </div>
         </div>
-        <div class="monitor-narratives-container" id="${monitor.containerId}"></div>
+        <div class="monitor-viz-container" id="${monitor.containerId}"></div>
       `;
       
       // Use CardBuilder to create the card
-      const cardHtml = CardBuilder.create(monitor.name, `monitor-body-${monitor.id}`, {
+      let cardHtml = CardBuilder.create(monitor.name, `monitor-body-${monitor.id}`, {
         noPadding: true,
         halfWidth: true,
         subtitle: subtitle,
         actions: actionsHtml
       });
+      
+      // Make the title clickable - wrap in anchor tag
+      cardHtml = cardHtml.replace(
+        `<h2 class="card-title">${monitor.name}</h2>`,
+        `<h2 class="card-title"><a href="#/monitor/${monitor.id}" class="card-title-link">${monitor.name}</a></h2>`
+      );
       
       // Insert the card body content into the generated card
       // We need to replace the empty body with our content
@@ -364,53 +453,527 @@ export class MonitorsView extends BaseView {
     // Setup create/edit monitor handlers
     this.setupMonitorEditorHandlers(enrichedMonitors);
     
+    // Setup visualization dropdown handlers
+    this.setupVisualizationDropdowns(enrichedMonitors);
+    
     // Initialize card width toggles for all monitor cards
     const monitorsGrid = this.container.querySelector('.monitors-grid');
     initAllCardToggles(monitorsGrid, 'monitors');
     
-    // Initialize NarrativeList components for each monitor
+    // Store enriched monitors for later use
+    this.enrichedMonitors = enrichedMonitors;
+    
+    // Initialize visualizations for each monitor
     enrichedMonitors.forEach(monitor => {
-      if (monitor.matchedNarratives && monitor.matchedNarratives.length > 0) {
-        const narrativeList = new NarrativeList(monitor.containerId, {
-          maxItems: 5,
-          showSentiment: true,
-          showStatus: true,
-          showSparkline: true,
-          showVolume: true,
-          showSubNarratives: true,
-          maxSubNarratives: 3,
-          defaultShowDescription: false,
-          onNarrativeClick: (n) => {
-            window.location.hash = `#/narrative/${n.id}`;
+      this.renderMonitorVisualization(monitor);
+    });
+  }
+
+  /**
+   * Render the visualization for a specific monitor based on selected type
+   */
+  renderMonitorVisualization(monitor) {
+    const vizType = this.monitorVisualizationTypes.get(monitor.id) || 'narratives';
+    const container = document.getElementById(monitor.containerId);
+    
+    if (!container) return;
+    
+    // Clear existing content and destroy old component
+    container.innerHTML = '';
+    this.destroyMonitorVisualization(monitor.id);
+    
+    switch (vizType) {
+      case 'narratives':
+        this.renderNarrativesVisualization(monitor, container);
+        break;
+      case 'events':
+        this.renderEventsVisualization(monitor, container);
+        break;
+      case 'volume':
+        this.renderVolumeVisualization(monitor, container);
+        break;
+      case 'volume_events':
+        this.renderVolumeEventsVisualization(monitor, container);
+        break;
+      case 'topics':
+        this.renderTopicsVisualization(monitor, container);
+        break;
+      case 'locations':
+        this.renderLocationsVisualization(monitor, container);
+        break;
+      case 'faction_overlaps':
+        this.renderFactionOverlapsVisualization(monitor, container);
+        break;
+      case 'faction_sentiment':
+        this.renderFactionSentimentVisualization(monitor, container);
+        break;
+      case 'network_graph':
+        this.renderNetworkGraphVisualization(monitor, container);
+        break;
+      case 'documents':
+        this.renderDocumentsVisualization(monitor, container);
+        break;
+      default:
+        this.renderNarrativesVisualization(monitor, container);
+    }
+  }
+
+  /**
+   * Render Narratives visualization (default)
+   */
+  renderNarrativesVisualization(monitor, container) {
+    if (monitor.matchedNarratives && monitor.matchedNarratives.length > 0) {
+      const narrativeList = new NarrativeList(container, {
+        maxItems: 5,
+        showSentiment: true,
+        showStatus: true,
+        showSparkline: true,
+        showVolume: true,
+        showSubNarratives: true,
+        maxSubNarratives: 3,
+        defaultShowDescription: false,
+        onNarrativeClick: (n) => {
+          window.location.hash = `#/narrative/${n.id}`;
+        }
+      });
+      narrativeList.update({ narratives: monitor.matchedNarratives });
+      this.visualizationComponents.push({ monitorId: monitor.id, component: narrativeList, type: 'narratives' });
+      
+      // Store reference for description toggle
+      this.descriptionToggles.set(monitor.id, narrativeList);
+      
+      // Set up description toggle handler
+      const descToggle = document.getElementById(`desc-toggle-${monitor.id}`);
+      if (descToggle) {
+        descToggle.addEventListener('click', () => {
+          const isShowing = narrativeList.toggleDescription();
+          descToggle.classList.toggle('active', isShowing);
+        });
+      }
+    } else {
+      this.showEmptyVisualization(container, 'No matching narratives');
+    }
+  }
+
+  /**
+   * Render Events visualization
+   */
+  renderEventsVisualization(monitor, container) {
+    const events = monitor.matchedEvents || DataService.getEventsForMonitor(monitor.id);
+    
+    if (events && events.length > 0) {
+      const timeline = new Timeline(container, {
+        height: 280,
+        onEventClick: (e) => {
+          window.location.hash = `#/event/${e.id}`;
+        }
+      });
+      timeline.update({ events });
+      this.visualizationComponents.push({ monitorId: monitor.id, component: timeline, type: 'events' });
+    } else {
+      this.showEmptyVisualization(container, 'No matching events');
+    }
+  }
+
+  /**
+   * Render Narrative Volume Over Time visualization
+   */
+  renderVolumeVisualization(monitor, container) {
+    const narratives = monitor.matchedNarratives;
+    
+    if (narratives && narratives.length > 0) {
+      // Aggregate volume data from matched narratives
+      const volumeData = this.aggregateVolumeData(narratives);
+      
+      if (volumeData.dates.length > 0) {
+        const chart = new StackedAreaChart(container, {
+          height: 280,
+          onFactionClick: (f) => {
+            window.location.hash = `#/faction/${f.id}`;
           }
         });
-        narrativeList.update({ narratives: monitor.matchedNarratives });
-        this.narrativeListComponents.push(narrativeList);
-        
-        // Store reference for description toggle
-        this.descriptionToggles.set(monitor.id, narrativeList);
-        
-        // Set up description toggle handler
-        const descToggle = document.getElementById(`desc-toggle-${monitor.id}`);
-        if (descToggle) {
-          descToggle.addEventListener('click', () => {
-            const isShowing = narrativeList.toggleDescription();
-            descToggle.classList.toggle('active', isShowing);
-          });
-        }
+        chart.update(volumeData);
+        this.visualizationComponents.push({ monitorId: monitor.id, component: chart, type: 'volume' });
       } else {
-        // Show empty state for monitors with no matching narratives
-        const container = document.getElementById(monitor.containerId);
-        if (container) {
-          container.innerHTML = `
-            <div class="empty-state" style="padding: 24px;">
-              <div class="empty-state-icon">📋</div>
-              <p class="empty-state-text">No matching narratives</p>
-            </div>
-          `;
+        this.showEmptyVisualization(container, 'No volume data available');
+      }
+    } else {
+      this.showEmptyVisualization(container, 'No narrative data for volume chart');
+    }
+  }
+
+  /**
+   * Render Volume Over Time with Events visualization
+   */
+  renderVolumeEventsVisualization(monitor, container) {
+    const narratives = monitor.matchedNarratives;
+    const events = monitor.matchedEvents || DataService.getEventsForMonitor(monitor.id);
+    
+    if ((narratives && narratives.length > 0) || (events && events.length > 0)) {
+      const volumeData = this.aggregateVolumeData(narratives || []);
+      
+      const composite = new TimelineVolumeComposite(container, {
+        height: 400,
+        showViewToggle: false,
+        onEventClick: (e) => {
+          window.location.hash = `#/event/${e.id}`;
+        },
+        onFactionClick: (f) => {
+          window.location.hash = `#/faction/${f.id}`;
         }
+      });
+      composite.update({ volumeData, events: events || [] });
+      this.visualizationComponents.push({ monitorId: monitor.id, component: composite, type: 'volume_events' });
+    } else {
+      this.showEmptyVisualization(container, 'No data for volume/events chart');
+    }
+  }
+
+  /**
+   * Render Topics visualization
+   */
+  renderTopicsVisualization(monitor, container) {
+    // Get topics related to matched narratives
+    const topics = DataService.getTopics();
+    
+    if (topics && topics.length > 0) {
+      const topicList = new TopicList(container, {
+        maxItems: 8,
+        showSparkline: true,
+        showVolume: true,
+        showDuration: true,
+        onTopicClick: (t) => {
+          // Topics might not have their own detail page, so we can show documents
+          console.log('Topic clicked:', t);
+        }
+      });
+      topicList.update({ topics });
+      this.visualizationComponents.push({ monitorId: monitor.id, component: topicList, type: 'topics' });
+    } else {
+      this.showEmptyVisualization(container, 'No topics found');
+    }
+  }
+
+  /**
+   * Render Locations visualization (map)
+   */
+  renderLocationsVisualization(monitor, container) {
+    const narratives = monitor.matchedNarratives;
+    
+    // Collect all locations from matched narratives
+    const locationIds = new Set();
+    narratives.forEach(n => {
+      (n.locationIds || []).forEach(id => locationIds.add(id));
+    });
+    
+    // Get location objects with their related data
+    const locations = [...locationIds]
+      .map(id => {
+        const location = DataService.getLocation(id);
+        if (!location) return null;
+        
+        // Get narratives and events for this location
+        const relatedNarratives = DataService.getNarrativesForLocation(id);
+        const relatedEvents = DataService.getEventsForLocation(id);
+        
+        return {
+          ...location,
+          narratives: relatedNarratives,
+          events: relatedEvents
+        };
+      })
+      .filter(loc => loc && loc.coordinates);
+    
+    if (locations.length > 0) {
+      const mapView = new MapView(container, {
+        height: 350,
+        onMarkerClick: (loc) => {
+          // Optional: handle marker click
+        }
+      });
+      mapView.update({ locations });
+      this.visualizationComponents.push({ monitorId: monitor.id, component: mapView, type: 'locations' });
+    } else {
+      this.showEmptyVisualization(container, 'No locations with coordinates found');
+    }
+  }
+
+  /**
+   * Render Faction Overlaps visualization
+   */
+  renderFactionOverlapsVisualization(monitor, container) {
+    const narratives = monitor.matchedNarratives;
+    
+    // Get factions involved in the matched narratives
+    const factionIds = new Set();
+    narratives.forEach(n => {
+      if (n.factionMentions) {
+        Object.keys(n.factionMentions).forEach(fId => factionIds.add(fId));
       }
     });
+    
+    const factions = [...factionIds].map(id => DataService.getFaction(id)).filter(Boolean);
+    // Only include overlaps where ALL factions are present in our set
+    // (venn.js requires all sets in an overlap to be defined)
+    const overlaps = DataService.getFactionOverlaps().filter(o => 
+      o.factionIds.every(fId => factionIds.has(fId))
+    );
+    
+    if (factions.length >= 2) {
+      const venn = new VennDiagram(container, {
+        height: 300,
+        onFactionClick: (f) => {
+          window.location.hash = `#/faction/${f.id}`;
+        }
+      });
+      venn.update({ sets: factions, overlaps });
+      this.visualizationComponents.push({ monitorId: monitor.id, component: venn, type: 'faction_overlaps' });
+    } else {
+      this.showEmptyVisualization(container, 'Need at least 2 factions for overlap visualization');
+    }
+  }
+
+  /**
+   * Render Faction Sentiment visualization
+   */
+  renderFactionSentimentVisualization(monitor, container) {
+    const narratives = monitor.matchedNarratives;
+    
+    // Aggregate faction sentiments from matched narratives
+    const factionStats = new Map();
+    narratives.forEach(n => {
+      if (n.factionMentions) {
+        Object.entries(n.factionMentions).forEach(([factionId, data]) => {
+          if (!factionStats.has(factionId)) {
+            factionStats.set(factionId, { totalVolume: 0, weightedSentiment: 0 });
+          }
+          const stats = factionStats.get(factionId);
+          if (data.volume && typeof data.sentiment === 'number') {
+            stats.totalVolume += data.volume;
+            stats.weightedSentiment += data.sentiment * data.volume;
+          }
+        });
+      }
+    });
+    
+    const factions = [...factionStats.entries()]
+      .map(([factionId, stats]) => {
+        const faction = DataService.getFaction(factionId);
+        if (!faction || stats.totalVolume === 0) return null;
+        return {
+          ...faction,
+          sentiment: stats.weightedSentiment / stats.totalVolume,
+          volume: stats.totalVolume
+        };
+      })
+      .filter(Boolean)
+      .sort((a, b) => b.volume - a.volume);
+    
+    if (factions.length > 0) {
+      const chart = new SentimentChart(container, {
+        height: Math.max(200, factions.length * 40 + 60),
+        onFactionClick: (f) => {
+          window.location.hash = `#/faction/${f.id}`;
+        }
+      });
+      chart.update({ factions });
+      this.visualizationComponents.push({ monitorId: monitor.id, component: chart, type: 'faction_sentiment' });
+    } else {
+      this.showEmptyVisualization(container, 'No faction sentiment data available');
+    }
+  }
+
+  /**
+   * Render Network Graph visualization
+   */
+  renderNetworkGraphVisualization(monitor, container) {
+    const narratives = monitor.matchedNarratives;
+    
+    // Collect all persons and organizations from matched narratives
+    const personIds = new Set();
+    const orgIds = new Set();
+    
+    narratives.forEach(n => {
+      (n.personIds || []).forEach(id => personIds.add(id));
+      (n.organizationIds || []).forEach(id => orgIds.add(id));
+    });
+    
+    if (personIds.size + orgIds.size >= 2) {
+      const graphData = DataService.buildNetworkGraph([...personIds], [...orgIds]);
+      
+      if (graphData.nodes.length >= 2) {
+        const graph = new NetworkGraph(container, {
+          height: 350,
+          onNodeClick: (node) => {
+            if (node.type === 'person') {
+              window.location.hash = `#/person/${node.id}`;
+            } else {
+              window.location.hash = `#/organization/${node.id}`;
+            }
+          }
+        });
+        graph.update(graphData);
+        this.visualizationComponents.push({ monitorId: monitor.id, component: graph, type: 'network_graph' });
+      } else {
+        this.showEmptyVisualization(container, 'Not enough connections for network graph');
+      }
+    } else {
+      this.showEmptyVisualization(container, 'Need at least 2 people/organizations');
+    }
+  }
+
+  /**
+   * Render Documents visualization
+   */
+  renderDocumentsVisualization(monitor, container) {
+    const narratives = monitor.matchedNarratives;
+    
+    // Collect documents from matched narratives
+    const documentIds = new Set();
+    narratives.forEach(n => {
+      (n.documentIds || []).forEach(id => documentIds.add(id));
+    });
+    
+    const documents = [...documentIds]
+      .map(id => DataService.getDocument(id))
+      .filter(Boolean)
+      .sort((a, b) => new Date(b.publishedDate) - new Date(a.publishedDate));
+    
+    if (documents.length > 0) {
+      const docList = new DocumentList(container, {
+        maxItems: 8,
+        showExcerpt: true,
+        showPublisher: true,
+        showDate: true,
+        onDocumentClick: (doc) => {
+          window.location.hash = `#/document/${doc.id}`;
+        }
+      });
+      docList.update({ documents });
+      this.visualizationComponents.push({ monitorId: monitor.id, component: docList, type: 'documents' });
+    } else {
+      this.showEmptyVisualization(container, 'No documents found');
+    }
+  }
+
+  /**
+   * Show empty state in visualization container
+   */
+  showEmptyVisualization(container, message) {
+    container.innerHTML = `
+      <div class="empty-state" style="padding: 24px;">
+        <div class="empty-state-icon">📋</div>
+        <p class="empty-state-text">${message}</p>
+      </div>
+    `;
+  }
+
+  /**
+   * Aggregate volume data from multiple narratives
+   */
+  aggregateVolumeData(narratives) {
+    const factions = DataService.getFactions();
+    const dateMap = new Map();
+    
+    narratives.forEach(n => {
+      (n.volumeOverTime || []).forEach(entry => {
+        if (!dateMap.has(entry.date)) {
+          dateMap.set(entry.date, {});
+        }
+        const dayData = dateMap.get(entry.date);
+        Object.entries(entry.factionVolumes || {}).forEach(([fId, vol]) => {
+          dayData[fId] = (dayData[fId] || 0) + vol;
+        });
+      });
+    });
+    
+    const dates = [...dateMap.keys()].sort();
+    const series = factions.map(f =>
+      dates.map(date => (dateMap.get(date) || {})[f.id] || 0)
+    );
+    
+    return { dates, series, factions };
+  }
+
+  /**
+   * Destroy visualization component for a specific monitor
+   */
+  destroyMonitorVisualization(monitorId) {
+    const index = this.visualizationComponents.findIndex(c => c.monitorId === monitorId);
+    if (index !== -1) {
+      const { component } = this.visualizationComponents[index];
+      if (component && typeof component.destroy === 'function') {
+        component.destroy();
+      }
+      this.visualizationComponents.splice(index, 1);
+    }
+    this.descriptionToggles.delete(monitorId);
+  }
+
+  /**
+   * Setup visualization dropdown handlers
+   */
+  setupVisualizationDropdowns(enrichedMonitors) {
+    const dropdowns = this.container.querySelectorAll('.monitor-viz-dropdown');
+    
+    dropdowns.forEach(dropdown => {
+      const trigger = dropdown.querySelector('.monitor-viz-dropdown-trigger');
+      const menu = dropdown.querySelector('.monitor-viz-dropdown-menu');
+      const monitorId = dropdown.dataset.monitorId;
+      
+      if (trigger && menu) {
+        trigger.addEventListener('click', (e) => {
+          e.stopPropagation();
+          
+          // Close other open dropdowns
+          dropdowns.forEach(otherDropdown => {
+            if (otherDropdown !== dropdown) {
+              otherDropdown.classList.remove('open');
+            }
+          });
+          
+          // Toggle this dropdown
+          dropdown.classList.toggle('open');
+        });
+        
+        // Handle option selection
+        menu.querySelectorAll('.viz-dropdown-option').forEach(option => {
+          option.addEventListener('click', (e) => {
+            e.stopPropagation();
+            const vizType = option.dataset.vizType;
+            
+            // Update selection
+            this.monitorVisualizationTypes.set(monitorId, vizType);
+            
+            // Update dropdown label
+            const label = VISUALIZATION_TYPES.find(v => v.id === vizType)?.label;
+            trigger.querySelector('.viz-dropdown-label').textContent = label;
+            
+            // Update active state
+            menu.querySelectorAll('.viz-dropdown-option').forEach(opt => {
+              opt.classList.toggle('active', opt.dataset.vizType === vizType);
+            });
+            
+            // Close dropdown
+            dropdown.classList.remove('open');
+            
+            // Re-render visualization
+            const monitor = enrichedMonitors.find(m => m.id === monitorId);
+            if (monitor) {
+              this.renderMonitorVisualization(monitor);
+            }
+          });
+        });
+      }
+    });
+    
+    // Close dropdowns when clicking outside
+    this.vizDropdownClickHandler = (e) => {
+      if (!e.target.closest('.monitor-viz-dropdown')) {
+        dropdowns.forEach(dropdown => dropdown.classList.remove('open'));
+      }
+    };
+    document.addEventListener('click', this.vizDropdownClickHandler);
   }
 
   /**
@@ -485,17 +1048,30 @@ export class MonitorsView extends BaseView {
   }
 
   destroy() {
-    // Clean up narrative list components
-    this.narrativeListComponents.forEach(c => c.destroy && c.destroy());
-    this.narrativeListComponents = [];
+    // Clean up visualization components
+    this.visualizationComponents.forEach(c => {
+      if (c.component && typeof c.component.destroy === 'function') {
+        c.component.destroy();
+      }
+    });
+    this.visualizationComponents = [];
     
     // Clear description toggles map
     this.descriptionToggles.clear();
+    
+    // Clear visualization types map
+    this.monitorVisualizationTypes.clear();
     
     // Remove document click handler
     if (this.documentClickHandler) {
       document.removeEventListener('click', this.documentClickHandler);
       this.documentClickHandler = null;
+    }
+    
+    // Remove viz dropdown click handler
+    if (this.vizDropdownClickHandler) {
+      document.removeEventListener('click', this.vizDropdownClickHandler);
+      this.vizDropdownClickHandler = null;
     }
     
     super.destroy();

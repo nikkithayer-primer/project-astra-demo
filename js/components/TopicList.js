@@ -1,13 +1,12 @@
 /**
  * TopicList.js
- * List of topics with sparklines and bullet point summaries
+ * List of topics with sparklines, duration, and bullet point summaries
+ * Extends BaseItemList for common list functionality
  */
 
-import { BaseComponent } from './BaseComponent.js';
-import { Sparkline } from './Sparkline.js';
-import { DataService } from '../data/DataService.js';
+import { BaseItemList } from './BaseItemList.js';
 
-export class TopicList extends BaseComponent {
+export class TopicList extends BaseItemList {
   constructor(containerId, options = {}) {
     super(containerId, {
       maxItems: 10,
@@ -18,40 +17,87 @@ export class TopicList extends BaseComponent {
       maxBulletPoints: 3,
       ...options
     });
-    this.sparklines = [];
     this.showBullets = this.options.showBulletPoints;
-    this.expandedTopics = new Set();
   }
 
-  toggleExpanded(topicId) {
-    if (this.expandedTopics.has(topicId)) {
-      this.expandedTopics.delete(topicId);
-    } else {
-      this.expandedTopics.add(topicId);
-    }
-    this.render();
+  /**
+   * Get items from data
+   */
+  getItems() {
+    return this.data?.topics || [];
   }
 
+  /**
+   * Get empty state message
+   */
+  getEmptyMessage() {
+    return 'No topics found';
+  }
+
+  /**
+   * Get list container CSS class
+   */
+  getListClass() {
+    return 'topic-list';
+  }
+
+  /**
+   * Get item CSS class
+   */
+  getItemClass(item) {
+    return 'topic-item-wrapper';
+  }
+
+  /**
+   * Get item title (topics use 'headline' field)
+   */
+  getItemTitle(item) {
+    return item.headline || item.text || '';
+  }
+
+  /**
+   * Calculate volume from volumeOverTime (different from narrative/subnarrative)
+   */
+  calculateVolume(item) {
+    if (!item.volumeOverTime || !item.volumeOverTime.length) return 0;
+    return item.volumeOverTime.reduce((sum, entry) => sum + (entry.volume || 0), 0);
+  }
+
+  /**
+   * Get sparkline values (different structure from narratives)
+   */
+  getSparklineValues(item) {
+    if (!item.volumeOverTime || !item.volumeOverTime.length) return [];
+    return item.volumeOverTime.map(d => d.volume || 0);
+  }
+
+  /**
+   * Get sparkline color (topics use accent color, not sentiment)
+   */
+  getSparklineColor(item) {
+    return 'var(--accent-primary)';
+  }
+
+  /**
+   * Toggle bullet points visibility
+   */
   toggleBulletPoints() {
     this.showBullets = !this.showBullets;
     this.render();
     return this.showBullets;
   }
 
+  /**
+   * Set bullet points visibility
+   */
   setShowBulletPoints(show) {
     this.showBullets = show;
     this.render();
   }
 
-  formatDate(dateString) {
-    if (!dateString) return '';
-    const date = new Date(dateString);
-    return date.toLocaleDateString('en-US', {
-      month: 'short',
-      day: 'numeric'
-    });
-  }
-
+  /**
+   * Format duration from start to end date
+   */
   formatDuration(startDate, endDate) {
     const start = new Date(startDate);
     const end = endDate ? new Date(endDate) : new Date();
@@ -65,11 +111,9 @@ export class TopicList extends BaseComponent {
     return `${Math.floor(diffDays / 30)} months`;
   }
 
-  calculateTotalVolume(topic) {
-    if (!topic.volumeOverTime || !topic.volumeOverTime.length) return 0;
-    return topic.volumeOverTime.reduce((sum, entry) => sum + (entry.volume || 0), 0);
-  }
-
+  /**
+   * Get status indicator HTML
+   */
   getStatusIndicator(topic) {
     const isActive = !topic.endDate || new Date(topic.endDate) >= new Date();
     if (isActive) {
@@ -87,130 +131,76 @@ export class TopicList extends BaseComponent {
     </span>`;
   }
 
-  render() {
-    this.clear();
-    this.sparklines.forEach(s => s.destroy());
-    this.sparklines = [];
+  /**
+   * Render a single topic item's content
+   */
+  renderItemContent(item, sparklineIndex) {
+    const totalVolume = this.calculateVolume(item);
+    const hasBulletPoints = item.bulletPoints && item.bulletPoints.length > 0;
+    const isExpanded = this.isExpanded(item.id);
+    const duration = this.formatDuration(item.startDate, item.endDate);
+    const dateRange = item.endDate 
+      ? `${this.formatDate(item.startDate, { month: 'short', day: 'numeric' })} - ${this.formatDate(item.endDate, { month: 'short', day: 'numeric' })}`
+      : `Since ${this.formatDate(item.startDate, { month: 'short', day: 'numeric' })}`;
 
-    if (!this.data || !this.data.topics || !this.data.topics.length) {
-      this.showEmptyState('No topics found');
-      return;
-    }
-
-    const list = document.createElement('ul');
-    list.className = 'topic-list';
-
-    const items = this.data.topics.slice(0, this.options.maxItems);
-
-    items.forEach((topic, i) => {
-      const totalVolume = this.calculateTotalVolume(topic);
-      const hasBulletPoints = topic.bulletPoints && topic.bulletPoints.length > 0;
-      const isExpanded = this.expandedTopics.has(topic.id);
-      const duration = this.formatDuration(topic.startDate, topic.endDate);
-      const dateRange = topic.endDate 
-        ? `${this.formatDate(topic.startDate)} - ${this.formatDate(topic.endDate)}`
-        : `Since ${this.formatDate(topic.startDate)}`;
-
-      const item = document.createElement('li');
-      item.className = 'topic-item-wrapper';
-      item.dataset.id = topic.id;
-
-      item.innerHTML = `
-        <div class="topic-item${hasBulletPoints && this.showBullets ? ' has-bullets' : ''}${isExpanded ? ' expanded' : ''}">
-          <div class="topic-status-column">
-            ${this.getStatusIndicator(topic)}
-          </div>
-          <div class="topic-content">
-            <div class="topic-headline">${topic.headline}</div>
-            ${this.options.showDuration ? `
-              <div class="topic-duration">
-                <span class="topic-date-range">${dateRange}</span>
-                <span class="topic-duration-badge">${duration}</span>
-              </div>
-            ` : ''}
-            ${hasBulletPoints && this.showBullets ? `
-              <ul class="topic-bullets${isExpanded ? ' expanded' : ''}">
-                ${topic.bulletPoints.slice(0, isExpanded ? undefined : this.options.maxBulletPoints).map(bp => `
-                  <li class="topic-bullet">${bp}</li>
-                `).join('')}
-              </ul>
-              ${topic.bulletPoints.length > this.options.maxBulletPoints && !isExpanded ? `
-                <button class="topic-expand-toggle" data-topic-id="${topic.id}">
-                  +${topic.bulletPoints.length - this.options.maxBulletPoints} more
-                </button>
-              ` : ''}
-              ${isExpanded && topic.bulletPoints.length > this.options.maxBulletPoints ? `
-                <button class="topic-expand-toggle" data-topic-id="${topic.id}">
-                  Show less
-                </button>
-              ` : ''}
-            ` : ''}
-          </div>
-          <div class="topic-meta">
-            ${this.options.showVolume ? `
-              <span class="topic-volume">${this.formatNumber(totalVolume)}</span>
-            ` : ''}
-            ${this.options.showSparkline ? `
-              <div class="sparkline-container" data-sparkline-index="${i}"></div>
-            ` : ''}
-          </div>
+    return `
+      <div class="topic-item${hasBulletPoints && this.showBullets ? ' has-bullets' : ''}${isExpanded ? ' expanded' : ''}" data-id="${item.id}">
+        <div class="topic-status-column">
+          ${this.getStatusIndicator(item)}
         </div>
-      `;
+        <div class="topic-content">
+          <div class="topic-headline">${this.getItemTitle(item)}</div>
+          ${this.options.showDuration ? `
+            <div class="topic-duration">
+              <span class="topic-date-range">${dateRange}</span>
+              <span class="topic-duration-badge">${duration}</span>
+            </div>
+          ` : ''}
+          ${hasBulletPoints && this.showBullets ? `
+            <ul class="topic-bullets${isExpanded ? ' expanded' : ''}">
+              ${item.bulletPoints.slice(0, isExpanded ? undefined : this.options.maxBulletPoints).map(bp => `
+                <li class="topic-bullet">${bp}</li>
+              `).join('')}
+            </ul>
+            ${item.bulletPoints.length > this.options.maxBulletPoints && !isExpanded ? `
+              <button class="topic-expand-toggle" data-topic-id="${item.id}">
+                +${item.bulletPoints.length - this.options.maxBulletPoints} more
+              </button>
+            ` : ''}
+            ${isExpanded && item.bulletPoints.length > this.options.maxBulletPoints ? `
+              <button class="topic-expand-toggle" data-topic-id="${item.id}">
+                Show less
+              </button>
+            ` : ''}
+          ` : ''}
+        </div>
+        <div class="topic-meta">
+          ${this.options.showVolume ? `
+            <span class="topic-volume">${this.formatNumber(totalVolume)}</span>
+          ` : ''}
+          ${this.options.showSparkline ? `
+            <div class="sparkline-container" data-sparkline-index="${sparklineIndex}"></div>
+          ` : ''}
+        </div>
+      </div>
+    `;
+  }
 
-      // Handle topic item click (navigate to detail if handler provided)
-      const topicItem = item.querySelector('.topic-item');
-      topicItem.addEventListener('click', (e) => {
-        // Don't navigate if clicking the expand toggle
-        if (e.target.closest('.topic-expand-toggle')) {
-          return;
-        }
-        if (this.options.onTopicClick) {
-          this.options.onTopicClick(topic);
-        }
-      });
-
-      // Handle expand toggle click
-      const expandToggle = item.querySelector('.topic-expand-toggle');
-      if (expandToggle) {
-        expandToggle.addEventListener('click', (e) => {
-          e.preventDefault();
-          e.stopPropagation();
-          this.toggleExpanded(topic.id);
-        });
-      }
-
-      list.appendChild(item);
-    });
-
-    this.container.appendChild(list);
-
-    // Render sparklines after DOM update
-    if (this.options.showSparkline) {
-      requestAnimationFrame(() => {
-        const containers = this.container.querySelectorAll('.sparkline-container');
-        
-        containers.forEach((container, idx) => {
-          const topic = items[idx];
-          if (topic && topic.volumeOverTime && topic.volumeOverTime.length) {
-            const sparkline = new Sparkline(container, {
-              width: 80,
-              height: 24,
-              color: 'var(--accent-primary)'
-            });
-            const values = topic.volumeOverTime.map(d => d.volume || 0);
-            sparkline.update(values);
-            this.sparklines.push(sparkline);
-          }
-        });
+  /**
+   * Set up additional handlers
+   */
+  setupAdditionalHandlers(element, item) {
+    // Handle expand toggle click
+    const expandToggle = element.querySelector('.topic-expand-toggle');
+    if (expandToggle) {
+      expandToggle.addEventListener('click', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        this.toggleExpanded(item.id);
       });
     }
   }
 
-  destroy() {
-    this.sparklines.forEach(s => s.destroy());
-    this.sparklines = [];
-    super.destroy();
-  }
 }
 
 export default TopicList;

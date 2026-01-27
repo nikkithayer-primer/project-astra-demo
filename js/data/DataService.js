@@ -1828,6 +1828,171 @@ export const DataService = {
     return 'custom';
   },
 
+  /**
+   * Get all persons referenced by narratives matching a monitor's scope.
+   */
+  getPersonsForMonitor: (monitorId) => {
+    const narratives = DataService.getNarrativesForMonitor(monitorId);
+    const personIds = new Set();
+    
+    narratives.forEach(n => {
+      (n.personIds || []).forEach(pId => personIds.add(pId));
+    });
+    
+    return [...personIds]
+      .map(pId => findById('persons', pId))
+      .filter(Boolean);
+  },
+
+  /**
+   * Get all organizations referenced by narratives matching a monitor's scope.
+   */
+  getOrganizationsForMonitor: (monitorId) => {
+    const narratives = DataService.getNarrativesForMonitor(monitorId);
+    const orgIds = new Set();
+    
+    narratives.forEach(n => {
+      (n.organizationIds || []).forEach(oId => orgIds.add(oId));
+    });
+    
+    return [...orgIds]
+      .map(oId => findById('organizations', oId))
+      .filter(Boolean);
+  },
+
+  /**
+   * Get all locations referenced by narratives and events matching a monitor's scope.
+   */
+  getLocationsForMonitor: (monitorId) => {
+    const narratives = DataService.getNarrativesForMonitor(monitorId);
+    const events = DataService.getEventsForMonitor(monitorId);
+    const locationIds = new Set();
+    
+    // Collect from narratives
+    narratives.forEach(n => {
+      (n.locationIds || []).forEach(lId => locationIds.add(lId));
+    });
+    
+    // Collect from events
+    events.forEach(e => {
+      if (e.locationId) locationIds.add(e.locationId);
+    });
+    
+    return [...locationIds]
+      .map(lId => findById('locations', lId))
+      .filter(Boolean);
+  },
+
+  /**
+   * Get all factions engaged with narratives matching a monitor's scope.
+   * Returns factions with aggregated sentiment and volume.
+   */
+  getFactionsForMonitor: (monitorId) => {
+    const narratives = DataService.getNarrativesForMonitor(monitorId);
+    const factionStats = new Map();
+    
+    narratives.forEach(n => {
+      Object.entries(n.factionMentions || {}).forEach(([factionId, data]) => {
+        if (!factionStats.has(factionId)) {
+          factionStats.set(factionId, { totalVolume: 0, weightedSentiment: 0 });
+        }
+        const stats = factionStats.get(factionId);
+        const volume = data.volume || 0;
+        const sentiment = typeof data.sentiment === 'number' ? data.sentiment : 0;
+        stats.totalVolume += volume;
+        stats.weightedSentiment += sentiment * volume;
+      });
+    });
+    
+    const factions = dataStore.data.factions || [];
+    return [...factionStats.entries()]
+      .map(([factionId, stats]) => {
+        const faction = factions.find(f => f.id === factionId);
+        if (!faction || stats.totalVolume === 0) return null;
+        return {
+          ...faction,
+          volume: stats.totalVolume,
+          sentiment: stats.weightedSentiment / stats.totalVolume
+        };
+      })
+      .filter(Boolean)
+      .sort((a, b) => b.volume - a.volume);
+  },
+
+  /**
+   * Get all documents from narratives matching a monitor's scope.
+   */
+  getDocumentsForMonitor: (monitorId) => {
+    const narratives = DataService.getNarrativesForMonitor(monitorId);
+    const documentIds = new Set();
+    
+    narratives.forEach(n => {
+      (n.documentIds || []).forEach(dId => documentIds.add(dId));
+    });
+    
+    const documents = dataStore.data.documents || [];
+    return [...documentIds]
+      .map(dId => documents.find(d => d.id === dId))
+      .filter(Boolean)
+      .sort((a, b) => new Date(b.publishedDate) - new Date(a.publishedDate));
+  },
+
+  /**
+   * Get aggregated volume over time for narratives matching a monitor's scope.
+   * Groups by faction for chart display.
+   */
+  getAggregateVolumeForMonitor: (monitorId) => {
+    const narratives = DataService.getNarrativesForMonitor(monitorId);
+    const factions = dataStore.data.factions || [];
+    const dateMap = new Map();
+    
+    narratives.forEach(n => {
+      (n.volumeOverTime || []).forEach(entry => {
+        if (!dateMap.has(entry.date)) {
+          dateMap.set(entry.date, {});
+        }
+        const dayData = dateMap.get(entry.date);
+        Object.entries(entry.factionVolumes || {}).forEach(([fId, vol]) => {
+          dayData[fId] = (dayData[fId] || 0) + vol;
+        });
+      });
+    });
+    
+    const dates = [...dateMap.keys()].sort();
+    
+    // Get unique faction IDs that have volume
+    const activeFactionIds = new Set();
+    dateMap.forEach(dayData => {
+      Object.keys(dayData).forEach(fId => activeFactionIds.add(fId));
+    });
+    
+    const relevantFactions = factions.filter(f => activeFactionIds.has(f.id));
+    const series = relevantFactions.map(f =>
+      dates.map(date => (dateMap.get(date) || {})[f.id] || 0)
+    );
+    
+    return { dates, series, factions: relevantFactions };
+  },
+
+  /**
+   * Get topics that are linked to documents from narratives matching a monitor's scope.
+   */
+  getTopicsForMonitor: (monitorId) => {
+    const narratives = DataService.getNarrativesForMonitor(monitorId);
+    const topics = dataStore.data.topics || [];
+    
+    // Collect all document IDs from matched narratives
+    const documentIds = new Set();
+    narratives.forEach(n => {
+      (n.documentIds || []).forEach(dId => documentIds.add(dId));
+    });
+    
+    // Find topics that reference these documents
+    return topics.filter(topic => 
+      (topic.documentIds || []).some(dId => documentIds.has(dId))
+    );
+  },
+
   // Search across all entities
   search: (query) => {
     const results = {

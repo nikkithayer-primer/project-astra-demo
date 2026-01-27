@@ -14,6 +14,7 @@ import { locations } from './locations.js';
 import { events } from './events.js';
 import { documents } from './documents.js';
 import { monitors, alerts } from './monitors.js';
+import { topics } from './topics.js';
 
 export const datasetId = 'walmart-brand';
 export const datasetName = 'Walmart Brand';
@@ -33,7 +34,8 @@ export const mockData = {
   organizations,
   documents,
   monitors,
-  alerts
+  alerts,
+  topics
 };
 
 /**

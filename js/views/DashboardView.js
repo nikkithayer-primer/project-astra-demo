@@ -9,6 +9,7 @@ import { NarrativeList } from '../components/NarrativeList.js';
 import { TopicList } from '../components/TopicList.js';
 import { MapView } from '../components/MapView.js';
 import { TimelineVolumeComposite } from '../components/TimelineVolumeComposite.js';
+import { Timeline } from '../components/Timeline.js';
 import { SentimentChart } from '../components/SentimentChart.js';
 import { initAllCardToggles } from '../utils/cardWidthToggle.js';
 import { formatDateWithYear, STATUS_LABELS } from '../utils/formatters.js';
@@ -19,6 +20,8 @@ export class DashboardView extends BaseView {
     super(container, options);
     // Status filter state: Set of selected statuses (empty = no filter)
     this.statusFilters = new Set();
+    // Events view mode: 'vertical' or 'horizontal' timeline
+    this.eventsViewMode = 'vertical';
   }
 
   async render() {
@@ -178,6 +181,31 @@ export class DashboardView extends BaseView {
               </button>
             `
           })}
+          ${CardBuilder.create('Recent Events', 'dashboard-events', { 
+            noPadding: true, 
+            bodyClass: 'card-body-scrollable',
+            actions: `
+              <div class="view-toggle" id="events-view-toggle">
+                <button class="view-toggle-btn active" data-view="vertical" title="Vertical Timeline">
+                  <svg viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.5">
+                    <path d="M4 2v12"/>
+                    <circle cx="4" cy="4" r="2"/>
+                    <circle cx="4" cy="9" r="2"/>
+                    <circle cx="4" cy="14" r="1.5"/>
+                    <path d="M8 4h6M8 9h6M8 14h4"/>
+                  </svg>
+                </button>
+                <button class="view-toggle-btn" data-view="horizontal" title="Horizontal Timeline">
+                  <svg viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.5">
+                    <path d="M2 8h12"/>
+                    <circle cx="4" cy="8" r="2"/>
+                    <circle cx="8" cy="8" r="2"/>
+                    <circle cx="12" cy="8" r="2"/>
+                  </svg>
+                </button>
+              </div>
+            `
+          })}
           ${CardBuilder.create('Activity Locations', 'dashboard-map', { fullWidth: true, noPadding: true })}
         </div>
       </div>
@@ -190,7 +218,8 @@ export class DashboardView extends BaseView {
       1: 'half', // Top Narratives - half width
       2: 'half', // Sentiment by Faction - half width
       3: 'half', // Trending Topics - half width
-      4: 'full'  // Map - full width
+      4: 'half', // Recent Events - half width
+      5: 'full'  // Map - full width
     });
 
     // Add click handlers for stat cards (navigate to list views)
@@ -323,6 +352,9 @@ export class DashboardView extends BaseView {
       this.components.sentimentChart.enableAutoResize();
     }
 
+    // Recent Events (vertical timeline)
+    this.renderEventsCard(recentEvents);
+
     // Map with all locations (filtered by time range and status)
     const locations = DataService.getAllLocationsWithCounts(this.timeRange, this.statusFilter);
     if (locations.length > 0) {
@@ -331,6 +363,164 @@ export class DashboardView extends BaseView {
       });
       this.components.map.update({ locations });
     }
+  }
+
+  /**
+   * Render the events card with vertical or horizontal timeline
+   */
+  renderEventsCard(events) {
+    // Store events for re-rendering on toggle
+    this._dashboardEvents = events;
+    
+    const container = document.getElementById('dashboard-events');
+    if (!container) return;
+
+    if (!events || events.length === 0) {
+      container.innerHTML = `
+        <div class="vertical-timeline-empty">
+          <div class="vertical-timeline-empty-icon">📅</div>
+          <p class="vertical-timeline-empty-text">No recent events</p>
+        </div>
+      `;
+      return;
+    }
+
+    // Sort events by date (newest first) and limit to 10
+    const sortedEvents = [...events]
+      .sort((a, b) => new Date(b.date) - new Date(a.date))
+      .slice(0, 10);
+
+    if (this.eventsViewMode === 'horizontal') {
+      container.innerHTML = '<div id="dashboard-events-timeline" style="min-height: 350px;"></div>';
+      this.initializeHorizontalTimeline(sortedEvents);
+    } else {
+      container.innerHTML = this.renderEventsVerticalTimeline(sortedEvents);
+      this.attachVerticalTimelineListeners(container);
+    }
+    
+    // Set up toggle listener
+    this.setupEventsViewToggle();
+  }
+
+  /**
+   * Initialize horizontal timeline component
+   */
+  initializeHorizontalTimeline(events) {
+    // Destroy existing timeline if any
+    if (this.components.eventsTimeline) {
+      this.components.eventsTimeline.destroy();
+      this.components.eventsTimeline = null;
+    }
+
+    const timelineContainer = document.getElementById('dashboard-events-timeline');
+    if (!timelineContainer || events.length === 0) return;
+
+    this.components.eventsTimeline = new Timeline('dashboard-events-timeline', {
+      height: Math.max(300, Math.min(events.length * 70, 450)),
+      onEventClick: (event) => {
+        window.location.hash = `#/event/${event.id}`;
+      }
+    });
+    this.components.eventsTimeline.update({ events });
+  }
+
+  /**
+   * Render vertical timeline view for events
+   */
+  renderEventsVerticalTimeline(events) {
+    // Group events by month/year for separators
+    let currentMonth = null;
+    const itemsHtml = events.map(event => {
+      const date = new Date(event.date);
+      const monthKey = `${date.getFullYear()}-${date.getMonth()}`;
+      const isSubEvent = event.parentEventId != null;
+      
+      // Format date parts
+      const dayStr = date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+      const timeStr = date.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
+      
+      // Get location if available
+      const location = DataService.getLocationForEvent(event.id);
+      const locationHtml = location ? `
+        <span class="vertical-timeline-location">
+          <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5">
+            <path d="M8 1C5.2 1 3 3.2 3 6c0 4 5 9 5 9s5-5 5-9c0-2.8-2.2-5-5-5z"/>
+            <circle cx="8" cy="6" r="2"/>
+          </svg>
+          ${location.name}
+        </span>
+      ` : '';
+
+      // Check if we need a month separator
+      let separatorHtml = '';
+      if (monthKey !== currentMonth) {
+        currentMonth = monthKey;
+        const monthLabel = date.toLocaleDateString('en-US', { month: 'long', year: 'numeric' });
+        separatorHtml = `
+          <div class="vertical-timeline-separator">
+            <span class="vertical-timeline-separator-label">${monthLabel}</span>
+          </div>
+        `;
+      }
+
+      return `
+        ${separatorHtml}
+        <div class="vertical-timeline-item" data-event-id="${event.id}">
+          <div class="vertical-timeline-marker ${isSubEvent ? 'sub-event' : ''}"></div>
+          <div class="vertical-timeline-date">
+            <div class="vertical-timeline-date-day">${dayStr}</div>
+            <div class="vertical-timeline-date-time">${timeStr}</div>
+          </div>
+          <div class="vertical-timeline-content">
+            <div class="vertical-timeline-text">${event.text}</div>
+            <div class="vertical-timeline-meta">
+              ${locationHtml}
+            </div>
+          </div>
+        </div>
+      `;
+    }).join('');
+
+    return `<div class="vertical-timeline">${itemsHtml}</div>`;
+  }
+
+  /**
+   * Attach click listeners for vertical timeline items
+   */
+  attachVerticalTimelineListeners(container) {
+    container.querySelectorAll('.vertical-timeline-item').forEach(item => {
+      item.addEventListener('click', () => {
+        const eventId = item.dataset.eventId;
+        window.location.hash = `#/event/${eventId}`;
+      });
+    });
+  }
+
+  /**
+   * Set up the events view toggle listener
+   */
+  setupEventsViewToggle() {
+    const toggle = document.getElementById('events-view-toggle');
+    if (!toggle) return;
+
+    toggle.querySelectorAll('.view-toggle-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const newMode = btn.dataset.view;
+        if (newMode !== this.eventsViewMode) {
+          this.eventsViewMode = newMode;
+          
+          // Update button states
+          toggle.querySelectorAll('.view-toggle-btn').forEach(b => {
+            b.classList.toggle('active', b.dataset.view === newMode);
+          });
+          
+          // Re-render events card
+          if (this._dashboardEvents) {
+            this.renderEventsCard(this._dashboardEvents);
+          }
+        }
+      });
+    });
   }
 
   setMission(missionId) {

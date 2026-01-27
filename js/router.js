@@ -17,6 +17,7 @@ import { DocumentsView } from './views/DocumentsView.js';
 import { ListView } from './views/ListView.js';
 import { EditorView } from './views/EditorView.js';
 import { MonitorsView } from './views/MonitorsView.js';
+import { MonitorView } from './views/MonitorView.js';
 import { WorkspacesView } from './views/WorkspacesView.js';
 import { SearchView } from './views/SearchView.js';
 import { ProjectsView } from './views/ProjectsView.js';
@@ -414,6 +415,10 @@ export class Router {
         this.currentView = new ListView(this.container, 'entities', filterOptions);
         break;
 
+      case 'topics':
+        this.currentView = new ListView(this.container, 'topics', filterOptions);
+        break;
+
       case 'editor':
         this.currentView = new EditorView(this.container);
         break;
@@ -433,6 +438,14 @@ export class Router {
         // The dashboard now handles status filtering inline
         window.location.hash = '#/dashboard';
         return;
+
+      case 'monitor':
+        if (id) {
+          this.currentView = new MonitorView(this.container, id, filterOptions);
+        } else {
+          this.currentView = new MonitorsView(this.container, filterOptions);
+        }
+        break;
 
       case 'monitors':
         this.currentView = new MonitorsView(this.container, filterOptions);
@@ -500,7 +513,9 @@ export class Router {
           (linkRoute === 'locations' && route === 'location') ||
           (linkRoute === 'events' && route === 'event') ||
           (linkRoute === 'entities' && (route === 'person' || route === 'organization')) ||
-          (linkRoute === 'documents' && route === 'document')) {
+          (linkRoute === 'documents' && route === 'document') ||
+          (linkRoute === 'monitors' && route === 'monitor') ||
+          (linkRoute === 'topics' && route === 'topic')) {
         link.classList.add('active');
       }
     });
