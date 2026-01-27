@@ -1,0 +1,386 @@
+{
+  "main:person-001": {
+    "imageUrl": null,
+    "wikidataId": "Q6279"
+  },
+  "main:person-003": {
+    "imageUrl": null,
+    "wikidataId": "Q22686"
+  },
+  "main:person-004": {
+    "imageUrl": null,
+    "wikidataId": "Q3052772"
+  },
+  "main:person-005": {
+    "imageUrl": null,
+    "wikidataId": "Q60772"
+  },
+  "main:person-006": {
+    "imageUrl": null,
+    "wikidataId": "Q51846080"
+  },
+  "main:person-007": {
+    "imageUrl": null,
+    "wikidataId": "Q40589"
+  },
+  "main:person-008": {
+    "imageUrl": null,
+    "wikidataId": "Q137782735"
+  },
+  "main:person-009": {
+    "imageUrl": null,
+    "wikidataId": "Q112522244"
+  },
+  "main:person-011": {
+    "imageUrl": null,
+    "wikidataId": "Q18350371"
+  },
+  "main:person-012": {
+    "imageUrl": null,
+    "wikidataId": "Q34413987"
+  },
+  "main:person-013": {
+    "imageUrl": null,
+    "wikidataId": "Q7128915"
+  },
+  "main:person-014": {
+    "imageUrl": null,
+    "wikidataId": "Q137849040"
+  },
+  "main:person-015": {
+    "imageUrl": null,
+    "wikidataId": "Q20675571"
+  },
+  "main:person-016": {
+    "imageUrl": null,
+    "wikidataId": "Q5292992"
+  },
+  "main:person-018": {
+    "imageUrl": null,
+    "wikidataId": "Q465749"
+  },
+  "main:person-019": {
+    "imageUrl": null,
+    "wikidataId": "Q2434360"
+  },
+  "main:person-020": {
+    "imageUrl": null,
+    "wikidataId": "Q28203630"
+  },
+  "main:person-021": {
+    "imageUrl": null,
+    "wikidataId": "Q26436159"
+  },
+  "main:person-022": {
+    "imageUrl": null,
+    "wikidataId": "Q58324174"
+  },
+  "main:person-023": {
+    "imageUrl": null,
+    "wikidataId": "Q80764814"
+  },
+  "main:person-024": {
+    "imageUrl": null,
+    "wikidataId": "Q57242006"
+  },
+  "main:person-026": {
+    "imageUrl": null,
+    "wikidataId": "Q1352872"
+  },
+  "main:org-001": {
+    "imageUrl": null,
+    "wikidataId": "Q29552"
+  },
+  "main:org-002": {
+    "imageUrl": null,
+    "wikidataId": "Q6868379"
+  },
+  "main:org-003": {
+    "imageUrl": null,
+    "wikidataId": "Q204711"
+  },
+  "main:org-004": {
+    "imageUrl": null,
+    "wikidataId": "Q48938223"
+  },
+  "main:org-005": {
+    "imageUrl": null,
+    "wikidataId": "Q29468"
+  },
+  "main:org-006": {
+    "imageUrl": null,
+    "wikidataId": "Q164182"
+  },
+  "main:org-008": {
+    "imageUrl": null,
+    "wikidataId": "Q8880"
+  },
+  "main:org-009": {
+    "imageUrl": null,
+    "wikidataId": "Q170418"
+  },
+  "main:org-010": {
+    "imageUrl": null,
+    "wikidataId": "Q4706346"
+  },
+  "main:org-011": {
+    "imageUrl": null,
+    "wikidataId": "Q943091"
+  },
+  "main:org-012": {
+    "imageUrl": null,
+    "wikidataId": "Q42301907"
+  },
+  "main:org-014": {
+    "imageUrl": null,
+    "wikidataId": "Q7644915"
+  },
+  "main:org-015": {
+    "imageUrl": null,
+    "wikidataId": "Q6471499"
+  },
+  "main:org-017": {
+    "imageUrl": null,
+    "wikidataId": "Q11231"
+  },
+  "main:org-019": {
+    "imageUrl": null,
+    "wikidataId": "Q6868130"
+  },
+  "main:org-020": {
+    "imageUrl": null,
+    "wikidataId": "Q11268"
+  },
+  "main:org-021": {
+    "imageUrl": null,
+    "wikidataId": "Q77184342"
+  },
+  "main:org-022": {
+    "imageUrl": null,
+    "wikidataId": "Q30287047"
+  },
+  "main:org-023": {
+    "imageUrl": null,
+    "wikidataId": "Q976978"
+  },
+  "china:person-002": {
+    "imageUrl": null,
+    "wikidataId": "Q22100031"
+  },
+  "china:person-004": {
+    "imageUrl": null,
+    "wikidataId": "Q96654591"
+  },
+  "china:person-005": {
+    "imageUrl": null,
+    "wikidataId": "Q5562913"
+  },
+  "china:person-006": {
+    "imageUrl": null,
+    "wikidataId": "Q124285822"
+  },
+  "china:person-007": {
+    "imageUrl": null,
+    "wikidataId": "Q64616136"
+  },
+  "china:person-008": {
+    "imageUrl": null,
+    "wikidataId": "Q115655234"
+  },
+  "china:person-010": {
+    "imageUrl": null,
+    "wikidataId": "Q8291839"
+  },
+  "china:person-011": {
+    "imageUrl": null,
+    "wikidataId": "Q712802"
+  },
+  "china:person-012": {
+    "imageUrl": null,
+    "wikidataId": "Q59485866"
+  },
+  "china:person-015": {
+    "imageUrl": null,
+    "wikidataId": "Q18627579"
+  },
+  "china:person-016": {
+    "imageUrl": null,
+    "wikidataId": "Q45615906"
+  },
+  "china:person-017": {
+    "imageUrl": null,
+    "wikidataId": "Q67424753"
+  },
+  "china:person-018": {
+    "imageUrl": null,
+    "wikidataId": "Q112121131"
+  },
+  "china:org-001": {
+    "imageUrl": null,
+    "wikidataId": "Q15678063"
+  },
+  "china:org-002": {
+    "imageUrl": null,
+    "wikidataId": "Q297879"
+  },
+  "china:org-003": {
+    "imageUrl": null,
+    "wikidataId": "Q621610"
+  },
+  "china:org-004": {
+    "imageUrl": null,
+    "wikidataId": "Q2401707"
+  },
+  "china:org-005": {
+    "imageUrl": null,
+    "wikidataId": "Q503577"
+  },
+  "china:org-006": {
+    "imageUrl": null,
+    "wikidataId": "Q455289"
+  },
+  "china:org-008": {
+    "imageUrl": null,
+    "wikidataId": "Q1064065"
+  },
+  "china:org-009": {
+    "imageUrl": null,
+    "wikidataId": "Q59261"
+  },
+  "china:org-010": {
+    "imageUrl": null,
+    "wikidataId": "Q160120"
+  },
+  "china:org-011": {
+    "imageUrl": null,
+    "wikidataId": "Q1342041"
+  },
+  "china:org-012": {
+    "imageUrl": null,
+    "wikidataId": "Q624649"
+  },
+  "china:org-013": {
+    "imageUrl": null,
+    "wikidataId": "Q28415694"
+  },
+  "china:org-014": {
+    "imageUrl": null,
+    "wikidataId": "Q20718"
+  },
+  "china:org-016": {
+    "imageUrl": null,
+    "wikidataId": "Q130486239"
+  },
+  "china:org-018": {
+    "imageUrl": null,
+    "wikidataId": "Q608776"
+  },
+  "china:org-019": {
+    "imageUrl": null,
+    "wikidataId": "Q2303478"
+  },
+  "china:org-020": {
+    "imageUrl": null,
+    "wikidataId": "Q713418"
+  },
+  "china:org-022": {
+    "imageUrl": null,
+    "wikidataId": "Q37464930"
+  },
+  "china:org-025": {
+    "imageUrl": null,
+    "wikidataId": "Q204839"
+  },
+  "china:org-026": {
+    "imageUrl": null,
+    "wikidataId": "Q4378607"
+  },
+  "walmart:person-001": {
+    "imageUrl": null,
+    "wikidataId": "Q16196595"
+  },
+  "walmart:person-002": {
+    "imageUrl": null,
+    "wikidataId": "Q99670302"
+  },
+  "walmart:person-003": {
+    "imageUrl": null,
+    "wikidataId": "Q116691210"
+  },
+  "walmart:person-005": {
+    "imageUrl": null,
+    "wikidataId": "Q5296426"
+  },
+  "walmart:person-006": {
+    "imageUrl": null,
+    "wikidataId": "Q19281782"
+  },
+  "walmart:person-007": {
+    "imageUrl": null,
+    "wikidataId": "Q64531735"
+  },
+  "walmart:person-008": {
+    "imageUrl": null,
+    "wikidataId": "Q22112002"
+  },
+  "walmart:person-009": {
+    "imageUrl": null,
+    "wikidataId": "Q54818267"
+  },
+  "walmart:person-010": {
+    "imageUrl": null,
+    "wikidataId": "Q102381223"
+  },
+  "walmart:person-011": {
+    "imageUrl": null,
+    "wikidataId": "Q655736"
+  },
+  "walmart:person-013": {
+    "imageUrl": null,
+    "wikidataId": "Q105546511"
+  },
+  "walmart:person-014": {
+    "imageUrl": null,
+    "wikidataId": "Q41812531"
+  },
+  "walmart:person-016": {
+    "imageUrl": null,
+    "wikidataId": "Q112481918"
+  },
+  "walmart:org-001": {
+    "imageUrl": null,
+    "wikidataId": "Q483551"
+  },
+  "walmart:org-003": {
+    "imageUrl": null,
+    "wikidataId": "Q865563"
+  },
+  "walmart:org-004": {
+    "imageUrl": null,
+    "wikidataId": "Q3884"
+  },
+  "walmart:org-006": {
+    "imageUrl": null,
+    "wikidataId": "Q1282092"
+  },
+  "walmart:org-007": {
+    "imageUrl": null,
+    "wikidataId": "Q204711"
+  },
+  "walmart:org-008": {
+    "imageUrl": null,
+    "wikidataId": "Q1957782"
+  },
+  "walmart:org-009": {
+    "imageUrl": null,
+    "wikidataId": "Q1053605"
+  },
+  "walmart:org-010": {
+    "imageUrl": null,
+    "wikidataId": "Q125054"
+  },
+  "walmart:org-011": {
+    "imageUrl": null,
+    "wikidataId": "Q715583"
+  }
+}

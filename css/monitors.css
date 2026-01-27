@@ -1,0 +1,333 @@
+/**
+ * monitors.css
+ * Styles for the Monitors view
+ */
+
+/* Header Actions with Dropdowns */
+.view-header-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+/* Monitor Dropdown Menu Styles */
+.monitor-dropdown-menu {
+  min-width: 240px;
+  padding: var(--space-sm) 0;
+}
+
+.dropdown-item-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-md);
+  padding: var(--space-sm) var(--space-lg);
+  font-size: var(--text-sm);
+  color: var(--text-secondary);
+}
+
+.dropdown-item-row:hover {
+  background: var(--bg-hover);
+}
+
+.dropdown-item-row > *:first-child {
+  flex-shrink: 0;
+}
+
+.dropdown-item-row > *:last-child {
+  text-align: right;
+  margin-left: auto;
+}
+
+.dropdown-item-row .data-label {
+  font-weight: 500;
+  color: var(--text-primary);
+}
+
+/* Monitors Section */
+.monitors-section {
+  margin-bottom: var(--space-lg);
+}
+
+.monitors-section-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: var(--space-md);
+}
+
+.monitors-section-header .section-title {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin: 0;
+}
+
+/* Monitors Grid - Extends content-grid with monitor-specific styles */
+.monitors-grid.content-grid {
+  /* Inherits content-grid layout */
+}
+
+/* Monitor Alerts Section inside card body */
+.monitor-alerts-section {
+  padding: var(--space-md);
+  border-bottom: 1px solid var(--border-subtle);
+  background: var(--bg-secondary);
+}
+
+.monitor-section-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: var(--space-sm);
+}
+
+.monitor-section-title {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--text-muted);
+}
+
+.alert-count {
+  font-size: 11px;
+  padding: 2px 6px;
+  background: var(--bg-tertiary);
+  border-radius: 10px;
+  color: var(--text-secondary);
+}
+
+.monitor-alerts-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+}
+
+.monitor-alert-item {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  padding: var(--space-xs) 0;
+  font-size: 12px;
+}
+
+.monitor-alert-item .alert-description {
+  flex: 1;
+  color: var(--text-secondary);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.monitor-alert-item .alert-time {
+  flex-shrink: 0;
+  font-size: 11px;
+  color: var(--text-muted);
+}
+
+.monitor-no-alerts {
+  font-size: 12px;
+  color: var(--text-muted);
+  font-style: italic;
+}
+
+.monitor-scope-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: var(--space-md);
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.monitor-narratives-container {
+  max-height: 400px;
+  overflow-y: auto;
+}
+
+.monitor-narratives-container .narrative-list {
+  border-top: none;
+}
+
+.monitor-narratives-container .narrative-item-wrapper:first-child .narrative-item {
+  border-top: none;
+}
+
+/* Scope Entity in Monitor Cards */
+.scope-entity {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  color: var(--text-primary);
+}
+
+.scope-entity-icon {
+  color: var(--text-secondary);
+  flex-shrink: 0;
+}
+
+/* Scope Types Reference List */
+.scope-type-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.scope-type-icon {
+  color: var(--text-secondary);
+  flex-shrink: 0;
+}
+
+.scope-type-label {
+  font-weight: 500;
+  color: var(--text-primary);
+}
+
+.monitor-triggers {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.trigger-tag {
+  font-size: 11px;
+  padding: 3px 8px;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-subtle);
+  border-radius: 4px;
+  color: var(--text-secondary);
+}
+
+.monitor-meta {
+  font-size: 11px;
+  color: var(--text-muted);
+}
+
+.meta-item.meta-paused {
+  color: #6b7280;
+  font-style: italic;
+}
+
+/* Alerts Table */
+.alerts-table {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  background: var(--border-subtle);
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+.alert-row {
+  display: grid;
+  grid-template-columns: 100px 180px 140px 1fr 80px;
+  gap: 16px;
+  padding: 12px 16px;
+  background: var(--bg-secondary);
+  align-items: center;
+  font-size: 13px;
+}
+
+.alert-row:hover {
+  background: var(--bg-tertiary);
+}
+
+.alert-time {
+  color: var(--text-muted);
+  font-size: 12px;
+}
+
+.alert-monitor {
+  font-weight: 500;
+  color: var(--text-primary);
+}
+
+.alert-type-badge {
+  font-size: 11px;
+  padding: 3px 8px;
+  border-radius: 4px;
+  font-weight: 500;
+}
+
+.alert-type-badge.volume {
+  background: rgba(59, 130, 246, 0.15);
+  color: #3b82f6;
+}
+
+.alert-type-badge.sentiment {
+  background: rgba(168, 85, 247, 0.15);
+  color: #a855f7;
+}
+
+.alert-type-badge.narrative {
+  background: rgba(239, 68, 68, 0.15);
+  color: #ef4444;
+}
+
+.alert-type-badge.event {
+  background: rgba(16, 185, 129, 0.15);
+  color: #10b981;
+}
+
+.alert-type-badge.faction {
+  background: rgba(245, 158, 11, 0.15);
+  color: #f59e0b;
+}
+
+.alert-description {
+  color: var(--text-secondary);
+}
+
+.severity-badge {
+  font-size: 11px;
+  padding: 3px 8px;
+  border-radius: 4px;
+  font-weight: 500;
+  text-align: center;
+}
+
+.severity-badge.high {
+  background: rgba(239, 68, 68, 0.15);
+  color: #ef4444;
+}
+
+.severity-badge.medium {
+  background: rgba(245, 158, 11, 0.15);
+  color: #f59e0b;
+}
+
+.severity-badge.low {
+  background: rgba(107, 114, 128, 0.15);
+  color: #9ca3af;
+}
+
+.badge-status-paused {
+  background: rgba(107, 114, 128, 0.15);
+  color: #9ca3af;
+}
+
+.badge-status-high {
+  background: rgba(249, 115, 22, 0.15);
+  color: #f97316;
+}
+
+/* Responsive */
+@media (max-width: 900px) {
+  .alert-row {
+    grid-template-columns: 80px 1fr;
+    gap: 8px;
+  }
+  
+  .alert-monitor,
+  .alert-type,
+  .alert-description {
+    grid-column: 2;
+  }
+  
+  .alert-severity {
+    grid-column: 2;
+    justify-self: start;
+  }
+}

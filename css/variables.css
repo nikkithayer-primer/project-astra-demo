@@ -1,0 +1,62 @@
+/* CSS Custom Properties
+   Design tokens for Primer Intelligence Dashboard */
+
+:root {
+  /* Light mode palette */
+  --bg-primary: #F8F9FA;
+  --bg-secondary: #FFFFFF;
+  --bg-tertiary: #F0F2F5;
+  --bg-hover: #E8EAED;
+  
+  --border-color: #B6BFC9;
+  --border-subtle: #D8DDE3;
+  
+  --text-strong: #212636;
+  --text-primary: #3B485C;
+  --text-secondary: #506078;
+  --text-muted: #66778C;
+  --chart-label: #66778C;
+  --chart-axis: #B6BFC9;
+  
+  --accent-primary: #3169ED;
+  --accent-secondary: #2855C5;
+  --accent-muted: #E8EEFF;
+  --accent-success: #16a34a;
+  --accent-danger: #dc2626;
+  --accent-warning: #d97706;
+  
+  /* Sentiment colors (softened for readability) */
+  --sentiment-positive: #66BB6A;
+  --sentiment-negative: #E57373;
+  
+  --status-high: #dc2626;
+  --status-medium: #d97706;
+  --status-low: #16a34a;
+  --status-neutral: #506078;
+  
+  /* Compact spacing scale */
+  --space-xs: 2px;
+  --space-sm: 4px;
+  --space-md: 8px;
+  --space-lg: 12px;
+  --space-xl: 16px;
+  --space-2xl: 24px;
+  
+  /* Typography */
+  --font-sans: 'Neue Haas Grotesk Text', -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-display: 'Neue Haas Grotesk Display', -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-mono: 'SF Mono', Consolas, monospace;
+  
+  --text-xs: 12px;
+  --text-sm: 13px;
+  --text-base: 14px;
+  --text-lg: 15px;
+  --text-xl: 16px;
+  
+  --line-height: 1.4;
+  
+  /* Layout */
+  --navbar-height: 48px;
+  --header-height: 32px;
+  --border-radius: 3px;
+}

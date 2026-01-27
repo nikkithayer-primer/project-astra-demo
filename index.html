@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Primer - Intelligence Dashboard</title>
+  
+  <!-- External Libraries -->
+  <script src="https://d3js.org/d3.v7.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/venn.js@0.2.20/build/venn.min.js"></script>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  
+  <!-- CSS Reset & Variables -->
+  <link rel="stylesheet" href="css/variables.css">
+  <link rel="stylesheet" href="css/reset.css">
+
+  <!-- Base Styles -->
+  <link rel="stylesheet" href="css/typography.css">
+  <link rel="stylesheet" href="css/layout.css">
+  <link rel="stylesheet" href="css/navigation.css">
+
+  <!-- Components -->
+  <link rel="stylesheet" href="css/cards.css">
+  <link rel="stylesheet" href="css/forms.css">
+  <link rel="stylesheet" href="css/chat.css">
+  <link rel="stylesheet" href="css/components.css">
+
+  <!-- View-specific -->
+  <link rel="stylesheet" href="css/editor.css">
+  <link rel="stylesheet" href="css/monitors.css">
+  <link rel="stylesheet" href="css/monitor-editor.css">
+
+  <!-- Utilities (last for override capability) -->
+  <link rel="stylesheet" href="css/utilities.css">
+</head>
+<body>
+  <nav class="top-navbar">
+    <div class="navbar-left">
+      <a href="#/dashboard" class="logo">
+        <img src="img/logo.png" alt="Primer" class="logo-img">
+      </a>
+      
+      <div class="navbar-links">
+        <!-- Direct Links -->
+        <a href="#/dashboard" class="nav-link" data-view="dashboard">
+          <svg class="nav-icon" viewBox="0 0 16 16" fill="none" stroke="var(--text-secondary)" stroke-width="1">
+            <rect x="1" y="1" width="6" height="6" rx="1"/>
+            <rect x="9" y="1" width="6" height="6" rx="1"/>
+            <rect x="1" y="9" width="6" height="6" rx="1"/>
+            <rect x="9" y="9" width="6" height="6" rx="1"/>
+          </svg>
+          <span>Dashboard</span>
+        </a>
+        <a href="#/monitors" class="nav-link" data-view="monitors">
+          <svg class="nav-icon" viewBox="0 0 16 16" fill="none" stroke="var(--text-secondary)" stroke-width="1">
+            <rect x="1" y="2" width="14" height="10" rx="1"/>
+            <path d="M5 14h6M8 12v2"/>
+            <path d="M4 6h2M4 8h3M10 5l2 2-2 2"/>
+          </svg>
+          <span>Monitors</span>
+        </a>
+        <a href="#/workspaces" class="nav-link" data-view="workspaces">
+          <svg class="nav-icon" viewBox="0 0 16 16" fill="none" stroke="var(--text-secondary)" stroke-width="1">
+            <rect x="1" y="1" width="14" height="14" rx="1"/>
+            <path d="M1 5h14"/>
+            <path d="M5 5v10"/>
+          </svg>
+          <span>Workspaces</span>
+        </a>
+        <a href="#/search" class="nav-link" data-view="search">
+          <svg class="nav-icon" viewBox="0 0 16 16" fill="none" stroke="var(--text-secondary)" stroke-width="1">
+            <circle cx="7" cy="7" r="4.5"/>
+            <path d="M10.5 10.5L14 14"/>
+          </svg>
+          <span>Search</span>
+        </a>
+        <a href="#/projects" class="nav-link" data-view="projects">
+          <svg class="nav-icon" viewBox="0 0 16 16" fill="none" stroke="var(--text-secondary)" stroke-width="1">
+            <path d="M2 4h5l2 2h5v8H2V4z" rx="1"/>
+            <path d="M2 4V3a1 1 0 011-1h4l2 2"/>
+          </svg>
+          <span>Projects</span>
+        </a>
+        
+      </div>
+    </div>
+    
+    <!-- User Avatar with Tools Dropdown -->
+    <div class="navbar-right">
+      <!-- Data Dropdown -->
+      <div class="nav-dropdown data-dropdown">
+        <button class="nav-dropdown-trigger">
+          <span>Data</span>
+          <svg class="dropdown-arrow" viewBox="0 0 16 16" fill="none" stroke="var(--text-secondary)" stroke-width="1">
+            <path d="M4 6l4 4 4-4"/>
+          </svg>
+        </button>
+        <div class="nav-dropdown-menu">
+          <a href="#/narratives" class="nav-link" data-view="narratives">
+            <svg class="nav-icon" viewBox="0 0 16 16" fill="none" stroke="var(--text-secondary)" stroke-width="1">
+              <path d="M2 2h12v12H2z" rx="1"/>
+              <path d="M4 5h8M4 8h8M4 11h5"/>
+            </svg>
+            <span>Narratives</span>
+          </a>
+          <a href="#/topics" class="nav-link" data-view="topics">
+            <svg class="nav-icon" viewBox="0 0 16 16" fill="none" stroke="var(--text-secondary)" stroke-width="1">
+              <path d="M6 1v14M10 1v14M1 6h14M1 10h14"/>
+            </svg>
+            <span>Topics</span>
+          </a>
+          <a href="#/factions" class="nav-link" data-view="factions">
+            <svg class="nav-icon" viewBox="0 0 16 16" fill="none" stroke="var(--text-secondary)" stroke-width="1">
+              <circle cx="8" cy="5" r="2.5"/>
+              <circle cx="4" cy="11" r="2"/>
+              <circle cx="12" cy="11" r="2"/>
+              <path d="M6 6.5L4.5 9M10 6.5l1.5 2.5"/>
+            </svg>
+            <span>Factions</span>
+          </a>
+          <a href="#/locations" class="nav-link" data-view="locations">
+            <svg class="nav-icon" viewBox="0 0 16 16" fill="none" stroke="var(--text-secondary)" stroke-width="1">
+              <path d="M8 1C5.2 1 3 3.2 3 6c0 4 5 9 5 9s5-5 5-9c0-2.8-2.2-5-5-5z"/>
+              <circle cx="8" cy="6" r="2"/>
+            </svg>
+            <span>Locations</span>
+          </a>
+          <a href="#/events" class="nav-link" data-view="events">
+            <svg class="nav-icon" viewBox="0 0 16 16" fill="none" stroke="var(--text-secondary)" stroke-width="1">
+              <rect x="2" y="3" width="12" height="11" rx="1"/>
+              <path d="M2 6h12M5 1v3M11 1v3"/>
+            </svg>
+            <span>Events</span>
+          </a>
+          <a href="#/entities" class="nav-link" data-view="entities">
+            <svg class="nav-icon" viewBox="0 0 16 16" fill="none" stroke="var(--text-secondary)" stroke-width="1">
+              <circle cx="8" cy="4" r="2.5"/>
+              <path d="M3 14c0-3 2.2-5 5-5s5 2 5 5"/>
+            </svg>
+            <span>People & Orgs</span>
+          </a>
+          <a href="#/documents" class="nav-link" data-view="documents">
+            <svg class="nav-icon" viewBox="0 0 16 16" fill="none" stroke="var(--text-secondary)" stroke-width="1">
+              <rect x="2" y="1" width="12" height="14" rx="1"/>
+              <path d="M5 4h6M5 7h6M5 10h4"/>
+            </svg>
+            <span>Documents</span>
+          </a>
+        </div>
+      </div>
+      
+      <div class="nav-dropdown avatar-dropdown">
+        <button class="avatar-trigger">
+          <span class="avatar-initials">JD</span>
+        </button>
+        <div class="nav-dropdown-menu avatar-menu">
+          <div class="avatar-menu-header">
+            <span class="avatar-name">Jane Doe</span>
+            <span class="avatar-email">jane.doe@primer.ai</span>
+          </div>
+          <div class="avatar-menu-divider"></div>
+          <div class="avatar-menu-section">
+            <span class="avatar-menu-label">Sample Dataset</span>
+            <button class="dataset-option" data-dataset="american-politics">
+              <span class="dataset-indicator"></span>
+              <span>American Politics</span>
+            </button>
+            <button class="dataset-option" data-dataset="china-semiconductor">
+              <span class="dataset-indicator"></span>
+              <span>China Semiconductor</span>
+            </button>
+            <button class="dataset-option" data-dataset="walmart-brand">
+              <span class="dataset-indicator"></span>
+              <span>Walmart Brand</span>
+            </button>
+          </div>
+          <div class="avatar-menu-divider"></div>
+          <a href="#/editor" class="nav-link" data-view="editor">
+            <svg class="nav-icon" viewBox="0 0 16 16" fill="none" stroke="var(--text-secondary)" stroke-width="1">
+              <path d="M11 2l3 3-9 9H2v-3l9-9z"/>
+            </svg>
+            <span>Data Editor</span>
+          </a>
+          <a href="#/data-model" class="nav-link" data-view="data-model">
+            <svg class="nav-icon" viewBox="0 0 16 16" fill="none" stroke="var(--text-secondary)" stroke-width="1">
+              <ellipse cx="8" cy="4" rx="5" ry="2"/>
+              <path d="M3 4v8c0 1.1 2.2 2 5 2s5-.9 5-2V4"/>
+              <path d="M3 8c0 1.1 2.2 2 5 2s5-.9 5-2"/>
+            </svg>
+            <span>Data Model</span>
+          </a>
+          <a href="#/component-demos" class="nav-link" data-view="component-demos">
+            <svg class="nav-icon" viewBox="0 0 16 16" fill="none" stroke="var(--text-secondary)" stroke-width="1">
+              <rect x="1" y="1" width="5" height="5" rx="1"/>
+              <rect x="10" y="1" width="5" height="5" rx="1"/>
+              <rect x="1" y="10" width="5" height="5" rx="1"/>
+              <rect x="10" y="10" width="5" height="5" rx="1"/>
+            </svg>
+            <span>Component Demos</span>
+          </a>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <div class="content-wrapper">
+    <!-- Global Filter Bar -->
+    <div class="global-filter-bar">
+      <div class="filter-group mission-filter-group">
+        <label for="mission-filter">Mission</label>
+        <select id="mission-filter">
+          <option value="all">All Missions</option>
+        </select>
+      </div>
+      
+      <div class="filter-group time-filter-group">
+        <label>Time Range</label>
+        <div class="time-filter-wrapper">
+          <div id="time-range-filter"></div>
+          <span id="time-range-label" class="time-range-label">All Time</span>
+          <button id="clear-time-filter" class="clear-filter-btn" title="Clear time filter">
+            <svg viewBox="0 0 16 16" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M4 4l8 8M12 4l-8 8"/>
+            </svg>
+          </button>
+        </div>
+      </div>
+      
+      <div class="filter-group chat-toggle-group">
+        <button id="chat-toggle" class="chat-toggle-btn" title="Toggle Chat">
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.5">
+            <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/>
+          </svg>
+          <span class="chat-toggle-label">Chat</span>
+        </button>
+      </div>
+    </div>
+
+    <main id="app" class="main-content">
+    <div class="loading-state">
+      <div class="loader"></div>
+      <p>Initializing dashboard...</p>
+    </div>
+  </main>
+  
+  <!-- Modal Container -->
+  <div id="modal-container" class="modal-container hidden">
+    <div class="modal-backdrop"></div>
+    <div class="modal-content"></div>
+  </div>
+
+  <!-- Toast Container -->
+  <div id="toast-container" class="toast-container"></div>
+
+  </div><!-- /content-wrapper -->
+
+  <!-- Chat Panel -->
+  <aside id="chat-panel" class="chat-panel">
+    <div class="chat-header">
+      <div class="chat-header-title">
+        <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.5">
+          <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/>
+        </svg>
+        <span>Chat</span>
+      </div>
+      <button id="chat-close" class="chat-close-btn" title="Close chat">
+        <svg viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M4 4l8 8M12 4l-8 8"/>
+        </svg>
+      </button>
+    </div>
+    <div id="chat-messages" class="chat-messages">
+      <div id="chat-welcome" class="chat-message assistant">
+        <div class="chat-message-content">
+          Loading page summary...
+        </div>
+      </div>
+    </div>
+    <div class="chat-input-wrapper">
+      <textarea id="chat-input" class="chat-input" placeholder="Ask a question..." rows="1"></textarea>
+      <button id="chat-send" class="chat-send-btn" title="Send message">
+        <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2">
+          <line x1="22" y1="2" x2="11" y2="13"/>
+          <polygon points="22 2 15 22 11 13 2 9 22 2"/>
+        </svg>
+      </button>
+    </div>
+  </aside>
+
+  <script type="module" src="js/app.js"></script>
+</body>
+</html>
