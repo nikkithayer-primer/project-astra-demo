@@ -196,7 +196,7 @@ export class DocumentsView extends BaseView {
     // Document type filter
     const documentTypeSelect = document.getElementById('document-type-filter');
     if (documentTypeSelect) {
-      documentTypeSelect.addEventListener('change', (e) => {
+      this.addListener(documentTypeSelect, 'change', (e) => {
         this.documentTypeFilter = e.target.value;
         this.render();
       });

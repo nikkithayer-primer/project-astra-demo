@@ -98,12 +98,7 @@ export class DocumentView extends BaseView {
    * Spacebar: next document, Delete/Backspace: previous document
    */
   setupKeyboardNavigation() {
-    // Remove any existing handler
-    if (this._keydownHandler) {
-      document.removeEventListener('keydown', this._keydownHandler);
-    }
-    
-    this._keydownHandler = (e) => {
+    this.addListener(document, 'keydown', (e) => {
       // Don't navigate if user is typing in an input field
       if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA' || e.target.isContentEditable) {
         return;
@@ -116,9 +111,7 @@ export class DocumentView extends BaseView {
         e.preventDefault();
         this.navigateToPreviousDocument();
       }
-    };
-    
-    document.addEventListener('keydown', this._keydownHandler);
+    });
   }
 
   /**
@@ -165,13 +158,9 @@ export class DocumentView extends BaseView {
   }
 
   /**
-   * Clean up keyboard listener and components
+   * Clean up components
    */
   destroy() {
-    if (this._keydownHandler) {
-      document.removeEventListener('keydown', this._keydownHandler);
-      this._keydownHandler = null;
-    }
     super.destroy();
   }
 
@@ -477,7 +466,7 @@ export class DocumentView extends BaseView {
     container.innerHTML = renderEntityList(allEntities, { sortByName: true });
 
     container.querySelectorAll('.entity-list-item').forEach(item => {
-      item.addEventListener('click', () => {
+      this.addListener(item, 'click', () => {
         const id = item.dataset.id;
         const type = item.dataset.type;
         window.location.hash = `#/${type}/${id}`;
@@ -493,7 +482,7 @@ export class DocumentView extends BaseView {
     if (!toggleContainer) return;
 
     toggleContainer.querySelectorAll('.view-toggle-btn').forEach(btn => {
-      btn.addEventListener('click', () => {
+      this.addListener(btn, 'click', () => {
         const newView = btn.dataset.view;
         if (newView !== this.networkViewMode) {
           this.networkViewMode = newView;

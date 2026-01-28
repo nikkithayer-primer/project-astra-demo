@@ -8,6 +8,7 @@ import { BaseView } from './BaseView.js';
 import { DataService } from '../data/DataService.js';
 import { PageHeader } from '../utils/PageHeader.js';
 import { initAllCardToggles } from '../utils/cardWidthToggle.js';
+import { aggregatePublisherVolumeData, aggregateFactionVolumeData } from '../utils/volumeDataUtils.js';
 import {
   CardManager,
   NetworkGraphCard,
@@ -134,56 +135,11 @@ export class EntityDetailView extends BaseView {
     data.hasNetwork = data.relatedPersons.length > 0 || data.relatedOrgs.length > 0;
 
     // Build publisher volume data for the composite chart (by source)
-    const publishers = DataService.getPublishers ? DataService.getPublishers() : [];
-    const dateMap = new Map();
-    const publisherIds = new Set();
-    
-    data.documents.forEach(doc => {
-      if (!doc.publishedDate) return;
-      const date = doc.publishedDate.split('T')[0];
-      if (!dateMap.has(date)) {
-        dateMap.set(date, {});
-      }
-      if (doc.publisherId) {
-        publisherIds.add(doc.publisherId);
-        const dayData = dateMap.get(date);
-        dayData[doc.publisherId] = (dayData[doc.publisherId] || 0) + 1;
-      }
-    });
-
-    const dates = [...dateMap.keys()].sort();
-    const relevantPublishers = [...publisherIds].map(id => publishers.find(p => p.id === id)).filter(Boolean);
-    const series = relevantPublishers.map(publisher =>
-      dates.map(date => (dateMap.get(date) || {})[publisher.id] || 0)
-    );
-
-    data.publisherData = dates.length > 0 ? { dates, series, publishers: relevantPublishers } : null;
+    data.publisherData = aggregatePublisherVolumeData(data.documents);
     data.hasPublisherData = data.publisherData && data.publisherData.dates.length > 0;
 
     // Build faction volume data for the composite chart (by faction)
-    const factionDateMap = new Map();
-    const factionIds = new Set();
-    
-    data.documents.forEach(doc => {
-      if (!doc.publishedDate || !doc.factionMentions) return;
-      const date = doc.publishedDate.split('T')[0];
-      if (!factionDateMap.has(date)) {
-        factionDateMap.set(date, {});
-      }
-      Object.keys(doc.factionMentions).forEach(factionId => {
-        factionIds.add(factionId);
-        const dayData = factionDateMap.get(date);
-        dayData[factionId] = (dayData[factionId] || 0) + 1;
-      });
-    });
-
-    const factionDates = [...factionDateMap.keys()].sort();
-    const relevantFactions = [...factionIds].map(id => DataService.getFaction(id)).filter(Boolean);
-    const factionSeries = relevantFactions.map(faction =>
-      factionDates.map(date => (factionDateMap.get(date) || {})[faction.id] || 0)
-    );
-
-    data.volumeData = factionDates.length > 0 ? { dates: factionDates, series: factionSeries, factions: relevantFactions } : null;
+    data.volumeData = aggregateFactionVolumeData(data.documents);
     data.hasVolumeData = data.volumeData && data.volumeData.dates.length > 0;
 
     // Get events from related narratives

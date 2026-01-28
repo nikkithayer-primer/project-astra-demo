@@ -7,6 +7,7 @@ import { BaseView } from './BaseView.js';
 import { DataService } from '../data/DataService.js';
 import { PageHeader } from '../utils/PageHeader.js';
 import { initAllCardToggles } from '../utils/cardWidthToggle.js';
+import { aggregatePublisherVolumeData, aggregateFactionSentiment } from '../utils/volumeDataUtils.js';
 import {
   CardManager,
   NetworkGraphCard,
@@ -145,30 +146,7 @@ export class EventView extends BaseView {
     const allEvents = [event, ...subEvents];
 
     // Prepare publisher volume data for the composite chart (by source)
-    const publishers = DataService.getPublishers ? DataService.getPublishers() : [];
-    const dateMap = new Map();
-    const publisherIds = new Set();
-    
-    documents.forEach(doc => {
-      if (!doc.publishedDate) return;
-      const date = doc.publishedDate.split('T')[0];
-      if (!dateMap.has(date)) {
-        dateMap.set(date, {});
-      }
-      if (doc.publisherId) {
-        publisherIds.add(doc.publisherId);
-        const dayData = dateMap.get(date);
-        dayData[doc.publisherId] = (dayData[doc.publisherId] || 0) + 1;
-      }
-    });
-
-    const dates = [...dateMap.keys()].sort();
-    const relevantPublishers = [...publisherIds].map(id => publishers.find(p => p.id === id)).filter(Boolean);
-    const series = relevantPublishers.map(publisher =>
-      dates.map(date => (dateMap.get(date) || {})[publisher.id] || 0)
-    );
-
-    const publisherData = dates.length > 0 ? { dates, series, publishers: relevantPublishers } : null;
+    const publisherData = aggregatePublisherVolumeData(documents);
     const hasPublisherData = publisherData && publisherData.dates.length > 0;
     const hasVolumeTimeline = hasPublisherData || allEvents.length > 0;
 
@@ -180,34 +158,8 @@ export class EventView extends BaseView {
     );
 
     // Get factions from documents and compute sentiment
-    const factionMap = new Map();
-    documents.forEach(doc => {
-      Object.keys(doc.factionMentions || {}).forEach(factionId => {
-        const mention = doc.factionMentions[factionId];
-        if (!factionMap.has(factionId)) {
-          factionMap.set(factionId, { volume: 0, sentimentSum: 0, count: 0 });
-        }
-        const data = factionMap.get(factionId);
-        data.volume += 1;
-        if (mention.sentiment !== undefined) {
-          data.sentimentSum += mention.sentiment;
-          data.count += 1;
-        }
-      });
-    });
-
-    const factions = [];
-    const sentimentFactions = [];
-    factionMap.forEach((data, factionId) => {
-      const faction = DataService.getFaction(factionId);
-      if (faction) {
-        factions.push(faction);
-        sentimentFactions.push({
-          ...faction,
-          sentiment: data.count > 0 ? data.sentimentSum / data.count : 0
-        });
-      }
-    });
+    const sentimentFactions = aggregateFactionSentiment(documents);
+    const factions = sentimentFactions.map(sf => DataService.getFaction(sf.id)).filter(Boolean);
 
     // Get faction overlaps
     const factionOverlaps = factions.length > 1

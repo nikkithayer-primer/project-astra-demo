@@ -1,0 +1,629 @@
+<!DOCTYPE html>
+<html lang="en" class="doc-page">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Primer - Boolean Parser</title>
+  
+  <!-- CSS Reset & Variables -->
+  <link rel="stylesheet" href="css/variables.css">
+  <link rel="stylesheet" href="css/reset.css">
+
+  <!-- Base Styles -->
+  <link rel="stylesheet" href="css/typography.css">
+  <link rel="stylesheet" href="css/layout.css">
+  <link rel="stylesheet" href="css/navigation.css">
+
+  <!-- Components -->
+  <link rel="stylesheet" href="css/cards.css">
+  <link rel="stylesheet" href="css/forms.css">
+  <link rel="stylesheet" href="css/components.css">
+
+  <!-- Documentation Pages -->
+  <link rel="stylesheet" href="css/documentation.css">
+
+  <!-- Utilities (last for override capability) -->
+  <link rel="stylesheet" href="css/utilities.css">
+
+  <style>
+    /* Parser-specific styles only */
+    .parser-layout {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: var(--space-2xl);
+      min-height: 400px;
+    }
+
+    @media (max-width: 900px) {
+      .parser-layout {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .parser-column {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-md);
+    }
+
+    .boolean-input {
+      flex: 1;
+      min-height: 300px;
+      padding: var(--space-lg);
+      font-family: var(--font-mono);
+      font-size: var(--text-sm);
+      line-height: 1.6;
+      background: var(--bg-tertiary);
+      border: 1px solid var(--border-color);
+      border-radius: var(--border-radius);
+      color: var(--text-primary);
+      resize: none;
+    }
+
+    .boolean-input:focus {
+      outline: none;
+      border-color: var(--accent-primary);
+    }
+
+    .output-panel {
+      flex: 1;
+      min-height: 300px;
+      overflow: auto;
+    }
+
+    .hierarchy-tree {
+      font-family: var(--font-mono);
+      font-size: var(--text-xs);
+      line-height: 1.8;
+    }
+
+    .tree-node {
+      padding-left: var(--space-xl);
+      position: relative;
+    }
+
+    .tree-node::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 0;
+      bottom: 0.9em;
+      width: 1px;
+      background: var(--border-color);
+    }
+
+    .tree-node::after {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 0.9em;
+      width: var(--space-lg);
+      height: 1px;
+      background: var(--border-color);
+    }
+
+    .tree-node:last-child::before {
+      bottom: calc(100% - 0.9em);
+    }
+
+    .tree-root {
+      padding-left: 0;
+    }
+
+    .tree-root::before,
+    .tree-root::after {
+      display: none;
+    }
+
+    .operator-badge {
+      display: inline-block;
+      padding: 2px 6px;
+      border-radius: 3px;
+      font-weight: 600;
+      font-size: 11px;
+      text-transform: uppercase;
+      margin-bottom: var(--space-xs);
+    }
+
+    .operator-and {
+      background: rgba(22, 163, 74, 0.15);
+      color: var(--accent-success);
+    }
+
+    .operator-or {
+      background: rgba(49, 105, 237, 0.15);
+      color: var(--accent-primary);
+    }
+
+    .operator-not {
+      background: rgba(220, 38, 38, 0.15);
+      color: var(--accent-danger);
+    }
+
+    .node-term {
+      display: inline-block;
+      padding: var(--space-xs) var(--space-md);
+      background: var(--bg-tertiary);
+      border-radius: var(--border-radius);
+      font-size: var(--text-xs);
+    }
+
+    .example-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--space-md);
+    }
+  </style>
+</head>
+<body>
+  <nav class="top-navbar">
+    <div class="navbar-left">
+      <a href="index.html#/dashboard" class="logo">
+        <img src="img/logo.png" alt="Primer" class="logo-img">
+      </a>
+      
+      <div class="navbar-links">
+        <a href="index.html#/dashboard" class="nav-link">
+          <svg class="nav-icon" viewBox="0 0 16 16" fill="none" stroke="var(--text-secondary)" stroke-width="1">
+            <rect x="1" y="1" width="6" height="6" rx="1"/>
+            <rect x="9" y="1" width="6" height="6" rx="1"/>
+            <rect x="1" y="9" width="6" height="6" rx="1"/>
+            <rect x="9" y="9" width="6" height="6" rx="1"/>
+          </svg>
+          <span>Dashboard</span>
+        </a>
+        <a href="index.html#/monitors" class="nav-link">
+          <svg class="nav-icon" viewBox="0 0 16 16" fill="none" stroke="var(--text-secondary)" stroke-width="1">
+            <rect x="1" y="2" width="14" height="10" rx="1"/>
+            <path d="M5 14h6M8 12v2"/>
+            <path d="M4 6h2M4 8h3M10 5l2 2-2 2"/>
+          </svg>
+          <span>Monitors</span>
+        </a>
+        <a href="index.html#/workspaces" class="nav-link">
+          <svg class="nav-icon" viewBox="0 0 16 16" fill="none" stroke="var(--text-secondary)" stroke-width="1">
+            <rect x="1" y="1" width="14" height="14" rx="1"/>
+            <path d="M1 5h14"/>
+            <path d="M5 5v10"/>
+          </svg>
+          <span>Workspaces</span>
+        </a>
+        <a href="index.html#/search" class="nav-link">
+          <svg class="nav-icon" viewBox="0 0 16 16" fill="none" stroke="var(--text-secondary)" stroke-width="1">
+            <circle cx="7" cy="7" r="4.5"/>
+            <path d="M10.5 10.5L14 14"/>
+          </svg>
+          <span>Search</span>
+        </a>
+      </div>
+    </div>
+    
+    <div class="navbar-right">
+      <div class="nav-dropdown data-dropdown">
+        <button class="nav-dropdown-trigger">
+          <span>Data</span>
+          <svg class="dropdown-arrow" viewBox="0 0 16 16" fill="none" stroke="var(--text-secondary)" stroke-width="1">
+            <path d="M4 6l4 4 4-4"/>
+          </svg>
+        </button>
+        <div class="nav-dropdown-menu">
+          <a href="index.html#/narratives" class="nav-link">
+            <svg class="nav-icon" viewBox="0 0 16 16" fill="none" stroke="var(--text-secondary)" stroke-width="1">
+              <path d="M2 2h12v12H2z" rx="1"/>
+              <path d="M4 5h8M4 8h8M4 11h5"/>
+            </svg>
+            <span>Narratives</span>
+          </a>
+          <a href="index.html#/factions" class="nav-link">
+            <svg class="nav-icon" viewBox="0 0 16 16" fill="none" stroke="var(--text-secondary)" stroke-width="1">
+              <circle cx="8" cy="5" r="2.5"/>
+              <circle cx="4" cy="11" r="2"/>
+              <circle cx="12" cy="11" r="2"/>
+              <path d="M6 6.5L4.5 9M10 6.5l1.5 2.5"/>
+            </svg>
+            <span>Factions</span>
+          </a>
+          <a href="index.html#/locations" class="nav-link">
+            <svg class="nav-icon" viewBox="0 0 16 16" fill="none" stroke="var(--text-secondary)" stroke-width="1">
+              <path d="M8 1C5.2 1 3 3.2 3 6c0 4 5 9 5 9s5-5 5-9c0-2.8-2.2-5-5-5z"/>
+              <circle cx="8" cy="6" r="2"/>
+            </svg>
+            <span>Locations</span>
+          </a>
+          <a href="index.html#/events" class="nav-link">
+            <svg class="nav-icon" viewBox="0 0 16 16" fill="none" stroke="var(--text-secondary)" stroke-width="1">
+              <rect x="2" y="3" width="12" height="11" rx="1"/>
+              <path d="M2 6h12M5 1v3M11 1v3"/>
+            </svg>
+            <span>Events</span>
+          </a>
+          <a href="index.html#/entities" class="nav-link">
+            <svg class="nav-icon" viewBox="0 0 16 16" fill="none" stroke="var(--text-secondary)" stroke-width="1">
+              <circle cx="8" cy="4" r="2.5"/>
+              <path d="M3 14c0-3 2.2-5 5-5s5 2 5 5"/>
+            </svg>
+            <span>People & Orgs</span>
+          </a>
+        </div>
+      </div>
+      
+      <div class="nav-dropdown avatar-dropdown">
+        <button class="avatar-trigger">
+          <span class="avatar-initials">JD</span>
+        </button>
+        <div class="nav-dropdown-menu avatar-menu">
+          <div class="avatar-menu-header">
+            <span class="avatar-name">Jane Doe</span>
+            <span class="avatar-email">jane.doe@primer.ai</span>
+          </div>
+          <div class="avatar-menu-divider"></div>
+          <a href="data-model.html" class="nav-link">
+            <svg class="nav-icon" viewBox="0 0 16 16" fill="none" stroke="var(--text-secondary)" stroke-width="1">
+              <ellipse cx="8" cy="4" rx="5" ry="2"/>
+              <path d="M3 4v8c0 1.1 2.2 2 5 2s5-.9 5-2V4"/>
+              <path d="M3 8c0 1.1 2.2 2 5 2s5-.9 5-2"/>
+            </svg>
+            <span>Data Model</span>
+          </a>
+          <a href="component-demos.html" class="nav-link">
+            <svg class="nav-icon" viewBox="0 0 16 16" fill="none" stroke="var(--text-secondary)" stroke-width="1">
+              <rect x="1" y="1" width="5" height="5" rx="1"/>
+              <rect x="10" y="1" width="5" height="5" rx="1"/>
+              <rect x="1" y="10" width="5" height="5" rx="1"/>
+              <rect x="10" y="10" width="5" height="5" rx="1"/>
+            </svg>
+            <span>Component Demos</span>
+          </a>
+          <a href="boolean-parser.html" class="nav-link active">
+            <svg class="nav-icon" viewBox="0 0 16 16" fill="none" stroke="var(--text-secondary)" stroke-width="1">
+              <path d="M3 3h10v2H3zM3 7h6v2H3zM9 7h4v2H9zM3 11h10v2H3z"/>
+            </svg>
+            <span>Boolean Parser</span>
+          </a>
+          <div class="avatar-menu-divider"></div>
+          <a href="index.html" class="nav-link" title="Settings available in main app">
+            <svg class="nav-icon" viewBox="0 0 16 16" fill="none" stroke="var(--text-secondary)" stroke-width="1">
+              <circle cx="8" cy="8" r="2.5"/>
+              <path d="M8 1v2M8 13v2M1 8h2M13 8h2M2.9 2.9l1.4 1.4M11.7 11.7l1.4 1.4M2.9 13.1l1.4-1.4M11.7 4.3l1.4-1.4"/>
+            </svg>
+            <span>Settings</span>
+          </a>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <main class="doc-main">
+    <div class="page-intro">
+      <h1 class="page-title">Boolean Expression Parser</h1>
+      <p class="page-description">Paste a boolean expression to visualize its hierarchical structure. Supports AND, OR, NOT operators and parentheses for grouping.</p>
+    </div>
+
+    <div class="parser-layout">
+      <div class="parser-column">
+        <h3 class="section-title">Boolean Expression</h3>
+        <textarea 
+          class="boolean-input" 
+          id="booleanInput" 
+          placeholder="Enter a boolean expression...
+
+Examples:
+(apple AND orange) OR (banana AND NOT grape)
+(A OR B) AND (C OR D) AND NOT E"></textarea>
+        <div class="flex gap-md">
+          <button class="btn btn-primary" id="parseBtn">Parse Expression</button>
+          <button class="btn" id="clearBtn">Clear</button>
+        </div>
+      </div>
+
+      <div class="parser-column">
+        <h3 class="section-title">Parsed Hierarchy</h3>
+        <div class="demo-container output-panel" id="outputContainer">
+          <div class="loading-state">
+            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+              <path d="M3 3h7v7H3zM14 3h7v7h-7zM3 14h7v7H3zM14 17h7M17.5 14v7"/>
+            </svg>
+            <p class="text-muted mt-md">Enter a boolean expression and click "Parse Expression"</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="component-section mt-6">
+      <h3 class="section-title">Example Expressions</h3>
+      <div class="example-list">
+        <button class="nav-pill example-chip">(A AND B) OR C</button>
+        <button class="nav-pill example-chip">(apple OR orange) AND NOT banana</button>
+        <button class="nav-pill example-chip">((A AND B) OR (C AND D)) AND NOT E</button>
+        <button class="nav-pill example-chip">"exact phrase" AND keyword</button>
+        <button class="nav-pill example-chip">(cat OR dog) AND (food OR treats) AND NOT "pet store"</button>
+      </div>
+    </div>
+  </main>
+
+  <script>
+    // Boolean Expression Parser
+    class BooleanParser {
+      constructor(input) {
+        this.input = input.trim();
+        this.pos = 0;
+      }
+
+      parse() {
+        if (!this.input) {
+          throw new Error('Empty expression');
+        }
+        const result = this.parseOr();
+        this.skipWhitespace();
+        if (this.pos < this.input.length) {
+          throw new Error(`Unexpected character at position ${this.pos}: "${this.input[this.pos]}"`);
+        }
+        return result;
+      }
+
+      skipWhitespace() {
+        while (this.pos < this.input.length && /\s/.test(this.input[this.pos])) {
+          this.pos++;
+        }
+      }
+
+      parseOr() {
+        let left = this.parseAnd();
+        
+        while (true) {
+          this.skipWhitespace();
+          if (this.matchKeyword('OR')) {
+            const right = this.parseAnd();
+            if (left.type === 'OR') {
+              left.children.push(right);
+            } else {
+              left = { type: 'OR', children: [left, right] };
+            }
+          } else {
+            break;
+          }
+        }
+        
+        return left;
+      }
+
+      parseAnd() {
+        let left = this.parseNot();
+        
+        while (true) {
+          this.skipWhitespace();
+          if (this.matchKeyword('AND')) {
+            const right = this.parseNot();
+            if (left.type === 'AND') {
+              left.children.push(right);
+            } else {
+              left = { type: 'AND', children: [left, right] };
+            }
+          } else {
+            break;
+          }
+        }
+        
+        return left;
+      }
+
+      parseNot() {
+        this.skipWhitespace();
+        if (this.matchKeyword('NOT')) {
+          const operand = this.parseNot();
+          return { type: 'NOT', child: operand };
+        }
+        return this.parsePrimary();
+      }
+
+      parsePrimary() {
+        this.skipWhitespace();
+        
+        if (this.pos >= this.input.length) {
+          throw this.createError('Unexpected end of expression');
+        }
+
+        // Check for unexpected closing paren (common error)
+        if (this.input[this.pos] === ')') {
+          throw this.createError('Unexpected closing parenthesis - check for empty OR/AND clauses');
+        }
+
+        if (this.input[this.pos] === '(') {
+          this.pos++;
+          const result = this.parseOr();
+          this.skipWhitespace();
+          if (this.pos >= this.input.length || this.input[this.pos] !== ')') {
+            throw this.createError('Missing closing parenthesis');
+          }
+          this.pos++;
+          return result;
+        }
+
+        if (this.input[this.pos] === '"' || this.input[this.pos] === "'") {
+          const quote = this.input[this.pos];
+          this.pos++;
+          let term = '';
+          while (this.pos < this.input.length && this.input[this.pos] !== quote) {
+            term += this.input[this.pos];
+            this.pos++;
+          }
+          if (this.pos >= this.input.length) {
+            throw this.createError('Unterminated quoted string');
+          }
+          this.pos++;
+          return { type: 'TERM', value: `"${term}"` };
+        }
+
+        let term = '';
+        while (this.pos < this.input.length) {
+          const char = this.input[this.pos];
+          if (/[\s()]/.test(char)) break;
+          
+          const remaining = this.input.slice(this.pos).toUpperCase();
+          // Check for operators with or without leading space (handle "word"AND case)
+          if (remaining.startsWith('AND') || remaining.startsWith('OR') || remaining.startsWith('NOT')) {
+            // Only break if it's a standalone operator (followed by space, paren, quote, or end)
+            const afterKeyword = remaining.startsWith('AND') ? remaining.slice(3) : 
+                                 remaining.startsWith('NOT') ? remaining.slice(3) : remaining.slice(2);
+            if (!afterKeyword || /^[\s("']/.test(afterKeyword)) {
+              break;
+            }
+          }
+          
+          term += char;
+          this.pos++;
+        }
+
+        if (!term) {
+          throw this.createError('Expected term');
+        }
+
+        return { type: 'TERM', value: term };
+      }
+
+      matchKeyword(keyword) {
+        const remaining = this.input.slice(this.pos);
+        // Match keyword followed by whitespace, open paren, or quote
+        const regex = new RegExp(`^${keyword}(?:[\\s("']|$)`, 'i');
+        if (regex.test(remaining)) {
+          this.pos += keyword.length;
+          return true;
+        }
+        return false;
+      }
+
+      createError(message) {
+        const contextStart = Math.max(0, this.pos - 30);
+        const contextEnd = Math.min(this.input.length, this.pos + 30);
+        const before = this.input.slice(contextStart, this.pos);
+        const after = this.input.slice(this.pos, contextEnd);
+        const pointer = '▶';
+        
+        const contextMsg = `\n\nAt position ${this.pos}:\n...${before}${pointer}${after}...`;
+        return new Error(message + contextMsg);
+      }
+    }
+
+    function renderTree(node, isRoot = true) {
+      const rootClass = isRoot ? 'tree-root' : '';
+      
+      if (node.type === 'TERM') {
+        return `<div class="tree-node ${rootClass}"><span class="node-term">${escapeHtml(node.value)}</span></div>`;
+      }
+
+      if (node.type === 'NOT') {
+        return `
+          <div class="tree-node ${rootClass}">
+            <span class="operator-badge operator-not">NOT</span>
+            ${renderTree(node.child, false)}
+          </div>
+        `;
+      }
+
+      if (node.type === 'AND' || node.type === 'OR') {
+        const operatorClass = node.type === 'AND' ? 'operator-and' : 'operator-or';
+        const children = node.children.map(child => renderTree(child, false)).join('');
+        return `
+          <div class="tree-node ${rootClass}">
+            <span class="operator-badge ${operatorClass}">${node.type}</span>
+            ${children}
+          </div>
+        `;
+      }
+
+      return '';
+    }
+
+    function escapeHtml(text) {
+      const div = document.createElement('div');
+      div.textContent = text;
+      return div.innerHTML;
+    }
+
+    const booleanInput = document.getElementById('booleanInput');
+    const outputContainer = document.getElementById('outputContainer');
+    const parseBtn = document.getElementById('parseBtn');
+    const clearBtn = document.getElementById('clearBtn');
+    const exampleChips = document.querySelectorAll('.example-chip');
+
+    function parseAndRender() {
+      const input = booleanInput.value.trim();
+      
+      if (!input) {
+        outputContainer.innerHTML = `
+          <div class="loading-state">
+            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+              <path d="M3 3h7v7H3zM14 3h7v7h-7zM3 14h7v7H3zM14 17h7M17.5 14v7"/>
+            </svg>
+            <p class="text-muted mt-md">Enter a boolean expression and click "Parse Expression"</p>
+          </div>
+        `;
+        return;
+      }
+
+      try {
+        const parser = new BooleanParser(input);
+        const ast = parser.parse();
+        outputContainer.innerHTML = `<div class="hierarchy-tree">${renderTree(ast)}</div>`;
+      } catch (error) {
+        const msgParts = error.message.split('\n\nAt position');
+        let html = `<div class="toast error" style="max-width:100%;white-space:pre-wrap;font-family:var(--font-mono);font-size:var(--text-xs);line-height:1.6;">`;
+        html += `<strong>${escapeHtml(msgParts[0])}</strong>`;
+        if (msgParts[1]) {
+          html += `<br><br>At position${escapeHtml(msgParts[1]).replace('▶', '<mark style="background:var(--accent-danger);color:white;padding:0 2px;">▶</mark>')}`;
+        }
+        html += `</div>`;
+        outputContainer.innerHTML = html;
+      }
+    }
+
+    parseBtn.addEventListener('click', parseAndRender);
+
+    clearBtn.addEventListener('click', () => {
+      booleanInput.value = '';
+      outputContainer.innerHTML = `
+        <div class="loading-state">
+          <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+            <path d="M3 3h7v7H3zM14 3h7v7h-7zM3 14h7v7H3zM14 17h7M17.5 14v7"/>
+          </svg>
+          <p class="text-muted mt-md">Enter a boolean expression and click "Parse Expression"</p>
+        </div>
+      `;
+    });
+
+    booleanInput.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' && !e.shiftKey) {
+        e.preventDefault();
+        parseAndRender();
+      }
+    });
+
+    exampleChips.forEach(chip => {
+      chip.addEventListener('click', () => {
+        booleanInput.value = chip.textContent;
+        parseAndRender();
+      });
+    });
+
+    const dropdowns = document.querySelectorAll('.nav-dropdown');
+    
+    dropdowns.forEach((dropdown) => {
+      const trigger = dropdown.querySelector('.nav-dropdown-trigger, .avatar-trigger');
+      
+      if (trigger) {
+        trigger.addEventListener('click', (e) => {
+          e.stopPropagation();
+          dropdowns.forEach(d => {
+            if (d !== dropdown) d.classList.remove('open');
+          });
+          dropdown.classList.toggle('open');
+        });
+      }
+    });
+
+    document.addEventListener('click', () => {
+      dropdowns.forEach(d => d.classList.remove('open'));
+    });
+  </script>
+</body>
+</html>

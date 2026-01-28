@@ -614,7 +614,7 @@ export class MonitorsView extends BaseView {
       // Set up description toggle handler
       const descToggle = document.getElementById(`desc-toggle-${monitor.id}`);
       if (descToggle) {
-        descToggle.addEventListener('click', () => {
+        this.addListener(descToggle, 'click', () => {
           const isShowing = narrativeList.toggleDescription();
           descToggle.classList.toggle('active', isShowing);
         });
@@ -725,7 +725,7 @@ export class MonitorsView extends BaseView {
       // Set up description toggle handler for topics
       const descToggle = document.getElementById(`desc-toggle-${monitor.id}`);
       if (descToggle) {
-        descToggle.addEventListener('click', () => {
+        this.addListener(descToggle, 'click', () => {
           const isShowing = topicList.toggleBulletPoints();
           descToggle.classList.toggle('active', isShowing);
         });
@@ -1013,7 +1013,7 @@ export class MonitorsView extends BaseView {
       const monitorId = dropdown.dataset.monitorId;
       
       if (trigger && menu) {
-        trigger.addEventListener('click', (e) => {
+        this.addListener(trigger, 'click', (e) => {
           e.stopPropagation();
           
           // Close other open dropdowns
@@ -1029,7 +1029,7 @@ export class MonitorsView extends BaseView {
         
         // Handle option selection
         menu.querySelectorAll('.viz-dropdown-option').forEach(option => {
-          option.addEventListener('click', (e) => {
+          this.addListener(option, 'click', (e) => {
             e.stopPropagation();
             const vizType = option.dataset.vizType;
             
@@ -1059,12 +1059,11 @@ export class MonitorsView extends BaseView {
     });
     
     // Close dropdowns when clicking outside
-    this.vizDropdownClickHandler = (e) => {
+    this.addListener(document, 'click', (e) => {
       if (!e.target.closest('.monitor-viz-dropdown')) {
         dropdowns.forEach(dropdown => dropdown.classList.remove('open'));
       }
-    };
-    document.addEventListener('click', this.vizDropdownClickHandler);
+    });
   }
 
   /**
@@ -1078,7 +1077,7 @@ export class MonitorsView extends BaseView {
       const trigger = dropdown.querySelector('.nav-dropdown-trigger');
       
       if (trigger) {
-        trigger.addEventListener('click', (e) => {
+        this.addListener(trigger, 'click', (e) => {
           e.stopPropagation();
           
           // Close other open dropdowns
@@ -1095,12 +1094,11 @@ export class MonitorsView extends BaseView {
     });
     
     // Close dropdowns when clicking outside
-    this.documentClickHandler = (e) => {
+    this.addListener(document, 'click', (e) => {
       if (!e.target.closest('.nav-dropdown.monitor-dropdown')) {
         dropdowns.forEach(dropdown => dropdown.classList.remove('open'));
       }
-    };
-    document.addEventListener('click', this.documentClickHandler);
+    });
   }
 
   /**
@@ -1113,7 +1111,7 @@ export class MonitorsView extends BaseView {
     // Handle "New Monitor" button click
     const newMonitorBtn = this.container.querySelector('.btn-primary');
     if (newMonitorBtn) {
-      newMonitorBtn.addEventListener('click', () => {
+      this.addListener(newMonitorBtn, 'click', () => {
         this.monitorEditor.openCreate(() => {
           // Re-render the view after save
           this.render();
@@ -1124,7 +1122,7 @@ export class MonitorsView extends BaseView {
     // Handle edit button clicks
     const editBtns = this.container.querySelectorAll('.monitor-edit-btn');
     editBtns.forEach(btn => {
-      btn.addEventListener('click', (e) => {
+      this.addListener(btn, 'click', (e) => {
         e.stopPropagation();
         const monitorId = btn.dataset.monitorId;
         const monitor = enrichedMonitors.find(m => m.id === monitorId);
@@ -1153,18 +1151,7 @@ export class MonitorsView extends BaseView {
     // Clear visualization types map
     this.monitorVisualizationTypes.clear();
     
-    // Remove document click handler
-    if (this.documentClickHandler) {
-      document.removeEventListener('click', this.documentClickHandler);
-      this.documentClickHandler = null;
-    }
-    
-    // Remove viz dropdown click handler
-    if (this.vizDropdownClickHandler) {
-      document.removeEventListener('click', this.vizDropdownClickHandler);
-      this.vizDropdownClickHandler = null;
-    }
-    
+    // Event listeners are cleaned up by BaseView.destroy()
     super.destroy();
   }
 }

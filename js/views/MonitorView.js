@@ -233,7 +233,7 @@ export class MonitorView extends BaseView {
     if (this.isDashboardTab()) {
       const descToggle = this.container.querySelector('#narrative-desc-toggle');
       if (descToggle && this.components['monitor-narratives']) {
-        descToggle.addEventListener('click', () => {
+        this.addListener(descToggle, 'click', () => {
           const isShowing = this.components['monitor-narratives'].toggleDescription();
           descToggle.classList.toggle('active', isShowing);
         });
@@ -517,7 +517,7 @@ export class MonitorView extends BaseView {
   setupEditButton(monitor) {
     const editBtn = this.container.querySelector('#monitor-edit-btn');
     if (editBtn) {
-      editBtn.addEventListener('click', () => {
+      this.addListener(editBtn, 'click', () => {
         this.monitorEditor = getMonitorEditor();
         this.monitorEditor.openEdit(monitor, () => {
           // Re-render the view after save

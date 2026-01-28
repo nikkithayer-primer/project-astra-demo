@@ -340,7 +340,7 @@ export class WorkspaceView extends BaseView {
     // Edit button
     const editBtn = this.container.querySelector('#workspace-edit-btn');
     if (editBtn) {
-      editBtn.addEventListener('click', () => {
+      this.addListener(editBtn, 'click', () => {
         const editor = getWorkspaceEditor();
         editor.openEdit(workspace, (updatedWorkspace) => {
           // Re-render the view with updated data
@@ -352,7 +352,7 @@ export class WorkspaceView extends BaseView {
     // Archive/Restore button
     const archiveBtn = this.container.querySelector('#workspace-archive-btn');
     if (archiveBtn) {
-      archiveBtn.addEventListener('click', () => {
+      this.addListener(archiveBtn, 'click', () => {
         const isArchived = workspace.status === 'archived';
         const newStatus = isArchived ? 'active' : 'archived';
         

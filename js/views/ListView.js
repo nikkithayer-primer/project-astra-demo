@@ -9,6 +9,7 @@ import { DataService } from '../data/DataService.js';
 import { NarrativeList } from '../components/NarrativeList.js';
 import { Timeline } from '../components/Timeline.js';
 import { STATUS_LABELS } from '../utils/formatters.js';
+import { renderVerticalTimeline } from '../utils/verticalTimeline.js';
 
 // Entity types with labels (used for people/orgs filter - mirrors DocumentsView pattern)
 const ENTITY_TYPES = {
@@ -156,7 +157,7 @@ export class ListView extends BaseView {
       // Attach search listener
       const searchInput = document.getElementById('list-search');
       if (searchInput) {
-        searchInput.addEventListener('input', (e) => {
+        this.addListener(searchInput, 'input', (e) => {
           this.searchQuery = e.target.value;
           this.updateFilteredList();
         });
@@ -474,72 +475,7 @@ export class ListView extends BaseView {
    * Render vertical timeline for events
    */
   renderVerticalTimeline(events) {
-    if (!events || events.length === 0) {
-      return `
-        <div class="vertical-timeline-empty">
-          <div class="vertical-timeline-empty-icon">📅</div>
-          <p class="vertical-timeline-empty-text">No events to display</p>
-        </div>
-      `;
-    }
-
-    // Sort events by date (newest first)
-    const sortedEvents = [...events].sort((a, b) => new Date(b.date) - new Date(a.date));
-
-    // Group events by month/year for separators
-    let currentMonth = null;
-    const itemsHtml = sortedEvents.map(event => {
-      const date = new Date(event.date);
-      const monthKey = `${date.getFullYear()}-${date.getMonth()}`;
-      const isSubEvent = event.parentEventId != null;
-      
-      // Format date parts
-      const dayStr = date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
-      const timeStr = date.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
-      
-      // Get location if available
-      const location = DataService.getLocationForEvent(event.id);
-      const locationHtml = location ? `
-        <span class="vertical-timeline-location">
-          <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5">
-            <path d="M8 1C5.2 1 3 3.2 3 6c0 4 5 9 5 9s5-5 5-9c0-2.8-2.2-5-5-5z"/>
-            <circle cx="8" cy="6" r="2"/>
-          </svg>
-          ${location.name}
-        </span>
-      ` : '';
-
-      // Check if we need a month separator
-      let separatorHtml = '';
-      if (monthKey !== currentMonth) {
-        currentMonth = monthKey;
-        const monthLabel = date.toLocaleDateString('en-US', { month: 'long', year: 'numeric' });
-        separatorHtml = `
-          <div class="vertical-timeline-separator">
-            <span class="vertical-timeline-separator-label">${monthLabel}</span>
-          </div>
-        `;
-      }
-
-      return `
-        ${separatorHtml}
-        <div class="vertical-timeline-item" data-event-id="${event.id}">
-          <div class="vertical-timeline-marker ${isSubEvent ? 'sub-event' : ''}"></div>
-          <div class="vertical-timeline-date">
-            <div class="vertical-timeline-date-day">${dayStr}</div>
-            <div class="vertical-timeline-date-time">${timeStr}</div>
-          </div>
-          <div class="vertical-timeline-content">
-            <div class="vertical-timeline-text">${event.text}</div>
-            <div class="vertical-timeline-meta">
-              ${locationHtml}
-            </div>
-          </div>
-        </div>
-      `;
-    }).join('');
-
-    return `<div class="vertical-timeline">${itemsHtml}</div>`;
+    return renderVerticalTimeline(events, { sortNewestFirst: true });
   }
 
   /**
@@ -548,7 +484,7 @@ export class ListView extends BaseView {
   attachVerticalTimelineListeners() {
     const items = this.container.querySelectorAll('.vertical-timeline-item');
     items.forEach(item => {
-      item.addEventListener('click', () => {
+      this.addListener(item, 'click', () => {
         const eventId = item.dataset.eventId;
         window.location.hash = `#/event/${eventId}`;
       });
@@ -561,7 +497,7 @@ export class ListView extends BaseView {
   attachItemClickListeners(config) {
     const items = document.querySelectorAll('.entity-list-item');
     items.forEach(item => {
-      item.addEventListener('click', () => {
+      this.addListener(item, 'click', () => {
         const id = item.dataset.id;
         const type = item.dataset.type;
         
@@ -602,7 +538,7 @@ export class ListView extends BaseView {
     // Search input
     const searchInput = document.getElementById('list-search');
     if (searchInput) {
-      searchInput.addEventListener('input', (e) => {
+      this.addListener(searchInput, 'input', (e) => {
         this.searchQuery = e.target.value;
         this.updateFilteredList();
       });
@@ -611,7 +547,7 @@ export class ListView extends BaseView {
     // Entity type filter (mirrors DocumentsView publisherTypeFilter pattern)
     const entityTypeSelect = document.getElementById('entity-type-filter');
     if (entityTypeSelect) {
-      entityTypeSelect.addEventListener('change', (e) => {
+      this.addListener(entityTypeSelect, 'change', (e) => {
         this.entityTypeFilter = e.target.value;
         this.render();
       });
@@ -632,7 +568,7 @@ export class ListView extends BaseView {
   attachViewToggleListeners(items, config) {
     const toggleBtns = this.container.querySelectorAll('.view-toggle-btn');
     toggleBtns.forEach(btn => {
-      btn.addEventListener('click', (e) => {
+      this.addListener(btn, 'click', (e) => {
         const newMode = btn.dataset.view;
         if (newMode !== this.eventsViewMode) {
           this.eventsViewMode = newMode;

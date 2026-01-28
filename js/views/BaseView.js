@@ -32,6 +32,37 @@ export class BaseView {
     this.components = {};
     this.missionId = options.missionId || 'all';
     this.timeRange = options.timeRange || null;
+    
+    // Centralized event listener tracking for automatic cleanup
+    this._listeners = [];
+  }
+
+  /**
+   * Add an event listener with automatic tracking for cleanup
+   * @param {EventTarget} element - The element to attach the listener to
+   * @param {string} event - The event type (e.g., 'click', 'input')
+   * @param {Function} handler - The event handler function
+   * @param {Object} options - Optional event listener options
+   */
+  addListener(element, event, handler, options) {
+    if (!element) return;
+    element.addEventListener(event, handler, options);
+    this._listeners.push({ element, event, handler, options });
+  }
+
+  /**
+   * Remove all tracked event listeners
+   * Called automatically by destroy()
+   */
+  removeAllListeners() {
+    this._listeners.forEach(({ element, event, handler, options }) => {
+      try {
+        element.removeEventListener(event, handler, options);
+      } catch (e) {
+        // Element may have been removed from DOM
+      }
+    });
+    this._listeners = [];
   }
 
   /**
@@ -46,6 +77,9 @@ export class BaseView {
    */
   destroy() {
     try {
+      // Remove all tracked event listeners
+      this.removeAllListeners();
+      
       // Destroy drag-drop manager if present
       if (this.dragDropManager) {
         this.dragDropManager.destroy();
@@ -197,7 +231,7 @@ export class BaseView {
 
         // Add click handlers for narrative items
         document.querySelectorAll('.narrative-link-item').forEach(item => {
-          item.addEventListener('click', () => {
+          this.addListener(item, 'click', () => {
             const narrativeId = item.dataset.id;
             if (window.app && window.app.closeModal) {
               window.app.closeModal();

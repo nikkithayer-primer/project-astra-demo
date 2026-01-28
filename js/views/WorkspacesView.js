@@ -113,7 +113,7 @@ export class WorkspacesView extends BaseView {
     const workspaceCards = this.container.querySelectorAll('.workspace-card');
     workspaceCards.forEach(card => {
       card.style.cursor = 'pointer';
-      card.addEventListener('click', () => {
+      this.addListener(card, 'click', () => {
         const workspaceId = card.dataset.workspaceId;
         window.location.hash = `#/workspace/${workspaceId}`;
       });
@@ -122,7 +122,7 @@ export class WorkspacesView extends BaseView {
     // Create workspace button in header
     const createBtn = this.container.querySelector('#create-workspace-btn');
     if (createBtn) {
-      createBtn.addEventListener('click', () => {
+      this.addListener(createBtn, 'click', () => {
         this.handleCreateWorkspace();
       });
     }
@@ -130,7 +130,7 @@ export class WorkspacesView extends BaseView {
     // Empty state create button
     const emptyCreateBtn = this.container.querySelector('#empty-create-btn');
     if (emptyCreateBtn) {
-      emptyCreateBtn.addEventListener('click', () => {
+      this.addListener(emptyCreateBtn, 'click', () => {
         this.handleCreateWorkspace();
       });
     }

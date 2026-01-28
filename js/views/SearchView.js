@@ -226,13 +226,13 @@ export class SearchView extends BaseView {
     const clearBtn = document.getElementById('search-clear');
 
     if (input) {
-      input.addEventListener('input', (e) => {
+      this.addListener(input, 'input', (e) => {
         this.searchQuery = e.target.value;
         this.updateClearButton();
         this.debounceSearch();
       });
 
-      input.addEventListener('keydown', (e) => {
+      this.addListener(input, 'keydown', (e) => {
         if (e.key === 'Escape') {
           this.clearSearch();
         } else if (e.key === 'Enter') {
@@ -246,7 +246,7 @@ export class SearchView extends BaseView {
     }
 
     if (clearBtn) {
-      clearBtn.addEventListener('click', () => {
+      this.addListener(clearBtn, 'click', () => {
         this.clearSearch();
       });
     }
@@ -254,7 +254,7 @@ export class SearchView extends BaseView {
     // Repository checkbox handlers
     const repoCheckboxes = this.container.querySelectorAll('input[name="repository"]');
     repoCheckboxes.forEach(checkbox => {
-      checkbox.addEventListener('change', (e) => {
+      this.addListener(checkbox, 'change', (e) => {
         const repoId = e.target.value;
         if (e.target.checked) {
           this.selectedRepositories.add(repoId);
@@ -269,7 +269,7 @@ export class SearchView extends BaseView {
     // Clear time range button
     const clearTimeBtn = document.getElementById('clear-time-range');
     if (clearTimeBtn) {
-      clearTimeBtn.addEventListener('click', () => {
+      this.addListener(clearTimeBtn, 'click', () => {
         this.timeRange = null;
         if (this.timeRangeFilter) {
           this.timeRangeFilter.clearSelection();

@@ -162,7 +162,7 @@ export const DataService = {
     return narratives;
   },
   getNarrative: (id) => findById('narratives', id),
-  getNarrativeById: (id) => findById('narratives', id),
+  getNarrativeById(id) { return this.getNarrative(id); },  // Alias for getNarrative
   
   // Get narratives by status (with optional time range)
   getNarrativesByStatus: (status, timeRange = null) => {
@@ -192,38 +192,38 @@ export const DataService = {
   // Themes
   getThemes: () => dataStore.data?.themes || [],
   getTheme: (id) => findById('themes', id),
-  getThemeById: (id) => findById('themes', id),
+  getThemeById(id) { return this.getTheme(id); },  // Alias for getTheme
 
   // Factions
   getFactions: () => dataStore.data?.factions || [],
   getFaction: (id) => findById('factions', id),
-  getFactionById: (id) => findById('factions', id),
+  getFactionById(id) { return this.getFaction(id); },  // Alias for getFaction
   getFactionOverlaps: () => dataStore.data?.factionOverlaps || [],
 
   // Locations
   getLocations: () => dataStore.data?.locations || [],
   getLocation: (id) => findById('locations', id),
-  getLocationById: (id) => findById('locations', id),
+  getLocationById(id) { return this.getLocation(id); },  // Alias for getLocation
 
   // Events
   getEvents: () => dataStore.data?.events || [],
   getEvent: (id) => findById('events', id),
-  getEventById: (id) => findById('events', id),
+  getEventById(id) { return this.getEvent(id); },  // Alias for getEvent
 
   // Persons
   getPersons: () => dataStore.data?.persons || [],
   getPerson: (id) => findById('persons', id),
-  getPersonById: (id) => findById('persons', id),
+  getPersonById(id) { return this.getPerson(id); },  // Alias for getPerson
 
   // Organizations
   getOrganizations: () => dataStore.data?.organizations || [],
   getOrganization: (id) => findById('organizations', id),
-  getOrganizationById: (id) => findById('organizations', id),
+  getOrganizationById(id) { return this.getOrganization(id); },  // Alias for getOrganization
 
   // Documents
   getDocuments: () => dataStore.data.documents || [],
   getDocument: (id) => findById('documents', id),
-  getDocumentById: (id) => findById('documents', id),
+  getDocumentById(id) { return this.getDocument(id); },  // Alias for getDocument
   
   /**
    * Get documents filtered by document type
@@ -304,12 +304,12 @@ export const DataService = {
   // Search Filters
   getSearchFilters: () => dataStore.data.searchFilters || [],
   getSearchFilter: (id) => findById('searchFilters', id),
-  getSearchFilterById: (id) => findById('searchFilters', id),
+  getSearchFilterById(id) { return this.getSearchFilter(id); },  // Alias for getSearchFilter
 
   // Topics
   getTopics: () => dataStore.data.topics || [],
   getTopic: (id) => findById('topics', id),
-  getTopicById: (id) => findById('topics', id),
+  getTopicById(id) { return this.getTopic(id); },  // Alias for getTopic
   
   // Get topics filtered by time range
   getTopicsInRange: (timeRange = null) => {

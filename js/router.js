@@ -43,6 +43,9 @@ export class Router {
       missionId: 'all',
       timeRange: null // { start: Date, end: Date } or null for all time
     };
+    
+    // Track dashboard filter listeners for cleanup
+    this._dashboardListeners = [];
 
     // Bind hash change handler with error handling
     window.addEventListener('hashchange', () => {
@@ -53,6 +56,45 @@ export class Router {
         this.showErrorPage('Navigation Error', 'An error occurred while loading this page.');
       }
     });
+  }
+  
+  /**
+   * Add a dashboard filter listener with tracking for cleanup
+   */
+  _addDashboardListener(element, event, handler) {
+    if (!element) return;
+    element.addEventListener(event, handler);
+    this._dashboardListeners.push({ element, event, handler });
+  }
+  
+  /**
+   * Remove all tracked dashboard filter listeners
+   */
+  _removeDashboardListeners() {
+    this._dashboardListeners.forEach(({ element, event, handler }) => {
+      try {
+        element.removeEventListener(event, handler);
+      } catch (e) {
+        // Element may have been removed from DOM
+      }
+    });
+    this._dashboardListeners = [];
+  }
+  
+  /**
+   * Clean up dashboard-specific resources when navigating away
+   */
+  cleanupDashboardFilters() {
+    this._removeDashboardListeners();
+    
+    if (this.timeRangeFilter && this.timeRangeFilter.destroy) {
+      try {
+        this.timeRangeFilter.destroy();
+      } catch (e) {
+        console.error('Router: Error destroying time range filter:', e);
+      }
+      this.timeRangeFilter = null;
+    }
   }
 
   /**
@@ -162,7 +204,7 @@ export class Router {
     try {
       const missionSelect = document.getElementById('mission-filter');
       if (missionSelect) {
-        missionSelect.addEventListener('change', (e) => {
+        this._addDashboardListener(missionSelect, 'change', (e) => {
           this.filters.missionId = e.target.value || 'all';
           this.onFiltersChanged();
         });
@@ -244,7 +286,7 @@ export class Router {
   initClearTimeFilterButton() {
     const clearBtn = document.getElementById('clear-time-filter');
     if (clearBtn) {
-      clearBtn.addEventListener('click', () => {
+      this._addDashboardListener(clearBtn, 'click', () => {
         if (this.timeRangeFilter) {
           this.timeRangeFilter.clearSelection();
         }
@@ -337,6 +379,9 @@ export class Router {
     } catch (e) {
       console.error('Router: Error destroying sticky header:', e);
     }
+    
+    // Clean up dashboard filters if navigating away from dashboard
+    this.cleanupDashboardFilters();
     
     if (this.currentView && this.currentView.destroy) {
       try {
