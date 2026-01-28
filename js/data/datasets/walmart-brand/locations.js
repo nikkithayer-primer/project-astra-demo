@@ -62,5 +62,17 @@ export const locations = [
     name: 'Rural Oklahoma',
     coordinates: { lat: 35.4676, lng: -97.5164 },
     type: 'region'
+  },
+  {
+    id: 'loc-011',
+    name: 'Dallas, Texas',
+    coordinates: { lat: 32.7767, lng: -96.7970 },
+    type: 'city'
+  },
+  {
+    id: 'loc-012',
+    name: 'Memphis, Tennessee',
+    coordinates: { lat: 35.1495, lng: -90.0490 },
+    type: 'city'
   }
 ];

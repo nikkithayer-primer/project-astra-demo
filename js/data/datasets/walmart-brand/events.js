@@ -142,5 +142,125 @@ export const events = [
     locationId: 'loc-009',
     personIds: ['person-016', 'person-017'],
     organizationIds: ['org-001', 'org-013']
+  },
+  {
+    id: 'event-015',
+    text: 'Investigation reveals Great Value supplier labor violations',
+    date: '2025-06-15T09:00:00Z',
+    parentEventId: null,
+    subEventIds: ['event-016'],
+    locationId: 'loc-006',
+    personIds: [],
+    organizationIds: ['org-001', 'org-018']
+  },
+  {
+    id: 'event-016',
+    text: 'FTC opens inquiry into Walmart supplier practices',
+    date: '2025-07-01T14:00:00Z',
+    parentEventId: 'event-015',
+    subEventIds: [],
+    locationId: 'loc-006',
+    personIds: ['person-022'],
+    organizationIds: ['org-018', 'org-001']
+  },
+  {
+    id: 'event-017',
+    text: 'Walmart fulfillment center workers file for union election',
+    date: '2025-07-20T10:00:00Z',
+    parentEventId: null,
+    subEventIds: ['event-019'],
+    locationId: 'loc-011',
+    personIds: ['person-020'],
+    organizationIds: ['org-016', 'org-001']
+  },
+  {
+    id: 'event-018',
+    text: 'Walmart announces expansion of healthcare clinics',
+    date: '2025-08-05T09:00:00Z',
+    parentEventId: null,
+    subEventIds: ['event-021'],
+    locationId: 'loc-001',
+    personIds: ['person-023'],
+    organizationIds: ['org-019']
+  },
+  {
+    id: 'event-019',
+    text: 'Union election fails at Dallas fulfillment center',
+    date: '2025-09-15T18:00:00Z',
+    parentEventId: 'event-017',
+    subEventIds: [],
+    locationId: 'loc-011',
+    personIds: ['person-020'],
+    organizationIds: ['org-016', 'org-001']
+  },
+  {
+    id: 'event-020',
+    text: 'Second fulfillment center files for union election',
+    date: '2025-10-01T10:00:00Z',
+    parentEventId: null,
+    subEventIds: ['event-026'],
+    locationId: 'loc-003',
+    personIds: ['person-020', 'person-025'],
+    organizationIds: ['org-016', 'org-006']
+  },
+  {
+    id: 'event-021',
+    text: 'Walmart Health expands to 15 new rural communities',
+    date: '2025-10-15T09:00:00Z',
+    parentEventId: 'event-018',
+    subEventIds: [],
+    locationId: 'loc-001',
+    personIds: ['person-023'],
+    organizationIds: ['org-019']
+  },
+  {
+    id: 'event-022',
+    text: 'Black Friday delivery system overwhelmed',
+    date: '2025-11-29T00:00:00Z',
+    parentEventId: null,
+    subEventIds: ['event-023', 'event-024'],
+    locationId: 'loc-001',
+    personIds: ['person-018', 'person-019'],
+    organizationIds: ['org-001']
+  },
+  {
+    id: 'event-023',
+    text: 'Walmart apologizes for holiday delivery failures',
+    date: '2025-12-05T10:00:00Z',
+    parentEventId: 'event-022',
+    subEventIds: [],
+    locationId: 'loc-001',
+    personIds: ['person-001', 'person-018'],
+    organizationIds: ['org-001']
+  },
+  {
+    id: 'event-024',
+    text: 'Consumer groups file FTC complaint over delivery promises',
+    date: '2025-12-15T14:00:00Z',
+    parentEventId: 'event-022',
+    subEventIds: [],
+    locationId: 'loc-006',
+    personIds: ['person-007', 'person-022'],
+    organizationIds: ['org-008', 'org-018']
+  },
+  {
+    id: 'event-025',
+    text: 'Walmart announces $500M delivery infrastructure investment',
+    date: '2025-12-28T09:00:00Z',
+    parentEventId: null,
+    subEventIds: [],
+    locationId: 'loc-001',
+    personIds: ['person-001', 'person-019'],
+    organizationIds: ['org-001']
+  },
+  {
+    id: 'event-026',
+    text: 'Atlanta fulfillment center votes to unionize',
+    date: '2026-01-10T18:00:00Z',
+    parentEventId: 'event-020',
+    subEventIds: [],
+    locationId: 'loc-003',
+    personIds: ['person-020', 'person-025'],
+    organizationIds: ['org-016', 'org-001']
   }
 ];

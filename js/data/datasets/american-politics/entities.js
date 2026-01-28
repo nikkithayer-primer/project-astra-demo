@@ -388,6 +388,162 @@ export const persons = [
       'faction-005': 0.42,
       'faction-006': -0.72
     }
+  },
+  {
+    id: 'person-027',
+    name: 'Greg Abbott',
+    type: 'politician',
+    affiliatedOrganizationId: 'org-024',
+    imageUrl: null,
+    affiliatedFactionIds: ['faction-001'],
+    relatedLocationIds: ['loc-010', 'loc-011'],
+    relatedEventIds: ['event-027', 'event-031'],
+    documentIds: ['doc-032', 'doc-040'],
+    factionSentiment: {
+      'faction-001': 0.78,
+      'faction-002': -0.72,
+      'faction-003': -0.68
+    }
+  },
+  {
+    id: 'person-028',
+    name: 'Ron DeSantis',
+    type: 'politician',
+    affiliatedOrganizationId: 'org-025',
+    imageUrl: null,
+    affiliatedFactionIds: ['faction-001'],
+    relatedLocationIds: ['loc-010'],
+    relatedEventIds: ['event-028', 'event-031'],
+    documentIds: ['doc-034', 'doc-040'],
+    factionSentiment: {
+      'faction-001': 0.75,
+      'faction-002': -0.78,
+      'faction-003': -0.72
+    }
+  },
+  {
+    id: 'person-029',
+    name: 'Gavin Newsom',
+    type: 'politician',
+    affiliatedOrganizationId: 'org-026',
+    imageUrl: null,
+    affiliatedFactionIds: ['faction-002'],
+    relatedLocationIds: ['loc-009'],
+    relatedEventIds: ['event-029'],
+    documentIds: ['doc-037'],
+    factionSentiment: {
+      'faction-001': -0.72,
+      'faction-002': 0.68,
+      'faction-003': 0.55
+    }
+  },
+  {
+    id: 'person-030',
+    name: 'Merrick Garland',
+    type: 'government_official',
+    affiliatedOrganizationId: 'org-010',
+    imageUrl: null,
+    affiliatedFactionIds: ['faction-002'],
+    relatedLocationIds: ['loc-001'],
+    relatedEventIds: ['event-030'],
+    documentIds: ['doc-038'],
+    factionSentiment: {
+      'faction-001': -0.68,
+      'faction-002': 0.62,
+      'faction-004': 0.45
+    }
+  },
+  {
+    id: 'person-031',
+    name: 'John Roberts',
+    type: 'judge',
+    affiliatedOrganizationId: 'org-027',
+    imageUrl: null,
+    affiliatedFactionIds: ['faction-004'],
+    relatedLocationIds: ['loc-009'],
+    relatedEventIds: ['event-037'],
+    documentIds: ['doc-047'],
+    factionSentiment: {
+      'faction-001': 0.25,
+      'faction-002': 0.28,
+      'faction-004': 0.72
+    }
+  },
+  {
+    id: 'person-032',
+    name: 'Mike Johnson',
+    type: 'politician',
+    affiliatedOrganizationId: 'org-020',
+    imageUrl: null,
+    affiliatedFactionIds: ['faction-001'],
+    relatedLocationIds: ['loc-004', 'loc-009'],
+    relatedEventIds: ['event-032', 'event-034'],
+    documentIds: ['doc-041', 'doc-044', 'doc-056'],
+    factionSentiment: {
+      'faction-001': 0.72,
+      'faction-002': -0.65
+    }
+  },
+  {
+    id: 'person-033',
+    name: 'Chuck Schumer',
+    type: 'politician',
+    affiliatedOrganizationId: 'org-020',
+    imageUrl: null,
+    affiliatedFactionIds: ['faction-002'],
+    relatedLocationIds: ['loc-004', 'loc-009'],
+    relatedEventIds: ['event-033', 'event-034'],
+    documentIds: ['doc-042', 'doc-044', 'doc-056'],
+    factionSentiment: {
+      'faction-001': -0.68,
+      'faction-002': 0.72
+    }
+  },
+  {
+    id: 'person-034',
+    name: 'Anne Milgram',
+    type: 'government_official',
+    affiliatedOrganizationId: 'org-028',
+    imageUrl: null,
+    affiliatedFactionIds: ['faction-004'],
+    relatedLocationIds: ['loc-001'],
+    relatedEventIds: ['event-035'],
+    documentIds: ['doc-035', 'doc-036'],
+    factionSentiment: {
+      'faction-004': 0.58,
+      'faction-005': 0.45
+    }
+  },
+  {
+    id: 'person-035',
+    name: 'Xavier Becerra',
+    type: 'government_official',
+    affiliatedOrganizationId: 'org-022',
+    imageUrl: null,
+    affiliatedFactionIds: ['faction-002'],
+    relatedLocationIds: ['loc-001'],
+    relatedEventIds: ['event-035'],
+    documentIds: ['doc-035', 'doc-036', 'doc-053'],
+    factionSentiment: {
+      'faction-001': -0.55,
+      'faction-002': 0.62,
+      'faction-005': 0.48
+    }
+  },
+  {
+    id: 'person-036',
+    name: 'Kash Patel',
+    type: 'government_official',
+    affiliatedOrganizationId: 'org-012',
+    imageUrl: null,
+    affiliatedFactionIds: ['faction-001'],
+    relatedLocationIds: ['loc-001'],
+    relatedEventIds: ['event-038'],
+    documentIds: ['doc-050'],
+    factionSentiment: {
+      'faction-001': 0.82,
+      'faction-002': -0.85
+    }
   }
 ];
 
@@ -665,6 +821,113 @@ export const organizations = [
       'faction-001': -0.42,
       'faction-005': 0.68,
       'faction-006': 0.55
+    }
+  },
+  {
+    id: 'org-024',
+    name: 'Office of the Governor of Texas',
+    type: 'government',
+    imageUrl: null,
+    affiliatedFactionIds: ['faction-001'],
+    relatedLocationIds: ['loc-010', 'loc-011'],
+    documentIds: ['doc-032', 'doc-040'],
+    factionSentiment: {
+      'faction-001': 0.75,
+      'faction-002': -0.68
+    }
+  },
+  {
+    id: 'org-025',
+    name: 'Office of the Governor of Florida',
+    type: 'government',
+    imageUrl: null,
+    affiliatedFactionIds: ['faction-001'],
+    relatedLocationIds: [],
+    documentIds: ['doc-034', 'doc-040'],
+    factionSentiment: {
+      'faction-001': 0.72,
+      'faction-002': -0.72
+    }
+  },
+  {
+    id: 'org-026',
+    name: 'Office of the Governor of California',
+    type: 'government',
+    imageUrl: null,
+    affiliatedFactionIds: ['faction-002'],
+    relatedLocationIds: [],
+    documentIds: ['doc-037'],
+    factionSentiment: {
+      'faction-001': -0.68,
+      'faction-002': 0.72
+    }
+  },
+  {
+    id: 'org-027',
+    name: 'Supreme Court of the United States',
+    type: 'judicial',
+    imageUrl: null,
+    affiliatedFactionIds: ['faction-004'],
+    relatedLocationIds: ['loc-009'],
+    documentIds: ['doc-039', 'doc-047'],
+    factionSentiment: {
+      'faction-001': 0.35,
+      'faction-002': 0.28,
+      'faction-004': 0.72
+    }
+  },
+  {
+    id: 'org-028',
+    name: 'Drug Enforcement Administration',
+    type: 'government',
+    imageUrl: null,
+    affiliatedFactionIds: ['faction-004'],
+    relatedLocationIds: ['loc-001'],
+    documentIds: ['doc-035', 'doc-036'],
+    factionSentiment: {
+      'faction-004': 0.62,
+      'faction-005': 0.48
+    }
+  },
+  {
+    id: 'org-029',
+    name: 'Texas National Guard',
+    type: 'military',
+    imageUrl: null,
+    affiliatedFactionIds: ['faction-001', 'faction-004'],
+    relatedLocationIds: ['loc-010', 'loc-011'],
+    documentIds: ['doc-032', 'doc-033'],
+    factionSentiment: {
+      'faction-001': 0.72,
+      'faction-002': -0.65,
+      'faction-004': 0.68
+    }
+  },
+  {
+    id: 'org-030',
+    name: 'ACLU',
+    type: 'nonprofit',
+    imageUrl: null,
+    affiliatedFactionIds: ['faction-002', 'faction-003'],
+    relatedLocationIds: ['loc-009'],
+    documentIds: ['doc-049'],
+    factionSentiment: {
+      'faction-001': -0.72,
+      'faction-002': 0.75,
+      'faction-003': 0.78
+    }
+  },
+  {
+    id: 'org-031',
+    name: 'Heritage Foundation',
+    type: 'nonprofit',
+    imageUrl: null,
+    affiliatedFactionIds: ['faction-001'],
+    relatedLocationIds: ['loc-009'],
+    documentIds: ['doc-052'],
+    factionSentiment: {
+      'faction-001': 0.85,
+      'faction-002': -0.78
     }
   }
 ];

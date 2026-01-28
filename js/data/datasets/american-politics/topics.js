@@ -117,5 +117,69 @@ export const topics = [
       { date: '2026-01-22', volume: 145 }
     ],
     createdAt: '2026-01-19T18:00:00Z'
+  },
+  {
+    id: 'topic-006',
+    headline: 'Border State Governors Form Coalition on Immigration',
+    bulletPoints: [
+      'Texas deploys 5,000 National Guard troops to southern border',
+      'Florida signs aggressive border enforcement legislation',
+      'Eight Republican governors coordinate enforcement strategy at Texas summit',
+      'DOJ opens civil rights investigation into state border actions',
+      'Border crossings reach five-year low amid debate over causes'
+    ],
+    documentIds: ['doc-032', 'doc-033', 'doc-034', 'doc-037', 'doc-038', 'doc-040', 'doc-054'],
+    startDate: '2025-06-15',
+    endDate: null,
+    volumeOverTime: [
+      { date: '2025-06-15', volume: 185 },
+      { date: '2025-07-10', volume: 245 },
+      { date: '2025-08-20', volume: 325 },
+      { date: '2025-09-01', volume: 385 },
+      { date: '2025-12-28', volume: 295 }
+    ],
+    createdAt: '2025-06-15T14:00:00Z'
+  },
+  {
+    id: 'topic-007',
+    headline: 'Federal Budget Showdown Leads to October Shutdown',
+    bulletPoints: [
+      'House passes border-focused spending bill on party-line vote',
+      'Senate Democrats block bill, citing "ransom demand"',
+      'Government shuts down for 18 days as negotiations collapse',
+      'Hundreds of thousands of federal workers furloughed',
+      'Modest compromise reopens government but satisfies neither party'
+    ],
+    documentIds: ['doc-041', 'doc-042', 'doc-043', 'doc-044', 'doc-045', 'doc-046'],
+    startDate: '2025-09-15',
+    endDate: '2025-10-19',
+    volumeOverTime: [
+      { date: '2025-09-15', volume: 165 },
+      { date: '2025-09-22', volume: 285 },
+      { date: '2025-10-01', volume: 425 },
+      { date: '2025-10-08', volume: 365 },
+      { date: '2025-10-19', volume: 295 }
+    ],
+    createdAt: '2025-09-15T17:00:00Z'
+  },
+  {
+    id: 'topic-008',
+    headline: 'Opioid Settlement Distribution Sparks Legal Battles',
+    bulletPoints: [
+      'Settlement funds begin arriving in hardest-hit communities',
+      'Health officials debate priorities for fund allocation',
+      'States sue over allocation formula, claiming unfair distribution',
+      'Supreme Court to review settlement distribution methodology'
+    ],
+    documentIds: ['doc-035', 'doc-036', 'doc-039', 'doc-053'],
+    startDate: '2025-07-01',
+    endDate: null,
+    volumeOverTime: [
+      { date: '2025-07-01', volume: 125 },
+      { date: '2025-07-20', volume: 185 },
+      { date: '2025-08-15', volume: 225 },
+      { date: '2025-12-20', volume: 165 }
+    ],
+    createdAt: '2025-07-01T10:00:00Z'
   }
 ];

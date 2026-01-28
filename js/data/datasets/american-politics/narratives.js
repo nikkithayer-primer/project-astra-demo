@@ -297,5 +297,159 @@ export const narratives = [
     ],
     documentIds: ['doc-018', 'doc-019', 'doc-020'],
     createdAt: '2026-01-18T00:00:00Z'
+  },
+  {
+    id: 'narr-011',
+    text: '2024 Election certification challenges and Capitol security concerns',
+    description: 'As the January 2025 electoral certification approaches, concerns mount about potential challenges and security threats. The Supreme Court has agreed to expedite election-related cases, while Capitol Police expand security perimeters. FBI leadership transitions add to political tensions, with both parties positioning themselves for the certification process. Security preparations have intensified following the events of January 6, 2021.',
+    missionId: 'mission-003',
+    status: 'in_progress',
+    sentiment: -0.35,
+    themeIds: ['sub-028', 'sub-029', 'sub-030'],
+    factionMentions: {
+      'faction-001': { volume: 285, sentiment: 0.48 },
+      'faction-002': { volume: 245, sentiment: -0.55 },
+      'faction-004': { volume: 165, sentiment: 0.35 }
+    },
+    publisherVolumes: {
+      'pub-nat-fox': { volume: 95, sentiment: 0.52 },
+      'pub-nat-cnn': { volume: 88, sentiment: -0.48 },
+      'pub-nat-nyt': { volume: 72, sentiment: -0.35 },
+      'pub-nat-wapo': { volume: 68, sentiment: -0.42 },
+      'pub-x': { volume: 145, sentiment: -0.28 },
+      'pub-facebook': { volume: 85, sentiment: -0.32 }
+    },
+    factionSources: {
+      'faction-001': { 'pub-nat-fox': 85, 'pub-x': 95, 'pub-facebook': 55 },
+      'faction-002': { 'pub-nat-cnn': 75, 'pub-nat-nyt': 62, 'pub-nat-wapo': 58, 'pub-x': 50 },
+      'faction-004': { 'pub-nat-nyt': 45, 'pub-nat-wapo': 42, 'pub-nat-cnn': 38, 'pub-x': 40 }
+    },
+    personIds: ['person-031', 'person-032', 'person-033', 'person-036'],
+    organizationIds: ['org-020', 'org-027', 'org-012', 'org-030', 'org-031'],
+    locationIds: ['loc-004', 'loc-009'],
+    eventIds: ['event-037', 'event-038'],
+    volumeOverTime: [
+      { date: '2025-11-15', factionVolumes: { 'faction-001': 85, 'faction-002': 72, 'faction-004': 48 }, publisherVolumes: { 'pub-nat-nyt': 25, 'pub-nat-fox': 28, 'pub-x': 45 } },
+      { date: '2025-11-20', factionVolumes: { 'faction-001': 125, 'faction-002': 105, 'faction-004': 75 }, publisherVolumes: { 'pub-nat-nyt': 35, 'pub-nat-fox': 42, 'pub-nat-wapo': 28, 'pub-x': 68 } },
+      { date: '2025-12-01', factionVolumes: { 'faction-001': 185, 'faction-002': 165, 'faction-004': 115 }, publisherVolumes: { 'pub-nat-nyt': 52, 'pub-nat-fox': 62, 'pub-nat-wapo': 45, 'pub-nat-cnn': 55, 'pub-x': 95 } },
+      { date: '2025-12-15', factionVolumes: { 'faction-001': 245, 'faction-002': 215, 'faction-004': 145 }, publisherVolumes: { 'pub-nat-nyt': 65, 'pub-nat-fox': 82, 'pub-nat-wapo': 58, 'pub-nat-cnn': 75, 'pub-x': 125 } },
+      { date: '2026-01-03', factionVolumes: { 'faction-001': 285, 'faction-002': 245, 'faction-004': 165 }, publisherVolumes: { 'pub-nat-nyt': 72, 'pub-nat-fox': 95, 'pub-nat-wapo': 68, 'pub-nat-cnn': 88, 'pub-x': 145 } }
+    ],
+    documentIds: ['doc-047', 'doc-048', 'doc-049', 'doc-050', 'doc-051', 'doc-052', 'doc-055', 'doc-056'],
+    createdAt: '2025-11-15T00:00:00Z'
+  },
+  {
+    id: 'narr-012',
+    text: 'Federal budget showdown threatens government shutdown',
+    description: 'A contentious federal budget battle over border security funding leads to an 18-day government shutdown in October 2025. House Republicans, led by Speaker Mike Johnson, pass a border-focused spending bill that Senate Democrats block. The shutdown furloughs hundreds of thousands of federal workers before a compromise is reached. The episode highlights deepening partisan divisions over fiscal priorities.',
+    missionId: 'mission-003',
+    status: 'resolved',
+    sentiment: -0.48,
+    themeIds: ['sub-031', 'sub-032'],
+    factionMentions: {
+      'faction-001': { volume: 225, sentiment: -0.42 },
+      'faction-002': { volume: 195, sentiment: -0.55 }
+    },
+    publisherVolumes: {
+      'pub-nat-cnn': { volume: 85, sentiment: -0.52 },
+      'pub-nat-fox': { volume: 78, sentiment: -0.38 },
+      'pub-nat-nyt': { volume: 72, sentiment: -0.48 },
+      'pub-nat-wapo': { volume: 65, sentiment: -0.55 },
+      'pub-int-reuters': { volume: 55, sentiment: -0.25 },
+      'pub-x': { volume: 125, sentiment: -0.45 }
+    },
+    factionSources: {
+      'faction-001': { 'pub-nat-fox': 68, 'pub-x': 85, 'pub-facebook': 42 },
+      'faction-002': { 'pub-nat-cnn': 72, 'pub-nat-nyt': 58, 'pub-nat-wapo': 55, 'pub-x': 40 }
+    },
+    personIds: ['person-032', 'person-033'],
+    organizationIds: ['org-020'],
+    locationIds: ['loc-001', 'loc-004'],
+    eventIds: ['event-032', 'event-033', 'event-034'],
+    volumeOverTime: [
+      { date: '2025-09-15', factionVolumes: { 'faction-001': 65, 'faction-002': 58 }, publisherVolumes: { 'pub-int-reuters': 18, 'pub-nat-cnn': 22, 'pub-x': 35 } },
+      { date: '2025-09-22', factionVolumes: { 'faction-001': 125, 'faction-002': 115 }, publisherVolumes: { 'pub-nat-cnn': 45, 'pub-nat-nyt': 38, 'pub-x': 65 } },
+      { date: '2025-10-01', factionVolumes: { 'faction-001': 195, 'faction-002': 175 }, publisherVolumes: { 'pub-nat-cnn': 72, 'pub-nat-nyt': 62, 'pub-nat-wapo': 55, 'pub-x': 105 } },
+      { date: '2025-10-08', factionVolumes: { 'faction-001': 215, 'faction-002': 188 }, publisherVolumes: { 'pub-nat-cnn': 82, 'pub-nat-nyt': 68, 'pub-nat-wapo': 62, 'pub-x': 118 } },
+      { date: '2025-10-19', factionVolumes: { 'faction-001': 225, 'faction-002': 195 }, publisherVolumes: { 'pub-nat-cnn': 85, 'pub-nat-nyt': 72, 'pub-nat-wapo': 65, 'pub-int-reuters': 55, 'pub-x': 125 } }
+    ],
+    documentIds: ['doc-041', 'doc-042', 'doc-043', 'doc-044', 'doc-045', 'doc-046'],
+    createdAt: '2025-09-15T00:00:00Z'
+  },
+  {
+    id: 'narr-013',
+    text: 'Opioid settlement funds distribution sparks controversy',
+    description: 'The distribution of billions in opioid lawsuit settlement funds begins in mid-2025, but disputes quickly emerge over allocation formulas. States hardest hit by the opioid crisis argue they deserve larger shares, while the DEA and HHS work to establish treatment and prevention programs. Legal challenges to the distribution formula reach the Supreme Court, adding uncertainty to communities awaiting relief.',
+    missionId: 'mission-002',
+    status: 'in_progress',
+    sentiment: -0.32,
+    themeIds: ['sub-033', 'sub-034'],
+    factionMentions: {
+      'faction-005': { volume: 165, sentiment: -0.45 },
+      'faction-006': { volume: 95, sentiment: -0.35 }
+    },
+    publisherVolumes: {
+      'pub-nat-nyt': { volume: 58, sentiment: -0.38 },
+      'pub-nat-wapo': { volume: 52, sentiment: -0.42 },
+      'pub-nat-cnn': { volume: 45, sentiment: -0.35 },
+      'pub-x': { volume: 85, sentiment: -0.28 }
+    },
+    factionSources: {
+      'faction-005': { 'pub-nat-nyt': 48, 'pub-nat-wapo': 42, 'pub-nat-cnn': 38, 'pub-x': 55 },
+      'faction-006': { 'pub-nat-nyt': 25, 'pub-x': 35, 'pub-tiktok': 35 }
+    },
+    personIds: ['person-034', 'person-035'],
+    organizationIds: ['org-028', 'org-022', 'org-027'],
+    locationIds: ['loc-001', 'loc-009'],
+    eventIds: ['event-035', 'event-036'],
+    volumeOverTime: [
+      { date: '2025-07-01', factionVolumes: { 'faction-005': 45, 'faction-006': 28 }, publisherVolumes: { 'pub-nat-nyt': 18, 'pub-nat-wapo': 15, 'pub-x': 25 } },
+      { date: '2025-07-20', factionVolumes: { 'faction-005': 75, 'faction-006': 48 }, publisherVolumes: { 'pub-nat-nyt': 28, 'pub-nat-wapo': 25, 'pub-x': 42 } },
+      { date: '2025-08-15', factionVolumes: { 'faction-005': 115, 'faction-006': 72 }, publisherVolumes: { 'pub-nat-nyt': 42, 'pub-nat-wapo': 38, 'pub-nat-cnn': 32, 'pub-x': 62 } },
+      { date: '2025-12-20', factionVolumes: { 'faction-005': 165, 'faction-006': 95 }, publisherVolumes: { 'pub-nat-nyt': 58, 'pub-nat-wapo': 52, 'pub-nat-cnn': 45, 'pub-x': 85 } }
+    ],
+    documentIds: ['doc-035', 'doc-036', 'doc-039', 'doc-053'],
+    createdAt: '2025-07-01T00:00:00Z'
+  },
+  {
+    id: 'narr-014',
+    text: 'Border state governors form coalition on immigration policy',
+    description: 'Republican governors from Texas, Florida, and other border states form a coalition to coordinate immigration enforcement independent of federal policy. Texas Governor Greg Abbott deploys thousands of National Guard troops to the border, while Florida Governor Ron DeSantis signs aggressive border security legislation. California Governor Gavin Newsom responds with a federal lawsuit. The DOJ opens investigations into state border actions, escalating federal-state tensions.',
+    missionId: 'mission-003',
+    status: 'in_progress',
+    sentiment: -0.45,
+    themeIds: ['sub-035', 'sub-036', 'sub-037'],
+    factionMentions: {
+      'faction-001': { volume: 345, sentiment: 0.65 },
+      'faction-002': { volume: 285, sentiment: -0.72 },
+      'faction-003': { volume: 195, sentiment: -0.68 },
+      'faction-004': { volume: 145, sentiment: 0.55 }
+    },
+    publisherVolumes: {
+      'pub-nat-fox': { volume: 125, sentiment: 0.58 },
+      'pub-nat-cnn': { volume: 115, sentiment: -0.62 },
+      'pub-nat-nyt': { volume: 95, sentiment: -0.48 },
+      'pub-x': { volume: 185, sentiment: -0.35 },
+      'pub-int-reuters': { volume: 72, sentiment: -0.15 }
+    },
+    factionSources: {
+      'faction-001': { 'pub-nat-fox': 115, 'pub-x': 125, 'pub-facebook': 65 },
+      'faction-002': { 'pub-nat-cnn': 95, 'pub-nat-nyt': 78, 'pub-x': 62 },
+      'faction-003': { 'pub-x': 85, 'pub-tiktok': 65, 'pub-nat-cnn': 45 },
+      'faction-004': { 'pub-nat-fox': 55, 'pub-x': 48, 'pub-int-reuters': 42 }
+    },
+    personIds: ['person-027', 'person-028', 'person-029', 'person-030'],
+    organizationIds: ['org-024', 'org-025', 'org-026', 'org-010', 'org-029', 'org-030'],
+    locationIds: ['loc-010', 'loc-011', 'loc-009'],
+    eventIds: ['event-027', 'event-028', 'event-029', 'event-030', 'event-031'],
+    volumeOverTime: [
+      { date: '2025-06-15', factionVolumes: { 'faction-001': 85, 'faction-002': 72, 'faction-003': 48, 'faction-004': 35 }, publisherVolumes: { 'pub-nat-fox': 32, 'pub-nat-cnn': 28, 'pub-x': 45 } },
+      { date: '2025-07-10', factionVolumes: { 'faction-001': 145, 'faction-002': 125, 'faction-003': 85, 'faction-004': 62 }, publisherVolumes: { 'pub-nat-fox': 55, 'pub-nat-cnn': 48, 'pub-x': 78 } },
+      { date: '2025-08-20', factionVolumes: { 'faction-001': 225, 'faction-002': 195, 'faction-003': 135, 'faction-004': 98 }, publisherVolumes: { 'pub-nat-fox': 85, 'pub-nat-cnn': 78, 'pub-nat-nyt': 62, 'pub-x': 125 } },
+      { date: '2025-09-01', factionVolumes: { 'faction-001': 285, 'faction-002': 245, 'faction-003': 165, 'faction-004': 125 }, publisherVolumes: { 'pub-nat-fox': 108, 'pub-nat-cnn': 98, 'pub-nat-nyt': 82, 'pub-x': 158 } },
+      { date: '2025-12-28', factionVolumes: { 'faction-001': 345, 'faction-002': 285, 'faction-003': 195, 'faction-004': 145 }, publisherVolumes: { 'pub-nat-fox': 125, 'pub-nat-cnn': 115, 'pub-nat-nyt': 95, 'pub-x': 185, 'pub-int-reuters': 72 } }
+    ],
+    documentIds: ['doc-032', 'doc-033', 'doc-034', 'doc-037', 'doc-038', 'doc-040', 'doc-054'],
+    createdAt: '2025-06-15T00:00:00Z'
   }
 ];

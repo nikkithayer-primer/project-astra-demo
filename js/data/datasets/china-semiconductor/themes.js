@@ -344,5 +344,164 @@ export const themes = [
       { date: '2026-01-17', factionVolumes: { 'faction-001': 65, 'faction-005': 78 } },
       { date: '2026-01-18', factionVolumes: { 'faction-001': 95, 'faction-005': 115 } }
     ]
+  },
+  {
+    id: 'sub-018',
+    text: 'Intel restructuring amid foundry business struggles',
+    description: 'Intel announces major restructuring including 15,000 layoffs as its foundry business fails to compete with TSMC. CEO Pat Gelsinger faces investor pressure as quarterly losses mount and the stock price declines significantly.',
+    parentNarrativeId: 'narr-008',
+    sentiment: -0.58,
+    factionMentions: {
+      'faction-005': { volume: 185, sentiment: -0.62 },
+      'faction-006': { volume: 95, sentiment: 0.38 }
+    },
+    personIds: ['person-020'],
+    organizationIds: ['org-027'],
+    locationIds: ['loc-012'],
+    eventIds: ['event-015', 'event-020'],
+    volumeOverTime: [
+      { date: '2025-06-20', factionVolumes: { 'faction-005': 72, 'faction-006': 35 } },
+      { date: '2025-09-15', factionVolumes: { 'faction-005': 145, 'faction-006': 72 } },
+      { date: '2026-01-06', factionVolumes: { 'faction-005': 185, 'faction-006': 95 } }
+    ]
+  },
+  {
+    id: 'sub-019',
+    text: 'CHIPS Act funding helps struggling US chipmakers',
+    description: 'Intel secures $8.5 billion in CHIPS Act funding in December 2025, providing a lifeline for its US manufacturing ambitions. The funding supports new fab construction and research initiatives, though analysts question whether it\'s enough to close the gap with Asian competitors.',
+    parentNarrativeId: 'narr-008',
+    sentiment: 0.42,
+    factionMentions: {
+      'faction-002': { volume: 95, sentiment: 0.65 },
+      'faction-005': { volume: 125, sentiment: 0.58 }
+    },
+    personIds: ['person-020'],
+    organizationIds: ['org-027', 'org-005'],
+    locationIds: ['loc-004'],
+    eventIds: ['event-026'],
+    volumeOverTime: [
+      { date: '2025-12-10', factionVolumes: { 'faction-002': 95, 'faction-005': 125 } }
+    ]
+  },
+  {
+    id: 'sub-020',
+    text: 'South Korea ramps semiconductor investment',
+    description: 'Samsung and SK Hynix announce major domestic investments with government support, including $17 billion in new subsidies. The investments aim to maintain Korea\'s leadership in memory chips and expand into advanced logic manufacturing.',
+    parentNarrativeId: 'narr-009',
+    sentiment: 0.55,
+    factionMentions: {
+      'faction-006': { volume: 145, sentiment: 0.72 }
+    },
+    personIds: ['person-022', 'person-023'],
+    organizationIds: ['org-014', 'org-029', 'org-032'],
+    locationIds: ['loc-011'],
+    eventIds: ['event-016', 'event-022'],
+    volumeOverTime: [
+      { date: '2025-07-05', factionVolumes: { 'faction-006': 55 } },
+      { date: '2025-10-01', factionVolumes: { 'faction-006': 105 } },
+      { date: '2026-01-12', factionVolumes: { 'faction-006': 145 } }
+    ]
+  },
+  {
+    id: 'sub-021',
+    text: 'US-Korea trade tensions over chip subsidies',
+    description: 'The United States objects to Korean semiconductor subsidies at the WTO, arguing they distort global competition. The dispute strains the technology alliance between the countries and complicates coordinated efforts to counter China\'s chip ambitions.',
+    parentNarrativeId: 'narr-009',
+    sentiment: -0.45,
+    factionMentions: {
+      'faction-002': { volume: 115, sentiment: -0.48 },
+      'faction-006': { volume: 85, sentiment: -0.55 }
+    },
+    personIds: [],
+    organizationIds: ['org-005', 'org-032'],
+    locationIds: ['loc-004', 'loc-011'],
+    eventIds: ['event-017'],
+    volumeOverTime: [
+      { date: '2025-07-25', factionVolumes: { 'faction-002': 72, 'faction-006': 55 } },
+      { date: '2025-10-25', factionVolumes: { 'faction-002': 98, 'faction-006': 72 } },
+      { date: '2025-12-28', factionVolumes: { 'faction-002': 115, 'faction-006': 85 } }
+    ]
+  },
+  {
+    id: 'sub-022',
+    text: 'China rare earth export controls escalate',
+    description: 'China announces rare earth export quotas in August 2025 and tightens controls on gallium and germanium in October. The measures target materials essential for semiconductor manufacturing, with officials citing resource conservation while critics see retaliation for Western chip export controls.',
+    parentNarrativeId: 'narr-010',
+    sentiment: -0.62,
+    factionMentions: {
+      'faction-001': { volume: 195, sentiment: 0.78 },
+      'faction-002': { volume: 165, sentiment: -0.72 },
+      'faction-004': { volume: 145, sentiment: 0.82 }
+    },
+    personIds: ['person-025'],
+    organizationIds: ['org-030', 'org-009'],
+    locationIds: ['loc-006'],
+    eventIds: ['event-018', 'event-023'],
+    volumeOverTime: [
+      { date: '2025-08-10', factionVolumes: { 'faction-001': 75, 'faction-002': 62, 'faction-004': 55 } },
+      { date: '2025-10-15', factionVolumes: { 'faction-001': 155, 'faction-002': 135, 'faction-004': 115 } },
+      { date: '2026-01-08', factionVolumes: { 'faction-001': 195, 'faction-002': 165, 'faction-004': 145 } }
+    ]
+  },
+  {
+    id: 'sub-023',
+    text: 'Semiconductor supply chain adapts to rare earth restrictions',
+    description: 'US and allied semiconductor companies scramble to secure alternative sources of rare earth materials and develop recycling technologies. Industry leaders warn of potential production disruptions, while government officials discuss strategic reserves and supply chain diversification.',
+    parentNarrativeId: 'narr-010',
+    sentiment: -0.35,
+    factionMentions: {
+      'faction-002': { volume: 85, sentiment: -0.48 },
+      'faction-005': { volume: 105, sentiment: -0.42 }
+    },
+    personIds: ['person-024'],
+    organizationIds: ['org-005', 'org-006'],
+    locationIds: ['loc-004'],
+    eventIds: ['event-019'],
+    volumeOverTime: [
+      { date: '2025-08-25', factionVolumes: { 'faction-002': 48, 'faction-005': 55 } },
+      { date: '2025-10-20', factionVolumes: { 'faction-002': 72, 'faction-005': 85 } },
+      { date: '2026-01-08', factionVolumes: { 'faction-002': 85, 'faction-005': 105 } }
+    ]
+  },
+  {
+    id: 'sub-024',
+    text: 'AI chip demand outstrips global production capacity',
+    description: 'Nvidia reports record demand for its AI accelerators, with customers waiting months for deliveries. The shortage reflects explosive growth in AI applications and the challenges of scaling advanced chip production. TSMC and SK Hynix ramp capacity to meet demand.',
+    parentNarrativeId: 'narr-011',
+    sentiment: 0.48,
+    factionMentions: {
+      'faction-003': { volume: 125, sentiment: 0.65 },
+      'faction-005': { volume: 185, sentiment: 0.72 },
+      'faction-006': { volume: 145, sentiment: 0.68 }
+    },
+    personIds: ['person-021', 'person-023'],
+    organizationIds: ['org-028', 'org-029', 'org-020'],
+    locationIds: ['loc-012', 'loc-011', 'loc-010'],
+    eventIds: ['event-021', 'event-022'],
+    volumeOverTime: [
+      { date: '2025-09-20', factionVolumes: { 'faction-003': 48, 'faction-005': 72, 'faction-006': 55 } },
+      { date: '2025-10-01', factionVolumes: { 'faction-003': 85, 'faction-005': 125, 'faction-006': 98 } },
+      { date: '2026-01-10', factionVolumes: { 'faction-003': 125, 'faction-005': 185, 'faction-006': 145 } }
+    ]
+  },
+  {
+    id: 'sub-025',
+    text: 'Competition intensifies in AI accelerator market',
+    description: 'AMD and Intel race to offer alternatives to Nvidia\'s dominant AI chips. AMD\'s new accelerator receives positive reviews, while Intel leverages CHIPS Act funding for AI chip development. Analysts debate whether any competitor can meaningfully challenge Nvidia\'s market position.',
+    parentNarrativeId: 'narr-011',
+    sentiment: 0.35,
+    factionMentions: {
+      'faction-003': { volume: 85, sentiment: 0.58 },
+      'faction-005': { volume: 115, sentiment: 0.52 }
+    },
+    personIds: ['person-026'],
+    organizationIds: ['org-031', 'org-027'],
+    locationIds: ['loc-012'],
+    eventIds: ['event-025'],
+    volumeOverTime: [
+      { date: '2025-11-20', factionVolumes: { 'faction-003': 48, 'faction-005': 65 } },
+      { date: '2025-11-25', factionVolumes: { 'faction-003': 72, 'faction-005': 95 } },
+      { date: '2026-01-10', factionVolumes: { 'faction-003': 85, 'faction-005': 115 } }
+    ]
   }
 ];

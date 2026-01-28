@@ -1570,5 +1570,710 @@ export const documents = [
         replies: []
       }
     ]
+  },
+
+  // Historical documents: Border State Coalition (June-December 2025)
+  {
+    id: 'doc-032',
+    documentType: 'news_article',
+    repositoryId: 'repo-news',
+    classification: 'U',
+    url: 'https://www.foxnews.com/politics/texas-governor-deploys-5000-guardsmen-border',
+    publishedDate: '2025-06-15T14:00:00Z',
+    publisherId: 'pub-nat-fox',
+    title: 'Texas Governor Deploys 5,000 Guardsmen to Border in Largest State-Led Enforcement Operation',
+    author: 'Bill Melugin',
+    contentBlocks: [
+      { type: 'paragraph', content: 'Texas Governor Greg Abbott announced Monday the deployment of 5,000 additional National Guard troops to the southern border, marking the largest state-led border enforcement operation in American history.' },
+      { type: 'paragraph', content: 'The deployment targets areas around Eagle Pass and Del Rio, where federal authorities have reported surging migrant encounters. Abbott said the state would continue to fill what he called a "vacuum of federal leadership."' },
+      { type: 'quote', content: '"Texas will not sit idly by while the federal government fails to secure our border. We will defend our state with every resource at our disposal," Abbott said at a press conference in Austin.' }
+    ],
+    excerpt: 'Texas Governor Greg Abbott announces deployment of 5,000 National Guard troops to border in largest state-led enforcement operation.',
+    narrativeIds: ['narr-014'],
+    themeIds: ['sub-035'],
+    personIds: ['person-027'],
+    organizationIds: ['org-024', 'org-029'],
+    locationIds: ['loc-010', 'loc-011'],
+    eventIds: ['event-027'],
+    factionMentions: {
+      'faction-001': { sentiment: 0.72 },
+      'faction-002': { sentiment: -0.65 }
+    },
+    highlights: [],
+    comments: []
+  },
+  {
+    id: 'doc-033',
+    documentType: 'news_article',
+    repositoryId: 'repo-news',
+    classification: 'U',
+    url: 'https://www.cnn.com/2025/06/18/politics/immigration-advocates-condemn-texas-border-surge',
+    publishedDate: '2025-06-18T16:00:00Z',
+    publisherId: 'pub-nat-cnn',
+    title: 'Immigration Advocates Condemn Texas Border Surge as "Dangerous Overreach"',
+    author: 'Priscilla Alvarez',
+    contentBlocks: [
+      { type: 'paragraph', content: 'Immigration advocacy groups are condemning Texas\'s deployment of 5,000 National Guard troops to the border as a dangerous escalation that could lead to humanitarian crises.' },
+      { type: 'paragraph', content: 'The ACLU of Texas warned that the militarization of the border threatens the rights of asylum seekers and could result in family separations.' }
+    ],
+    excerpt: 'Immigration advocates condemn Texas National Guard deployment as dangerous overreach.',
+    narrativeIds: ['narr-014'],
+    themeIds: ['sub-035'],
+    personIds: [],
+    organizationIds: ['org-029', 'org-030'],
+    locationIds: ['loc-011'],
+    eventIds: ['event-027'],
+    factionMentions: {
+      'faction-001': { sentiment: -0.55 },
+      'faction-002': { sentiment: 0.62 },
+      'faction-003': { sentiment: 0.78 }
+    },
+    highlights: [],
+    comments: []
+  },
+  {
+    id: 'doc-034',
+    documentType: 'news_article',
+    repositoryId: 'repo-news',
+    classification: 'U',
+    url: 'https://www.foxnews.com/politics/desantis-signs-florida-border-security-bill',
+    publishedDate: '2025-07-10T15:00:00Z',
+    publisherId: 'pub-nat-fox',
+    title: 'DeSantis Signs Aggressive Border Enforcement Bill, Pledges Support for Texas Coalition',
+    author: 'Adam Shaw',
+    contentBlocks: [
+      { type: 'paragraph', content: 'Florida Governor Ron DeSantis signed sweeping border security legislation Thursday, authorizing state law enforcement to arrest and detain individuals suspected of illegal border crossing.' },
+      { type: 'paragraph', content: 'The bill also allocates $100 million to support Texas\'s border enforcement efforts and creates a state-level deportation task force.' }
+    ],
+    excerpt: 'DeSantis signs border security bill and pledges support for Texas border coalition.',
+    narrativeIds: ['narr-014'],
+    themeIds: ['sub-035'],
+    personIds: ['person-028'],
+    organizationIds: ['org-025'],
+    locationIds: [],
+    eventIds: ['event-028'],
+    factionMentions: {
+      'faction-001': { sentiment: 0.75 },
+      'faction-002': { sentiment: -0.68 }
+    },
+    highlights: [],
+    comments: []
+  },
+  {
+    id: 'doc-035',
+    documentType: 'news_article',
+    repositoryId: 'repo-news',
+    classification: 'U',
+    url: 'https://www.nytimes.com/2025/07/05/health/opioid-settlement-distribution-begins',
+    publishedDate: '2025-07-05T10:00:00Z',
+    publisherId: 'pub-nat-nyt',
+    title: 'Opioid Settlement Checks Begin Arriving in Hardest-Hit Communities',
+    author: 'Jan Hoffman',
+    contentBlocks: [
+      { type: 'paragraph', content: 'Communities devastated by the opioid epidemic are beginning to receive their first settlement payments, marking the start of what officials hope will be a decade-long recovery effort.' },
+      { type: 'paragraph', content: 'West Virginia, which has the nation\'s highest overdose death rate, received $42 million in initial funding for treatment programs.' }
+    ],
+    excerpt: 'First opioid settlement payments arrive in communities hardest hit by the epidemic.',
+    narrativeIds: ['narr-013'],
+    themeIds: ['sub-033'],
+    personIds: ['person-034', 'person-035'],
+    organizationIds: ['org-028', 'org-022'],
+    locationIds: ['loc-001'],
+    eventIds: ['event-035'],
+    factionMentions: {
+      'faction-005': { sentiment: 0.45 },
+      'faction-006': { sentiment: 0.38 }
+    },
+    highlights: [],
+    comments: []
+  },
+  {
+    id: 'doc-036',
+    documentType: 'news_article',
+    repositoryId: 'repo-news',
+    classification: 'U',
+    url: 'https://www.washingtonpost.com/health/2025/07/20/opioid-funds-debate-best-use',
+    publishedDate: '2025-07-20T09:00:00Z',
+    publisherId: 'pub-nat-wapo',
+    title: 'Health Officials Debate Best Use of Opioid Settlement Funds',
+    author: 'Lenny Bernstein',
+    contentBlocks: [
+      { type: 'paragraph', content: 'As billions in opioid settlement funds begin flowing to states and localities, health officials are debating whether to prioritize treatment, prevention, or harm reduction programs.' },
+      { type: 'paragraph', content: 'The DEA and HHS have issued conflicting guidance, leaving local officials uncertain about federal expectations.' }
+    ],
+    excerpt: 'Health officials debate priorities for spending opioid settlement funds.',
+    narrativeIds: ['narr-013'],
+    themeIds: ['sub-033', 'sub-034'],
+    personIds: ['person-034', 'person-035'],
+    organizationIds: ['org-028', 'org-022'],
+    locationIds: ['loc-001'],
+    eventIds: ['event-035'],
+    factionMentions: {
+      'faction-005': { sentiment: 0.35 },
+      'faction-006': { sentiment: 0.42 }
+    },
+    highlights: [],
+    comments: []
+  },
+  {
+    id: 'doc-037',
+    documentType: 'news_article',
+    repositoryId: 'repo-news',
+    classification: 'U',
+    url: 'https://www.cnn.com/2025/08/05/politics/california-federal-lawsuit-border',
+    publishedDate: '2025-08-05T12:00:00Z',
+    publisherId: 'pub-nat-cnn',
+    title: 'California Files Federal Lawsuit Over Border Policies, Claims Constitutional Violations',
+    author: 'Tierney Sneed',
+    contentBlocks: [
+      { type: 'paragraph', content: 'California Governor Gavin Newsom announced a federal lawsuit challenging Texas and Florida border enforcement actions as unconstitutional infringements on federal immigration authority.' },
+      { type: 'paragraph', content: 'The lawsuit seeks an injunction to prevent state-led deportations and arrests of migrants.' }
+    ],
+    excerpt: 'California sues federal government over border policies, claiming constitutional violations.',
+    narrativeIds: ['narr-014'],
+    themeIds: ['sub-036'],
+    personIds: ['person-029'],
+    organizationIds: ['org-026'],
+    locationIds: ['loc-009'],
+    eventIds: ['event-029'],
+    factionMentions: {
+      'faction-001': { sentiment: -0.72 },
+      'faction-002': { sentiment: 0.68 }
+    },
+    highlights: [],
+    comments: []
+  },
+  {
+    id: 'doc-038',
+    documentType: 'news_article',
+    repositoryId: 'repo-news',
+    classification: 'U',
+    url: 'https://www.nytimes.com/2025/08/20/us/politics/doj-texas-border-investigation',
+    publishedDate: '2025-08-20T16:00:00Z',
+    publisherId: 'pub-nat-nyt',
+    title: 'DOJ Opens Investigation Into Texas Border Operations',
+    author: 'Charlie Savage',
+    contentBlocks: [
+      { type: 'paragraph', content: 'The Justice Department has opened a civil rights investigation into Texas\'s border enforcement operations, Attorney General Merrick Garland announced.' },
+      { type: 'paragraph', content: 'The investigation will examine whether state actions have resulted in civil rights violations against migrants and asylum seekers.' }
+    ],
+    excerpt: 'DOJ opens investigation into Texas border operations amid civil rights concerns.',
+    narrativeIds: ['narr-014'],
+    themeIds: ['sub-036'],
+    personIds: ['person-030'],
+    organizationIds: ['org-010'],
+    locationIds: ['loc-001'],
+    eventIds: ['event-030'],
+    factionMentions: {
+      'faction-001': { sentiment: -0.58 },
+      'faction-002': { sentiment: 0.55 }
+    },
+    highlights: [],
+    comments: []
+  },
+  {
+    id: 'doc-039',
+    documentType: 'news_article',
+    repositoryId: 'repo-news',
+    classification: 'U',
+    url: 'https://www.washingtonpost.com/health/2025/08/15/states-sue-opioid-settlement-formula',
+    publishedDate: '2025-08-15T11:00:00Z',
+    publisherId: 'pub-nat-wapo',
+    title: 'States Sue Over Opioid Settlement Allocation Formula',
+    author: 'Katie Shepherd',
+    contentBlocks: [
+      { type: 'paragraph', content: 'West Virginia, Ohio, and several other states have filed lawsuits challenging the opioid settlement allocation formula, arguing it unfairly benefits less-impacted states.' },
+      { type: 'paragraph', content: 'The lawsuits ask the Supreme Court to review and revise the distribution methodology.' }
+    ],
+    excerpt: 'States challenge opioid settlement allocation formula in federal court.',
+    narrativeIds: ['narr-013'],
+    themeIds: ['sub-034'],
+    personIds: [],
+    organizationIds: ['org-027'],
+    locationIds: ['loc-009'],
+    eventIds: ['event-036'],
+    factionMentions: {
+      'faction-005': { sentiment: -0.42 },
+      'faction-006': { sentiment: -0.35 }
+    },
+    highlights: [],
+    comments: []
+  },
+  {
+    id: 'doc-040',
+    documentType: 'news_article',
+    repositoryId: 'repo-news',
+    classification: 'U',
+    url: 'https://www.foxnews.com/politics/border-governors-unified-strategy-texas-summit',
+    publishedDate: '2025-09-01T10:00:00Z',
+    publisherId: 'pub-nat-fox',
+    title: 'Border Governors Announce Unified Strategy at Texas Summit',
+    author: 'Griff Jenkins',
+    contentBlocks: [
+      { type: 'paragraph', content: 'Governors from Texas, Florida, and six other states announced a unified border enforcement strategy at a summit in Austin, pledging mutual aid and shared resources.' },
+      { type: 'paragraph', content: 'The coalition represents the most significant state-level challenge to federal immigration authority in decades.' }
+    ],
+    excerpt: 'Border governors announce unified enforcement strategy at Texas summit.',
+    narrativeIds: ['narr-014'],
+    themeIds: ['sub-035', 'sub-037'],
+    personIds: ['person-027', 'person-028'],
+    organizationIds: ['org-024', 'org-025'],
+    locationIds: ['loc-010'],
+    eventIds: ['event-031'],
+    factionMentions: {
+      'faction-001': { sentiment: 0.78 },
+      'faction-002': { sentiment: -0.72 }
+    },
+    highlights: [],
+    comments: []
+  },
+  {
+    id: 'doc-041',
+    documentType: 'news_article',
+    repositoryId: 'repo-news',
+    classification: 'U',
+    url: 'https://www.reuters.com/world/us/house-narrowly-passes-border-security-funding',
+    publishedDate: '2025-09-15T17:00:00Z',
+    publisherId: 'pub-int-reuters',
+    title: 'House Narrowly Passes Border Security Funding Bill',
+    author: 'Richard Cowan',
+    contentBlocks: [
+      { type: 'paragraph', content: 'The House of Representatives narrowly passed a $14 billion border security funding bill on a party-line vote, setting up a showdown with the Senate.' },
+      { type: 'paragraph', content: 'Speaker Mike Johnson called the bill essential for national security, while Democrats criticized it as a poison pill designed to shut down the government.' }
+    ],
+    excerpt: 'House passes border security funding bill, Senate showdown looms.',
+    narrativeIds: ['narr-012', 'narr-014'],
+    themeIds: ['sub-031'],
+    personIds: ['person-032'],
+    organizationIds: ['org-020'],
+    locationIds: ['loc-004'],
+    eventIds: ['event-032'],
+    factionMentions: {
+      'faction-001': { sentiment: 0.62 },
+      'faction-002': { sentiment: -0.45 }
+    },
+    highlights: [],
+    comments: []
+  },
+  {
+    id: 'doc-042',
+    documentType: 'news_article',
+    repositoryId: 'repo-news',
+    classification: 'U',
+    url: 'https://www.cnn.com/2025/09/22/politics/senate-blocks-border-bill-shutdown',
+    publishedDate: '2025-09-22T15:00:00Z',
+    publisherId: 'pub-nat-cnn',
+    title: 'Senate Democrats Block Border Bill, Government Shutdown Looms',
+    author: 'Manu Raju',
+    contentBlocks: [
+      { type: 'paragraph', content: 'Senate Democrats blocked the House-passed border security bill, with Majority Leader Chuck Schumer calling it "ransom demand" that holds government funding hostage.' },
+      { type: 'paragraph', content: 'With no compromise in sight, a government shutdown appears increasingly likely by October 1.' }
+    ],
+    excerpt: 'Senate blocks border bill, government shutdown appears imminent.',
+    narrativeIds: ['narr-012'],
+    themeIds: ['sub-031', 'sub-032'],
+    personIds: ['person-033'],
+    organizationIds: ['org-020'],
+    locationIds: ['loc-004'],
+    eventIds: ['event-033'],
+    factionMentions: {
+      'faction-001': { sentiment: -0.68 },
+      'faction-002': { sentiment: 0.52 }
+    },
+    highlights: [],
+    comments: []
+  },
+  {
+    id: 'doc-043',
+    documentType: 'news_article',
+    repositoryId: 'repo-news',
+    classification: 'U',
+    url: 'https://www.nytimes.com/2025/09/28/us/politics/budget-negotiations-collapse',
+    publishedDate: '2025-09-28T18:00:00Z',
+    publisherId: 'pub-nat-nyt',
+    title: 'Budget Negotiations Collapse as Shutdown Deadline Approaches',
+    author: 'Carl Hulse',
+    contentBlocks: [
+      { type: 'paragraph', content: 'Last-ditch budget negotiations collapsed Saturday night, making a government shutdown all but certain when the fiscal year ends Monday.' },
+      { type: 'paragraph', content: 'Both parties blamed each other for the impasse, with each side accusing the other of putting politics above the needs of federal workers and the public.' }
+    ],
+    excerpt: 'Budget negotiations collapse, shutdown appears certain.',
+    narrativeIds: ['narr-012'],
+    themeIds: ['sub-031'],
+    personIds: ['person-032', 'person-033'],
+    organizationIds: ['org-020'],
+    locationIds: ['loc-004'],
+    eventIds: [],
+    factionMentions: {
+      'faction-001': { sentiment: -0.35 },
+      'faction-002': { sentiment: -0.42 }
+    },
+    highlights: [],
+    comments: []
+  },
+  {
+    id: 'doc-044',
+    documentType: 'news_article',
+    repositoryId: 'repo-news',
+    classification: 'U',
+    url: 'https://www.washingtonpost.com/politics/2025/10/01/government-shutdown-begins',
+    publishedDate: '2025-10-01T00:30:00Z',
+    publisherId: 'pub-nat-wapo',
+    title: 'Government Shutdown Begins as Congress Fails to Reach Deal',
+    author: 'Marianna Sotomayor',
+    contentBlocks: [
+      { type: 'paragraph', content: 'The federal government shut down at midnight after Congress failed to pass a funding bill, furloughing hundreds of thousands of federal workers.' },
+      { type: 'paragraph', content: 'National parks closed and passport processing halted as essential services were reduced to skeleton crews.' }
+    ],
+    excerpt: 'Government shutdown begins, hundreds of thousands furloughed.',
+    narrativeIds: ['narr-012'],
+    themeIds: ['sub-032'],
+    personIds: ['person-032', 'person-033'],
+    organizationIds: ['org-020'],
+    locationIds: ['loc-001'],
+    eventIds: ['event-034'],
+    factionMentions: {
+      'faction-001': { sentiment: -0.52 },
+      'faction-002': { sentiment: -0.55 }
+    },
+    highlights: [],
+    comments: []
+  },
+  {
+    id: 'doc-045',
+    documentType: 'news_article',
+    repositoryId: 'repo-news',
+    classification: 'U',
+    url: 'https://www.cnn.com/2025/10/08/politics/shutdown-federal-workers-hardship',
+    publishedDate: '2025-10-08T11:00:00Z',
+    publisherId: 'pub-nat-cnn',
+    title: 'Federal Workers Furloughed as Shutdown Enters Second Week',
+    author: 'Devan Cole',
+    contentBlocks: [
+      { type: 'paragraph', content: 'The government shutdown entered its second week with no end in sight, leaving federal workers facing mounting financial hardship and uncertainty.' },
+      { type: 'paragraph', content: 'Worker unions are calling for emergency legislation to end the impasse.' }
+    ],
+    excerpt: 'Federal workers face hardship as shutdown enters second week.',
+    narrativeIds: ['narr-012'],
+    themeIds: ['sub-032'],
+    personIds: [],
+    organizationIds: ['org-020'],
+    locationIds: ['loc-001'],
+    eventIds: [],
+    factionMentions: {
+      'faction-001': { sentiment: -0.48 },
+      'faction-002': { sentiment: -0.45 }
+    },
+    highlights: [],
+    comments: []
+  },
+  {
+    id: 'doc-046',
+    documentType: 'news_article',
+    repositoryId: 'repo-news',
+    classification: 'U',
+    url: 'https://www.reuters.com/world/us/shutdown-ends-compromise-reached',
+    publishedDate: '2025-10-19T03:00:00Z',
+    publisherId: 'pub-int-reuters',
+    title: 'Government Reopens After 18-Day Shutdown, Compromise Reached',
+    author: 'David Morgan',
+    contentBlocks: [
+      { type: 'paragraph', content: 'The government reopened early Sunday after an 18-day shutdown, following a compromise that neither party celebrated.' },
+      { type: 'paragraph', content: 'The deal includes modest border security funding increases but falls far short of Republican demands.' }
+    ],
+    excerpt: 'Government reopens after 18-day shutdown with modest compromise.',
+    narrativeIds: ['narr-012'],
+    themeIds: ['sub-031', 'sub-032'],
+    personIds: ['person-032', 'person-033'],
+    organizationIds: ['org-020'],
+    locationIds: ['loc-001'],
+    eventIds: [],
+    factionMentions: {
+      'faction-001': { sentiment: 0.25 },
+      'faction-002': { sentiment: 0.28 }
+    },
+    highlights: [],
+    comments: []
+  },
+  {
+    id: 'doc-047',
+    documentType: 'news_article',
+    repositoryId: 'repo-news',
+    classification: 'U',
+    url: 'https://www.nytimes.com/2025/11/15/us/politics/supreme-court-election-cases',
+    publishedDate: '2025-11-15T11:00:00Z',
+    publisherId: 'pub-nat-nyt',
+    title: 'Supreme Court Agrees to Expedite Election Certification Cases',
+    author: 'Adam Liptak',
+    contentBlocks: [
+      { type: 'paragraph', content: 'The Supreme Court announced it will expedite consideration of multiple cases related to the January electoral certification, setting arguments for early December.' },
+      { type: 'paragraph', content: 'Chief Justice John Roberts cited the "extraordinary importance" of resolving legal questions before the certification deadline.' }
+    ],
+    excerpt: 'Supreme Court expedites election certification cases ahead of January deadline.',
+    narrativeIds: ['narr-011'],
+    themeIds: ['sub-028'],
+    personIds: ['person-031'],
+    organizationIds: ['org-027'],
+    locationIds: ['loc-009'],
+    eventIds: ['event-037'],
+    factionMentions: {
+      'faction-001': { sentiment: 0.55 },
+      'faction-002': { sentiment: -0.62 },
+      'faction-004': { sentiment: 0.48 }
+    },
+    highlights: [],
+    comments: []
+  },
+  {
+    id: 'doc-048',
+    documentType: 'news_article',
+    repositoryId: 'repo-news',
+    classification: 'U',
+    url: 'https://www.washingtonpost.com/politics/2025/11/20/capitol-security-january-certification',
+    publishedDate: '2025-11-20T14:00:00Z',
+    publisherId: 'pub-nat-wapo',
+    title: 'Security Preparations Ramp Up Ahead of January Certification',
+    author: 'Dan Lamothe',
+    contentBlocks: [
+      { type: 'paragraph', content: 'Capitol Police are implementing enhanced security measures ahead of the January electoral certification, including expanded perimeters and increased coordination with federal agencies.' },
+      { type: 'paragraph', content: 'Officials say they have learned from the events of January 6, 2021 and are prepared for any contingency.' }
+    ],
+    excerpt: 'Capitol Police expand security preparations for January certification.',
+    narrativeIds: ['narr-011'],
+    themeIds: ['sub-029'],
+    personIds: [],
+    organizationIds: [],
+    locationIds: ['loc-004'],
+    eventIds: [],
+    factionMentions: {
+      'faction-004': { sentiment: 0.65 }
+    },
+    highlights: [],
+    comments: []
+  },
+  {
+    id: 'doc-049',
+    documentType: 'news_article',
+    repositoryId: 'repo-news',
+    classification: 'U',
+    url: 'https://www.cnn.com/2025/11/25/politics/aclu-election-law-challenges',
+    publishedDate: '2025-11-25T13:00:00Z',
+    publisherId: 'pub-nat-cnn',
+    title: 'ACLU Announces Legal Challenges to State Election Laws',
+    author: 'Ariane de Vogue',
+    contentBlocks: [
+      { type: 'paragraph', content: 'The ACLU announced a coordinated legal challenge to election laws in six states, arguing restrictions on mail-in voting and ID requirements violate constitutional protections.' },
+      { type: 'paragraph', content: 'The cases target laws passed since 2021 that civil rights groups say disproportionately impact minority voters.' }
+    ],
+    excerpt: 'ACLU launches coordinated challenge to state election laws.',
+    narrativeIds: ['narr-011'],
+    themeIds: ['sub-030'],
+    personIds: [],
+    organizationIds: ['org-030'],
+    locationIds: ['loc-009'],
+    eventIds: [],
+    factionMentions: {
+      'faction-001': { sentiment: -0.72 },
+      'faction-002': { sentiment: 0.68 },
+      'faction-003': { sentiment: 0.55 }
+    },
+    highlights: [],
+    comments: []
+  },
+  {
+    id: 'doc-050',
+    documentType: 'news_article',
+    repositoryId: 'repo-news',
+    classification: 'U',
+    url: 'https://www.foxnews.com/politics/fbi-leadership-transition',
+    publishedDate: '2025-12-01T15:00:00Z',
+    publisherId: 'pub-nat-fox',
+    title: 'FBI Leadership Shake-Up Announced Amid Political Transition',
+    author: 'Jake Gibson',
+    contentBlocks: [
+      { type: 'paragraph', content: 'Kash Patel has been announced as the incoming FBI Director, marking a significant shift in the bureau\'s leadership as the new administration takes shape.' },
+      { type: 'paragraph', content: 'Patel, a former deputy to the Director of National Intelligence, has pledged to reform the FBI\'s approach to political investigations.' }
+    ],
+    excerpt: 'Kash Patel announced as incoming FBI Director.',
+    narrativeIds: ['narr-011'],
+    themeIds: ['sub-028'],
+    personIds: ['person-036'],
+    organizationIds: ['org-012'],
+    locationIds: ['loc-001'],
+    eventIds: ['event-038'],
+    factionMentions: {
+      'faction-001': { sentiment: 0.72 },
+      'faction-002': { sentiment: -0.78 }
+    },
+    highlights: [],
+    comments: []
+  },
+  {
+    id: 'doc-051',
+    documentType: 'news_article',
+    repositoryId: 'repo-news',
+    classification: 'U',
+    url: 'https://www.washingtonpost.com/politics/2025/12/10/capitol-police-security-perimeter',
+    publishedDate: '2025-12-10T10:00:00Z',
+    publisherId: 'pub-nat-wapo',
+    title: 'Capitol Police Expand Security Perimeter for Certification',
+    author: 'Paul Kane',
+    contentBlocks: [
+      { type: 'paragraph', content: 'Capitol Police have expanded the security perimeter around the Capitol complex, with barriers extending several blocks in all directions ahead of the January certification.' },
+      { type: 'paragraph', content: 'The measures represent the most extensive security preparations since the January 6, 2021 attack.' }
+    ],
+    excerpt: 'Capitol Police implement most extensive security measures since January 6.',
+    narrativeIds: ['narr-011'],
+    themeIds: ['sub-029'],
+    personIds: [],
+    organizationIds: [],
+    locationIds: ['loc-004'],
+    eventIds: [],
+    factionMentions: {
+      'faction-004': { sentiment: 0.58 }
+    },
+    highlights: [],
+    comments: []
+  },
+  {
+    id: 'doc-052',
+    documentType: 'news_article',
+    repositoryId: 'repo-news',
+    classification: 'U',
+    url: 'https://www.foxnews.com/politics/heritage-foundation-transition-recommendations',
+    publishedDate: '2025-12-15T12:00:00Z',
+    publisherId: 'pub-nat-fox',
+    title: 'Heritage Foundation Releases Transition Policy Recommendations',
+    author: 'Chad Pergram',
+    contentBlocks: [
+      { type: 'paragraph', content: 'The Heritage Foundation released its comprehensive policy recommendations for the incoming administration, covering everything from border security to federal workforce reform.' },
+      { type: 'paragraph', content: 'The document builds on the controversial Project 2025 framework, providing detailed implementation guidance.' }
+    ],
+    excerpt: 'Heritage Foundation releases comprehensive transition policy recommendations.',
+    narrativeIds: ['narr-011', 'narr-012'],
+    themeIds: ['sub-028', 'sub-031'],
+    personIds: [],
+    organizationIds: ['org-031'],
+    locationIds: ['loc-009'],
+    eventIds: [],
+    factionMentions: {
+      'faction-001': { sentiment: 0.82 },
+      'faction-002': { sentiment: -0.75 }
+    },
+    highlights: [],
+    comments: []
+  },
+  {
+    id: 'doc-053',
+    documentType: 'news_article',
+    repositoryId: 'repo-news',
+    classification: 'U',
+    url: 'https://www.nytimes.com/2025/12/20/health/opioid-funding-disputes',
+    publishedDate: '2025-12-20T09:00:00Z',
+    publisherId: 'pub-nat-nyt',
+    title: 'Opioid Funding Disputes Continue as Year Ends',
+    author: 'Jan Hoffman',
+    contentBlocks: [
+      { type: 'paragraph', content: 'Legal disputes over opioid settlement allocation continue as the year ends, with the Supreme Court yet to rule on state challenges to the distribution formula.' },
+      { type: 'paragraph', content: 'Communities awaiting funds express frustration at the delays while the opioid crisis claims over 100,000 lives annually.' }
+    ],
+    excerpt: 'Opioid settlement disputes continue, delaying funds to affected communities.',
+    narrativeIds: ['narr-013'],
+    themeIds: ['sub-034'],
+    personIds: ['person-035'],
+    organizationIds: ['org-022', 'org-027'],
+    locationIds: ['loc-001'],
+    eventIds: [],
+    factionMentions: {
+      'faction-005': { sentiment: -0.38 },
+      'faction-006': { sentiment: -0.32 }
+    },
+    highlights: [],
+    comments: []
+  },
+  {
+    id: 'doc-054',
+    documentType: 'news_article',
+    repositoryId: 'repo-news',
+    classification: 'U',
+    url: 'https://www.reuters.com/world/us/border-crossings-five-year-low',
+    publishedDate: '2025-12-28T14:00:00Z',
+    publisherId: 'pub-int-reuters',
+    title: 'Border Crossings Reach Five-Year Low, Debate Over Credit Continues',
+    author: 'Ted Hesson',
+    contentBlocks: [
+      { type: 'paragraph', content: 'Border crossings have fallen to a five-year low, but debate continues over whether state enforcement efforts or broader economic and international factors deserve credit.' },
+      { type: 'paragraph', content: 'Republican governors claim their enforcement coalition has deterred illegal crossings, while critics point to improved conditions in source countries.' }
+    ],
+    excerpt: 'Border crossings at five-year low, debate over causes continues.',
+    narrativeIds: ['narr-014'],
+    themeIds: ['sub-037'],
+    personIds: [],
+    organizationIds: [],
+    locationIds: ['loc-011'],
+    eventIds: [],
+    factionMentions: {
+      'faction-001': { sentiment: 0.65 },
+      'faction-002': { sentiment: -0.42 }
+    },
+    highlights: [],
+    comments: []
+  },
+  {
+    id: 'doc-055',
+    documentType: 'news_article',
+    repositoryId: 'repo-news',
+    classification: 'U',
+    url: 'https://www.nytimes.com/2026/01/02/us/politics/election-certification-smooth',
+    publishedDate: '2026-01-02T10:00:00Z',
+    publisherId: 'pub-nat-nyt',
+    title: 'Election Certification Expected to Proceed Smoothly',
+    author: 'Jonathan Weisman',
+    contentBlocks: [
+      { type: 'paragraph', content: 'With the Supreme Court having resolved key legal challenges, officials express confidence that the January electoral certification will proceed without disruption.' },
+      { type: 'paragraph', content: 'Security preparations are in place and both parties have signaled acceptance of the process.' }
+    ],
+    excerpt: 'Officials confident election certification will proceed smoothly.',
+    narrativeIds: ['narr-011'],
+    themeIds: ['sub-028', 'sub-029'],
+    personIds: [],
+    organizationIds: ['org-027'],
+    locationIds: ['loc-004'],
+    eventIds: [],
+    factionMentions: {
+      'faction-001': { sentiment: 0.45 },
+      'faction-002': { sentiment: 0.38 },
+      'faction-004': { sentiment: 0.52 }
+    },
+    highlights: [],
+    comments: []
+  },
+  {
+    id: 'doc-056',
+    documentType: 'news_article',
+    repositoryId: 'repo-news',
+    classification: 'U',
+    url: 'https://www.cnn.com/2026/01/03/politics/new-congress-sworn-in',
+    publishedDate: '2026-01-03T14:00:00Z',
+    publisherId: 'pub-nat-cnn',
+    title: 'New Congress Sworn In Amid Partisan Tensions',
+    author: 'Annie Grayer',
+    contentBlocks: [
+      { type: 'paragraph', content: 'The new Congress was sworn in Friday amid continued partisan tensions, with Speaker Mike Johnson and Majority Leader Chuck Schumer offering dueling visions for the year ahead.' },
+      { type: 'paragraph', content: 'The October shutdown remains a sore point, with both parties accusing the other of political brinkmanship.' }
+    ],
+    excerpt: 'New Congress sworn in amid continued partisan tensions.',
+    narrativeIds: ['narr-011', 'narr-012'],
+    themeIds: ['sub-028', 'sub-031'],
+    personIds: ['person-032', 'person-033'],
+    organizationIds: ['org-020'],
+    locationIds: ['loc-004'],
+    eventIds: [],
+    factionMentions: {
+      'faction-001': { sentiment: 0.35 },
+      'faction-002': { sentiment: 0.32 }
+    },
+    highlights: [],
+    comments: []
   }
 ];

@@ -50,5 +50,17 @@ export const locations = [
     name: 'Washington, D.C.',
     coordinates: { lat: 38.9072, lng: -77.0369 },
     type: 'city'
+  },
+  {
+    id: 'loc-010',
+    name: 'Austin, Texas',
+    coordinates: { lat: 30.2672, lng: -97.7431 },
+    type: 'city'
+  },
+  {
+    id: 'loc-011',
+    name: 'Eagle Pass, Texas',
+    coordinates: { lat: 28.7091, lng: -100.4995 },
+    type: 'city'
   }
 ];

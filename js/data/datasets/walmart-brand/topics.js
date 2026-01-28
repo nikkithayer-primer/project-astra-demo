@@ -149,5 +149,70 @@ export const topics = [
       { date: '2026-01-20', volume: 575 }
     ],
     createdAt: '2026-01-18T13:00:00Z'
+  },
+  {
+    id: 'topic-008',
+    headline: 'FTC Investigates Walmart Supply Chain Practices',
+    bulletPoints: [
+      'Investigation reveals labor violations at Great Value supplier factories',
+      'Workers describe unsafe conditions and excessive pressure',
+      'FTC opens formal inquiry into retail supply chain practices',
+      'Consumer groups demand greater transparency'
+    ],
+    documentIds: ['doc-024', 'doc-025', 'doc-026'],
+    startDate: '2025-06-15',
+    endDate: null,
+    volumeOverTime: [
+      { date: '2025-06-15', volume: 165 },
+      { date: '2025-06-22', volume: 285 },
+      { date: '2025-07-01', volume: 365 },
+      { date: '2025-07-15', volume: 245 }
+    ],
+    createdAt: '2025-06-15T10:00:00Z'
+  },
+  {
+    id: 'topic-009',
+    headline: 'Walmart Fulfillment Workers Push for Unionization',
+    bulletPoints: [
+      'Dallas facility files for union election in July',
+      'Workers cite concerns about conditions and wages',
+      'Texas vote fails but Atlanta campaign continues',
+      'Historic victory: Atlanta center votes to unionize in January',
+      'Walmart announces new benefits in response'
+    ],
+    documentIds: ['doc-027', 'doc-028', 'doc-032', 'doc-033', 'doc-034', 'doc-035', 'doc-046', 'doc-047', 'doc-048'],
+    startDate: '2025-07-20',
+    endDate: null,
+    volumeOverTime: [
+      { date: '2025-07-20', volume: 185 },
+      { date: '2025-09-15', volume: 345 },
+      { date: '2025-10-01', volume: 285 },
+      { date: '2026-01-10', volume: 525 },
+      { date: '2026-01-15', volume: 385 }
+    ],
+    createdAt: '2025-07-20T11:00:00Z'
+  },
+  {
+    id: 'topic-010',
+    headline: 'Holiday Delivery Failures Damage Walmart Reputation',
+    bulletPoints: [
+      'Black Friday demand overwhelms Walmart delivery system',
+      'Thousands of customers report delayed or missing orders',
+      'CEO apologizes for failures affecting holiday gifts',
+      'Consumer groups file FTC complaint over delivery promises',
+      'Walmart announces $500M infrastructure investment'
+    ],
+    documentIds: ['doc-038', 'doc-039', 'doc-040', 'doc-041', 'doc-042', 'doc-043', 'doc-044', 'doc-045'],
+    startDate: '2025-11-29',
+    endDate: null,
+    volumeOverTime: [
+      { date: '2025-11-29', volume: 285 },
+      { date: '2025-12-05', volume: 485 },
+      { date: '2025-12-10', volume: 625 },
+      { date: '2025-12-20', volume: 465 },
+      { date: '2025-12-28', volume: 325 },
+      { date: '2026-01-02', volume: 245 }
+    ],
+    createdAt: '2025-11-29T18:00:00Z'
   }
 ];

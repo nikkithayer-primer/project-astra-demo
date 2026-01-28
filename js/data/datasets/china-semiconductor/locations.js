@@ -62,5 +62,17 @@ export const locations = [
     name: 'Hsinchu, Taiwan',
     coordinates: { lat: 24.8138, lng: 120.9675 },
     type: 'city'
+  },
+  {
+    id: 'loc-011',
+    name: 'Seoul, South Korea',
+    coordinates: { lat: 37.5665, lng: 126.9780 },
+    type: 'city'
+  },
+  {
+    id: 'loc-012',
+    name: 'Santa Clara, California',
+    coordinates: { lat: 37.3541, lng: -121.9552 },
+    type: 'city'
   }
 ];

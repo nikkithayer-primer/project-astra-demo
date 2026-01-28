@@ -1027,5 +1027,705 @@ export const documents = [
       }
     ],
     comments: []
+  },
+
+  // Historical documents: Supplier Issues, Unionization, Healthcare, Delivery (June 2025 - January 2026)
+  {
+    id: 'doc-024',
+    documentType: 'news_article',
+    repositoryId: 'repo-news',
+    classification: 'U',
+    url: 'https://www.reuters.com/business/great-value-supplier-violations',
+    publishedDate: '2025-06-15T10:00:00Z',
+    publisherId: 'pub-reuters',
+    title: 'Investigation Reveals Unsafe Conditions at Great Value Supplier',
+    author: 'Howard Schneider',
+    contentBlocks: [
+      { type: 'paragraph', content: 'An investigation has uncovered unsafe working conditions and labor violations at factories producing Walmart\'s Great Value private-label products.' },
+      { type: 'paragraph', content: 'Workers described long hours, inadequate safety equipment, and pressure to meet production quotas that put their health at risk.' }
+    ],
+    excerpt: 'Investigation reveals labor and safety violations at Great Value supplier factories.',
+    narrativeIds: ['narr-008'],
+    themeIds: ['sub-017'],
+    personIds: [],
+    organizationIds: ['org-001'],
+    locationIds: ['loc-006'],
+    eventIds: ['event-015'],
+    factionMentions: {
+      'faction-003': { sentiment: -0.72 },
+      'faction-004': { sentiment: -0.68 }
+    },
+    highlights: [],
+    comments: []
+  },
+  {
+    id: 'doc-025',
+    documentType: 'news_article',
+    repositoryId: 'repo-news',
+    classification: 'U',
+    url: 'https://www.wsj.com/business/walmart-supply-chain-transparency',
+    publishedDate: '2025-06-22T09:00:00Z',
+    publisherId: 'pub-wsj',
+    title: 'Walmart Faces Pressure Over Supply Chain Transparency',
+    author: 'Sarah Nassauer',
+    contentBlocks: [
+      { type: 'paragraph', content: 'Walmart is facing growing pressure from consumer advocacy groups to improve transparency in its supply chain following revelations about supplier labor violations.' },
+      { type: 'paragraph', content: 'Critics argue that Walmart\'s aggressive price demands create conditions for worker exploitation.' }
+    ],
+    excerpt: 'Consumer groups demand greater transparency in Walmart supply chain.',
+    narrativeIds: ['narr-008'],
+    themeIds: ['sub-017', 'sub-018'],
+    personIds: [],
+    organizationIds: ['org-001'],
+    locationIds: ['loc-006'],
+    eventIds: [],
+    factionMentions: {
+      'faction-003': { sentiment: -0.65 },
+      'faction-005': { sentiment: -0.42 }
+    },
+    highlights: [],
+    comments: []
+  },
+  {
+    id: 'doc-026',
+    documentType: 'news_article',
+    repositoryId: 'repo-news',
+    classification: 'U',
+    url: 'https://www.bloomberg.com/business/ftc-retail-supply-chain-inquiry',
+    publishedDate: '2025-07-01T14:00:00Z',
+    publisherId: 'pub-bloomberg',
+    title: 'FTC Opens Inquiry Into Retail Supply Chain Practices',
+    author: 'David McLaughlin',
+    contentBlocks: [
+      { type: 'paragraph', content: 'The Federal Trade Commission has opened an inquiry into retail supply chain practices, with Walmart among the companies being examined.' },
+      { type: 'paragraph', content: 'FTC Chair Lina Khan said the agency is examining whether price pressures contribute to supplier labor violations.' }
+    ],
+    excerpt: 'FTC opens inquiry into Walmart and other retailers\' supply chain practices.',
+    narrativeIds: ['narr-008'],
+    themeIds: ['sub-018'],
+    personIds: ['person-022'],
+    organizationIds: ['org-018', 'org-001'],
+    locationIds: ['loc-006'],
+    eventIds: ['event-016'],
+    factionMentions: {
+      'faction-004': { sentiment: 0.55 },
+      'faction-005': { sentiment: -0.48 }
+    },
+    highlights: [],
+    comments: []
+  },
+  {
+    id: 'doc-027',
+    documentType: 'news_article',
+    repositoryId: 'repo-news',
+    classification: 'U',
+    url: 'https://apnews.com/article/walmart-fulfillment-workers-union',
+    publishedDate: '2025-07-20T11:00:00Z',
+    publisherId: 'pub-ap',
+    title: 'Walmart Fulfillment Workers in Texas Seek Union Vote',
+    author: 'Anne D\'Innocenzio',
+    contentBlocks: [
+      { type: 'paragraph', content: 'Workers at a Walmart e-commerce fulfillment center in Dallas have filed for a union election, citing concerns about working conditions and wages.' },
+      { type: 'paragraph', content: 'The Retail, Wholesale and Department Store Union is supporting the organizing effort.' }
+    ],
+    excerpt: 'Walmart fulfillment workers in Texas file for union election.',
+    narrativeIds: ['narr-009'],
+    themeIds: ['sub-019'],
+    personIds: ['person-020'],
+    organizationIds: ['org-016', 'org-001'],
+    locationIds: ['loc-011'],
+    eventIds: ['event-017'],
+    factionMentions: {
+      'faction-002': { sentiment: 0.72 },
+      'faction-003': { sentiment: 0.78 }
+    },
+    highlights: [],
+    comments: []
+  },
+  {
+    id: 'doc-028',
+    documentType: 'news_article',
+    repositoryId: 'repo-news',
+    classification: 'U',
+    url: 'https://www.usatoday.com/story/money/warehouse-workers-organizing',
+    publishedDate: '2025-07-28T10:00:00Z',
+    publisherId: 'pub-usatoday',
+    title: 'Why Warehouse Workers Are Organizing in Record Numbers',
+    author: 'Charisse Jones',
+    contentBlocks: [
+      { type: 'paragraph', content: 'Warehouse and fulfillment center workers across the country are organizing at record rates, following the Amazon Labor Union\'s landmark victory.' },
+      { type: 'paragraph', content: 'Labor experts say the pandemic highlighted the essential nature of warehouse work while exposing difficult conditions.' }
+    ],
+    excerpt: 'Analysis: Warehouse workers organize at record rates across the country.',
+    narrativeIds: ['narr-009'],
+    themeIds: ['sub-019', 'sub-020'],
+    personIds: ['person-021'],
+    organizationIds: ['org-016', 'org-017'],
+    locationIds: [],
+    eventIds: [],
+    factionMentions: {
+      'faction-002': { sentiment: 0.68 },
+      'faction-003': { sentiment: 0.75 }
+    },
+    highlights: [],
+    comments: []
+  },
+  {
+    id: 'doc-029',
+    documentType: 'news_article',
+    repositoryId: 'repo-news',
+    classification: 'U',
+    url: 'https://www.wsj.com/health/walmart-healthcare-rural-expansion',
+    publishedDate: '2025-08-05T09:00:00Z',
+    publisherId: 'pub-wsj',
+    title: 'Walmart Bets Big on Healthcare as Rural Hospitals Struggle',
+    author: 'Sharon Terlep',
+    contentBlocks: [
+      { type: 'paragraph', content: 'Walmart is expanding its healthcare clinic network into rural communities that have lost hospitals, offering primary care, dental, and mental health services.' },
+      { type: 'paragraph', content: 'The company says it can provide care at prices 40% below market rates by leveraging its store infrastructure.' }
+    ],
+    excerpt: 'Walmart expands healthcare clinics into underserved rural communities.',
+    narrativeIds: ['narr-010'],
+    themeIds: ['sub-021'],
+    personIds: ['person-023'],
+    organizationIds: ['org-019'],
+    locationIds: ['loc-001', 'loc-009'],
+    eventIds: ['event-018'],
+    factionMentions: {
+      'faction-001': { sentiment: 0.45 },
+      'faction-004': { sentiment: 0.52 },
+      'faction-005': { sentiment: 0.58 }
+    },
+    highlights: [],
+    comments: []
+  },
+  {
+    id: 'doc-030',
+    documentType: 'news_article',
+    repositoryId: 'repo-news',
+    classification: 'U',
+    url: 'https://localnews.example.com/walmart-health-rural-missouri',
+    publishedDate: '2025-08-15T11:00:00Z',
+    publisherId: 'pub-localnews',
+    title: 'Can Walmart Fill the Rural Healthcare Gap?',
+    author: 'Jennifer Martinez',
+    contentBlocks: [
+      { type: 'paragraph', content: 'In rural Missouri, where the nearest hospital is 45 minutes away, residents are welcoming a new Walmart Health clinic.' },
+      { type: 'paragraph', content: 'But some healthcare advocates question whether corporate healthcare can adequately serve vulnerable populations.' }
+    ],
+    excerpt: 'Rural community weighs pros and cons of Walmart healthcare expansion.',
+    narrativeIds: ['narr-010'],
+    themeIds: ['sub-021', 'sub-022'],
+    personIds: [],
+    organizationIds: ['org-019'],
+    locationIds: ['loc-009'],
+    eventIds: [],
+    factionMentions: {
+      'faction-001': { sentiment: 0.55 },
+      'faction-004': { sentiment: 0.48 }
+    },
+    highlights: [],
+    comments: []
+  },
+  {
+    id: 'doc-031',
+    documentType: 'news_article',
+    repositoryId: 'repo-news',
+    classification: 'U',
+    url: 'https://consumeraffairs.com/walmart-healthcare-motives',
+    publishedDate: '2025-08-25T10:00:00Z',
+    publisherId: 'pub-consumeraffairs',
+    title: 'Critics Question Walmart\'s Healthcare Motives',
+    author: 'Mark Huffman',
+    contentBlocks: [
+      { type: 'paragraph', content: 'Consumer advocacy groups are questioning Walmart\'s motives in expanding healthcare services, suggesting profit rather than community service drives the initiative.' },
+      { type: 'paragraph', content: 'Critics point to the company\'s history of closing unprofitable stores regardless of community impact.' }
+    ],
+    excerpt: 'Consumer groups question Walmart\'s healthcare expansion motives.',
+    narrativeIds: ['narr-010'],
+    themeIds: ['sub-022'],
+    personIds: [],
+    organizationIds: ['org-019', 'org-021'],
+    locationIds: [],
+    eventIds: [],
+    factionMentions: {
+      'faction-001': { sentiment: -0.35 },
+      'faction-004': { sentiment: 0.42 }
+    },
+    highlights: [],
+    comments: []
+  },
+  {
+    id: 'doc-032',
+    documentType: 'news_article',
+    repositoryId: 'repo-news',
+    classification: 'U',
+    url: 'https://www.reuters.com/business/union-vote-fails-walmart-texas',
+    publishedDate: '2025-09-15T19:00:00Z',
+    publisherId: 'pub-reuters',
+    title: 'Union Vote Fails at Texas Walmart Fulfillment Center',
+    author: 'Howard Schneider',
+    contentBlocks: [
+      { type: 'paragraph', content: 'Workers at a Walmart fulfillment center in Dallas voted against union representation in a closely watched election.' },
+      { type: 'paragraph', content: 'Union organizers blamed Walmart\'s aggressive anti-union campaign for the defeat but vowed to continue organizing efforts.' }
+    ],
+    excerpt: 'Walmart fulfillment center workers in Texas vote against union.',
+    narrativeIds: ['narr-009'],
+    themeIds: ['sub-020'],
+    personIds: ['person-020'],
+    organizationIds: ['org-016', 'org-001'],
+    locationIds: ['loc-011'],
+    eventIds: ['event-019'],
+    factionMentions: {
+      'faction-002': { sentiment: -0.65 },
+      'faction-003': { sentiment: -0.72 }
+    },
+    highlights: [],
+    comments: []
+  },
+  {
+    id: 'doc-033',
+    documentType: 'news_article',
+    repositoryId: 'repo-news',
+    classification: 'U',
+    url: 'https://apnews.com/article/walmart-union-workers-vow-continue',
+    publishedDate: '2025-09-18T10:00:00Z',
+    publisherId: 'pub-ap',
+    title: 'Workers Vow to Continue Organizing Despite Setback',
+    author: 'Anne D\'Innocenzio',
+    contentBlocks: [
+      { type: 'paragraph', content: 'Following their defeat in Dallas, Walmart warehouse workers say they will continue their organizing campaign at other facilities.' },
+      { type: 'paragraph', content: 'RWDSU leader Stuart Appelbaum said the close vote shows significant worker support for unionization.' }
+    ],
+    excerpt: 'Walmart fulfillment workers vow to continue organizing after Texas defeat.',
+    narrativeIds: ['narr-009'],
+    themeIds: ['sub-019'],
+    personIds: ['person-020'],
+    organizationIds: ['org-016'],
+    locationIds: ['loc-011'],
+    eventIds: [],
+    factionMentions: {
+      'faction-002': { sentiment: 0.58 },
+      'faction-003': { sentiment: 0.65 }
+    },
+    highlights: [],
+    comments: []
+  },
+  {
+    id: 'doc-034',
+    documentType: 'news_article',
+    repositoryId: 'repo-news',
+    classification: 'U',
+    url: 'https://www.bloomberg.com/business/walmart-anti-union-tactics',
+    publishedDate: '2025-09-25T14:00:00Z',
+    publisherId: 'pub-bloomberg',
+    title: 'Walmart\'s Anti-Union Tactics Come Under Scrutiny',
+    author: 'Matthew Boyle',
+    contentBlocks: [
+      { type: 'paragraph', content: 'Labor advocates are calling for an investigation into Walmart\'s anti-union tactics following the company\'s defeat of an organizing effort in Texas.' },
+      { type: 'paragraph', content: 'Workers described mandatory meetings where managers warned about the dangers of unionization.' }
+    ],
+    excerpt: 'Labor groups call for investigation into Walmart anti-union tactics.',
+    narrativeIds: ['narr-009'],
+    themeIds: ['sub-020'],
+    personIds: [],
+    organizationIds: ['org-001', 'org-016'],
+    locationIds: [],
+    eventIds: [],
+    factionMentions: {
+      'faction-002': { sentiment: -0.72 },
+      'faction-003': { sentiment: -0.78 },
+      'faction-005': { sentiment: -0.35 }
+    },
+    highlights: [],
+    comments: []
+  },
+  {
+    id: 'doc-035',
+    documentType: 'news_article',
+    repositoryId: 'repo-news',
+    classification: 'U',
+    url: 'https://www.usatoday.com/story/money/walmart-second-union-vote',
+    publishedDate: '2025-10-01T11:00:00Z',
+    publisherId: 'pub-usatoday',
+    title: 'Second Walmart Fulfillment Center Files for Union Election',
+    author: 'Charisse Jones',
+    contentBlocks: [
+      { type: 'paragraph', content: 'Workers at a Walmart e-commerce fulfillment center in Atlanta have filed for a union election, the second such effort at the retail giant this year.' },
+      { type: 'paragraph', content: 'Organizers say they have learned from the Texas campaign and are better prepared for Walmart\'s opposition.' }
+    ],
+    excerpt: 'Atlanta Walmart fulfillment center files for union election.',
+    narrativeIds: ['narr-009'],
+    themeIds: ['sub-019'],
+    personIds: ['person-020', 'person-025'],
+    organizationIds: ['org-016', 'org-006'],
+    locationIds: ['loc-003'],
+    eventIds: ['event-020'],
+    factionMentions: {
+      'faction-002': { sentiment: 0.72 },
+      'faction-003': { sentiment: 0.75 }
+    },
+    highlights: [],
+    comments: []
+  },
+  {
+    id: 'doc-036',
+    documentType: 'news_article',
+    repositoryId: 'repo-news',
+    classification: 'U',
+    url: 'https://localnews.example.com/walmart-health-15-new-clinics',
+    publishedDate: '2025-10-15T10:00:00Z',
+    publisherId: 'pub-localnews',
+    title: 'Walmart Health Opens 15 New Clinics in Underserved Areas',
+    author: 'Jennifer Martinez',
+    contentBlocks: [
+      { type: 'paragraph', content: 'Walmart Health opened 15 new clinics in rural communities across the South and Midwest, bringing healthcare services to areas that have lost local hospitals.' },
+      { type: 'paragraph', content: 'The clinics offer primary care, dental services, and mental health counseling at prices significantly below market rates.' }
+    ],
+    excerpt: 'Walmart Health opens 15 clinics in underserved rural communities.',
+    narrativeIds: ['narr-010'],
+    themeIds: ['sub-021'],
+    personIds: ['person-023'],
+    organizationIds: ['org-019'],
+    locationIds: ['loc-009', 'loc-010'],
+    eventIds: ['event-021'],
+    factionMentions: {
+      'faction-001': { sentiment: 0.62 },
+      'faction-004': { sentiment: 0.55 }
+    },
+    highlights: [],
+    comments: []
+  },
+  {
+    id: 'doc-037',
+    documentType: 'news_article',
+    repositoryId: 'repo-news',
+    classification: 'U',
+    url: 'https://apnews.com/article/rural-communities-walmart-healthcare',
+    publishedDate: '2025-10-25T14:00:00Z',
+    publisherId: 'pub-ap',
+    title: 'Rural Communities Embrace Walmart Healthcare Expansion',
+    author: 'Michelle Price',
+    contentBlocks: [
+      { type: 'paragraph', content: 'Rural residents across the South are embracing Walmart\'s healthcare expansion, with many saying the clinics fill a critical gap left by closed hospitals.' },
+      { type: 'paragraph', content: 'Local officials say any healthcare is better than none, even as some question long-term sustainability.' }
+    ],
+    excerpt: 'Rural communities welcome Walmart healthcare amid hospital closures.',
+    narrativeIds: ['narr-010'],
+    themeIds: ['sub-021', 'sub-022'],
+    personIds: [],
+    organizationIds: ['org-019'],
+    locationIds: ['loc-009', 'loc-010'],
+    eventIds: [],
+    factionMentions: {
+      'faction-001': { sentiment: 0.68 },
+      'faction-004': { sentiment: 0.52 }
+    },
+    highlights: [],
+    comments: []
+  },
+  {
+    id: 'doc-038',
+    documentType: 'news_article',
+    repositoryId: 'repo-news',
+    classification: 'U',
+    url: 'https://www.wsj.com/business/walmart-black-friday-delivery-chaos',
+    publishedDate: '2025-11-29T18:00:00Z',
+    publisherId: 'pub-wsj',
+    title: 'Black Friday Online Sales Surge Overwhelms Walmart Delivery',
+    author: 'Sarah Nassauer',
+    contentBlocks: [
+      { type: 'paragraph', content: 'Walmart\'s delivery system buckled under record Black Friday online sales, with thousands of customers reporting delayed or missing orders.' },
+      { type: 'paragraph', content: 'The company said it was working to resolve issues but could not guarantee delivery times for orders placed over the weekend.' }
+    ],
+    excerpt: 'Walmart delivery system overwhelmed by Black Friday demand.',
+    narrativeIds: ['narr-011'],
+    themeIds: ['sub-023'],
+    personIds: ['person-018', 'person-019'],
+    organizationIds: ['org-001'],
+    locationIds: ['loc-001'],
+    eventIds: ['event-022'],
+    factionMentions: {
+      'faction-001': { sentiment: -0.72 },
+      'faction-005': { sentiment: -0.65 },
+      'faction-006': { sentiment: 0.48 }
+    },
+    highlights: [],
+    comments: []
+  },
+  {
+    id: 'doc-039',
+    documentType: 'social_media',
+    repositoryId: 'repo-osint',
+    classification: 'U',
+    url: 'https://x.com/example/status/walmart-orders-stuck',
+    publishedDate: '2025-11-30T10:00:00Z',
+    publisherId: 'pub-x',
+    title: 'Thousands of Walmart Orders Stuck in Transit [Social Media Thread]',
+    author: '@frustrated_shopper',
+    contentBlocks: [
+      { type: 'paragraph', content: 'Thread: My Walmart Black Friday order has been "in transit" for 4 days with no updates. Hundreds of replies showing same issue. @Walmart customer service unreachable. #WalmartFail' }
+    ],
+    excerpt: 'Social media thread documents widespread Walmart delivery failures.',
+    narrativeIds: ['narr-011'],
+    themeIds: ['sub-023'],
+    personIds: [],
+    organizationIds: ['org-001'],
+    locationIds: [],
+    eventIds: ['event-022'],
+    factionMentions: {
+      'faction-001': { sentiment: -0.82 }
+    },
+    highlights: [],
+    comments: []
+  },
+  {
+    id: 'doc-040',
+    documentType: 'news_article',
+    repositoryId: 'repo-news',
+    classification: 'U',
+    url: 'https://www.reuters.com/business/walmart-ceo-apology-delivery',
+    publishedDate: '2025-12-05T11:00:00Z',
+    publisherId: 'pub-reuters',
+    title: 'Walmart CEO Apologizes for Holiday Delivery Failures',
+    author: 'Siddharth Cavale',
+    contentBlocks: [
+      { type: 'paragraph', content: 'Walmart CEO Doug McMillon apologized for widespread delivery failures that left thousands of customers without their holiday orders.' },
+      { type: 'paragraph', content: 'The company announced it would provide refunds and gift cards to affected customers, but critics said the response was insufficient.' }
+    ],
+    excerpt: 'Walmart CEO apologizes for widespread holiday delivery failures.',
+    narrativeIds: ['narr-011'],
+    themeIds: ['sub-023', 'sub-024'],
+    personIds: ['person-001', 'person-018'],
+    organizationIds: ['org-001'],
+    locationIds: ['loc-001'],
+    eventIds: ['event-023'],
+    factionMentions: {
+      'faction-001': { sentiment: -0.58 },
+      'faction-005': { sentiment: -0.42 }
+    },
+    highlights: [],
+    comments: []
+  },
+  {
+    id: 'doc-041',
+    documentType: 'social_media',
+    repositoryId: 'repo-osint',
+    classification: 'U',
+    url: 'https://www.tiktok.com/example/walmart-gift-late',
+    publishedDate: '2025-12-10T15:00:00Z',
+    publisherId: 'pub-tiktok',
+    title: 'Customer Fury Mounts as Walmart Gifts Arrive Late [Viral Video]',
+    author: '@holiday_disaster',
+    contentBlocks: [
+      { type: 'paragraph', content: 'Viral TikTok shows parent opening empty box that was supposed to contain children\'s Christmas presents from Walmart. Video has 2.5M views. Comments filled with similar stories.' }
+    ],
+    excerpt: 'Viral video shows Walmart delivery failures impacting holiday gifts.',
+    narrativeIds: ['narr-011'],
+    themeIds: ['sub-023'],
+    personIds: [],
+    organizationIds: ['org-001'],
+    locationIds: [],
+    eventIds: [],
+    factionMentions: {
+      'faction-001': { sentiment: -0.85 }
+    },
+    highlights: [],
+    comments: []
+  },
+  {
+    id: 'doc-042',
+    documentType: 'news_article',
+    repositoryId: 'repo-news',
+    classification: 'U',
+    url: 'https://consumeraffairs.com/ftc-complaint-walmart-delivery',
+    publishedDate: '2025-12-15T14:00:00Z',
+    publisherId: 'pub-consumeraffairs',
+    title: 'Consumer Groups File FTC Complaint Over Walmart Delivery',
+    author: 'Mark Huffman',
+    contentBlocks: [
+      { type: 'paragraph', content: 'Consumer advocacy groups have filed an FTC complaint alleging Walmart made delivery promises it couldn\'t keep during the holiday season.' },
+      { type: 'paragraph', content: 'The complaint seeks investigation into whether Walmart\'s advertising was deceptive.' }
+    ],
+    excerpt: 'Consumer groups file FTC complaint over Walmart delivery promises.',
+    narrativeIds: ['narr-011'],
+    themeIds: ['sub-024'],
+    personIds: ['person-007', 'person-022'],
+    organizationIds: ['org-008', 'org-018'],
+    locationIds: ['loc-006'],
+    eventIds: ['event-024'],
+    factionMentions: {
+      'faction-001': { sentiment: 0.62 },
+      'faction-004': { sentiment: 0.72 }
+    },
+    highlights: [],
+    comments: []
+  },
+  {
+    id: 'doc-043',
+    documentType: 'news_article',
+    repositoryId: 'repo-news',
+    classification: 'U',
+    url: 'https://www.retaildive.com/walmart-delivery-system-failure',
+    publishedDate: '2025-12-20T10:00:00Z',
+    publisherId: 'pub-retaildive',
+    title: 'How Walmart\'s Delivery System Failed During Peak Season',
+    author: 'Ben Unglesbee',
+    contentBlocks: [
+      { type: 'paragraph', content: 'A Retail Dive analysis examines how Walmart\'s delivery infrastructure collapsed under holiday demand, causing widespread failures.' },
+      { type: 'paragraph', content: 'Industry experts say the company underestimated online order volume and overcommitted on delivery promises.' }
+    ],
+    excerpt: 'Analysis: How Walmart\'s delivery system failed during peak season.',
+    narrativeIds: ['narr-011'],
+    themeIds: ['sub-023', 'sub-024'],
+    personIds: ['person-026'],
+    organizationIds: ['org-001', 'org-022'],
+    locationIds: [],
+    eventIds: [],
+    factionMentions: {
+      'faction-005': { sentiment: -0.52 },
+      'faction-006': { sentiment: 0.45 }
+    },
+    highlights: [],
+    comments: []
+  },
+  {
+    id: 'doc-044',
+    documentType: 'news_article',
+    repositoryId: 'repo-news',
+    classification: 'U',
+    url: 'https://www.bloomberg.com/walmart-500m-delivery-investment',
+    publishedDate: '2025-12-28T09:00:00Z',
+    publisherId: 'pub-bloomberg',
+    title: 'Walmart Announces $500M Investment in Delivery Infrastructure',
+    author: 'Matthew Boyle',
+    contentBlocks: [
+      { type: 'paragraph', content: 'Walmart announced a $500 million investment to upgrade its delivery infrastructure following widespread holiday season failures.' },
+      { type: 'paragraph', content: 'The investment will expand fulfillment capacity and improve logistics technology.' }
+    ],
+    excerpt: 'Walmart pledges $500M investment to fix delivery infrastructure.',
+    narrativeIds: ['narr-011'],
+    themeIds: ['sub-024'],
+    personIds: ['person-001', 'person-019'],
+    organizationIds: ['org-001'],
+    locationIds: ['loc-001'],
+    eventIds: ['event-025'],
+    factionMentions: {
+      'faction-001': { sentiment: 0.35 },
+      'faction-005': { sentiment: 0.58 }
+    },
+    highlights: [],
+    comments: []
+  },
+  {
+    id: 'doc-045',
+    documentType: 'social_media',
+    repositoryId: 'repo-osint',
+    classification: 'U',
+    url: 'https://x.com/example/status/walmart-still-failing',
+    publishedDate: '2026-01-02T14:00:00Z',
+    publisherId: 'pub-x',
+    title: 'Walmart Delivery Still Struggling as New Year Begins [Social Media]',
+    author: '@still_waiting',
+    contentBlocks: [
+      { type: 'paragraph', content: 'Still waiting for my Dec 15 Walmart order. Customer service says "we\'re working on it." This company has completely lost my trust. Anyone else still stuck? #NeverAgainWalmart' }
+    ],
+    excerpt: 'Social media shows continued Walmart delivery issues into January.',
+    narrativeIds: ['narr-011'],
+    themeIds: ['sub-023'],
+    personIds: [],
+    organizationIds: ['org-001'],
+    locationIds: [],
+    eventIds: [],
+    factionMentions: {
+      'faction-001': { sentiment: -0.72 }
+    },
+    highlights: [],
+    comments: []
+  },
+  {
+    id: 'doc-046',
+    documentType: 'news_article',
+    repositoryId: 'repo-news',
+    classification: 'U',
+    url: 'https://www.reuters.com/business/walmart-atlanta-union-victory',
+    publishedDate: '2026-01-10T19:00:00Z',
+    publisherId: 'pub-reuters',
+    title: 'Historic: Atlanta Walmart Fulfillment Center Votes to Unionize',
+    author: 'Howard Schneider',
+    contentBlocks: [
+      { type: 'paragraph', content: 'Workers at a Walmart e-commerce fulfillment center in Atlanta voted to join the RWDSU, marking the first successful union at a Walmart warehouse.' },
+      { type: 'paragraph', content: 'Union leaders called the victory "a watershed moment for retail workers across America."' }
+    ],
+    excerpt: 'Atlanta Walmart fulfillment center becomes first to unionize.',
+    narrativeIds: ['narr-009'],
+    themeIds: ['sub-019'],
+    personIds: ['person-020', 'person-025'],
+    organizationIds: ['org-016', 'org-001'],
+    locationIds: ['loc-003'],
+    eventIds: ['event-026'],
+    factionMentions: {
+      'faction-002': { sentiment: 0.85 },
+      'faction-003': { sentiment: 0.88 }
+    },
+    highlights: [],
+    comments: []
+  },
+  {
+    id: 'doc-047',
+    documentType: 'news_article',
+    repositoryId: 'repo-news',
+    classification: 'U',
+    url: 'https://www.wsj.com/business/atlanta-union-vote-retail-impact',
+    publishedDate: '2026-01-12T10:00:00Z',
+    publisherId: 'pub-wsj',
+    title: 'What the Atlanta Union Vote Means for Retail Workers',
+    author: 'Sarah Nassauer',
+    contentBlocks: [
+      { type: 'paragraph', content: 'The successful union vote at Walmart\'s Atlanta fulfillment center could have ripple effects across the retail industry.' },
+      { type: 'paragraph', content: 'Labor experts say the victory may inspire organizing efforts at other warehouses and retail facilities.' }
+    ],
+    excerpt: 'Analysis: Implications of first Walmart warehouse union victory.',
+    narrativeIds: ['narr-009'],
+    themeIds: ['sub-020'],
+    personIds: ['person-020'],
+    organizationIds: ['org-016', 'org-001'],
+    locationIds: ['loc-003'],
+    eventIds: ['event-026'],
+    factionMentions: {
+      'faction-002': { sentiment: 0.72 },
+      'faction-003': { sentiment: 0.78 },
+      'faction-005': { sentiment: -0.35 }
+    },
+    highlights: [],
+    comments: []
+  },
+  {
+    id: 'doc-048',
+    documentType: 'news_article',
+    repositoryId: 'repo-news',
+    classification: 'U',
+    url: 'https://www.bloomberg.com/walmart-new-worker-benefits',
+    publishedDate: '2026-01-15T11:00:00Z',
+    publisherId: 'pub-bloomberg',
+    title: 'Walmart Responds to Union Victory With New Worker Benefits',
+    author: 'Matthew Boyle',
+    contentBlocks: [
+      { type: 'paragraph', content: 'Following the historic union victory in Atlanta, Walmart announced new worker benefits including higher minimum wages and improved scheduling flexibility.' },
+      { type: 'paragraph', content: 'Critics called the move an attempt to discourage further organizing by addressing worker concerns preemptively.' }
+    ],
+    excerpt: 'Walmart announces new benefits following Atlanta union victory.',
+    narrativeIds: ['narr-009', 'narr-003'],
+    themeIds: ['sub-008', 'sub-019'],
+    personIds: ['person-001'],
+    organizationIds: ['org-001', 'org-016'],
+    locationIds: ['loc-001'],
+    eventIds: [],
+    factionMentions: {
+      'faction-002': { sentiment: 0.45 },
+      'faction-003': { sentiment: 0.52 }
+    },
+    highlights: [],
+    comments: []
   }
 ];

@@ -288,6 +288,155 @@ export const persons = [
     factionSentiment: {
       'faction-005': -0.42
     }
+  },
+  {
+    id: 'person-020',
+    name: 'Pat Gelsinger',
+    type: 'executive',
+    affiliatedOrganizationId: 'org-027',
+    imageUrl: null,
+    affiliatedFactionIds: ['faction-005'],
+    relatedLocationIds: ['loc-012'],
+    relatedEventIds: ['event-015', 'event-020', 'event-026'],
+    documentIds: ['doc-036', 'doc-037', 'doc-043', 'doc-053', 'doc-057'],
+    factionSentiment: {
+      'faction-002': 0.35,
+      'faction-005': 0.58,
+      'faction-006': 0.42
+    }
+  },
+  {
+    id: 'person-021',
+    name: 'Jensen Huang',
+    type: 'executive',
+    affiliatedOrganizationId: 'org-028',
+    imageUrl: null,
+    affiliatedFactionIds: ['faction-005'],
+    relatedLocationIds: ['loc-012'],
+    relatedEventIds: ['event-021'],
+    documentIds: ['doc-044', 'doc-045', 'doc-056'],
+    factionSentiment: {
+      'faction-005': 0.85,
+      'faction-006': 0.72
+    }
+  },
+  {
+    id: 'person-022',
+    name: 'Lee Jae-yong',
+    type: 'executive',
+    affiliatedOrganizationId: 'org-014',
+    imageUrl: null,
+    affiliatedFactionIds: ['faction-006'],
+    relatedLocationIds: ['loc-011'],
+    relatedEventIds: ['event-016'],
+    documentIds: ['doc-038', 'doc-060'],
+    factionSentiment: {
+      'faction-006': 0.78
+    }
+  },
+  {
+    id: 'person-023',
+    name: 'Kwon Young-soo',
+    type: 'executive',
+    affiliatedOrganizationId: 'org-029',
+    imageUrl: null,
+    affiliatedFactionIds: ['faction-006'],
+    relatedLocationIds: ['loc-011'],
+    relatedEventIds: ['event-022'],
+    documentIds: ['doc-046', 'doc-060'],
+    factionSentiment: {
+      'faction-006': 0.75
+    }
+  },
+  {
+    id: 'person-024',
+    name: 'Alan Estevez',
+    type: 'government_official',
+    affiliatedOrganizationId: 'org-006',
+    imageUrl: null,
+    affiliatedFactionIds: ['faction-002'],
+    relatedLocationIds: ['loc-004'],
+    relatedEventIds: ['event-019'],
+    documentIds: ['doc-041', 'doc-048'],
+    factionSentiment: {
+      'faction-001': -0.72,
+      'faction-002': 0.75
+    }
+  },
+  {
+    id: 'person-025',
+    name: 'Wang Wentao',
+    type: 'government_official',
+    affiliatedOrganizationId: 'org-030',
+    imageUrl: null,
+    affiliatedFactionIds: ['faction-001', 'faction-004'],
+    relatedLocationIds: ['loc-006'],
+    relatedEventIds: ['event-018', 'event-023'],
+    documentIds: ['doc-040', 'doc-047'],
+    factionSentiment: {
+      'faction-001': 0.82,
+      'faction-002': -0.78,
+      'faction-004': 0.85
+    }
+  },
+  {
+    id: 'person-026',
+    name: 'Lisa Su',
+    type: 'executive',
+    affiliatedOrganizationId: 'org-031',
+    imageUrl: null,
+    affiliatedFactionIds: ['faction-005'],
+    relatedLocationIds: ['loc-012'],
+    relatedEventIds: ['event-025'],
+    documentIds: ['doc-051', 'doc-052'],
+    factionSentiment: {
+      'faction-005': 0.78,
+      'faction-006': 0.65
+    }
+  },
+  {
+    id: 'person-027',
+    name: 'Lip-Bu Tan',
+    type: 'executive',
+    affiliatedOrganizationId: 'org-019',
+    imageUrl: null,
+    affiliatedFactionIds: ['faction-005'],
+    relatedLocationIds: ['loc-012'],
+    relatedEventIds: [],
+    documentIds: [],
+    factionSentiment: {
+      'faction-005': 0.72
+    }
+  },
+  {
+    id: 'person-028',
+    name: 'Christophe Fouquet',
+    type: 'executive',
+    affiliatedOrganizationId: 'org-002',
+    imageUrl: null,
+    affiliatedFactionIds: ['faction-006'],
+    relatedLocationIds: ['loc-003'],
+    relatedEventIds: ['event-024'],
+    documentIds: ['doc-050'],
+    factionSentiment: {
+      'faction-001': -0.55,
+      'faction-006': 0.68
+    }
+  },
+  {
+    id: 'person-029',
+    name: 'Gary Dickerson',
+    type: 'executive',
+    affiliatedOrganizationId: 'org-003',
+    imageUrl: null,
+    affiliatedFactionIds: ['faction-005'],
+    relatedLocationIds: ['loc-012'],
+    relatedEventIds: [],
+    documentIds: [],
+    factionSentiment: {
+      'faction-002': 0.42,
+      'faction-005': 0.68
+    }
   }
 ];
 
@@ -621,6 +770,110 @@ export const organizations = [
     factionSentiment: {
       'faction-001': 0.82,
       'faction-004': 0.88
+    }
+  },
+  {
+    id: 'org-027',
+    name: 'Intel Corporation',
+    type: 'corporation',
+    imageUrl: null,
+    affiliatedFactionIds: ['faction-005'],
+    relatedLocationIds: ['loc-012'],
+    documentIds: ['doc-036', 'doc-037', 'doc-043', 'doc-053', 'doc-057'],
+    factionSentiment: {
+      'faction-002': 0.42,
+      'faction-005': 0.55,
+      'faction-006': 0.35
+    }
+  },
+  {
+    id: 'org-028',
+    name: 'Nvidia Corporation',
+    type: 'corporation',
+    imageUrl: null,
+    affiliatedFactionIds: ['faction-005'],
+    relatedLocationIds: ['loc-012'],
+    documentIds: ['doc-044', 'doc-045', 'doc-046', 'doc-051', 'doc-052', 'doc-056'],
+    factionSentiment: {
+      'faction-005': 0.85,
+      'faction-006': 0.78
+    }
+  },
+  {
+    id: 'org-029',
+    name: 'SK Hynix',
+    type: 'corporation',
+    imageUrl: null,
+    affiliatedFactionIds: ['faction-006'],
+    relatedLocationIds: ['loc-011'],
+    documentIds: ['doc-046', 'doc-060'],
+    factionSentiment: {
+      'faction-006': 0.75
+    }
+  },
+  {
+    id: 'org-030',
+    name: 'Ministry of Commerce of China (MOFCOM)',
+    type: 'government',
+    imageUrl: null,
+    affiliatedFactionIds: ['faction-001', 'faction-004'],
+    relatedLocationIds: ['loc-006'],
+    documentIds: ['doc-040', 'doc-047'],
+    factionSentiment: {
+      'faction-001': 0.85,
+      'faction-002': -0.78,
+      'faction-004': 0.88
+    }
+  },
+  {
+    id: 'org-031',
+    name: 'Advanced Micro Devices (AMD)',
+    type: 'corporation',
+    imageUrl: null,
+    affiliatedFactionIds: ['faction-005'],
+    relatedLocationIds: ['loc-012'],
+    documentIds: ['doc-051', 'doc-052'],
+    factionSentiment: {
+      'faction-005': 0.72,
+      'faction-006': 0.62
+    }
+  },
+  {
+    id: 'org-032',
+    name: 'Korea Ministry of Trade',
+    type: 'government',
+    imageUrl: null,
+    affiliatedFactionIds: ['faction-006'],
+    relatedLocationIds: ['loc-011'],
+    documentIds: ['doc-039', 'doc-049', 'doc-055'],
+    factionSentiment: {
+      'faction-002': -0.35,
+      'faction-006': 0.72
+    }
+  },
+  {
+    id: 'org-033',
+    name: 'Taiwan Ministry of Economic Affairs',
+    type: 'government',
+    imageUrl: null,
+    affiliatedFactionIds: ['faction-005'],
+    relatedLocationIds: ['loc-010'],
+    documentIds: ['doc-059'],
+    factionSentiment: {
+      'faction-005': 0.68
+    }
+  },
+  {
+    id: 'org-034',
+    name: 'Arm Holdings',
+    type: 'corporation',
+    imageUrl: null,
+    affiliatedFactionIds: ['faction-005', 'faction-006'],
+    relatedLocationIds: [],
+    documentIds: [],
+    factionSentiment: {
+      'faction-005': 0.62,
+      'faction-006': 0.58
     }
   }
 ];

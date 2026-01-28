@@ -148,5 +148,71 @@ export const topics = [
       { date: '2026-01-18', volume: 575 }
     ],
     createdAt: '2026-01-14T09:00:00Z'
+  },
+  {
+    id: 'topic-008',
+    headline: 'Intel Struggles While Nvidia Soars in Chip Wars',
+    bulletPoints: [
+      'Intel announces 15,000 layoffs in major restructuring',
+      'Company reports $1.6B quarterly loss, stock plunges 15%',
+      'Nvidia crushes earnings on record AI chip demand',
+      'Intel secures $8.5B in CHIPS Act funding as lifeline',
+      'AMD and others race to challenge Nvidia dominance'
+    ],
+    documentIds: ['doc-036', 'doc-037', 'doc-043', 'doc-053', 'doc-057'],
+    startDate: '2025-06-20',
+    endDate: null,
+    volumeOverTime: [
+      { date: '2025-06-20', volume: 285 },
+      { date: '2025-09-15', volume: 425 },
+      { date: '2025-09-20', volume: 512 },
+      { date: '2025-12-10', volume: 365 },
+      { date: '2026-01-06', volume: 295 }
+    ],
+    createdAt: '2025-06-20T09:00:00Z'
+  },
+  {
+    id: 'topic-009',
+    headline: 'China Rare Earth Controls Disrupt Chip Supply Chain',
+    bulletPoints: [
+      'China imposes rare earth export quotas as retaliation for Western controls',
+      'Gallium and germanium restrictions tightened further in October',
+      'Semiconductor industry warns of potential production disruptions',
+      'US firms scramble for alternative sources and recycling technologies',
+      'Impact remains limited so far as companies draw on stockpiles'
+    ],
+    documentIds: ['doc-040', 'doc-041', 'doc-042', 'doc-047', 'doc-048', 'doc-058'],
+    startDate: '2025-08-10',
+    endDate: null,
+    volumeOverTime: [
+      { date: '2025-08-10', volume: 245 },
+      { date: '2025-08-25', volume: 385 },
+      { date: '2025-10-15', volume: 465 },
+      { date: '2025-10-20', volume: 325 },
+      { date: '2026-01-08', volume: 185 }
+    ],
+    createdAt: '2025-08-10T11:00:00Z'
+  },
+  {
+    id: 'topic-010',
+    headline: 'AI Chip Shortage Intensifies Global Competition',
+    bulletPoints: [
+      'Nvidia reports record demand with 6+ month lead times',
+      'SK Hynix and Samsung ramp HBM production for AI chips',
+      'AMD launches competitor to Nvidia\'s H100',
+      'TSMC raises capex guidance to meet AI demand',
+      'Korean rivals announce surprise HBM production alliance'
+    ],
+    documentIds: ['doc-044', 'doc-045', 'doc-046', 'doc-051', 'doc-052', 'doc-056', 'doc-059', 'doc-060'],
+    startDate: '2025-09-20',
+    endDate: null,
+    volumeOverTime: [
+      { date: '2025-09-20', volume: 325 },
+      { date: '2025-10-01', volume: 412 },
+      { date: '2025-11-20', volume: 485 },
+      { date: '2026-01-05', volume: 545 },
+      { date: '2026-01-12', volume: 425 }
+    ],
+    createdAt: '2025-09-20T16:00:00Z'
   }
 ];

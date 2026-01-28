@@ -304,5 +304,156 @@ export const narratives = [
     ],
     documentIds: ['doc-020', 'doc-021', 'doc-022'],
     createdAt: '2026-01-14T00:00:00Z'
+  },
+  {
+    id: 'narr-008',
+    text: 'Intel struggles to compete as foundry business falters',
+    description: 'Intel Corporation faces mounting challenges as its foundry business fails to gain traction against TSMC and Samsung. A major restructuring in June 2025 results in 15,000 layoffs, and a September quarterly loss sends the stock plunging. However, the company secures $8.5 billion in CHIPS Act funding in December, providing a lifeline for its US manufacturing ambitions. Industry analysts question whether Intel can execute its turnaround strategy.',
+    missionId: 'mission-002',
+    status: 'in_progress',
+    sentiment: -0.45,
+    themeIds: ['sub-018', 'sub-019'],
+    factionMentions: {
+      'faction-002': { volume: 165, sentiment: -0.38 },
+      'faction-005': { volume: 285, sentiment: -0.55 },
+      'faction-006': { volume: 145, sentiment: 0.35 }
+    },
+    publisherVolumes: {
+      'pub-bloomberg': { volume: 125, sentiment: -0.48 },
+      'pub-wsj': { volume: 108, sentiment: -0.42 },
+      'pub-semiengi': { volume: 95, sentiment: -0.35 },
+      'pub-eetimes': { volume: 85, sentiment: -0.32 },
+      'pub-x': { volume: 145, sentiment: -0.52 }
+    },
+    factionSources: {
+      'faction-002': { 'pub-wsj': 72, 'pub-bloomberg': 58, 'pub-x': 35 },
+      'faction-005': { 'pub-bloomberg': 95, 'pub-semiengi': 82, 'pub-eetimes': 68, 'pub-x': 85 },
+      'faction-006': { 'pub-bloomberg': 55, 'pub-semiengi': 48, 'pub-x': 42 }
+    },
+    personIds: ['person-020'],
+    organizationIds: ['org-027', 'org-005'],
+    locationIds: ['loc-012', 'loc-004'],
+    eventIds: ['event-015', 'event-020', 'event-026'],
+    volumeOverTime: [
+      { date: '2025-06-20', factionVolumes: { 'faction-002': 55, 'faction-005': 95, 'faction-006': 48 }, publisherVolumes: { 'pub-bloomberg': 42, 'pub-wsj': 35, 'pub-semiengi': 32 } },
+      { date: '2025-09-15', factionVolumes: { 'faction-002': 115, 'faction-005': 195, 'faction-006': 98 }, publisherVolumes: { 'pub-bloomberg': 85, 'pub-wsj': 72, 'pub-semiengi': 65 } },
+      { date: '2025-12-10', factionVolumes: { 'faction-002': 165, 'faction-005': 285, 'faction-006': 145 }, publisherVolumes: { 'pub-bloomberg': 125, 'pub-wsj': 108, 'pub-semiengi': 95 } }
+    ],
+    documentIds: ['doc-036', 'doc-037', 'doc-043', 'doc-053', 'doc-057'],
+    createdAt: '2025-06-20T00:00:00Z'
+  },
+  {
+    id: 'narr-009',
+    text: 'South Korea semiconductor subsidies spark trade tensions',
+    description: 'South Korea\'s announcement of $17 billion in semiconductor subsidies triggers trade tensions with the United States. The US objects at the WTO, arguing the subsidies distort global competition. Samsung and SK Hynix defend the investments as essential for maintaining technological leadership, while Korean government officials push back against US criticism. The dispute highlights challenges in allied efforts to counter China\'s chip ambitions.',
+    missionId: 'mission-002',
+    status: 'in_progress',
+    sentiment: -0.38,
+    themeIds: ['sub-020', 'sub-021'],
+    factionMentions: {
+      'faction-002': { volume: 175, sentiment: -0.42 },
+      'faction-006': { volume: 225, sentiment: 0.55 }
+    },
+    publisherVolumes: {
+      'pub-reuters': { volume: 95, sentiment: -0.28 },
+      'pub-ft': { volume: 85, sentiment: -0.35 },
+      'pub-wsj': { volume: 78, sentiment: -0.42 },
+      'pub-semiengi': { volume: 65, sentiment: 0.25 },
+      'pub-x': { volume: 125, sentiment: -0.32 }
+    },
+    factionSources: {
+      'faction-002': { 'pub-wsj': 68, 'pub-reuters': 52, 'pub-ft': 55 },
+      'faction-006': { 'pub-reuters': 72, 'pub-semiengi': 58, 'pub-ft': 48, 'pub-x': 85 }
+    },
+    personIds: ['person-022', 'person-023'],
+    organizationIds: ['org-014', 'org-029', 'org-032', 'org-005'],
+    locationIds: ['loc-011', 'loc-004'],
+    eventIds: ['event-016', 'event-017', 'event-022'],
+    volumeOverTime: [
+      { date: '2025-07-05', factionVolumes: { 'faction-002': 55, 'faction-006': 85 }, publisherVolumes: { 'pub-reuters': 32, 'pub-ft': 28, 'pub-x': 42 } },
+      { date: '2025-07-25', factionVolumes: { 'faction-002': 115, 'faction-006': 145 }, publisherVolumes: { 'pub-reuters': 62, 'pub-wsj': 52, 'pub-ft': 48, 'pub-x': 85 } },
+      { date: '2025-10-25', factionVolumes: { 'faction-002': 155, 'faction-006': 195 }, publisherVolumes: { 'pub-reuters': 82, 'pub-wsj': 68, 'pub-ft': 72, 'pub-x': 108 } },
+      { date: '2025-12-28', factionVolumes: { 'faction-002': 175, 'faction-006': 225 }, publisherVolumes: { 'pub-reuters': 95, 'pub-wsj': 78, 'pub-ft': 85, 'pub-x': 125 } }
+    ],
+    documentIds: ['doc-038', 'doc-039', 'doc-046', 'doc-049', 'doc-055', 'doc-060'],
+    createdAt: '2025-07-05T00:00:00Z'
+  },
+  {
+    id: 'narr-010',
+    text: 'China rare earth export restrictions tighten chip supply chain',
+    description: 'China announces rare earth export quotas in August 2025, followed by tighter controls on gallium and germanium in October. The restrictions target materials essential for semiconductor manufacturing, raising supply chain concerns among US and allied chipmakers. Industry leaders warn of potential shortages, while China defends the measures as resource conservation. The moves are widely seen as retaliation for Western export controls on chip equipment.',
+    missionId: 'mission-002',
+    status: 'in_progress',
+    sentiment: -0.55,
+    themeIds: ['sub-022', 'sub-023'],
+    factionMentions: {
+      'faction-001': { volume: 285, sentiment: 0.72 },
+      'faction-002': { volume: 245, sentiment: -0.68 },
+      'faction-004': { volume: 195, sentiment: 0.78 }
+    },
+    publisherVolumes: {
+      'pub-xinhua': { volume: 145, sentiment: 0.82 },
+      'pub-bloomberg': { volume: 125, sentiment: -0.55 },
+      'pub-scmp': { volume: 95, sentiment: 0.45 },
+      'pub-eetimes': { volume: 75, sentiment: -0.38 },
+      'pub-x': { volume: 165, sentiment: -0.42 }
+    },
+    factionSources: {
+      'faction-001': { 'pub-xinhua': 125, 'pub-scmp': 78, 'pub-x': 82 },
+      'faction-002': { 'pub-bloomberg': 95, 'pub-eetimes': 62, 'pub-x': 88 },
+      'faction-004': { 'pub-xinhua': 98, 'pub-scmp': 55, 'pub-x': 42 }
+    },
+    personIds: ['person-024', 'person-025'],
+    organizationIds: ['org-030', 'org-005', 'org-006', 'org-009'],
+    locationIds: ['loc-006', 'loc-004'],
+    eventIds: ['event-018', 'event-019', 'event-023'],
+    volumeOverTime: [
+      { date: '2025-08-10', factionVolumes: { 'faction-001': 95, 'faction-002': 82, 'faction-004': 65 }, publisherVolumes: { 'pub-xinhua': 48, 'pub-bloomberg': 42, 'pub-x': 55 } },
+      { date: '2025-08-25', factionVolumes: { 'faction-001': 165, 'faction-002': 145, 'faction-004': 115 }, publisherVolumes: { 'pub-xinhua': 85, 'pub-bloomberg': 75, 'pub-x': 98 } },
+      { date: '2025-10-15', factionVolumes: { 'faction-001': 235, 'faction-002': 205, 'faction-004': 165 }, publisherVolumes: { 'pub-xinhua': 118, 'pub-bloomberg': 105, 'pub-x': 135 } },
+      { date: '2026-01-08', factionVolumes: { 'faction-001': 285, 'faction-002': 245, 'faction-004': 195 }, publisherVolumes: { 'pub-xinhua': 145, 'pub-bloomberg': 125, 'pub-x': 165 } }
+    ],
+    documentIds: ['doc-040', 'doc-041', 'doc-042', 'doc-047', 'doc-048', 'doc-058'],
+    createdAt: '2025-08-10T00:00:00Z'
+  },
+  {
+    id: 'narr-011',
+    text: 'Nvidia AI chip demand outpaces production capacity',
+    description: 'Nvidia reports record demand for its AI chips, with customers waiting months for deliveries. The shortage intensifies competition in the AI accelerator market, with AMD and Intel racing to offer alternatives. SK Hynix ramps up HBM production to meet demand, while industry analysts debate whether the AI chip boom is sustainable or a bubble.',
+    missionId: 'mission-003',
+    status: 'in_progress',
+    sentiment: 0.42,
+    themeIds: ['sub-024', 'sub-025'],
+    factionMentions: {
+      'faction-002': { volume: 145, sentiment: 0.55 },
+      'faction-003': { volume: 185, sentiment: 0.62 },
+      'faction-005': { volume: 265, sentiment: 0.72 },
+      'faction-006': { volume: 195, sentiment: 0.65 }
+    },
+    publisherVolumes: {
+      'pub-bloomberg': { volume: 145, sentiment: 0.58 },
+      'pub-wsj': { volume: 125, sentiment: 0.52 },
+      'pub-semiengi': { volume: 115, sentiment: 0.65 },
+      'pub-eetimes': { volume: 98, sentiment: 0.58 },
+      'pub-x': { volume: 185, sentiment: 0.48 }
+    },
+    factionSources: {
+      'faction-002': { 'pub-wsj': 62, 'pub-bloomberg': 55, 'pub-x': 28 },
+      'faction-003': { 'pub-semiengi': 95, 'pub-eetimes': 82, 'pub-x': 58 },
+      'faction-005': { 'pub-bloomberg': 105, 'pub-wsj': 85, 'pub-semiengi': 75 },
+      'faction-006': { 'pub-bloomberg': 72, 'pub-semiengi': 65, 'pub-x': 58 }
+    },
+    personIds: ['person-021', 'person-023', 'person-026'],
+    organizationIds: ['org-028', 'org-029', 'org-031'],
+    locationIds: ['loc-012', 'loc-011'],
+    eventIds: ['event-021', 'event-022', 'event-025'],
+    volumeOverTime: [
+      { date: '2025-09-20', factionVolumes: { 'faction-002': 55, 'faction-003': 72, 'faction-005': 105, 'faction-006': 78 }, publisherVolumes: { 'pub-bloomberg': 55, 'pub-wsj': 48, 'pub-semiengi': 42 } },
+      { date: '2025-10-01', factionVolumes: { 'faction-002': 85, 'faction-003': 108, 'faction-005': 158, 'faction-006': 118 }, publisherVolumes: { 'pub-bloomberg': 85, 'pub-wsj': 72, 'pub-semiengi': 68 } },
+      { date: '2025-11-20', factionVolumes: { 'faction-002': 115, 'faction-003': 145, 'faction-005': 215, 'faction-006': 158 }, publisherVolumes: { 'pub-bloomberg': 115, 'pub-wsj': 98, 'pub-semiengi': 92 } },
+      { date: '2026-01-10', factionVolumes: { 'faction-002': 145, 'faction-003': 185, 'faction-005': 265, 'faction-006': 195 }, publisherVolumes: { 'pub-bloomberg': 145, 'pub-wsj': 125, 'pub-semiengi': 115 } }
+    ],
+    documentIds: ['doc-044', 'doc-045', 'doc-046', 'doc-051', 'doc-052', 'doc-056', 'doc-059'],
+    createdAt: '2025-09-20T00:00:00Z'
   }
 ];

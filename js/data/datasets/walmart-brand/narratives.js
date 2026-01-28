@@ -290,5 +290,156 @@ export const narratives = [
     ],
     documentIds: ['doc-021', 'doc-022', 'doc-023'],
     createdAt: '2026-01-18T00:00:00Z'
+  },
+  {
+    id: 'narr-008',
+    text: 'Walmart faces scrutiny over Great Value supplier practices',
+    description: 'An investigation reveals labor and safety violations at suppliers producing Walmart\'s Great Value private-label products. The FTC opens an inquiry into Walmart\'s supply chain oversight, while consumer advocacy groups call for greater transparency. Walmart pledges to audit suppliers and improve monitoring, but critics argue the company\'s price pressures create conditions for worker exploitation.',
+    missionId: 'mission-003',
+    status: 'in_progress',
+    sentiment: -0.58,
+    themeIds: ['sub-017', 'sub-018'],
+    factionMentions: {
+      'faction-003': { volume: 185, sentiment: -0.72 },
+      'faction-004': { volume: 165, sentiment: -0.65 }
+    },
+    publisherVolumes: {
+      'pub-reuters': { volume: 85, sentiment: -0.52 },
+      'pub-wsj': { volume: 72, sentiment: -0.48 },
+      'pub-bloomberg': { volume: 65, sentiment: -0.45 },
+      'pub-x': { volume: 115, sentiment: -0.62 }
+    },
+    factionSources: {
+      'faction-003': { 'pub-x': 85, 'pub-reddit': 55, 'pub-tiktok': 45 },
+      'faction-004': { 'pub-consumeraffairs': 72, 'pub-reuters': 52, 'pub-wsj': 41 }
+    },
+    personIds: ['person-022'],
+    organizationIds: ['org-001', 'org-018'],
+    locationIds: ['loc-006'],
+    eventIds: ['event-015', 'event-016'],
+    volumeOverTime: [
+      { date: '2025-06-15', factionVolumes: { 'faction-003': 55, 'faction-004': 48 }, publisherVolumes: { 'pub-reuters': 25, 'pub-x': 35 } },
+      { date: '2025-06-22', factionVolumes: { 'faction-003': 98, 'faction-004': 85 }, publisherVolumes: { 'pub-reuters': 45, 'pub-wsj': 38, 'pub-x': 62 } },
+      { date: '2025-07-01', factionVolumes: { 'faction-003': 145, 'faction-004': 125 }, publisherVolumes: { 'pub-reuters': 68, 'pub-wsj': 58, 'pub-bloomberg': 52, 'pub-x': 92 } },
+      { date: '2025-07-15', factionVolumes: { 'faction-003': 185, 'faction-004': 165 }, publisherVolumes: { 'pub-reuters': 85, 'pub-wsj': 72, 'pub-bloomberg': 65, 'pub-x': 115 } }
+    ],
+    documentIds: ['doc-024', 'doc-025', 'doc-026'],
+    createdAt: '2025-06-15T00:00:00Z'
+  },
+  {
+    id: 'narr-009',
+    text: 'E-commerce fulfillment center workers push for unionization',
+    description: 'Workers at Walmart\'s e-commerce fulfillment centers launch organizing campaigns, seeking union representation. A Dallas facility votes on unionization in September 2025 but falls short, while an Atlanta center succeeds in January 2026 - marking the first successful Walmart warehouse union. Labor advocates celebrate the breakthrough while Walmart announces new worker benefits in response.',
+    missionId: 'mission-001',
+    status: 'in_progress',
+    sentiment: 0.35,
+    themeIds: ['sub-019', 'sub-020'],
+    factionMentions: {
+      'faction-002': { volume: 285, sentiment: 0.78 },
+      'faction-003': { volume: 245, sentiment: 0.82 }
+    },
+    publisherVolumes: {
+      'pub-reuters': { volume: 95, sentiment: 0.35 },
+      'pub-ap': { volume: 85, sentiment: 0.32 },
+      'pub-usatoday': { volume: 75, sentiment: 0.28 },
+      'pub-wsj': { volume: 68, sentiment: -0.25 },
+      'pub-x': { volume: 145, sentiment: 0.55 },
+      'pub-tiktok': { volume: 125, sentiment: 0.65 }
+    },
+    factionSources: {
+      'faction-002': { 'pub-tiktok': 105, 'pub-x': 95, 'pub-reddit': 85 },
+      'faction-003': { 'pub-tiktok': 85, 'pub-x': 78, 'pub-reddit': 82 }
+    },
+    personIds: ['person-020', 'person-021', 'person-025'],
+    organizationIds: ['org-001', 'org-016', 'org-017', 'org-006'],
+    locationIds: ['loc-011', 'loc-003'],
+    eventIds: ['event-017', 'event-019', 'event-020', 'event-026'],
+    volumeOverTime: [
+      { date: '2025-07-20', factionVolumes: { 'faction-002': 65, 'faction-003': 55 }, publisherVolumes: { 'pub-ap': 25, 'pub-x': 42 } },
+      { date: '2025-09-15', factionVolumes: { 'faction-002': 145, 'faction-003': 125 }, publisherVolumes: { 'pub-reuters': 52, 'pub-ap': 48, 'pub-x': 85 } },
+      { date: '2025-10-01', factionVolumes: { 'faction-002': 195, 'faction-003': 175 }, publisherVolumes: { 'pub-reuters': 72, 'pub-ap': 65, 'pub-usatoday': 52, 'pub-x': 115 } },
+      { date: '2026-01-10', factionVolumes: { 'faction-002': 285, 'faction-003': 245 }, publisherVolumes: { 'pub-reuters': 95, 'pub-ap': 85, 'pub-usatoday': 75, 'pub-wsj': 68, 'pub-x': 145 } }
+    ],
+    documentIds: ['doc-027', 'doc-028', 'doc-032', 'doc-033', 'doc-034', 'doc-035', 'doc-046', 'doc-047', 'doc-048'],
+    createdAt: '2025-07-20T00:00:00Z'
+  },
+  {
+    id: 'narr-010',
+    text: 'Walmart expands healthcare services amid rural hospital closures',
+    description: 'As rural hospitals continue to close across America, Walmart Health expands its clinic network into underserved communities. The company opens 15 new clinics in October 2025, offering primary care, dental, and mental health services. Supporters praise the expansion as filling a critical gap, while critics worry about corporate healthcare replacing community institutions.',
+    missionId: 'mission-001',
+    status: 'in_progress',
+    sentiment: 0.35,
+    themeIds: ['sub-021', 'sub-022'],
+    factionMentions: {
+      'faction-001': { volume: 185, sentiment: 0.55 },
+      'faction-004': { volume: 145, sentiment: 0.48 },
+      'faction-005': { volume: 95, sentiment: 0.42 }
+    },
+    publisherVolumes: {
+      'pub-localnews': { volume: 145, sentiment: 0.48 },
+      'pub-wsj': { volume: 75, sentiment: 0.42 },
+      'pub-ap': { volume: 65, sentiment: 0.38 },
+      'pub-consumeraffairs': { volume: 55, sentiment: 0.25 },
+      'pub-x': { volume: 95, sentiment: 0.52 }
+    },
+    factionSources: {
+      'faction-001': { 'pub-localnews': 115, 'pub-facebook': 45, 'pub-x': 55 },
+      'faction-004': { 'pub-consumeraffairs': 48, 'pub-localnews': 55, 'pub-wsj': 42 },
+      'faction-005': { 'pub-wsj': 52, 'pub-ap': 43 }
+    },
+    personIds: ['person-023'],
+    organizationIds: ['org-001', 'org-019', 'org-021'],
+    locationIds: ['loc-001', 'loc-009', 'loc-010'],
+    eventIds: ['event-018', 'event-021'],
+    volumeOverTime: [
+      { date: '2025-08-05', factionVolumes: { 'faction-001': 55, 'faction-004': 45, 'faction-005': 28 }, publisherVolumes: { 'pub-wsj': 25, 'pub-localnews': 42 } },
+      { date: '2025-08-25', factionVolumes: { 'faction-001': 95, 'faction-004': 78, 'faction-005': 48 }, publisherVolumes: { 'pub-wsj': 42, 'pub-localnews': 72, 'pub-consumeraffairs': 32 } },
+      { date: '2025-10-15', factionVolumes: { 'faction-001': 145, 'faction-004': 115, 'faction-005': 72 }, publisherVolumes: { 'pub-wsj': 58, 'pub-localnews': 108, 'pub-ap': 48, 'pub-x': 72 } },
+      { date: '2025-10-25', factionVolumes: { 'faction-001': 185, 'faction-004': 145, 'faction-005': 95 }, publisherVolumes: { 'pub-wsj': 75, 'pub-localnews': 145, 'pub-ap': 65, 'pub-x': 95 } }
+    ],
+    documentIds: ['doc-029', 'doc-030', 'doc-031', 'doc-036', 'doc-037'],
+    createdAt: '2025-08-05T00:00:00Z'
+  },
+  {
+    id: 'narr-011',
+    text: 'Holiday season delivery failures damage Walmart reputation',
+    description: 'Walmart\'s delivery system fails during the critical Black Friday to Christmas period, leaving thousands of customers without their holiday orders. The company apologizes and announces a $500 million infrastructure investment, but damage to its reputation lingers. Consumer groups file FTC complaints, and competitors gain ground as customers switch to more reliable alternatives.',
+    missionId: 'mission-004',
+    status: 'in_progress',
+    sentiment: -0.65,
+    themeIds: ['sub-023', 'sub-024'],
+    factionMentions: {
+      'faction-001': { volume: 385, sentiment: -0.78 },
+      'faction-005': { volume: 165, sentiment: -0.52 },
+      'faction-006': { volume: 225, sentiment: 0.55 }
+    },
+    publisherVolumes: {
+      'pub-wsj': { volume: 95, sentiment: -0.55 },
+      'pub-reuters': { volume: 85, sentiment: -0.48 },
+      'pub-bloomberg': { volume: 78, sentiment: -0.52 },
+      'pub-retaildive': { volume: 72, sentiment: -0.45 },
+      'pub-x': { volume: 245, sentiment: -0.72 },
+      'pub-tiktok': { volume: 185, sentiment: -0.78 },
+      'pub-consumeraffairs': { volume: 95, sentiment: -0.82 }
+    },
+    factionSources: {
+      'faction-001': { 'pub-x': 185, 'pub-tiktok': 145, 'pub-consumeraffairs': 85 },
+      'faction-005': { 'pub-wsj': 72, 'pub-bloomberg': 62, 'pub-retaildive': 58 },
+      'faction-006': { 'pub-x': 85, 'pub-reddit': 72, 'pub-tiktok': 68 }
+    },
+    personIds: ['person-001', 'person-018', 'person-019', 'person-007'],
+    organizationIds: ['org-001', 'org-008', 'org-018', 'org-022'],
+    locationIds: ['loc-001', 'loc-006'],
+    eventIds: ['event-022', 'event-023', 'event-024', 'event-025'],
+    volumeOverTime: [
+      { date: '2025-11-29', factionVolumes: { 'faction-001': 125, 'faction-005': 55, 'faction-006': 72 }, publisherVolumes: { 'pub-wsj': 32, 'pub-x': 85, 'pub-tiktok': 62 } },
+      { date: '2025-12-05', factionVolumes: { 'faction-001': 245, 'faction-005': 105, 'faction-006': 145 }, publisherVolumes: { 'pub-wsj': 62, 'pub-reuters': 52, 'pub-x': 165, 'pub-tiktok': 125 } },
+      { date: '2025-12-15', factionVolumes: { 'faction-001': 325, 'faction-005': 135, 'faction-006': 185 }, publisherVolumes: { 'pub-wsj': 78, 'pub-reuters': 72, 'pub-consumeraffairs': 78, 'pub-x': 205, 'pub-tiktok': 155 } },
+      { date: '2025-12-28', factionVolumes: { 'faction-001': 365, 'faction-005': 155, 'faction-006': 215 }, publisherVolumes: { 'pub-wsj': 88, 'pub-reuters': 82, 'pub-bloomberg': 72, 'pub-x': 235, 'pub-tiktok': 175 } },
+      { date: '2026-01-02', factionVolumes: { 'faction-001': 385, 'faction-005': 165, 'faction-006': 225 }, publisherVolumes: { 'pub-wsj': 95, 'pub-reuters': 85, 'pub-bloomberg': 78, 'pub-x': 245, 'pub-tiktok': 185 } }
+    ],
+    documentIds: ['doc-038', 'doc-039', 'doc-040', 'doc-041', 'doc-042', 'doc-043', 'doc-044', 'doc-045'],
+    createdAt: '2025-11-29T00:00:00Z'
   }
 ];

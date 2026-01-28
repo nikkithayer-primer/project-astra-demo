@@ -340,6 +340,154 @@ export const persons = [
       'faction-005': 0.12,
       'faction-006': 0.05
     }
+  },
+  {
+    id: 'person-018',
+    name: 'Cedric Clark',
+    type: 'executive',
+    affiliatedOrganizationId: 'org-001',
+    imageUrl: null,
+    affiliatedFactionIds: [],
+    relatedLocationIds: ['loc-001'],
+    relatedEventIds: ['event-022', 'event-023'],
+    documentIds: ['doc-038', 'doc-040'],
+    factionSentiment: {
+      'faction-001': -0.55,
+      'faction-005': 0.42
+    }
+  },
+  {
+    id: 'person-019',
+    name: 'Tom Ward',
+    type: 'executive',
+    affiliatedOrganizationId: 'org-001',
+    imageUrl: null,
+    affiliatedFactionIds: [],
+    relatedLocationIds: ['loc-001'],
+    relatedEventIds: ['event-022', 'event-025'],
+    documentIds: ['doc-038', 'doc-044'],
+    factionSentiment: {
+      'faction-001': -0.48,
+      'faction-005': 0.45
+    }
+  },
+  {
+    id: 'person-020',
+    name: 'Stuart Appelbaum',
+    type: 'labor_leader',
+    affiliatedOrganizationId: 'org-016',
+    imageUrl: null,
+    affiliatedFactionIds: ['faction-002', 'faction-003'],
+    relatedLocationIds: ['loc-011', 'loc-012'],
+    relatedEventIds: ['event-017', 'event-019', 'event-020', 'event-026'],
+    documentIds: ['doc-027', 'doc-032', 'doc-035', 'doc-046'],
+    factionSentiment: {
+      'faction-002': 0.85,
+      'faction-003': 0.88
+    }
+  },
+  {
+    id: 'person-021',
+    name: 'Chris Smalls',
+    type: 'activist',
+    affiliatedOrganizationId: 'org-017',
+    imageUrl: null,
+    affiliatedFactionIds: ['faction-003'],
+    relatedLocationIds: ['loc-012'],
+    relatedEventIds: [],
+    documentIds: ['doc-028'],
+    factionSentiment: {
+      'faction-002': 0.78,
+      'faction-003': 0.85
+    }
+  },
+  {
+    id: 'person-022',
+    name: 'Lina Khan',
+    type: 'government_official',
+    affiliatedOrganizationId: 'org-018',
+    imageUrl: null,
+    affiliatedFactionIds: ['faction-004'],
+    relatedLocationIds: ['loc-006'],
+    relatedEventIds: ['event-016', 'event-024'],
+    documentIds: ['doc-026', 'doc-042'],
+    factionSentiment: {
+      'faction-001': 0.52,
+      'faction-004': 0.82,
+      'faction-005': -0.38
+    }
+  },
+  {
+    id: 'person-023',
+    name: 'Ron Wahlen',
+    type: 'executive',
+    affiliatedOrganizationId: 'org-019',
+    imageUrl: null,
+    affiliatedFactionIds: [],
+    relatedLocationIds: ['loc-001'],
+    relatedEventIds: ['event-018', 'event-021'],
+    documentIds: ['doc-029', 'doc-036', 'doc-037'],
+    factionSentiment: {
+      'faction-001': 0.45,
+      'faction-004': 0.52
+    }
+  },
+  {
+    id: 'person-024',
+    name: 'John Rainey',
+    type: 'executive',
+    affiliatedOrganizationId: 'org-001',
+    imageUrl: null,
+    affiliatedFactionIds: ['faction-005'],
+    relatedLocationIds: ['loc-001'],
+    relatedEventIds: [],
+    documentIds: [],
+    factionSentiment: {
+      'faction-005': 0.65
+    }
+  },
+  {
+    id: 'person-025',
+    name: 'Kelvin Buncum',
+    type: 'activist',
+    affiliatedOrganizationId: 'org-006',
+    imageUrl: null,
+    affiliatedFactionIds: ['faction-003'],
+    relatedLocationIds: ['loc-011', 'loc-012'],
+    relatedEventIds: ['event-020', 'event-026'],
+    documentIds: ['doc-035', 'doc-046'],
+    factionSentiment: {
+      'faction-002': 0.78,
+      'faction-003': 0.85
+    }
+  },
+  {
+    id: 'person-026',
+    name: 'Chris Kirkpatrick',
+    type: 'journalist',
+    affiliatedOrganizationId: null,
+    imageUrl: null,
+    affiliatedFactionIds: ['faction-005'],
+    relatedLocationIds: [],
+    relatedEventIds: [],
+    documentIds: ['doc-043'],
+    factionSentiment: {
+      'faction-005': 0.72
+    }
+  },
+  {
+    id: 'person-027',
+    name: 'Craig Jelinek',
+    type: 'executive',
+    affiliatedOrganizationId: 'org-011',
+    imageUrl: null,
+    affiliatedFactionIds: ['faction-006'],
+    relatedLocationIds: [],
+    relatedEventIds: [],
+    documentIds: [],
+    factionSentiment: {
+      'faction-006': 0.72
+    }
   }
 ];
 
@@ -561,6 +709,116 @@ export const organizations = [
     documentIds: ['doc-007'],
     factionSentiment: {
       'faction-005': 0.58
+    }
+  },
+
+  // Labor Organizations (New)
+  {
+    id: 'org-016',
+    name: 'Retail, Wholesale and Department Store Union (RWDSU)',
+    type: 'union',
+    imageUrl: null,
+    affiliatedFactionIds: ['faction-002', 'faction-003'],
+    relatedLocationIds: ['loc-011', 'loc-012'],
+    documentIds: ['doc-027', 'doc-032', 'doc-033', 'doc-035', 'doc-046', 'doc-047'],
+    factionSentiment: {
+      'faction-002': 0.85,
+      'faction-003': 0.88
+    }
+  },
+  {
+    id: 'org-017',
+    name: 'Amazon Labor Union',
+    type: 'union',
+    imageUrl: null,
+    affiliatedFactionIds: ['faction-003'],
+    relatedLocationIds: [],
+    documentIds: ['doc-028'],
+    factionSentiment: {
+      'faction-002': 0.72,
+      'faction-003': 0.82
+    }
+  },
+
+  // Government (New)
+  {
+    id: 'org-018',
+    name: 'Federal Trade Commission',
+    type: 'government',
+    imageUrl: null,
+    affiliatedFactionIds: ['faction-004'],
+    relatedLocationIds: ['loc-006'],
+    documentIds: ['doc-026', 'doc-042'],
+    factionSentiment: {
+      'faction-001': 0.48,
+      'faction-004': 0.78,
+      'faction-005': -0.32
+    }
+  },
+
+  // Healthcare (New)
+  {
+    id: 'org-019',
+    name: 'Walmart Health',
+    type: 'corporation',
+    imageUrl: null,
+    affiliatedFactionIds: [],
+    relatedLocationIds: ['loc-001', 'loc-009', 'loc-010'],
+    documentIds: ['doc-029', 'doc-030', 'doc-031', 'doc-036', 'doc-037'],
+    factionSentiment: {
+      'faction-001': 0.55,
+      'faction-004': 0.48
+    }
+  },
+
+  // Additional Competitors (New)
+  {
+    id: 'org-020',
+    name: 'Dollar General',
+    type: 'corporation',
+    imageUrl: null,
+    affiliatedFactionIds: ['faction-006'],
+    relatedLocationIds: ['loc-009', 'loc-010'],
+    documentIds: [],
+    factionSentiment: {
+      'faction-001': 0.35,
+      'faction-006': 0.58
+    }
+  },
+  {
+    id: 'org-021',
+    name: 'CVS Health',
+    type: 'corporation',
+    imageUrl: null,
+    affiliatedFactionIds: [],
+    relatedLocationIds: [],
+    documentIds: ['doc-031'],
+    factionSentiment: {
+      'faction-004': 0.45
+    }
+  },
+  {
+    id: 'org-022',
+    name: 'Instacart',
+    type: 'corporation',
+    imageUrl: null,
+    affiliatedFactionIds: ['faction-006'],
+    relatedLocationIds: [],
+    documentIds: ['doc-043'],
+    factionSentiment: {
+      'faction-006': 0.62
+    }
+  },
+  {
+    id: 'org-023',
+    name: 'Kroger',
+    type: 'corporation',
+    imageUrl: null,
+    affiliatedFactionIds: ['faction-006'],
+    relatedLocationIds: [],
+    documentIds: [],
+    factionSentiment: {
+      'faction-006': 0.58
     }
   }
 ];

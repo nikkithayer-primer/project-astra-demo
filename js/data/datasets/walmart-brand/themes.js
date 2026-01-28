@@ -358,5 +358,166 @@ export const themes = [
       { date: '2026-01-19', factionVolumes: { 'faction-004': 28, 'faction-001': 18 } },
       { date: '2026-01-20', factionVolumes: { 'faction-004': 65, 'faction-001': 48 } }
     ]
+  },
+  {
+    id: 'sub-017',
+    text: 'Great Value supplier labor and safety violations exposed',
+    description: 'Investigation reveals unsafe working conditions and labor violations at factories producing Walmart\'s Great Value private-label products. Workers describe long hours, inadequate safety equipment, and pressure to meet production quotas.',
+    parentNarrativeId: 'narr-008',
+    sentiment: -0.68,
+    factionMentions: {
+      'faction-003': { volume: 115, sentiment: -0.78 },
+      'faction-004': { volume: 95, sentiment: -0.72 }
+    },
+    personIds: [],
+    organizationIds: ['org-001'],
+    locationIds: ['loc-006'],
+    eventIds: ['event-015'],
+    volumeOverTime: [
+      { date: '2025-06-15', factionVolumes: { 'faction-003': 42, 'faction-004': 35 } },
+      { date: '2025-06-22', factionVolumes: { 'faction-003': 85, 'faction-004': 72 } },
+      { date: '2025-07-01', factionVolumes: { 'faction-003': 115, 'faction-004': 95 } }
+    ]
+  },
+  {
+    id: 'sub-018',
+    text: 'FTC investigates retail supply chain practices',
+    description: 'The Federal Trade Commission opens an inquiry into Walmart\'s supply chain practices, examining whether the company\'s price pressures contribute to supplier labor violations. Consumer advocacy groups call for greater transparency in private-label sourcing.',
+    parentNarrativeId: 'narr-008',
+    sentiment: -0.45,
+    factionMentions: {
+      'faction-004': { volume: 85, sentiment: 0.55 },
+      'faction-005': { volume: 65, sentiment: -0.42 }
+    },
+    personIds: ['person-022'],
+    organizationIds: ['org-018', 'org-001'],
+    locationIds: ['loc-006'],
+    eventIds: ['event-016'],
+    volumeOverTime: [
+      { date: '2025-07-01', factionVolumes: { 'faction-004': 52, 'faction-005': 38 } },
+      { date: '2025-07-15', factionVolumes: { 'faction-004': 85, 'faction-005': 65 } }
+    ]
+  },
+  {
+    id: 'sub-019',
+    text: 'Fulfillment center workers organize for union representation',
+    description: 'Workers at Walmart e-commerce fulfillment centers in Texas and Georgia file for union elections, citing concerns about working conditions, scheduling, and wages. Labor organizers from RWDSU provide support and training.',
+    parentNarrativeId: 'narr-009',
+    sentiment: 0.55,
+    factionMentions: {
+      'faction-002': { volume: 165, sentiment: 0.82 },
+      'faction-003': { volume: 145, sentiment: 0.78 }
+    },
+    personIds: ['person-020', 'person-025'],
+    organizationIds: ['org-016', 'org-006'],
+    locationIds: ['loc-011', 'loc-003'],
+    eventIds: ['event-017', 'event-020', 'event-026'],
+    volumeOverTime: [
+      { date: '2025-07-20', factionVolumes: { 'faction-002': 48, 'faction-003': 42 } },
+      { date: '2025-10-01', factionVolumes: { 'faction-002': 105, 'faction-003': 92 } },
+      { date: '2026-01-10', factionVolumes: { 'faction-002': 165, 'faction-003': 145 } }
+    ]
+  },
+  {
+    id: 'sub-020',
+    text: 'Walmart responds to union organizing efforts',
+    description: 'Walmart deploys its traditional anti-union playbook, holding mandatory meetings and warning workers about union dues. A Dallas facility votes against unionization in September, but an Atlanta center succeeds in January 2026. Walmart announces new worker benefits in response.',
+    parentNarrativeId: 'narr-009',
+    sentiment: -0.42,
+    factionMentions: {
+      'faction-002': { volume: 125, sentiment: -0.68 },
+      'faction-003': { volume: 105, sentiment: -0.72 },
+      'faction-005': { volume: 72, sentiment: -0.35 }
+    },
+    personIds: ['person-020'],
+    organizationIds: ['org-001', 'org-016'],
+    locationIds: ['loc-011', 'loc-003'],
+    eventIds: ['event-019'],
+    volumeOverTime: [
+      { date: '2025-09-15', factionVolumes: { 'faction-002': 72, 'faction-003': 62, 'faction-005': 42 } },
+      { date: '2025-09-25', factionVolumes: { 'faction-002': 105, 'faction-003': 92, 'faction-005': 62 } },
+      { date: '2026-01-15', factionVolumes: { 'faction-002': 125, 'faction-003': 105, 'faction-005': 72 } }
+    ]
+  },
+  {
+    id: 'sub-021',
+    text: 'Walmart Health expands into underserved rural communities',
+    description: 'Walmart Health opens 15 new clinics in rural communities that have lost hospitals or lack adequate healthcare access. The clinics offer primary care, dental, and mental health services at prices 40% below market rates.',
+    parentNarrativeId: 'narr-010',
+    sentiment: 0.52,
+    factionMentions: {
+      'faction-001': { volume: 125, sentiment: 0.65 },
+      'faction-004': { volume: 95, sentiment: 0.55 }
+    },
+    personIds: ['person-023'],
+    organizationIds: ['org-019'],
+    locationIds: ['loc-009', 'loc-010'],
+    eventIds: ['event-018', 'event-021'],
+    volumeOverTime: [
+      { date: '2025-08-05', factionVolumes: { 'faction-001': 42, 'faction-004': 32 } },
+      { date: '2025-10-15', factionVolumes: { 'faction-001': 95, 'faction-004': 72 } },
+      { date: '2025-10-25', factionVolumes: { 'faction-001': 125, 'faction-004': 95 } }
+    ]
+  },
+  {
+    id: 'sub-022',
+    text: 'Debate over corporate healthcare in rural America',
+    description: 'The expansion of Walmart Health sparks debate about corporate healthcare replacing community institutions. Supporters argue any healthcare is better than none, while critics worry about profit motives and the erosion of public health infrastructure.',
+    parentNarrativeId: 'narr-010',
+    sentiment: 0.15,
+    factionMentions: {
+      'faction-001': { volume: 62, sentiment: 0.42 },
+      'faction-004': { volume: 52, sentiment: 0.38 }
+    },
+    personIds: [],
+    organizationIds: ['org-019', 'org-021'],
+    locationIds: ['loc-009'],
+    eventIds: [],
+    volumeOverTime: [
+      { date: '2025-08-25', factionVolumes: { 'faction-001': 35, 'faction-004': 28 } },
+      { date: '2025-10-25', factionVolumes: { 'faction-001': 62, 'faction-004': 52 } }
+    ]
+  },
+  {
+    id: 'sub-023',
+    text: 'Holiday season delivery system failures',
+    description: 'Walmart\'s delivery system buckles under Black Friday demand, leaving thousands of customers without their holiday orders. Social media fills with complaints about late deliveries, lost packages, and poor customer service responses.',
+    parentNarrativeId: 'narr-011',
+    sentiment: -0.72,
+    factionMentions: {
+      'faction-001': { volume: 285, sentiment: -0.82 }
+    },
+    personIds: ['person-018', 'person-019'],
+    organizationIds: ['org-001'],
+    locationIds: ['loc-001'],
+    eventIds: ['event-022', 'event-023'],
+    volumeOverTime: [
+      { date: '2025-11-29', factionVolumes: { 'faction-001': 95 } },
+      { date: '2025-11-30', factionVolumes: { 'faction-001': 165 } },
+      { date: '2025-12-05', factionVolumes: { 'faction-001': 225 } },
+      { date: '2025-12-10', factionVolumes: { 'faction-001': 265 } },
+      { date: '2026-01-02', factionVolumes: { 'faction-001': 285 } }
+    ]
+  },
+  {
+    id: 'sub-024',
+    text: 'Consumer backlash and regulatory scrutiny over delivery promises',
+    description: 'Consumer advocacy groups file FTC complaints alleging Walmart made delivery promises it couldn\'t keep. The company announces a $500 million infrastructure investment, but analysts question whether it can restore customer trust.',
+    parentNarrativeId: 'narr-011',
+    sentiment: -0.55,
+    factionMentions: {
+      'faction-001': { volume: 105, sentiment: 0.62 },
+      'faction-004': { volume: 85, sentiment: 0.72 },
+      'faction-005': { volume: 65, sentiment: -0.45 }
+    },
+    personIds: ['person-007', 'person-022'],
+    organizationIds: ['org-008', 'org-018'],
+    locationIds: ['loc-006'],
+    eventIds: ['event-024', 'event-025'],
+    volumeOverTime: [
+      { date: '2025-12-15', factionVolumes: { 'faction-001': 55, 'faction-004': 45, 'faction-005': 32 } },
+      { date: '2025-12-28', factionVolumes: { 'faction-001': 85, 'faction-004': 68, 'faction-005': 52 } },
+      { date: '2026-01-02', factionVolumes: { 'faction-001': 105, 'faction-004': 85, 'faction-005': 65 } }
+    ]
   }
 ];

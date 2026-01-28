@@ -142,5 +142,125 @@ export const events = [
     locationId: 'loc-009',
     personIds: ['person-019'],
     organizationIds: ['org-020', 'org-021']
+  },
+  {
+    id: 'event-015',
+    text: 'Intel announces major restructuring and layoffs',
+    date: '2025-06-20T08:00:00Z',
+    parentEventId: null,
+    subEventIds: ['event-020'],
+    locationId: 'loc-012',
+    personIds: ['person-020'],
+    organizationIds: ['org-027']
+  },
+  {
+    id: 'event-016',
+    text: 'Samsung announces $17B chip investment in South Korea',
+    date: '2025-07-05T09:00:00Z',
+    parentEventId: null,
+    subEventIds: ['event-017'],
+    locationId: 'loc-011',
+    personIds: ['person-022'],
+    organizationIds: ['org-014']
+  },
+  {
+    id: 'event-017',
+    text: 'US objects to Korean semiconductor subsidies at WTO',
+    date: '2025-07-25T15:00:00Z',
+    parentEventId: 'event-016',
+    subEventIds: [],
+    locationId: 'loc-004',
+    personIds: [],
+    organizationIds: ['org-005', 'org-032']
+  },
+  {
+    id: 'event-018',
+    text: 'China announces rare earth export quotas',
+    date: '2025-08-10T10:00:00Z',
+    parentEventId: null,
+    subEventIds: ['event-019', 'event-023'],
+    locationId: 'loc-006',
+    personIds: ['person-025'],
+    organizationIds: ['org-030']
+  },
+  {
+    id: 'event-019',
+    text: 'US semiconductor firms warn of supply chain impacts',
+    date: '2025-08-25T14:00:00Z',
+    parentEventId: 'event-018',
+    subEventIds: [],
+    locationId: 'loc-004',
+    personIds: ['person-024'],
+    organizationIds: ['org-005', 'org-006']
+  },
+  {
+    id: 'event-020',
+    text: 'Intel reports quarterly loss, stock plunges',
+    date: '2025-09-15T16:00:00Z',
+    parentEventId: 'event-015',
+    subEventIds: [],
+    locationId: 'loc-012',
+    personIds: ['person-020'],
+    organizationIds: ['org-027']
+  },
+  {
+    id: 'event-021',
+    text: 'Nvidia reports record AI chip demand',
+    date: '2025-09-20T16:00:00Z',
+    parentEventId: null,
+    subEventIds: [],
+    locationId: 'loc-012',
+    personIds: ['person-021'],
+    organizationIds: ['org-028']
+  },
+  {
+    id: 'event-022',
+    text: 'SK Hynix announces HBM production expansion',
+    date: '2025-10-01T09:00:00Z',
+    parentEventId: null,
+    subEventIds: [],
+    locationId: 'loc-011',
+    personIds: ['person-023'],
+    organizationIds: ['org-029']
+  },
+  {
+    id: 'event-023',
+    text: 'China tightens gallium and germanium export controls',
+    date: '2025-10-15T10:00:00Z',
+    parentEventId: 'event-018',
+    subEventIds: [],
+    locationId: 'loc-006',
+    personIds: ['person-025'],
+    organizationIds: ['org-030', 'org-009']
+  },
+  {
+    id: 'event-024',
+    text: 'ASML CEO warns of prolonged China restrictions',
+    date: '2025-11-05T10:00:00Z',
+    parentEventId: null,
+    subEventIds: [],
+    locationId: 'loc-003',
+    personIds: ['person-028'],
+    organizationIds: ['org-002']
+  },
+  {
+    id: 'event-025',
+    text: 'AMD unveils new AI accelerator to compete with Nvidia',
+    date: '2025-11-20T09:00:00Z',
+    parentEventId: null,
+    subEventIds: [],
+    locationId: 'loc-012',
+    personIds: ['person-026'],
+    organizationIds: ['org-031']
+  },
+  {
+    id: 'event-026',
+    text: 'Intel secures $8.5B in CHIPS Act funding',
+    date: '2025-12-10T10:00:00Z',
+    parentEventId: null,
+    subEventIds: [],
+    locationId: 'loc-004',
+    personIds: ['person-020'],
+    organizationIds: ['org-027', 'org-005']
   }
 ];

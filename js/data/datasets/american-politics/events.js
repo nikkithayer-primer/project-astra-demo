@@ -222,5 +222,125 @@ export const events = [
     locationId: 'loc-001',
     personIds: ['person-026'],
     organizationIds: ['org-022']
+  },
+  {
+    id: 'event-027',
+    text: 'Texas deploys additional National Guard to border',
+    date: '2025-06-15T10:00:00Z',
+    parentEventId: null,
+    subEventIds: ['event-031'],
+    locationId: 'loc-011',
+    personIds: ['person-027'],
+    organizationIds: ['org-024', 'org-029']
+  },
+  {
+    id: 'event-028',
+    text: 'DeSantis signs Florida border security bill',
+    date: '2025-07-10T14:00:00Z',
+    parentEventId: null,
+    subEventIds: [],
+    locationId: null,
+    personIds: ['person-028'],
+    organizationIds: ['org-025']
+  },
+  {
+    id: 'event-029',
+    text: 'California sues federal government over border policy',
+    date: '2025-08-05T11:00:00Z',
+    parentEventId: null,
+    subEventIds: [],
+    locationId: 'loc-009',
+    personIds: ['person-029'],
+    organizationIds: ['org-026']
+  },
+  {
+    id: 'event-030',
+    text: 'DOJ announces investigation into state border actions',
+    date: '2025-08-20T15:00:00Z',
+    parentEventId: null,
+    subEventIds: [],
+    locationId: 'loc-001',
+    personIds: ['person-030'],
+    organizationIds: ['org-010']
+  },
+  {
+    id: 'event-031',
+    text: 'Border governors summit in Texas',
+    date: '2025-09-01T09:00:00Z',
+    parentEventId: 'event-027',
+    subEventIds: [],
+    locationId: 'loc-010',
+    personIds: ['person-027', 'person-028'],
+    organizationIds: ['org-024', 'org-025']
+  },
+  {
+    id: 'event-032',
+    text: 'House passes border security funding bill',
+    date: '2025-09-15T16:00:00Z',
+    parentEventId: null,
+    subEventIds: ['event-033'],
+    locationId: 'loc-004',
+    personIds: ['person-032'],
+    organizationIds: ['org-020']
+  },
+  {
+    id: 'event-033',
+    text: 'Senate blocks border funding bill',
+    date: '2025-09-22T14:00:00Z',
+    parentEventId: 'event-032',
+    subEventIds: [],
+    locationId: 'loc-004',
+    personIds: ['person-033'],
+    organizationIds: ['org-020']
+  },
+  {
+    id: 'event-034',
+    text: 'Government shutdown begins',
+    date: '2025-10-01T00:00:00Z',
+    parentEventId: null,
+    subEventIds: [],
+    locationId: 'loc-001',
+    personIds: ['person-032', 'person-033'],
+    organizationIds: ['org-020']
+  },
+  {
+    id: 'event-035',
+    text: 'Opioid settlement distribution begins',
+    date: '2025-07-01T09:00:00Z',
+    parentEventId: null,
+    subEventIds: ['event-036'],
+    locationId: 'loc-001',
+    personIds: ['person-034', 'person-035'],
+    organizationIds: ['org-028', 'org-022']
+  },
+  {
+    id: 'event-036',
+    text: 'States challenge settlement allocation formula',
+    date: '2025-08-15T10:00:00Z',
+    parentEventId: 'event-035',
+    subEventIds: [],
+    locationId: 'loc-009',
+    personIds: [],
+    organizationIds: ['org-027']
+  },
+  {
+    id: 'event-037',
+    text: 'Supreme Court agrees to hear election cases',
+    date: '2025-11-15T10:00:00Z',
+    parentEventId: null,
+    subEventIds: [],
+    locationId: 'loc-009',
+    personIds: ['person-031'],
+    organizationIds: ['org-027']
+  },
+  {
+    id: 'event-038',
+    text: 'FBI leadership transition announced',
+    date: '2025-12-01T14:00:00Z',
+    parentEventId: null,
+    subEventIds: [],
+    locationId: 'loc-001',
+    personIds: ['person-036'],
+    organizationIds: ['org-012']
   }
 ];

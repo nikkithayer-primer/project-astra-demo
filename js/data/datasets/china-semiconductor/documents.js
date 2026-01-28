@@ -1748,5 +1748,703 @@ export const documents = [
         replies: []
       }
     ]
+  },
+
+  // Historical documents: Intel Struggles & Rare Earth Controls (June 2025 - January 2026)
+  {
+    id: 'doc-036',
+    documentType: 'news_article',
+    repositoryId: 'repo-news',
+    classification: 'U',
+    url: 'https://www.bloomberg.com/news/articles/intel-announces-15000-layoffs',
+    publishedDate: '2025-06-20T09:00:00Z',
+    publisherId: 'pub-bloomberg',
+    title: 'Intel Announces 15,000 Layoffs in Major Restructuring',
+    author: 'Ian King',
+    contentBlocks: [
+      { type: 'paragraph', content: 'Intel Corporation announced Monday it will cut 15,000 jobs as part of a major restructuring effort to stem losses in its foundry business.' },
+      { type: 'paragraph', content: 'CEO Pat Gelsinger called the cuts "painful but necessary" as the company struggles to compete with TSMC and Samsung in the contract chip manufacturing market.' }
+    ],
+    excerpt: 'Intel announces 15,000 layoffs amid struggles to compete in foundry business.',
+    narrativeIds: ['narr-008'],
+    themeIds: ['sub-018'],
+    personIds: ['person-020'],
+    organizationIds: ['org-027'],
+    locationIds: ['loc-012'],
+    eventIds: ['event-015'],
+    factionMentions: {
+      'faction-002': { sentiment: -0.55 },
+      'faction-005': { sentiment: -0.72 },
+      'faction-006': { sentiment: 0.35 }
+    },
+    highlights: [],
+    comments: []
+  },
+  {
+    id: 'doc-037',
+    documentType: 'news_article',
+    repositoryId: 'repo-news',
+    classification: 'U',
+    url: 'https://www.semiengineering.com/intel-foundry-survival',
+    publishedDate: '2025-06-25T10:00:00Z',
+    publisherId: 'pub-semiengi',
+    title: 'Can Intel Survive the Foundry Wars?',
+    author: 'Mark Lapedus',
+    contentBlocks: [
+      { type: 'paragraph', content: 'Intel\'s foundry ambitions face their toughest test yet. With TSMC commanding over 50% of the global foundry market and Samsung investing heavily, Intel must execute flawlessly to remain relevant.' },
+      { type: 'paragraph', content: 'Industry analysts are divided on whether Intel can close the technology gap.' }
+    ],
+    excerpt: 'Analysis: Intel\'s foundry business faces existential challenges.',
+    narrativeIds: ['narr-008'],
+    themeIds: ['sub-018', 'sub-019'],
+    personIds: ['person-020'],
+    organizationIds: ['org-027'],
+    locationIds: ['loc-012'],
+    eventIds: ['event-015'],
+    factionMentions: {
+      'faction-003': { sentiment: -0.42 },
+      'faction-005': { sentiment: -0.65 }
+    },
+    highlights: [],
+    comments: []
+  },
+  {
+    id: 'doc-038',
+    documentType: 'news_article',
+    repositoryId: 'repo-news',
+    classification: 'U',
+    url: 'https://www.reuters.com/technology/samsung-17-billion-chip-investment',
+    publishedDate: '2025-07-05T08:00:00Z',
+    publisherId: 'pub-reuters',
+    title: 'Samsung Pledges $17 Billion Chip Investment in Korea',
+    author: 'Heekyong Yang',
+    contentBlocks: [
+      { type: 'paragraph', content: 'Samsung Electronics announced a $17 billion investment in new semiconductor facilities in South Korea, backed by government subsidies.' },
+      { type: 'paragraph', content: 'The investment will expand production of advanced memory chips and establish new logic chip manufacturing lines.' }
+    ],
+    excerpt: 'Samsung announces $17 billion chip investment with Korean government support.',
+    narrativeIds: ['narr-009'],
+    themeIds: ['sub-020'],
+    personIds: ['person-022'],
+    organizationIds: ['org-014', 'org-032'],
+    locationIds: ['loc-011'],
+    eventIds: ['event-016'],
+    factionMentions: {
+      'faction-006': { sentiment: 0.72 }
+    },
+    highlights: [],
+    comments: []
+  },
+  {
+    id: 'doc-039',
+    documentType: 'news_article',
+    repositoryId: 'repo-news',
+    classification: 'U',
+    url: 'https://www.wsj.com/business/us-concerns-korean-semiconductor-subsidies',
+    publishedDate: '2025-07-25T14:00:00Z',
+    publisherId: 'pub-wsj',
+    title: 'US Raises Concerns Over Korean Semiconductor Subsidies',
+    author: 'Jiyoung Sohn',
+    contentBlocks: [
+      { type: 'paragraph', content: 'The United States has raised concerns at the World Trade Organization over South Korea\'s semiconductor subsidies, arguing they distort global competition.' },
+      { type: 'paragraph', content: 'The move strains the technology alliance between the countries at a sensitive time for chip supply chain efforts.' }
+    ],
+    excerpt: 'US objects to Korean chip subsidies at WTO, straining alliance.',
+    narrativeIds: ['narr-009'],
+    themeIds: ['sub-020', 'sub-021'],
+    personIds: [],
+    organizationIds: ['org-005', 'org-032'],
+    locationIds: ['loc-004', 'loc-011'],
+    eventIds: ['event-017'],
+    factionMentions: {
+      'faction-002': { sentiment: 0.58 },
+      'faction-006': { sentiment: -0.45 }
+    },
+    highlights: [],
+    comments: []
+  },
+  {
+    id: 'doc-040',
+    documentType: 'news_article',
+    repositoryId: 'repo-news',
+    classification: 'U',
+    url: 'https://www.scmp.com/tech/china-rare-earth-export-quotas',
+    publishedDate: '2025-08-10T11:00:00Z',
+    publisherId: 'pub-scmp',
+    title: 'China Imposes Rare Earth Export Quotas in Escalation of Tech Tensions',
+    author: 'Che Pan',
+    contentBlocks: [
+      { type: 'paragraph', content: 'China announced new export quotas on rare earth materials essential for semiconductor manufacturing, in what analysts see as retaliation for Western chip export controls.' },
+      { type: 'paragraph', content: 'The Ministry of Commerce cited resource conservation and environmental protection as reasons for the restrictions.' }
+    ],
+    excerpt: 'China imposes rare earth export quotas amid escalating tech tensions.',
+    narrativeIds: ['narr-010'],
+    themeIds: ['sub-022'],
+    personIds: ['person-025'],
+    organizationIds: ['org-030'],
+    locationIds: ['loc-006'],
+    eventIds: ['event-018'],
+    factionMentions: {
+      'faction-001': { sentiment: 0.75 },
+      'faction-002': { sentiment: -0.78 },
+      'faction-004': { sentiment: 0.82 }
+    },
+    highlights: [],
+    comments: []
+  },
+  {
+    id: 'doc-041',
+    documentType: 'news_article',
+    repositoryId: 'repo-news',
+    classification: 'U',
+    url: 'https://www.bloomberg.com/chip-industry-rare-earth-alarm',
+    publishedDate: '2025-08-25T09:00:00Z',
+    publisherId: 'pub-bloomberg',
+    title: 'Chip Industry Sounds Alarm on Rare Earth Restrictions',
+    author: 'Debby Wu',
+    contentBlocks: [
+      { type: 'paragraph', content: 'The semiconductor industry is warning that China\'s new rare earth export controls could disrupt production of advanced chips.' },
+      { type: 'paragraph', content: 'Industry executives are calling for emergency stockpiling and development of alternative sources.' }
+    ],
+    excerpt: 'Chip industry warns of disruptions from China rare earth restrictions.',
+    narrativeIds: ['narr-010'],
+    themeIds: ['sub-022', 'sub-023'],
+    personIds: ['person-024'],
+    organizationIds: ['org-005', 'org-006'],
+    locationIds: ['loc-004'],
+    eventIds: ['event-019'],
+    factionMentions: {
+      'faction-002': { sentiment: -0.65 },
+      'faction-005': { sentiment: -0.58 }
+    },
+    highlights: [],
+    comments: []
+  },
+  {
+    id: 'doc-042',
+    documentType: 'news_article',
+    repositoryId: 'repo-news',
+    classification: 'U',
+    url: 'https://www.eetimes.com/china-rare-earth-supply-chain-analysis',
+    publishedDate: '2025-08-30T10:00:00Z',
+    publisherId: 'pub-eetimes',
+    title: 'Analysis: How China\'s Rare Earth Controls Reshape Chip Supply Chains',
+    author: 'Ann Steffora Mutschler',
+    contentBlocks: [
+      { type: 'paragraph', content: 'China\'s rare earth export controls are forcing semiconductor companies to rethink their supply chains. Materials critical for chip production have limited alternative sources.' },
+      { type: 'paragraph', content: 'Companies are exploring recycling programs and investments in non-Chinese mining operations.' }
+    ],
+    excerpt: 'Analysis of how China\'s rare earth controls are reshaping chip supply chains.',
+    narrativeIds: ['narr-010'],
+    themeIds: ['sub-023'],
+    personIds: [],
+    organizationIds: [],
+    locationIds: [],
+    eventIds: [],
+    factionMentions: {
+      'faction-003': { sentiment: -0.35 }
+    },
+    highlights: [],
+    comments: []
+  },
+  {
+    id: 'doc-043',
+    documentType: 'news_article',
+    repositoryId: 'repo-news',
+    classification: 'U',
+    url: 'https://www.reuters.com/technology/intel-quarterly-loss',
+    publishedDate: '2025-09-15T17:00:00Z',
+    publisherId: 'pub-reuters',
+    title: 'Intel Reports $1.6B Quarterly Loss, Stock Plunges',
+    author: 'Jane Lee',
+    contentBlocks: [
+      { type: 'paragraph', content: 'Intel reported a $1.6 billion quarterly loss as its foundry business continues to struggle, sending shares down over 15% in after-hours trading.' },
+      { type: 'paragraph', content: 'CEO Pat Gelsinger defended the company\'s turnaround strategy but acknowledged the path to profitability will take longer than expected.' }
+    ],
+    excerpt: 'Intel reports $1.6B quarterly loss, stock plunges 15%.',
+    narrativeIds: ['narr-008'],
+    themeIds: ['sub-018'],
+    personIds: ['person-020'],
+    organizationIds: ['org-027'],
+    locationIds: ['loc-012'],
+    eventIds: ['event-020'],
+    factionMentions: {
+      'faction-005': { sentiment: -0.68 },
+      'faction-006': { sentiment: 0.42 }
+    },
+    highlights: [],
+    comments: []
+  },
+  {
+    id: 'doc-044',
+    documentType: 'news_article',
+    repositoryId: 'repo-news',
+    classification: 'U',
+    url: 'https://www.bloomberg.com/nvidia-earnings-ai-demand',
+    publishedDate: '2025-09-20T16:00:00Z',
+    publisherId: 'pub-bloomberg',
+    title: 'Nvidia Crushes Earnings Expectations on AI Chip Demand',
+    author: 'Ian King',
+    contentBlocks: [
+      { type: 'paragraph', content: 'Nvidia reported record quarterly revenue driven by insatiable demand for its AI chips, beating analyst expectations by a wide margin.' },
+      { type: 'paragraph', content: 'CEO Jensen Huang said customers are waiting months for deliveries as AI applications continue to expand across industries.' }
+    ],
+    excerpt: 'Nvidia reports record revenue driven by AI chip demand.',
+    narrativeIds: ['narr-011'],
+    themeIds: ['sub-024'],
+    personIds: ['person-021'],
+    organizationIds: ['org-028'],
+    locationIds: ['loc-012'],
+    eventIds: ['event-021'],
+    factionMentions: {
+      'faction-005': { sentiment: 0.85 },
+      'faction-006': { sentiment: 0.72 }
+    },
+    highlights: [],
+    comments: []
+  },
+  {
+    id: 'doc-045',
+    documentType: 'news_article',
+    repositoryId: 'repo-news',
+    classification: 'U',
+    url: 'https://www.wsj.com/tech/ai-chip-shortage-getting-worse',
+    publishedDate: '2025-09-25T10:00:00Z',
+    publisherId: 'pub-wsj',
+    title: 'The AI Chip Shortage Is Getting Worse',
+    author: 'Asa Fitch',
+    contentBlocks: [
+      { type: 'paragraph', content: 'The global shortage of AI chips is intensifying as demand from tech companies and enterprises far outpaces production capacity.' },
+      { type: 'paragraph', content: 'Nvidia\'s H100 chips remain in short supply, with lead times exceeding six months for most customers.' }
+    ],
+    excerpt: 'AI chip shortage intensifies as demand outpaces production.',
+    narrativeIds: ['narr-011'],
+    themeIds: ['sub-024', 'sub-025'],
+    personIds: [],
+    organizationIds: ['org-028'],
+    locationIds: [],
+    eventIds: [],
+    factionMentions: {
+      'faction-003': { sentiment: -0.38 },
+      'faction-005': { sentiment: 0.55 }
+    },
+    highlights: [],
+    comments: []
+  },
+  {
+    id: 'doc-046',
+    documentType: 'news_article',
+    repositoryId: 'repo-news',
+    classification: 'U',
+    url: 'https://www.semiengineering.com/sk-hynix-hbm-expansion',
+    publishedDate: '2025-10-01T09:00:00Z',
+    publisherId: 'pub-semiengi',
+    title: 'SK Hynix Ramps HBM Production to Meet AI Demand',
+    author: 'Ed Sperling',
+    contentBlocks: [
+      { type: 'paragraph', content: 'SK Hynix announced a major expansion of its High Bandwidth Memory production to meet surging demand from AI chip manufacturers.' },
+      { type: 'paragraph', content: 'The company is investing $5 billion in new production lines to keep pace with Nvidia and AMD requirements.' }
+    ],
+    excerpt: 'SK Hynix expands HBM production for AI chip demand.',
+    narrativeIds: ['narr-011'],
+    themeIds: ['sub-024'],
+    personIds: ['person-023'],
+    organizationIds: ['org-029'],
+    locationIds: ['loc-011'],
+    eventIds: ['event-022'],
+    factionMentions: {
+      'faction-006': { sentiment: 0.78 }
+    },
+    highlights: [],
+    comments: []
+  },
+  {
+    id: 'doc-047',
+    documentType: 'news_article',
+    repositoryId: 'repo-news',
+    classification: 'U',
+    url: 'http://www.xinhuanet.com/english/china-gallium-germanium-controls',
+    publishedDate: '2025-10-15T08:00:00Z',
+    publisherId: 'pub-xinhua',
+    title: 'China Further Restricts Gallium and Germanium Exports',
+    author: 'Xinhua Staff',
+    contentBlocks: [
+      { type: 'paragraph', content: 'China announced tighter export controls on gallium and germanium, critical materials for semiconductor production, effective immediately.' },
+      { type: 'paragraph', content: 'The Ministry of Commerce said the measures are necessary to protect strategic resources and promote sustainable development.' }
+    ],
+    excerpt: 'China tightens gallium and germanium export controls.',
+    narrativeIds: ['narr-010'],
+    themeIds: ['sub-022'],
+    personIds: ['person-025'],
+    organizationIds: ['org-030', 'org-009'],
+    locationIds: ['loc-006'],
+    eventIds: ['event-023'],
+    factionMentions: {
+      'faction-001': { sentiment: 0.82 },
+      'faction-004': { sentiment: 0.85 }
+    },
+    highlights: [],
+    comments: []
+  },
+  {
+    id: 'doc-048',
+    documentType: 'news_article',
+    repositoryId: 'repo-news',
+    classification: 'U',
+    url: 'https://www.bloomberg.com/us-firms-rare-earth-alternatives',
+    publishedDate: '2025-10-20T11:00:00Z',
+    publisherId: 'pub-bloomberg',
+    title: 'US Firms Scramble for Rare Earth Alternatives',
+    author: 'Eddie Spence',
+    contentBlocks: [
+      { type: 'paragraph', content: 'American semiconductor companies are scrambling to secure alternative sources of rare earth materials following China\'s export restrictions.' },
+      { type: 'paragraph', content: 'Companies are exploring partnerships with Australian and Canadian mining operations and investing in recycling technology.' }
+    ],
+    excerpt: 'US chip firms seek rare earth alternatives amid China restrictions.',
+    narrativeIds: ['narr-010'],
+    themeIds: ['sub-023'],
+    personIds: [],
+    organizationIds: [],
+    locationIds: ['loc-004'],
+    eventIds: [],
+    factionMentions: {
+      'faction-002': { sentiment: -0.52 },
+      'faction-005': { sentiment: -0.48 }
+    },
+    highlights: [],
+    comments: []
+  },
+  {
+    id: 'doc-049',
+    documentType: 'news_article',
+    repositoryId: 'repo-news',
+    classification: 'U',
+    url: 'https://www.ft.com/korea-us-chip-subsidy-tensions',
+    publishedDate: '2025-10-25T14:00:00Z',
+    publisherId: 'pub-ft',
+    title: 'Korea-US Tensions Rise Over Chip Subsidies',
+    author: 'Song Jung-a',
+    contentBlocks: [
+      { type: 'paragraph', content: 'Tensions between South Korea and the United States over semiconductor subsidies have reached a new high, complicating efforts to coordinate against China.' },
+      { type: 'paragraph', content: 'Korean officials argue US objections undermine the alliance\'s stated goal of securing chip supply chains.' }
+    ],
+    excerpt: 'US-Korea chip subsidy dispute strains technology alliance.',
+    narrativeIds: ['narr-009'],
+    themeIds: ['sub-021'],
+    personIds: [],
+    organizationIds: ['org-005', 'org-032'],
+    locationIds: ['loc-004', 'loc-011'],
+    eventIds: [],
+    factionMentions: {
+      'faction-002': { sentiment: -0.42 },
+      'faction-006': { sentiment: -0.55 }
+    },
+    highlights: [],
+    comments: []
+  },
+  {
+    id: 'doc-050',
+    documentType: 'news_article',
+    repositoryId: 'repo-news',
+    classification: 'U',
+    url: 'https://www.reuters.com/technology/asml-ceo-china-restrictions',
+    publishedDate: '2025-11-05T10:00:00Z',
+    publisherId: 'pub-reuters',
+    title: 'ASML CEO: China Restrictions Will Persist for Years',
+    author: 'Toby Sterling',
+    contentBlocks: [
+      { type: 'paragraph', content: 'ASML CEO Christophe Fouquet warned that restrictions on selling advanced chip-making equipment to China will likely persist for years.' },
+      { type: 'paragraph', content: 'The Dutch company has seen its China sales decline significantly since export controls were expanded.' }
+    ],
+    excerpt: 'ASML CEO warns China chip equipment restrictions will last years.',
+    narrativeIds: ['narr-002'],
+    themeIds: ['sub-006'],
+    personIds: ['person-028'],
+    organizationIds: ['org-002'],
+    locationIds: ['loc-003'],
+    eventIds: ['event-024'],
+    factionMentions: {
+      'faction-001': { sentiment: -0.62 },
+      'faction-006': { sentiment: -0.48 }
+    },
+    highlights: [],
+    comments: []
+  },
+  {
+    id: 'doc-051',
+    documentType: 'news_article',
+    repositoryId: 'repo-news',
+    classification: 'U',
+    url: 'https://www.eetimes.com/amd-ai-chip-nvidia-challenge',
+    publishedDate: '2025-11-20T10:00:00Z',
+    publisherId: 'pub-eetimes',
+    title: 'AMD Launches New AI Chip to Challenge Nvidia Dominance',
+    author: 'Rick Merritt',
+    contentBlocks: [
+      { type: 'paragraph', content: 'AMD unveiled its latest AI accelerator chip, positioning it as a cost-effective alternative to Nvidia\'s dominant H100 and upcoming B200.' },
+      { type: 'paragraph', content: 'CEO Lisa Su said the new chip offers competitive performance at a lower price point, appealing to cost-conscious enterprise customers.' }
+    ],
+    excerpt: 'AMD unveils new AI chip to challenge Nvidia\'s market dominance.',
+    narrativeIds: ['narr-011'],
+    themeIds: ['sub-025'],
+    personIds: ['person-026'],
+    organizationIds: ['org-031'],
+    locationIds: ['loc-012'],
+    eventIds: ['event-025'],
+    factionMentions: {
+      'faction-003': { sentiment: 0.55 },
+      'faction-005': { sentiment: 0.62 }
+    },
+    highlights: [],
+    comments: []
+  },
+  {
+    id: 'doc-052',
+    documentType: 'news_article',
+    repositoryId: 'repo-news',
+    classification: 'U',
+    url: 'https://www.semiengineering.com/can-anyone-catch-nvidia',
+    publishedDate: '2025-11-25T09:00:00Z',
+    publisherId: 'pub-semiengi',
+    title: 'Analysis: Can Anyone Catch Nvidia in AI Chips?',
+    author: 'Ann Steffora Mutschler',
+    contentBlocks: [
+      { type: 'paragraph', content: 'With AMD, Intel, and a host of startups racing to challenge Nvidia\'s dominance in AI chips, analysts are debating whether any competitor can meaningfully close the gap.' },
+      { type: 'paragraph', content: 'Nvidia\'s CUDA software ecosystem presents a formidable barrier to entry that hardware performance alone cannot overcome.' }
+    ],
+    excerpt: 'Analysis: Challenges facing Nvidia competitors in AI chip market.',
+    narrativeIds: ['narr-011'],
+    themeIds: ['sub-024', 'sub-025'],
+    personIds: [],
+    organizationIds: ['org-028', 'org-031', 'org-027'],
+    locationIds: [],
+    eventIds: [],
+    factionMentions: {
+      'faction-003': { sentiment: 0.42 }
+    },
+    highlights: [],
+    comments: []
+  },
+  {
+    id: 'doc-053',
+    documentType: 'news_article',
+    repositoryId: 'repo-news',
+    classification: 'U',
+    url: 'https://www.wsj.com/tech/intel-chips-act-funding',
+    publishedDate: '2025-12-10T10:00:00Z',
+    publisherId: 'pub-wsj',
+    title: 'Intel Secures $8.5B in CHIPS Act Funding',
+    author: 'Asa Fitch',
+    contentBlocks: [
+      { type: 'paragraph', content: 'Intel has secured $8.5 billion in CHIPS Act funding, providing a lifeline for its struggling US manufacturing ambitions.' },
+      { type: 'paragraph', content: 'The funding will support construction of new fabs in Ohio and Arizona and research into next-generation chip technology.' }
+    ],
+    excerpt: 'Intel receives $8.5B CHIPS Act funding for US manufacturing.',
+    narrativeIds: ['narr-008'],
+    themeIds: ['sub-019'],
+    personIds: ['person-020'],
+    organizationIds: ['org-027', 'org-005'],
+    locationIds: ['loc-004'],
+    eventIds: ['event-026'],
+    factionMentions: {
+      'faction-002': { sentiment: 0.65 },
+      'faction-005': { sentiment: 0.72 }
+    },
+    highlights: [],
+    comments: []
+  },
+  {
+    id: 'doc-054',
+    documentType: 'news_article',
+    repositoryId: 'repo-news',
+    classification: 'U',
+    url: 'https://www.scmp.com/tech/china-semiconductor-progress-2025',
+    publishedDate: '2025-12-20T09:00:00Z',
+    publisherId: 'pub-scmp',
+    title: 'Year in Review: China Semiconductor Progress Exceeds Expectations',
+    author: 'Che Pan',
+    contentBlocks: [
+      { type: 'paragraph', content: 'China\'s domestic semiconductor industry made significant progress in 2025 despite expanded Western export controls, with SMIC and other firms advancing their technology.' },
+      { type: 'paragraph', content: 'Industry watchers note that China has defied predictions of stagnation, though still lags behind leading-edge Western technology.' }
+    ],
+    excerpt: 'China semiconductor industry defies expectations in 2025.',
+    narrativeIds: ['narr-001'],
+    themeIds: ['sub-002'],
+    personIds: [],
+    organizationIds: ['org-001'],
+    locationIds: ['loc-001', 'loc-006'],
+    eventIds: [],
+    factionMentions: {
+      'faction-001': { sentiment: 0.78 },
+      'faction-003': { sentiment: 0.45 }
+    },
+    highlights: [],
+    comments: []
+  },
+  {
+    id: 'doc-055',
+    documentType: 'news_article',
+    repositoryId: 'repo-news',
+    classification: 'U',
+    url: 'https://www.reuters.com/technology/us-korea-chip-wto',
+    publishedDate: '2025-12-28T14:00:00Z',
+    publisherId: 'pub-reuters',
+    title: 'US-Korea Chip Subsidy Dispute Heads to WTO',
+    author: 'David Lawder',
+    contentBlocks: [
+      { type: 'paragraph', content: 'The United States formally escalated its dispute with South Korea over semiconductor subsidies to a WTO panel.' },
+      { type: 'paragraph', content: 'The move marks a significant escalation that could take years to resolve and further strains the technology alliance.' }
+    ],
+    excerpt: 'US escalates Korea chip subsidy dispute to WTO panel.',
+    narrativeIds: ['narr-009'],
+    themeIds: ['sub-021'],
+    personIds: [],
+    organizationIds: ['org-005', 'org-032'],
+    locationIds: ['loc-004'],
+    eventIds: [],
+    factionMentions: {
+      'faction-002': { sentiment: -0.35 },
+      'faction-006': { sentiment: -0.42 }
+    },
+    highlights: [],
+    comments: []
+  },
+  {
+    id: 'doc-056',
+    documentType: 'news_article',
+    repositoryId: 'repo-news',
+    classification: 'U',
+    url: 'https://www.bloomberg.com/nvidia-ces-next-gen-ai-chip',
+    publishedDate: '2026-01-05T09:00:00Z',
+    publisherId: 'pub-bloomberg',
+    title: 'Nvidia Announces Next-Gen AI Chip at CES',
+    author: 'Ian King',
+    contentBlocks: [
+      { type: 'paragraph', content: 'Nvidia CEO Jensen Huang unveiled the company\'s next-generation AI chip at CES, promising significant performance improvements over current offerings.' },
+      { type: 'paragraph', content: 'The announcement reinforced Nvidia\'s dominant position in the AI chip market as competitors struggle to catch up.' }
+    ],
+    excerpt: 'Nvidia unveils next-gen AI chip at CES, extending market lead.',
+    narrativeIds: ['narr-011'],
+    themeIds: ['sub-024'],
+    personIds: ['person-021'],
+    organizationIds: ['org-028'],
+    locationIds: ['loc-012'],
+    eventIds: [],
+    factionMentions: {
+      'faction-005': { sentiment: 0.82 },
+      'faction-006': { sentiment: 0.68 }
+    },
+    highlights: [],
+    comments: []
+  },
+  {
+    id: 'doc-057',
+    documentType: 'news_article',
+    repositoryId: 'repo-news',
+    classification: 'U',
+    url: 'https://www.eetimes.com/intel-ceo-ces-turnaround',
+    publishedDate: '2026-01-06T11:00:00Z',
+    publisherId: 'pub-eetimes',
+    title: 'Intel CEO Outlines Turnaround Strategy at CES',
+    author: 'Rick Merritt',
+    contentBlocks: [
+      { type: 'paragraph', content: 'Intel CEO Pat Gelsinger outlined an updated turnaround strategy at CES, emphasizing the company\'s progress on process technology and new customer wins.' },
+      { type: 'paragraph', content: 'Analysts remain skeptical, noting the company still faces significant execution challenges.' }
+    ],
+    excerpt: 'Intel CEO presents updated turnaround strategy at CES.',
+    narrativeIds: ['narr-008'],
+    themeIds: ['sub-019'],
+    personIds: ['person-020'],
+    organizationIds: ['org-027'],
+    locationIds: ['loc-012'],
+    eventIds: [],
+    factionMentions: {
+      'faction-005': { sentiment: 0.45 }
+    },
+    highlights: [],
+    comments: []
+  },
+  {
+    id: 'doc-058',
+    documentType: 'news_article',
+    repositoryId: 'repo-news',
+    classification: 'U',
+    url: 'https://www.ft.com/china-rare-earth-limited-impact',
+    publishedDate: '2026-01-08T10:00:00Z',
+    publisherId: 'pub-ft',
+    title: 'China Rare Earth Restrictions Show Limited Impact So Far',
+    author: 'Demetri Sevastopulo',
+    contentBlocks: [
+      { type: 'paragraph', content: 'China\'s rare earth export restrictions have had limited impact on global semiconductor production so far, as companies have drawn on stockpiles and alternative sources.' },
+      { type: 'paragraph', content: 'However, analysts warn that longer-term effects could be more severe if restrictions persist.' }
+    ],
+    excerpt: 'China rare earth restrictions show limited impact to date.',
+    narrativeIds: ['narr-010'],
+    themeIds: ['sub-023'],
+    personIds: [],
+    organizationIds: [],
+    locationIds: [],
+    eventIds: [],
+    factionMentions: {
+      'faction-001': { sentiment: -0.35 },
+      'faction-002': { sentiment: 0.42 }
+    },
+    highlights: [],
+    comments: []
+  },
+  {
+    id: 'doc-059',
+    documentType: 'news_article',
+    repositoryId: 'repo-news',
+    classification: 'U',
+    url: 'https://www.reuters.com/technology/tsmc-q4-ai-demand',
+    publishedDate: '2026-01-10T08:00:00Z',
+    publisherId: 'pub-reuters',
+    title: 'TSMC Reports Strong Q4 Driven by AI Chip Demand',
+    author: 'Yimou Lee',
+    contentBlocks: [
+      { type: 'paragraph', content: 'TSMC reported strong fourth-quarter results driven by surging demand for AI chips, with revenue exceeding analyst expectations.' },
+      { type: 'paragraph', content: 'The company raised its 2026 capital expenditure guidance to meet expected demand growth.' }
+    ],
+    excerpt: 'TSMC reports strong Q4 on AI chip demand, raises capex guidance.',
+    narrativeIds: ['narr-007', 'narr-011'],
+    themeIds: ['sub-016', 'sub-024'],
+    personIds: [],
+    organizationIds: ['org-020'],
+    locationIds: ['loc-010'],
+    eventIds: [],
+    factionMentions: {
+      'faction-005': { sentiment: 0.72 },
+      'faction-006': { sentiment: 0.65 }
+    },
+    highlights: [],
+    comments: []
+  },
+  {
+    id: 'doc-060',
+    documentType: 'news_article',
+    repositoryId: 'repo-news',
+    classification: 'U',
+    url: 'https://www.semiengineering.com/samsung-sk-hynix-hbm-alliance',
+    publishedDate: '2026-01-12T10:00:00Z',
+    publisherId: 'pub-semiengi',
+    title: 'Samsung and SK Hynix Announce HBM Production Alliance',
+    author: 'Ed Sperling',
+    contentBlocks: [
+      { type: 'paragraph', content: 'Samsung and SK Hynix announced a surprising alliance to coordinate HBM production, aiming to better meet surging AI chip demand.' },
+      { type: 'paragraph', content: 'The agreement allows the Korean rivals to share capacity information and coordinate supply to major customers.' }
+    ],
+    excerpt: 'Korean rivals Samsung and SK Hynix form HBM production alliance.',
+    narrativeIds: ['narr-009'],
+    themeIds: ['sub-020'],
+    personIds: ['person-022', 'person-023'],
+    organizationIds: ['org-014', 'org-029'],
+    locationIds: ['loc-011'],
+    eventIds: [],
+    factionMentions: {
+      'faction-006': { sentiment: 0.75 }
+    },
+    highlights: [],
+    comments: []
   }
 ];

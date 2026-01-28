@@ -411,5 +411,201 @@ export const themes = [
     volumeOverTime: [
       { date: '2026-01-20', factionVolumes: { 'faction-001': 32, 'faction-005': 78, 'faction-006': 55 } }
     ]
+  },
+  {
+    id: 'sub-028',
+    text: 'Electoral certification process under heightened scrutiny',
+    description: 'The January 2025 electoral certification faces unprecedented scrutiny as the Supreme Court expedites election-related cases. Legal challenges from both parties and ongoing debates about election integrity keep the process in the national spotlight. Security preparations intensify amid concerns about potential disruptions.',
+    parentNarrativeId: 'narr-011',
+    sentiment: -0.35,
+    factionMentions: {
+      'faction-001': { volume: 115, sentiment: 0.52 },
+      'faction-002': { volume: 98, sentiment: -0.58 },
+      'faction-004': { volume: 65, sentiment: 0.38 }
+    },
+    personIds: ['person-031', 'person-032', 'person-033'],
+    organizationIds: ['org-027', 'org-020'],
+    locationIds: ['loc-009', 'loc-004'],
+    eventIds: ['event-037'],
+    volumeOverTime: [
+      { date: '2025-11-15', factionVolumes: { 'faction-001': 45, 'faction-002': 38, 'faction-004': 25 } },
+      { date: '2025-12-15', factionVolumes: { 'faction-001': 85, 'faction-002': 72, 'faction-004': 48 } },
+      { date: '2026-01-02', factionVolumes: { 'faction-001': 115, 'faction-002': 98, 'faction-004': 65 } }
+    ]
+  },
+  {
+    id: 'sub-029',
+    text: 'Capitol security preparations for January 2025 certification',
+    description: 'Capitol Police expand security perimeters and coordinate with federal agencies ahead of the January electoral certification. Enhanced fencing, increased personnel, and coordination with the National Guard reflect lessons learned from January 6, 2021. Officials express confidence in security preparations while acknowledging elevated threat levels.',
+    parentNarrativeId: 'narr-011',
+    sentiment: 0.15,
+    factionMentions: {
+      'faction-004': { volume: 85, sentiment: 0.55 }
+    },
+    personIds: [],
+    organizationIds: ['org-027'],
+    locationIds: ['loc-004'],
+    eventIds: [],
+    volumeOverTime: [
+      { date: '2025-11-20', factionVolumes: { 'faction-004': 35 } },
+      { date: '2025-12-10', factionVolumes: { 'faction-004': 62 } },
+      { date: '2026-01-02', factionVolumes: { 'faction-004': 85 } }
+    ]
+  },
+  {
+    id: 'sub-030',
+    text: 'Legal challenges to state election procedures',
+    description: 'The ACLU and other civil rights organizations file legal challenges to state election laws they deem restrictive. Cases focus on voter ID requirements, mail-in ballot procedures, and election worker protections. The legal battles highlight ongoing tensions over election administration and access.',
+    parentNarrativeId: 'narr-011',
+    sentiment: -0.42,
+    factionMentions: {
+      'faction-001': { volume: 55, sentiment: -0.65 },
+      'faction-002': { volume: 72, sentiment: 0.58 },
+      'faction-003': { volume: 48, sentiment: 0.52 }
+    },
+    personIds: [],
+    organizationIds: ['org-030'],
+    locationIds: ['loc-009'],
+    eventIds: [],
+    volumeOverTime: [
+      { date: '2025-11-25', factionVolumes: { 'faction-001': 55, 'faction-002': 72, 'faction-003': 48 } }
+    ]
+  },
+  {
+    id: 'sub-031',
+    text: 'Budget negotiations stall over border funding priorities',
+    description: 'Congressional budget negotiations collapse as House Republicans insist on increased border security funding that Senate Democrats refuse to support. The impasse reflects broader partisan divides over immigration policy and government spending priorities.',
+    parentNarrativeId: 'narr-012',
+    sentiment: -0.48,
+    factionMentions: {
+      'faction-001': { volume: 125, sentiment: -0.38 },
+      'faction-002': { volume: 108, sentiment: -0.52 }
+    },
+    personIds: ['person-032', 'person-033'],
+    organizationIds: ['org-020'],
+    locationIds: ['loc-004'],
+    eventIds: ['event-032', 'event-033'],
+    volumeOverTime: [
+      { date: '2025-09-15', factionVolumes: { 'faction-001': 45, 'faction-002': 38 } },
+      { date: '2025-09-22', factionVolumes: { 'faction-001': 85, 'faction-002': 72 } },
+      { date: '2025-09-28', factionVolumes: { 'faction-001': 125, 'faction-002': 108 } }
+    ]
+  },
+  {
+    id: 'sub-032',
+    text: 'Government shutdown impacts federal workers and services',
+    description: 'The October 2025 government shutdown furloughs hundreds of thousands of federal workers and disrupts essential services. National parks close, passport processing halts, and federal workers face financial hardship. The 18-day shutdown ends with a compromise that neither party celebrates.',
+    parentNarrativeId: 'narr-012',
+    sentiment: -0.55,
+    factionMentions: {
+      'faction-001': { volume: 98, sentiment: -0.45 },
+      'faction-002': { volume: 85, sentiment: -0.58 }
+    },
+    personIds: [],
+    organizationIds: ['org-020'],
+    locationIds: ['loc-001'],
+    eventIds: ['event-034'],
+    volumeOverTime: [
+      { date: '2025-10-01', factionVolumes: { 'faction-001': 65, 'faction-002': 58 } },
+      { date: '2025-10-08', factionVolumes: { 'faction-001': 85, 'faction-002': 75 } },
+      { date: '2025-10-19', factionVolumes: { 'faction-001': 98, 'faction-002': 85 } }
+    ]
+  },
+  {
+    id: 'sub-033',
+    text: 'Opioid settlement funds distribution begins',
+    description: 'Communities ravaged by the opioid epidemic begin receiving settlement funds, with initial distributions focusing on treatment centers and prevention programs. The DEA and HHS coordinate to ensure funds reach intended purposes, while advocacy groups monitor implementation.',
+    parentNarrativeId: 'narr-013',
+    sentiment: 0.25,
+    factionMentions: {
+      'faction-005': { volume: 85, sentiment: 0.48 },
+      'faction-006': { volume: 52, sentiment: 0.42 }
+    },
+    personIds: ['person-034', 'person-035'],
+    organizationIds: ['org-028', 'org-022'],
+    locationIds: ['loc-001'],
+    eventIds: ['event-035'],
+    volumeOverTime: [
+      { date: '2025-07-01', factionVolumes: { 'faction-005': 45, 'faction-006': 28 } },
+      { date: '2025-07-20', factionVolumes: { 'faction-005': 85, 'faction-006': 52 } }
+    ]
+  },
+  {
+    id: 'sub-034',
+    text: 'States dispute opioid settlement allocation formula',
+    description: 'States with the highest opioid death rates argue the settlement allocation formula unfairly benefits less-impacted states. West Virginia, Ohio, and other hard-hit states file legal challenges seeking larger shares. The Supreme Court agrees to review the formula.',
+    parentNarrativeId: 'narr-013',
+    sentiment: -0.38,
+    factionMentions: {
+      'faction-005': { volume: 78, sentiment: -0.52 },
+      'faction-006': { volume: 45, sentiment: -0.38 }
+    },
+    personIds: [],
+    organizationIds: ['org-027'],
+    locationIds: ['loc-009'],
+    eventIds: ['event-036'],
+    volumeOverTime: [
+      { date: '2025-08-15', factionVolumes: { 'faction-005': 48, 'faction-006': 28 } },
+      { date: '2025-12-20', factionVolumes: { 'faction-005': 78, 'faction-006': 45 } }
+    ]
+  },
+  {
+    id: 'sub-035',
+    text: 'Republican governors coordinate border enforcement',
+    description: 'Texas Governor Greg Abbott leads a coalition of Republican governors in coordinating border enforcement independently of federal policy. The governors share resources, intelligence, and National Guard deployments. Florida Governor DeSantis signs legislation authorizing state border enforcement operations.',
+    parentNarrativeId: 'narr-014',
+    sentiment: 0.45,
+    factionMentions: {
+      'faction-001': { volume: 145, sentiment: 0.72 },
+      'faction-002': { volume: 85, sentiment: -0.68 },
+      'faction-004': { volume: 65, sentiment: 0.58 }
+    },
+    personIds: ['person-027', 'person-028'],
+    organizationIds: ['org-024', 'org-025', 'org-029'],
+    locationIds: ['loc-010', 'loc-011'],
+    eventIds: ['event-027', 'event-028', 'event-031'],
+    volumeOverTime: [
+      { date: '2025-06-15', factionVolumes: { 'faction-001': 55, 'faction-002': 32, 'faction-004': 25 } },
+      { date: '2025-07-10', factionVolumes: { 'faction-001': 95, 'faction-002': 58, 'faction-004': 42 } },
+      { date: '2025-09-01', factionVolumes: { 'faction-001': 145, 'faction-002': 85, 'faction-004': 65 } }
+    ]
+  },
+  {
+    id: 'sub-036',
+    text: 'Federal-state conflict over immigration authority',
+    description: 'The DOJ opens investigations into state border enforcement actions, arguing states are overstepping federal authority. California sues the federal government over border policies it deems unconstitutional. The conflict highlights ongoing tensions over federalism and immigration enforcement.',
+    parentNarrativeId: 'narr-014',
+    sentiment: -0.52,
+    factionMentions: {
+      'faction-001': { volume: 75, sentiment: -0.65 },
+      'faction-002': { volume: 95, sentiment: 0.58 },
+      'faction-003': { volume: 62, sentiment: 0.52 }
+    },
+    personIds: ['person-029', 'person-030'],
+    organizationIds: ['org-026', 'org-010'],
+    locationIds: ['loc-009'],
+    eventIds: ['event-029', 'event-030'],
+    volumeOverTime: [
+      { date: '2025-08-05', factionVolumes: { 'faction-001': 45, 'faction-002': 58, 'faction-003': 38 } },
+      { date: '2025-08-20', factionVolumes: { 'faction-001': 75, 'faction-002': 95, 'faction-003': 62 } }
+    ]
+  },
+  {
+    id: 'sub-037',
+    text: 'Border policy effectiveness debate',
+    description: 'As border crossings reach five-year lows, debate intensifies over whether state enforcement or federal policy deserves credit. Supporters of state actions cite deterrence effects, while critics argue economic factors and international conditions are the primary drivers.',
+    parentNarrativeId: 'narr-014',
+    sentiment: -0.15,
+    factionMentions: {
+      'faction-001': { volume: 85, sentiment: 0.58 },
+      'faction-002': { volume: 72, sentiment: -0.48 }
+    },
+    personIds: [],
+    organizationIds: [],
+    locationIds: ['loc-011'],
+    eventIds: [],
+    volumeOverTime: [
+      { date: '2025-12-28', factionVolumes: { 'faction-001': 85, 'faction-002': 72 } }
+    ]
   }
 ];
