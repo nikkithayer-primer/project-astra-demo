@@ -10,10 +10,14 @@ import { DataService } from '../data/DataService.js';
 import { dataStore } from '../data/DataStore.js';
 import { NetworkGraph } from './NetworkGraph.js';
 import { NarrativeList } from './NarrativeList.js';
+import { ThemeList } from './ThemeList.js';
+import { TopicList } from './TopicList.js';
 import { DocumentTable } from './DocumentTable.js';
 import { ColumnFilter } from './ColumnFilter.js';
 import { MapView } from './MapView.js';
 import { Timeline } from './Timeline.js';
+import { TimelineVolumeComposite } from './TimelineVolumeComposite.js';
+import { StackedAreaChart } from './StackedAreaChart.js';
 import { SentimentChart } from './SentimentChart.js';
 import { FactionCards } from './FactionCards.js';
 import { VennDiagram } from './VennDiagram.js';
@@ -653,6 +657,345 @@ export class VennDiagramCard extends BaseCardComponent {
 }
 
 /**
+ * Theme List Card Component
+ */
+export class ThemeListCard extends BaseCardComponent {
+  constructor(view, containerId, options = {}) {
+    super(view, containerId);
+    this.options = options;
+    this.themes = options.themes || [];
+    this.title = options.title || 'Themes';
+    this.maxItems = options.maxItems || 10;
+    this.showCount = options.showCount !== false;
+    this.showDescriptionToggle = options.showDescriptionToggle || false;
+    this.defaultShowDescription = options.defaultShowDescription || false;
+  }
+
+  hasData() {
+    return this.themes.length > 0;
+  }
+
+  getCardHtml() {
+    if (!this.hasData()) return '';
+    
+    const actionsHtml = this.showDescriptionToggle 
+      ? CardBuilder.descriptionToggle(`${this.containerId}-desc-toggle`)
+      : '';
+    
+    return CardBuilder.create(this.title, this.containerId, {
+      count: this.showCount ? this.themes.length : undefined,
+      noPadding: true,
+      fullWidth: this.options.fullWidth || false,
+      halfWidth: this.options.halfWidth || false,
+      actions: actionsHtml
+    });
+  }
+
+  initialize() {
+    if (!this.hasData()) return null;
+
+    this.component = new ThemeList(this.containerId, {
+      maxItems: this.maxItems,
+      defaultShowDescription: this.defaultShowDescription,
+      onItemClick: (t) => {
+        window.location.hash = `#/theme/${t.id}`;
+      }
+    });
+    this.component.update({ themes: this.themes });
+
+    // Set up description toggle if enabled
+    if (this.showDescriptionToggle) {
+      const toggle = document.getElementById(`${this.containerId}-desc-toggle`);
+      if (toggle) {
+        toggle.addEventListener('click', () => {
+          const isShowing = this.component.toggleDescription();
+          toggle.classList.toggle('active', isShowing);
+        });
+      }
+    }
+
+    return this.component;
+  }
+}
+
+/**
+ * Topic List Card Component
+ */
+export class TopicListCard extends BaseCardComponent {
+  constructor(view, containerId, options = {}) {
+    super(view, containerId);
+    this.options = options;
+    this.topics = options.topics || [];
+    this.title = options.title || 'Topics';
+    this.maxItems = options.maxItems || 5;
+    this.showCount = options.showCount !== false;
+    this.showSparkline = options.showSparkline !== false;
+    this.showVolume = options.showVolume !== false;
+    this.showDuration = options.showDuration !== false;
+    this.showBulletPoints = options.showBulletPoints || false;
+  }
+
+  hasData() {
+    return this.topics.length > 0;
+  }
+
+  getCardHtml() {
+    if (!this.hasData()) return '';
+    return CardBuilder.create(this.title, this.containerId, {
+      count: this.showCount ? this.topics.length : undefined,
+      noPadding: true,
+      fullWidth: this.options.fullWidth || false,
+      halfWidth: this.options.halfWidth || false
+    });
+  }
+
+  initialize() {
+    if (!this.hasData()) return null;
+
+    this.component = new TopicList(this.containerId, {
+      maxItems: this.maxItems,
+      showSparkline: this.showSparkline,
+      showVolume: this.showVolume,
+      showDuration: this.showDuration,
+      showBulletPoints: this.showBulletPoints,
+      onItemClick: (t) => {
+        window.location.hash = `#/topic/${t.id}`;
+      }
+    });
+    this.component.update({ topics: this.topics });
+
+    return this.component;
+  }
+}
+
+/**
+ * Timeline Volume Composite Card Component
+ * Combines volume chart with timeline events
+ */
+export class TimelineVolumeCompositeCard extends BaseCardComponent {
+  constructor(view, containerId, options = {}) {
+    super(view, containerId);
+    this.options = options;
+    this.volumeData = options.volumeData || null;
+    this.publisherData = options.publisherData || null;
+    this.events = options.events || [];
+    this.title = options.title || 'Volume & Events';
+    this.height = options.height || 320;
+    this.volumeHeight = options.volumeHeight || 140;
+    this.timelineHeight = options.timelineHeight || 140;
+    this.showViewToggle = options.showViewToggle || false;
+  }
+
+  hasData() {
+    const hasVolumeData = this.volumeData && this.volumeData.dates && this.volumeData.dates.length > 0;
+    const hasPublisherData = this.publisherData && this.publisherData.dates && this.publisherData.dates.length > 0;
+    return hasVolumeData || hasPublisherData || this.events.length > 0;
+  }
+
+  getCardHtml() {
+    if (!this.hasData()) return '';
+    return CardBuilder.create(this.title, this.containerId, {
+      fullWidth: this.options.fullWidth || false,
+      halfWidth: this.options.halfWidth || false
+    });
+  }
+
+  initialize() {
+    if (!this.hasData()) return null;
+
+    this.component = new TimelineVolumeComposite(this.containerId, {
+      height: this.height,
+      volumeHeight: this.volumeHeight,
+      timelineHeight: this.timelineHeight,
+      showViewToggle: this.showViewToggle,
+      onEventClick: (e) => {
+        window.location.hash = `#/event/${e.id}`;
+      },
+      onFactionClick: (f) => {
+        window.location.hash = `#/faction/${f.id}`;
+      }
+    });
+    this.component.update({
+      volumeData: this.volumeData,
+      publisherData: this.publisherData,
+      events: this.events
+    });
+    
+    if (this.options.enableAutoResize !== false) {
+      this.component.enableAutoResize();
+    }
+
+    return this.component;
+  }
+}
+
+/**
+ * Stacked Area Chart Card Component
+ * For volume over time visualization
+ */
+export class StackedAreaChartCard extends BaseCardComponent {
+  constructor(view, containerId, options = {}) {
+    super(view, containerId);
+    this.options = options;
+    this.chartData = options.chartData || null; // { dates, series, factions }
+    this.title = options.title || 'Volume Over Time';
+    this.height = options.height || 250;
+    this.showLegend = options.showLegend !== false;
+    this.showCount = options.showCount || false;
+    this.count = options.count || null;
+  }
+
+  hasData() {
+    return this.chartData && 
+           this.chartData.dates && 
+           this.chartData.dates.length > 0 &&
+           this.chartData.series &&
+           this.chartData.series.length > 0;
+  }
+
+  getCardHtml() {
+    if (!this.hasData()) return '';
+    return CardBuilder.create(this.title, this.containerId, {
+      count: this.showCount ? this.count : undefined,
+      fullWidth: this.options.fullWidth || false,
+      halfWidth: this.options.halfWidth || false
+    });
+  }
+
+  initialize() {
+    if (!this.hasData()) return null;
+
+    this.component = new StackedAreaChart(this.containerId, {
+      height: this.height,
+      showLegend: this.showLegend,
+      onFactionClick: (f) => {
+        window.location.hash = `#/faction/${f.id}`;
+      }
+    });
+    this.component.update(this.chartData);
+    
+    if (this.options.enableAutoResize !== false) {
+      this.component.enableAutoResize();
+    }
+
+    return this.component;
+  }
+}
+
+/**
+ * Bullet Points Card Component
+ * Displays a list of key points or bullet items
+ */
+export class BulletPointsCard extends BaseCardComponent {
+  constructor(view, containerId, options = {}) {
+    super(view, containerId);
+    this.options = options;
+    this.bulletPoints = options.bulletPoints || [];
+    this.title = options.title || 'Key Points';
+  }
+
+  hasData() {
+    return this.bulletPoints && this.bulletPoints.length > 0;
+  }
+
+  getCardHtml() {
+    if (!this.hasData()) return '';
+    return CardBuilder.create(this.title, this.containerId, {
+      fullWidth: this.options.fullWidth || false,
+      halfWidth: this.options.halfWidth || false
+    });
+  }
+
+  initialize() {
+    if (!this.hasData()) return null;
+
+    const container = document.getElementById(this.containerId);
+    if (!container) return null;
+
+    // Escape HTML helper
+    const escapeHtml = (text) => {
+      if (!text) return '';
+      const div = document.createElement('div');
+      div.textContent = text;
+      return div.innerHTML;
+    };
+
+    container.innerHTML = `
+      <ul class="bullet-points-list">
+        ${this.bulletPoints.map(bp => `<li class="bullet-point-item">${escapeHtml(bp)}</li>`).join('')}
+      </ul>
+    `;
+
+    return null; // No component to return, just rendered HTML
+  }
+}
+
+/**
+ * Summary Stats Card Component
+ * Displays summary statistics with labels
+ */
+export class SummaryStatsCard extends BaseCardComponent {
+  constructor(view, containerId, options = {}) {
+    super(view, containerId);
+    this.options = options;
+    this.stats = options.stats || []; // Array of { value, label } objects
+    this.title = options.title || 'Summary';
+    this.footer = options.footer || null; // Optional footer text/html
+  }
+
+  hasData() {
+    return this.stats && this.stats.length > 0;
+  }
+
+  getCardHtml() {
+    if (!this.hasData()) return '';
+    return CardBuilder.create(this.title, this.containerId, {
+      fullWidth: this.options.fullWidth || false,
+      halfWidth: this.options.halfWidth || false
+    });
+  }
+
+  initialize() {
+    if (!this.hasData()) return null;
+
+    const container = document.getElementById(this.containerId);
+    if (!container) return null;
+
+    // Escape HTML helper
+    const escapeHtml = (text) => {
+      if (!text) return '';
+      const div = document.createElement('div');
+      div.textContent = text;
+      return div.innerHTML;
+    };
+
+    const statsHtml = this.stats.map(stat => `
+      <div class="summary-stat">
+        <span class="summary-stat-value">${escapeHtml(String(stat.value))}</span>
+        <span class="summary-stat-label">${escapeHtml(stat.label)}</span>
+      </div>
+    `).join('');
+
+    const footerHtml = this.footer ? `
+      <div class="summary-footer">
+        ${this.footer}
+      </div>
+    ` : '';
+
+    container.innerHTML = `
+      <div class="summary-stats-container">
+        <div class="summary-stats-grid">
+          ${statsHtml}
+        </div>
+        ${footerHtml}
+      </div>
+    `;
+
+    return null; // No component to return, just rendered HTML
+  }
+}
+
+/**
  * Card Manager - helps manage multiple card components
  */
 export class CardManager {
@@ -761,11 +1104,17 @@ export class CardManager {
 export default {
   NetworkGraphCard,
   NarrativeListCard,
+  ThemeListCard,
+  TopicListCard,
   DocumentTableCard,
   MapCard,
   TimelineCard,
+  TimelineVolumeCompositeCard,
+  StackedAreaChartCard,
   SentimentChartCard,
   FactionCardsCard,
   VennDiagramCard,
+  BulletPointsCard,
+  SummaryStatsCard,
   CardManager
 };

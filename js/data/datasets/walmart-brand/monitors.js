@@ -13,7 +13,6 @@ export const monitors = [
     lastTriggered: '2026-01-18T10:30:00Z',
     scope: {
       logic: 'OR',
-      narrativeIds: ['narr-001'],
       keywords: ['self-checkout', 'detained', 'theft', 'receipt check', 'loss prevention']
     },
     triggers: {
@@ -36,7 +35,6 @@ export const monitors = [
     lastTriggered: '2026-01-15T13:00:00Z',
     scope: {
       logic: 'OR',
-      narrativeIds: ['narr-002'],
       keywords: ['empty shelves', 'out of stock', 'can\'t find', 'no inventory', 'bare aisles']
     },
     triggers: {
@@ -58,7 +56,6 @@ export const monitors = [
     lastTriggered: '2026-01-15T12:00:00Z',
     scope: {
       logic: 'OR',
-      narrativeIds: ['narr-003'],
       keywords: ['walmart worker', 'walmart employee', 'understaffed', '#walmartlife', 'working conditions']
     },
     triggers: {
@@ -81,7 +78,6 @@ export const monitors = [
     lastTriggered: '2026-01-18T14:30:00Z',
     scope: {
       logic: 'OR',
-      narrativeIds: ['narr-004'],
       keywords: ['recall', 'contamination', 'FDA', 'safety', 'great value', 'private label']
     },
     triggers: {
@@ -104,7 +100,6 @@ export const monitors = [
     lastTriggered: '2026-01-17T16:00:00Z',
     scope: {
       logic: 'OR',
-      narrativeIds: ['narr-005'],
       keywords: ['walmart prices', 'everyday low prices', 'cheaper at', 'price comparison', 'expensive']
     },
     triggers: {
@@ -126,7 +121,6 @@ export const monitors = [
     lastTriggered: '2026-01-16T11:00:00Z',
     scope: {
       logic: 'OR',
-      narrativeIds: ['narr-006'],
       keywords: ['target', 'amazon', 'costco', 'aldi', 'delivery', 'same-day']
     },
     triggers: {
@@ -148,7 +142,6 @@ export const monitors = [
     lastTriggered: '2026-01-18T13:00:00Z',
     scope: {
       logic: 'OR',
-      narrativeIds: ['narr-007'],
       keywords: ['store closing', 'walmart closure', 'food desert', 'rural', 'community impact']
     },
     triggers: {

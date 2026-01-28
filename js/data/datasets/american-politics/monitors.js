@@ -61,7 +61,7 @@ export const monitors = [
     scope: {
       organizationIds: ['org-003', 'org-022', 'org-023'], // FDA, HHS, World Resources Institute
       personIds: ['person-026'], // RFK Jr
-      narrativeIds: ['narr-003', 'narr-010'], // Food preservatives, dietary guidelines
+      keywords: ['dietary guidelines', 'food preservatives', 'FDA policy', 'food safety'],
       logic: 'OR' // Match narratives containing ANY of the above entities
     },
     options: {

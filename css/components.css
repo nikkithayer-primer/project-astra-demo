@@ -29,16 +29,6 @@
 .btn-small {
   padding: var(--space-xs) var(--space-sm);
   font-size: var(--text-xs);
-  background: var(--bg-tertiary);
-  border: 1px solid var(--border-color);
-  border-radius: var(--border-radius);
-  color: var(--text-secondary);
-  cursor: pointer;
-}
-
-.btn-small:hover {
-  color: var(--text-primary);
-  background: var(--bg-hover);
 }
 
 .btn-primary {
@@ -91,13 +81,10 @@
 }
 
 .btn-secondary {
-  background: var(--bg-tertiary);
-  border-color: var(--border-color);
   color: var(--text-secondary);
 }
 
 .btn-secondary:hover {
-  background: var(--bg-hover);
   color: var(--text-primary);
 }
 
@@ -2988,6 +2975,95 @@
 .status-badge.status-ended {
   background: var(--bg-tertiary);
   color: var(--text-muted);
+}
+
+/* ============================================
+   Generic Card Components
+   ============================================ */
+
+/* Bullet Points Card */
+.bullet-points-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.bullet-point-item {
+  position: relative;
+  padding: var(--space-sm) 0 var(--space-sm) var(--space-lg);
+  font-size: var(--text-sm);
+  line-height: 1.5;
+  color: var(--text-primary);
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.bullet-point-item:last-child {
+  border-bottom: none;
+}
+
+.bullet-point-item::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: calc(var(--space-sm) + 0.5em);
+  width: 6px;
+  height: 6px;
+  background: var(--accent-primary);
+  border-radius: 50%;
+}
+
+/* Summary Stats Card */
+.summary-stats-container {
+  padding: var(--space-md);
+}
+
+.summary-stats-grid {
+  display: flex;
+  gap: var(--space-xl);
+  padding-bottom: var(--space-md);
+  border-bottom: 1px solid var(--border-subtle);
+  margin-bottom: var(--space-md);
+}
+
+.summary-stat {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+}
+
+.summary-stat-value {
+  font-size: var(--text-2xl);
+  font-weight: var(--weight-medium);
+  color: var(--text-primary);
+  font-family: var(--font-mono);
+}
+
+.summary-stat-label {
+  font-size: var(--text-xs);
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.summary-footer {
+  font-size: var(--text-sm);
+  color: var(--text-secondary);
+}
+
+.summary-footer-label {
+  color: var(--text-muted);
+  margin-right: var(--space-sm);
+}
+
+.summary-footer-text {
+  color: var(--text-primary);
+}
+
+/* When summary has no footer, remove bottom margin */
+.summary-stats-container:not(:has(.summary-footer)) .summary-stats-grid {
+  border-bottom: none;
+  margin-bottom: 0;
+  padding-bottom: 0;
 }
 
 /* Faction Cards */

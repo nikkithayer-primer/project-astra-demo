@@ -1,51 +1,30 @@
 /**
  * MonitorView.js
- * Detail view for a single monitor showing matched narratives, entities, and visualizations
+ * Detail view for a single monitor using the CardManager pattern
  */
 
 import { BaseView } from './BaseView.js';
 import { DataService } from '../data/DataService.js';
-import { dataStore } from '../data/DataStore.js';
 import { PageHeader } from '../utils/PageHeader.js';
 import { CardBuilder } from '../utils/CardBuilder.js';
-import { NarrativeList } from '../components/NarrativeList.js';
-import { TopicList } from '../components/TopicList.js';
-import { SentimentChart } from '../components/SentimentChart.js';
-import { MapView } from '../components/MapView.js';
-import { TimelineVolumeComposite } from '../components/TimelineVolumeComposite.js';
-import { NetworkGraph } from '../components/NetworkGraph.js';
-import { DocumentTable } from '../components/DocumentTable.js';
-import { ColumnFilter } from '../components/ColumnFilter.js';
-import { getMonitorEditor } from '../components/MonitorEditorModal.js';
 import { initAllCardToggles } from '../utils/cardWidthToggle.js';
-import { renderEntityList } from '../utils/entityRenderer.js';
-
-// Column configuration for document tables
-const DOCUMENT_AVAILABLE_COLUMNS = {
-  classification: 'Classification',
-  documentType: 'Doc Type',
-  publisherName: 'Publisher',
-  publisherType: 'Publisher Type',
-  title: 'Title',
-  excerpt: 'Excerpt',
-  publishedDate: 'Published',
-  narratives: 'Narratives',
-  themes: 'Themes',
-  events: 'Events',
-  locations: 'Locations',
-  persons: 'People',
-  organizations: 'Organizations',
-  factions: 'Factions',
-  topics: 'Topics'
-};
-
-const DOCUMENT_DEFAULT_COLUMNS = ['classification', 'publisherName', 'publisherType', 'title', 'publishedDate'];
+import { getMonitorEditor } from '../components/MonitorEditorModal.js';
+import {
+  CardManager,
+  NetworkGraphCard,
+  NarrativeListCard,
+  TopicListCard,
+  SentimentChartCard,
+  MapCard,
+  TimelineVolumeCompositeCard,
+  DocumentTableCard
+} from '../components/CardComponents.js';
 
 export class MonitorView extends BaseView {
   constructor(container, monitorId, options = {}) {
     super(container, options);
     this.monitorId = monitorId;
-    this.networkViewMode = 'graph'; // 'graph' or 'list'
+    this.cardManager = new CardManager(this);
     this.monitorEditor = null;
   }
 
@@ -59,12 +38,23 @@ export class MonitorView extends BaseView {
     // Fetch all data upfront
     const data = this.fetchMonitorData(monitor);
     
-    // Determine active tab and build appropriate cards
+    // Store data for card setup
+    this._monitorData = { monitor, data };
+    
+    // Determine active tab
     const activeTab = this.getCurrentTab();
     const hasDocuments = data.documents.length > 0;
-    const cardsHtml = this.isDocumentsTab() 
-      ? this.buildDocumentsCard(data)
-      : this.buildDashboardCards(monitor, data);
+    
+    // Build cards based on active tab
+    if (this.isDocumentsTab()) {
+      this.setupDocumentsCard(monitor, data);
+    } else {
+      this.setupDashboardCards(monitor, data);
+    }
+    
+    // Generate tabs config
+    const baseHref = `#/monitor/${this.monitorId}`;
+    const tabsConfig = hasDocuments ? this.getTabsConfig(baseHref, true) : null;
 
     // Build subtitle with scope info
     const scopeLogic = monitor.scope?.logic || 'OR';
@@ -76,10 +66,6 @@ export class MonitorView extends BaseView {
       `<span class="match-count">${matchCount} narrative${matchCount !== 1 ? 's' : ''} matched</span>`,
       scopeLabel ? `<span class="text-muted">Scope: ${scopeLabel}</span>` : ''
     ].filter(Boolean).join(' ');
-
-    // Generate tabs config
-    const baseHref = `#/monitor/${this.monitorId}`;
-    const tabsConfig = hasDocuments ? this.getTabsConfig(baseHref, true) : null;
 
     // Edit button for header actions
     const editBtnHtml = `
@@ -108,45 +94,49 @@ export class MonitorView extends BaseView {
       activeTab: activeTab
     });
 
+    // Render page
     this.container.innerHTML = `
       ${headerHtml}
       <div class="content-area">
         <div class="content-grid">
-          ${cardsHtml}
+          ${this.cardManager.getHtml()}
+          ${this.isDashboardTab() ? this.getCustomCardsHtml(data) : ''}
         </div>
       </div>
     `;
 
     // Initialize card width toggles
-    if (cardsHtml) {
-      const contentGrid = this.container.querySelector('.content-grid');
+    const contentGrid = this.container.querySelector('.content-grid');
+    if (contentGrid) {
       const tabSuffix = this.isDocumentsTab() ? '-docs' : '';
       initAllCardToggles(contentGrid, `monitor-${this.monitorId}${tabSuffix}`);
     }
 
-    // Store pre-fetched data for component initialization
-    this._prefetchedData = { monitor, ...data };
-
-    await this.initializeComponents();
+    // Initialize all card components
+    const components = this.cardManager.initializeAll();
+    Object.assign(this.components, components);
 
     // Set up edit button handler
     this.setupEditButton(monitor);
 
-    // Set up description toggle for narratives (only on dashboard tab)
+    // Initialize custom components (alerts)
     if (this.isDashboardTab()) {
+      this.initializeCustomComponents(data);
+      
+      // Set up description toggle for narratives
       const descToggle = this.container.querySelector('#narrative-desc-toggle');
-      if (descToggle && this.components.narrativeList) {
+      if (descToggle && this.components['monitor-narratives']) {
         descToggle.addEventListener('click', () => {
-          const isShowing = this.components.narrativeList.toggleDescription();
+          const isShowing = this.components['monitor-narratives'].toggleDescription();
           descToggle.classList.toggle('active', isShowing);
         });
       }
     }
-
-    // Initialize drag-and-drop for cards
-    this.initDragDrop();
   }
 
+  /**
+   * Fetch all data related to the monitor
+   */
   fetchMonitorData(monitor) {
     // Get matched content using DataService methods
     const narratives = DataService.getNarrativesForMonitor(this.monitorId);
@@ -197,56 +187,91 @@ export class MonitorView extends BaseView {
   }
 
   /**
-   * Build cards for the Dashboard tab (all cards except documents)
+   * Set up card components for Dashboard tab
    */
-  buildDashboardCards(monitor, data) {
-    const cards = [];
+  setupDashboardCards(monitor, data) {
+    // Reset card manager for fresh setup
+    this.cardManager = new CardManager(this);
 
     // Narratives list (full width at top)
     if (data.narratives.length > 0) {
-      cards.push(CardBuilder.create('Matched Narratives', 'monitor-narratives', {
-        count: data.narratives.length,
+      this.cardManager.add(new NarrativeListCard(this, 'monitor-narratives', {
+        title: 'Matched Narratives',
+        narratives: data.narratives,
+        showCount: true,
+        maxItems: 10,
         fullWidth: true,
-        noPadding: true,
-        actions: CardBuilder.descriptionToggle('narrative-desc-toggle')
+        showDescriptionToggle: true
       }));
     }
 
-    // Volume Over Time and Faction Engagement as half-width cards
+    // Volume & Events Chart (half-width)
     if (data.hasVolumeTimeline) {
-      cards.push(CardBuilder.create('Volume & Events', 'monitor-volume-events', { halfWidth: true }));
+      this.cardManager.add(new TimelineVolumeCompositeCard(this, 'monitor-volume-events', {
+        title: 'Volume & Events',
+        volumeData: data.hasVolumeData ? data.volumeData : null,
+        publisherData: null,
+        events: data.allEvents,
+        halfWidth: true,
+        height: 320,
+        volumeHeight: 140,
+        timelineHeight: 140,
+        showViewToggle: false
+      }));
     }
 
+    // Faction Engagement (half-width)
     if (data.factions.length > 0) {
-      cards.push(CardBuilder.create('Faction Engagement', 'monitor-faction-sentiment', { halfWidth: true }));
+      this.cardManager.add(new SentimentChartCard(this, 'monitor-faction-sentiment', {
+        title: 'Faction Engagement',
+        factions: data.factions,
+        halfWidth: true,
+        clickRoute: 'faction'
+      }));
     }
 
-    // People & Organizations
+    // People & Organizations Network (half-width)
     if (data.hasNetwork) {
-      const entityCount = data.personIds.length + data.orgIds.length;
-      cards.push(CardBuilder.create('People & Organizations', 'monitor-network', { 
+      this.cardManager.add(new NetworkGraphCard(this, 'monitor-network', {
+        title: 'People & Organizations',
+        personIds: data.personIds,
+        orgIds: data.orgIds,
         halfWidth: true,
-        count: entityCount,
-        actions: this.getNetworkToggleHtml('monitor-network')
+        height: 400
       }));
     }
 
-    // Locations
+    // Related Locations Map (half-width)
     if (data.mapLocations.length > 0) {
-      cards.push(CardBuilder.create('Related Locations', 'monitor-map', {
+      this.cardManager.add(new MapCard(this, 'monitor-map', {
+        title: 'Related Locations',
+        locations: data.mapLocations,
         halfWidth: true,
-        noPadding: true
+        height: 350
       }));
     }
 
-    // Topics (if any)
+    // Related Topics (half-width)
     if (data.topics.length > 0) {
-      cards.push(CardBuilder.create('Related Topics', 'monitor-topics', {
-        count: data.topics.length,
+      this.cardManager.add(new TopicListCard(this, 'monitor-topics', {
+        title: 'Related Topics',
+        topics: data.topics,
+        showCount: true,
+        maxItems: 5,
         halfWidth: true,
-        noPadding: true
+        showSparkline: true,
+        showVolume: true,
+        showDuration: true,
+        showBulletPoints: false
       }));
     }
+  }
+
+  /**
+   * Get HTML for custom cards (alerts) that aren't managed by CardManager
+   */
+  getCustomCardsHtml(data) {
+    const cards = [];
 
     // Recent Alerts
     if (data.alerts.length > 0) {
@@ -261,178 +286,12 @@ export class MonitorView extends BaseView {
   }
 
   /**
-   * Build card for the Documents tab (full-width document table)
+   * Initialize custom components (alerts)
    */
-  buildDocumentsCard(data) {
-    if (data.documents.length === 0) {
-      return '<div class="empty-state"><p class="empty-state-text">No documents found</p></div>';
-    }
-
-    // Column filter in card header
-    const actionsHtml = `<div class="filter-control" id="monitor-docs-column-filter"></div>`;
-
-    return CardBuilder.create('Source Documents', 'monitor-documents', {
-      count: data.documents.length,
-      fullWidth: true,
-      noPadding: true,
-      actions: actionsHtml
-    });
-  }
-
-  async initializeComponents() {
-    const {
-      monitor, narratives, allEvents, alerts,
-      persons, organizations, factions, documents, topics,
-      volumeData, hasVolumeData, mapLocations, personIds, orgIds
-    } = this._prefetchedData;
-
-    // Documents Tab: Only initialize document table with column filter
-    if (this.isDocumentsTab()) {
-      if (documents.length > 0) {
-        // Check if classification should be shown
-        const settings = dataStore.getSettings();
-        const showClassification = settings.showClassification;
-        
-        // Filter available columns based on settings
-        const availableColumns = { ...DOCUMENT_AVAILABLE_COLUMNS };
-        if (!showClassification) {
-          delete availableColumns.classification;
-        }
-        
-        // Filter default columns based on settings
-        const defaultColumns = showClassification 
-          ? DOCUMENT_DEFAULT_COLUMNS 
-          : DOCUMENT_DEFAULT_COLUMNS.filter(col => col !== 'classification');
-        
-        // Initialize selected columns (start with defaults)
-        this._selectedDocColumns = [...defaultColumns];
-        
-        // Initialize column filter
-        const filterContainer = document.getElementById('monitor-docs-column-filter');
-        if (filterContainer) {
-          this.components.columnFilter = new ColumnFilter('monitor-docs-column-filter', {
-            availableColumns: availableColumns,
-            defaultColumns: defaultColumns,
-            requiredColumns: ['title'],
-            onChange: (columns) => {
-              this._selectedDocColumns = columns;
-              if (this.components.documentTable) {
-                this.components.documentTable.setColumns(columns);
-              }
-            }
-          });
-          this.components.columnFilter.setSelectedColumns(this._selectedDocColumns);
-          this.components.columnFilter.render();
-        }
-        
-        // Initialize document table
-        this.components.documentTable = new DocumentTable('monitor-documents', {
-          columns: this._selectedDocColumns,
-          maxItems: 50,
-          enableViewerMode: true,
-          onDocumentClick: (doc) => {
-            window.location.hash = `#/document/${doc.id}`;
-          }
-        });
-        this.components.documentTable.update({ documents });
-      }
-      return;
-    }
-
-    // Dashboard Tab: Initialize all other components
-
-    // Narratives List
-    if (narratives.length > 0) {
-      this.components.narrativeList = new NarrativeList('monitor-narratives', {
-        maxItems: 10,
-        showSentiment: true,
-        showStatus: true,
-        showSparkline: true,
-        showVolume: true,
-        showThemes: true,
-        maxThemes: 3,
-        defaultShowDescription: false,
-        onItemClick: (n) => {
-          window.location.hash = `#/narrative/${n.id}`;
-        }
-      });
-      this.components.narrativeList.update({ narratives });
-    }
-
-    // Volume & Events Chart
-    if (hasVolumeData || allEvents.length > 0) {
-      this.components.volumeEvents = new TimelineVolumeComposite('monitor-volume-events', {
-        height: 320,
-        volumeHeight: 140,
-        timelineHeight: 140,
-        showViewToggle: false,
-        onEventClick: (e) => {
-          window.location.hash = `#/event/${e.id}`;
-        },
-        onFactionClick: (f) => {
-          window.location.hash = `#/faction/${f.id}`;
-        }
-      });
-      this.components.volumeEvents.update({
-        volumeData: hasVolumeData ? volumeData : null,
-        publisherData: null,
-        events: allEvents
-      });
-      this.components.volumeEvents.enableAutoResize();
-    }
-
-    // Faction Sentiment Chart
-    if (factions.length > 0) {
-      this.components.sentimentChart = new SentimentChart('monitor-faction-sentiment', {
-        height: Math.max(150, factions.length * 50),
-        onFactionClick: (f) => {
-          window.location.hash = `#/faction/${f.id}`;
-        }
-      });
-      this.components.sentimentChart.update({ factions });
-      this.components.sentimentChart.enableAutoResize();
-    }
-
-    // Network Graph / Entity List
-    if (personIds.length > 0 || orgIds.length > 0) {
-      this._networkData = {
-        personIds,
-        orgIds,
-        persons,
-        orgs: organizations,
-        graphData: DataService.buildNetworkGraph(personIds, orgIds)
-      };
-      
-      this.renderNetworkView();
-      this.setupNetworkToggle('monitor-network');
-    }
-
-    // Map
-    if (mapLocations.length > 0) {
-      this.components.map = new MapView('monitor-map', {
-        height: 350
-      });
-      this.components.map.update({ locations: mapLocations });
-    }
-
-    // Topics List
-    if (topics.length > 0) {
-      this.components.topicList = new TopicList('monitor-topics', {
-        maxItems: 5,
-        showSparkline: true,
-        showVolume: true,
-        showDuration: true,
-        showBulletPoints: false,
-        onItemClick: (t) => {
-          window.location.hash = `#/topic/${t.id}`;
-        }
-      });
-      this.components.topicList.update({ topics });
-    }
-
+  initializeCustomComponents(data) {
     // Alerts List
-    if (alerts.length > 0) {
-      this.renderAlertsList(alerts);
+    if (data.alerts.length > 0) {
+      this.renderAlertsList(data.alerts);
     }
   }
 
@@ -526,104 +385,27 @@ export class MonitorView extends BaseView {
   }
 
   /**
-   * Get the HTML for the network view toggle buttons
+   * Set up card for Documents tab (full-width document table)
    */
-  getNetworkToggleHtml(containerId) {
-    return `
-      <div class="view-toggle network-view-toggle" data-container="${containerId}">
-        <button class="view-toggle-btn ${this.networkViewMode === 'graph' ? 'active' : ''}" data-view="graph" title="Network Graph">
-          <svg viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.5">
-            <circle cx="8" cy="4" r="2"/>
-            <circle cx="4" cy="12" r="2"/>
-            <circle cx="12" cy="12" r="2"/>
-            <path d="M8 6v2M6 10l-1 1M10 10l1 1"/>
-          </svg>
-        </button>
-        <button class="view-toggle-btn ${this.networkViewMode === 'list' ? 'active' : ''}" data-view="list" title="List View">
-          <svg viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.5">
-            <path d="M2 4h12M2 8h12M2 12h12"/>
-          </svg>
-        </button>
-      </div>
-    `;
-  }
+  setupDocumentsCard(monitor, data) {
+    // Reset card manager for fresh setup
+    this.cardManager = new CardManager(this);
 
-  /**
-   * Render the network view based on current mode
-   */
-  renderNetworkView() {
-    const container = document.getElementById('monitor-network');
-    if (!container || !this._networkData) return;
-
-    // Destroy existing component if switching from graph
-    if (this.components.network) {
-      this.components.network.destroy();
-      this.components.network = null;
-    }
-
-    if (this.networkViewMode === 'graph') {
-      this.components.network = new NetworkGraph('monitor-network', {
-        height: 400,
-        onNodeClick: (node) => {
-          const route = node.type === 'person' ? 'person' : 'organization';
-          window.location.hash = `#/${route}/${node.id}`;
-        },
-        onLinkClick: (link) => {
-          this.showConnectingNarrativesModal(link);
-        }
-      });
-      this.components.network.update(this._networkData.graphData);
-      this.components.network.enableAutoResize();
-    } else {
-      this.renderNetworkListView(container);
+    if (data.documents.length > 0) {
+      this.cardManager.add(new DocumentTableCard(this, 'monitor-documents', {
+        title: 'Source Documents',
+        documents: data.documents,
+        showCount: true,
+        fullWidth: true,
+        maxItems: 50,
+        enableViewerMode: true
+      }));
     }
   }
 
-  /**
-   * Render list view for people and organizations
-   */
-  renderNetworkListView(container) {
-    const { persons, orgs } = this._networkData;
-    const allEntities = [
-      ...persons.map(p => ({ ...p, _type: 'person' })),
-      ...orgs.map(o => ({ ...o, _type: 'organization' }))
-    ];
-
-    container.innerHTML = renderEntityList(allEntities, { sortByName: true });
-
-    // Add click listeners
-    container.querySelectorAll('.entity-list-item').forEach(item => {
-      item.addEventListener('click', () => {
-        const id = item.dataset.id;
-        const type = item.dataset.type;
-        window.location.hash = `#/${type}/${id}`;
-      });
-    });
-  }
-
-  /**
-   * Set up network view toggle listeners
-   */
-  setupNetworkToggle(containerId) {
-    const toggleContainer = document.querySelector(`.network-view-toggle[data-container="${containerId}"]`);
-    if (!toggleContainer) return;
-
-    toggleContainer.querySelectorAll('.view-toggle-btn').forEach(btn => {
-      btn.addEventListener('click', () => {
-        const newView = btn.dataset.view;
-        if (newView !== this.networkViewMode) {
-          this.networkViewMode = newView;
-          
-          // Update button states
-          toggleContainer.querySelectorAll('.view-toggle-btn').forEach(b => {
-            b.classList.toggle('active', b.dataset.view === newView);
-          });
-          
-          // Re-render the view
-          this.renderNetworkView();
-        }
-      });
-    });
+  destroy() {
+    this.cardManager.destroyAll();
+    super.destroy();
   }
 }
 

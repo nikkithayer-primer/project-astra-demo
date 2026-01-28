@@ -10,7 +10,7 @@ export const monitors = [
     scope: {
       organizationIds: ['org-001'], // SMIC
       personIds: ['person-001', 'person-002', 'person-003'], // SMIC leadership
-      narrativeIds: ['narr-001'], // SMIC 5nm breakthrough
+      keywords: ['SMIC', '5nm', 'chip breakthrough', 'semiconductor manufacturing'],
       logic: 'OR' // Match narratives containing ANY of the above entities
     },
     options: {
@@ -36,7 +36,7 @@ export const monitors = [
     scope: {
       organizationIds: ['org-002', 'org-004', 'org-005'], // ASML, US Commerce Dept, Dutch Govt
       personIds: ['person-004', 'person-005', 'person-006'], // Policy figures
-      narrativeIds: ['narr-002'] // ASML restrictions narrative
+      keywords: ['ASML', 'export controls', 'lithography', 'chip restrictions']
     },
     options: {
       includeSubEvents: true,
@@ -61,7 +61,7 @@ export const monitors = [
     scope: {
       organizationIds: ['org-007', 'org-008', 'org-009'], // Big Fund, Ministry of Finance, MIIT
       personIds: ['person-008', 'person-009', 'person-010'], // Investment figures
-      narrativeIds: ['narr-003'] // Big Fund narrative
+      keywords: ['Big Fund', 'semiconductor investment', 'China chip funding']
     },
     options: {
       includeSubEvents: true,
@@ -86,7 +86,7 @@ export const monitors = [
     scope: {
       organizationIds: ['org-010'], // Huawei
       personIds: ['person-011', 'person-012'], // Huawei leadership
-      narrativeIds: ['narr-004'] // Huawei stockpiling narrative
+      keywords: ['Huawei', 'sanctions', 'chip stockpiling', 'HiSilicon']
     },
     options: {
       includeSubEvents: true,
@@ -111,7 +111,7 @@ export const monitors = [
     scope: {
       organizationIds: ['org-013', 'org-020'], // YMTC, TSMC
       locationIds: ['loc-009', 'loc-010'], // Arizona locations
-      narrativeIds: ['narr-005', 'narr-007'] // YMTC and TSMC Arizona narratives
+      keywords: ['YMTC', 'TSMC Arizona', 'chip supply chain', 'fab construction']
     },
     options: {
       includeSubEvents: true,

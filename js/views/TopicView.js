@@ -1,42 +1,25 @@
 /**
  * TopicView.js
- * Detail view for a topic
+ * Detail view for a topic using the CardManager pattern
  */
 
 import { BaseView } from './BaseView.js';
 import { DataService } from '../data/DataService.js';
-import { dataStore } from '../data/DataStore.js';
 import { PageHeader } from '../utils/PageHeader.js';
-import { CardBuilder } from '../utils/CardBuilder.js';
-import { StackedAreaChart } from '../components/StackedAreaChart.js';
-import { DocumentTable } from '../components/DocumentTable.js';
-import { ColumnFilter } from '../components/ColumnFilter.js';
 import { initAllCardToggles } from '../utils/cardWidthToggle.js';
-
-// Column configuration for document tables
-const DOCUMENT_AVAILABLE_COLUMNS = {
-  classification: 'Classification',
-  documentType: 'Doc Type',
-  publisherName: 'Publisher',
-  publisherType: 'Publisher Type',
-  title: 'Title',
-  excerpt: 'Excerpt',
-  publishedDate: 'Published',
-  narratives: 'Narratives',
-  themes: 'Themes',
-  events: 'Events',
-  locations: 'Locations',
-  persons: 'People',
-  organizations: 'Organizations',
-  factions: 'Factions'
-};
-
-const DOCUMENT_DEFAULT_COLUMNS = ['classification', 'publisherName', 'publisherType', 'title', 'publishedDate'];
+import {
+  CardManager,
+  StackedAreaChartCard,
+  BulletPointsCard,
+  SummaryStatsCard,
+  DocumentTableCard
+} from '../components/CardComponents.js';
 
 export class TopicView extends BaseView {
   constructor(container, topicId, options = {}) {
     super(container, options);
     this.topicId = topicId;
+    this.cardManager = new CardManager(this);
   }
 
   async render() {
@@ -49,13 +32,20 @@ export class TopicView extends BaseView {
     // Fetch all data upfront
     const data = this.fetchTopicData(topic);
     
-    // Determine active tab and build appropriate cards
+    // Store data for card setup
+    this._topicData = { topic, data };
+    
+    // Determine active tab
     const activeTab = this.getCurrentTab();
     const hasDocuments = data.documents.length > 0;
-    const cardsHtml = this.isDocumentsTab() 
-      ? this.buildDocumentsCard(data)
-      : this.buildDashboardCards(topic, data);
-
+    
+    // Build cards based on active tab
+    if (this.isDocumentsTab()) {
+      this.setupDocumentsCard(topic, data);
+    } else {
+      this.setupDashboardCards(topic, data);
+    }
+    
     // Generate tabs config
     const baseHref = `#/topic/${this.topicId}`;
     const tabsConfig = hasDocuments ? this.getTabsConfig(baseHref, true) : null;
@@ -81,40 +71,75 @@ export class TopicView extends BaseView {
       activeTab: activeTab
     });
 
+    // Render page
     this.container.innerHTML = `
       ${headerHtml}
       <div class="content-area">
         <div class="content-grid">
-          ${cardsHtml}
+          ${this.cardManager.getHtml()}
         </div>
       </div>
     `;
 
     // Initialize card width toggles
-    if (cardsHtml) {
-      const contentGrid = this.container.querySelector('.content-grid');
+    const contentGrid = this.container.querySelector('.content-grid');
+    if (contentGrid) {
       const tabSuffix = this.isDocumentsTab() ? '-docs' : '';
       initAllCardToggles(contentGrid, `topic-${this.topicId}${tabSuffix}`, { 0: 'half', 1: 'half' });
     }
 
-    // Store pre-fetched data for component initialization
-    this._prefetchedData = { topic, ...data };
-
-    await this.initializeComponents();
-
-    // Initialize drag-and-drop for cards
-    this.initDragDrop();
+    // Initialize all card components
+    const components = this.cardManager.initializeAll();
+    Object.assign(this.components, components);
   }
 
+  /**
+   * Fetch all data related to the topic
+   */
   fetchTopicData(topic) {
     const documents = DataService.getDocumentsForTopic(this.topicId);
     const volumeOverTime = DataService.getTopicVolumeOverTime(this.topicId, this.timeRange);
     const totalVolume = DataService.getTopicTotalVolume(this.topicId, this.timeRange);
 
+    // Prepare volume chart data
+    let volumeChartData = null;
+    if (volumeOverTime && volumeOverTime.length > 0) {
+      volumeChartData = {
+        dates: volumeOverTime.map(d => d.date),
+        series: [volumeOverTime.map(d => d.volume || 0)],
+        factions: [{ id: 'volume', name: 'Volume', color: 'var(--accent-primary)' }]
+      };
+    }
+
+    // Calculate publisher stats for summary
+    const publishers = [...new Set(documents.map(d => d.publisherId))];
+    const publisherNames = publishers.map(pId => {
+      const pub = DataService.getPublisherById(pId);
+      return pub ? pub.name : 'Unknown';
+    });
+
+    // Build summary stats
+    const summaryStats = [
+      { value: documents.length, label: 'Documents' },
+      { value: publishers.length, label: 'Publishers' },
+      { value: totalVolume.toLocaleString(), label: 'Total Volume' }
+    ];
+
+    // Build publisher footer text
+    let publisherFooter = null;
+    if (publisherNames.length > 0) {
+      const displayNames = publisherNames.slice(0, 5).join(', ');
+      const moreCount = publisherNames.length > 5 ? ` +${publisherNames.length - 5} more` : '';
+      publisherFooter = `<span class="summary-footer-label">Sources:</span> <span class="summary-footer-text">${displayNames}${moreCount}</span>`;
+    }
+
     return {
       documents,
       volumeOverTime,
-      totalVolume
+      volumeChartData,
+      totalVolume,
+      summaryStats,
+      publisherFooter
     };
   }
 
@@ -148,175 +173,67 @@ export class TopicView extends BaseView {
   }
 
   /**
-   * Build cards for the Dashboard tab
+   * Set up card components for Dashboard tab
    */
-  buildDashboardCards(topic, data) {
-    const cards = [];
+  setupDashboardCards(topic, data) {
+    // Reset card manager for fresh setup
+    this.cardManager = new CardManager(this);
 
-    // Key Points card (bullet points)
+    // Key Points (bullet points) - half-width
     if (topic.bulletPoints && topic.bulletPoints.length > 0) {
-      cards.push(CardBuilder.create('Key Points', 'topic-bullets', { halfWidth: true }));
+      this.cardManager.add(new BulletPointsCard(this, 'topic-bullets', {
+        title: 'Key Points',
+        bulletPoints: topic.bulletPoints,
+        halfWidth: true
+      }));
     }
 
-    // Volume Over Time card
-    if (data.volumeOverTime && data.volumeOverTime.length > 0) {
-      cards.push(CardBuilder.create('Volume Over Time', 'topic-volume', { 
+    // Volume Over Time Chart - half-width
+    if (data.volumeChartData) {
+      this.cardManager.add(new StackedAreaChartCard(this, 'topic-volume', {
+        title: 'Volume Over Time',
+        chartData: data.volumeChartData,
         halfWidth: true,
+        height: 200,
+        showLegend: false,
+        showCount: true,
         count: data.totalVolume
       }));
     }
 
-    // Summary stats card if we have documents
+    // Summary stats - half-width
     if (data.documents.length > 0) {
-      cards.push(CardBuilder.create('Summary', 'topic-summary', { halfWidth: true }));
-    }
-
-    return cards.join('');
-  }
-
-  /**
-   * Build card for the Documents tab
-   */
-  buildDocumentsCard(data) {
-    if (data.documents.length === 0) {
-      return '<div class="empty-state"><p class="empty-state-text">No documents found</p></div>';
-    }
-
-    // Column filter in card header
-    const actionsHtml = `<div class="filter-control" id="topic-docs-column-filter"></div>`;
-
-    return CardBuilder.create('Source Documents', 'topic-documents', {
-      count: data.documents.length,
-      fullWidth: true,
-      noPadding: true,
-      actions: actionsHtml
-    });
-  }
-
-  async initializeComponents() {
-    const { topic, documents, volumeOverTime, totalVolume } = this._prefetchedData;
-
-    // Documents Tab: Only initialize document table with column filter
-    if (this.isDocumentsTab()) {
-      if (documents.length > 0) {
-        // Check if classification should be shown
-        const settings = dataStore.getSettings();
-        const showClassification = settings.showClassification;
-        
-        // Filter available columns based on settings
-        const availableColumns = { ...DOCUMENT_AVAILABLE_COLUMNS };
-        if (!showClassification) {
-          delete availableColumns.classification;
-        }
-        
-        // Filter default columns based on settings
-        const defaultColumns = showClassification 
-          ? DOCUMENT_DEFAULT_COLUMNS 
-          : DOCUMENT_DEFAULT_COLUMNS.filter(col => col !== 'classification');
-        
-        this._selectedDocColumns = [...defaultColumns];
-        
-        const filterContainer = document.getElementById('topic-docs-column-filter');
-        if (filterContainer) {
-          this.components.columnFilter = new ColumnFilter('topic-docs-column-filter', {
-            availableColumns: availableColumns,
-            defaultColumns: defaultColumns,
-            requiredColumns: ['title'],
-            onChange: (columns) => {
-              this._selectedDocColumns = columns;
-              if (this.components.documentTable) {
-                this.components.documentTable.setColumns(columns);
-              }
-            }
-          });
-          this.components.columnFilter.setSelectedColumns(this._selectedDocColumns);
-          this.components.columnFilter.render();
-        }
-        
-        this.components.documentTable = new DocumentTable('topic-documents', {
-          columns: this._selectedDocColumns,
-          maxItems: 50,
-          enableViewerMode: true,
-          onDocumentClick: (doc) => {
-            window.location.hash = `#/document/${doc.id}`;
-          }
-        });
-        this.components.documentTable.update({ documents });
-      }
-      return;
-    }
-
-    // Dashboard Tab: Initialize all other components
-
-    // Key Points (bullet points)
-    const bulletsContainer = document.getElementById('topic-bullets');
-    if (bulletsContainer && topic.bulletPoints && topic.bulletPoints.length > 0) {
-      bulletsContainer.innerHTML = `
-        <ul class="topic-detail-bullets">
-          ${topic.bulletPoints.map(bp => `<li class="topic-detail-bullet">${this.escapeHtml(bp)}</li>`).join('')}
-        </ul>
-      `;
-    }
-
-    // Volume Over Time Chart
-    if (volumeOverTime && volumeOverTime.length > 0) {
-      const chartData = {
-        dates: volumeOverTime.map(d => d.date),
-        series: [volumeOverTime.map(d => d.volume || 0)],
-        factions: [{ id: 'volume', name: 'Volume', color: 'var(--accent-primary)' }]
-      };
-      
-      this.components.volumeChart = new StackedAreaChart('topic-volume', {
-        height: 200,
-        showLegend: false
-      });
-      this.components.volumeChart.update(chartData);
-      this.components.volumeChart.enableAutoResize();
-    }
-
-    // Summary stats
-    const summaryContainer = document.getElementById('topic-summary');
-    if (summaryContainer && documents.length > 0) {
-      // Calculate some basic stats
-      const publishers = [...new Set(documents.map(d => d.publisherId))];
-      const publisherNames = publishers.map(pId => {
-        const pub = DataService.getPublisherById(pId);
-        return pub ? pub.name : 'Unknown';
-      });
-      
-      summaryContainer.innerHTML = `
-        <div class="topic-summary-stats">
-          <div class="topic-stat">
-            <span class="topic-stat-value">${documents.length}</span>
-            <span class="topic-stat-label">Documents</span>
-          </div>
-          <div class="topic-stat">
-            <span class="topic-stat-value">${publishers.length}</span>
-            <span class="topic-stat-label">Publishers</span>
-          </div>
-          <div class="topic-stat">
-            <span class="topic-stat-value">${totalVolume.toLocaleString()}</span>
-            <span class="topic-stat-label">Total Volume</span>
-          </div>
-        </div>
-        ${publisherNames.length > 0 ? `
-          <div class="topic-publishers">
-            <span class="topic-publishers-label">Sources:</span>
-            <span class="topic-publishers-list">${publisherNames.slice(0, 5).join(', ')}${publisherNames.length > 5 ? ` +${publisherNames.length - 5} more` : ''}</span>
-          </div>
-        ` : ''}
-      `;
+      this.cardManager.add(new SummaryStatsCard(this, 'topic-summary', {
+        title: 'Summary',
+        stats: data.summaryStats,
+        footer: data.publisherFooter,
+        halfWidth: true
+      }));
     }
   }
 
   /**
-   * Escape HTML to prevent XSS
+   * Set up card for Documents tab (full-width document table)
    */
-  escapeHtml(text) {
-    if (!text) return '';
-    const div = document.createElement('div');
-    div.textContent = text;
-    return div.innerHTML;
+  setupDocumentsCard(topic, data) {
+    // Reset card manager for fresh setup
+    this.cardManager = new CardManager(this);
+
+    if (data.documents.length > 0) {
+      this.cardManager.add(new DocumentTableCard(this, 'topic-documents', {
+        title: 'Source Documents',
+        documents: data.documents,
+        showCount: true,
+        fullWidth: true,
+        maxItems: 50,
+        enableViewerMode: true
+      }));
+    }
+  }
+
+  destroy() {
+    this.cardManager.destroyAll();
+    super.destroy();
   }
 }
 

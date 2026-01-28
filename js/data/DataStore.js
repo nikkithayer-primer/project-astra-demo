@@ -697,8 +697,7 @@ class DataStore {
         factionIds: monitor.scope?.factionIds || [],
         locationIds: monitor.scope?.locationIds || [],
         eventIds: monitor.scope?.eventIds || [],
-        narrativeIds: monitor.scope?.narrativeIds || [],
-        themeIds: monitor.scope?.themeIds || [],
+        keywords: monitor.scope?.keywords || [],
         logic: monitor.scope?.logic || 'OR'
       },
       options: {
@@ -752,6 +751,33 @@ class DataStore {
 
   deleteWorkspace(id) {
     return this.deleteEntity('workspaces', id);
+  }
+
+  // ============================================
+  // SearchFilter CRUD
+  // ============================================
+
+  createSearchFilter(filter) {
+    return this.createEntity('searchFilters', 'filter', {
+      name: filter.name,
+      description: filter.description || '',
+      scope: {
+        personIds: filter.scope?.personIds || [],
+        organizationIds: filter.scope?.organizationIds || [],
+        factionIds: filter.scope?.factionIds || [],
+        locationIds: filter.scope?.locationIds || [],
+        eventIds: filter.scope?.eventIds || [],
+        keywords: filter.scope?.keywords || []
+      }
+    });
+  }
+
+  updateSearchFilter(id, updates) {
+    return this.updateEntity('searchFilters', id, updates);
+  }
+
+  deleteSearchFilter(id) {
+    return this.deleteEntity('searchFilters', id);
   }
 
   generateInitialTopicVolume() {
@@ -917,7 +943,8 @@ class DataStore {
       monitors: [],
       alerts: [],
       users: [],
-      workspaces: []
+      workspaces: [],
+      searchFilters: []
     };
   }
 }

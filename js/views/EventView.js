@@ -1,48 +1,26 @@
 /**
  * EventView.js
- * Detail view for an event
+ * Detail view for an event using the CardManager pattern
  */
 
 import { BaseView } from './BaseView.js';
 import { DataService } from '../data/DataService.js';
-import { dataStore } from '../data/DataStore.js';
 import { PageHeader } from '../utils/PageHeader.js';
-import { CardBuilder } from '../utils/CardBuilder.js';
-import { Timeline } from '../components/Timeline.js';
-import { MapView } from '../components/MapView.js';
-import { NetworkGraph } from '../components/NetworkGraph.js';
-import { NarrativeList } from '../components/NarrativeList.js';
-import { DocumentTable } from '../components/DocumentTable.js';
-import { ColumnFilter } from '../components/ColumnFilter.js';
 import { initAllCardToggles } from '../utils/cardWidthToggle.js';
-import { renderEntityList } from '../utils/entityRenderer.js';
-
-// Column configuration for document tables
-const DOCUMENT_AVAILABLE_COLUMNS = {
-  classification: 'Classification',
-  documentType: 'Doc Type',
-  publisherName: 'Publisher',
-  publisherType: 'Publisher Type',
-  title: 'Title',
-  excerpt: 'Excerpt',
-  publishedDate: 'Published',
-  narratives: 'Narratives',
-  themes: 'Themes',
-  events: 'Events',
-  locations: 'Locations',
-  persons: 'People',
-  organizations: 'Organizations',
-  factions: 'Factions',
-  topics: 'Topics'
-};
-
-const DOCUMENT_DEFAULT_COLUMNS = ['classification', 'publisherName', 'publisherType', 'title', 'publishedDate'];
+import {
+  CardManager,
+  NetworkGraphCard,
+  NarrativeListCard,
+  MapCard,
+  TimelineCard,
+  DocumentTableCard
+} from '../components/CardComponents.js';
 
 export class EventView extends BaseView {
   constructor(container, eventId, options = {}) {
     super(container, options);
     this.eventId = eventId;
-    this.networkViewMode = 'graph'; // 'graph' or 'list'
+    this.cardManager = new CardManager(this);
   }
 
   async render() {
@@ -55,12 +33,23 @@ export class EventView extends BaseView {
     // Fetch all data upfront
     const data = this.fetchEventData(event);
     
-    // Determine active tab and build appropriate cards
+    // Store data for card setup
+    this._eventData = { event, data };
+    
+    // Determine active tab
     const activeTab = this.getCurrentTab();
     const hasDocuments = data.documents.length > 0;
-    const cardsHtml = this.isDocumentsTab() 
-      ? this.buildDocumentsCard(data)
-      : this.buildDashboardCards(event, data);
+    
+    // Build cards based on active tab
+    if (this.isDocumentsTab()) {
+      this.setupDocumentsCard(event, data);
+    } else {
+      this.setupDashboardCards(event, data);
+    }
+    
+    // Generate tabs config
+    const baseHref = `#/event/${this.eventId}`;
+    const tabsConfig = hasDocuments ? this.getTabsConfig(baseHref, true) : null;
 
     // Format date for subtitle
     const eventDate = new Date(event.date);
@@ -88,10 +77,6 @@ export class EventView extends BaseView {
     }
     breadcrumbs.push(this.truncateText(event.text, 40));
 
-    // Generate tabs config
-    const baseHref = `#/event/${this.eventId}`;
-    const tabsConfig = hasDocuments ? this.getTabsConfig(baseHref, true) : null;
-
     // Build page header with tabs
     const headerHtml = PageHeader.render({
       breadcrumbs: breadcrumbs,
@@ -109,32 +94,32 @@ export class EventView extends BaseView {
       </div>
     ` : '';
 
+    // Render page
     this.container.innerHTML = `
       ${headerHtml}
       <div class="content-area">
         ${parentLinkHtml}
         <div class="content-grid">
-          ${cardsHtml}
+          ${this.cardManager.getHtml()}
         </div>
       </div>
     `;
 
     // Initialize card width toggles
-    if (cardsHtml) {
-      const contentGrid = this.container.querySelector('.content-grid');
+    const contentGrid = this.container.querySelector('.content-grid');
+    if (contentGrid) {
       const tabSuffix = this.isDocumentsTab() ? '-docs' : '';
       initAllCardToggles(contentGrid, `event-${this.eventId}${tabSuffix}`, { 1: 'half', 2: 'half' });
     }
 
-    // Store pre-fetched data for component initialization
-    this._prefetchedData = { event, ...data };
-
-    await this.initializeComponents();
-
-    // Initialize drag-and-drop for cards
-    this.initDragDrop();
+    // Initialize all card components
+    const components = this.cardManager.initializeAll();
+    Object.assign(this.components, components);
   }
 
+  /**
+   * Fetch all data related to the event
+   */
   fetchEventData(event) {
     const parentEvent = DataService.getParentEvent(this.eventId);
     const subEvents = DataService.getSubEventsForEvent(this.eventId);
@@ -145,266 +130,92 @@ export class EventView extends BaseView {
     const documents = DataService.getDocumentsForEvent(this.eventId);
     const hasNetwork = persons.length > 0 || organizations.length > 0;
 
-    return { parentEvent, subEvents, location, persons, organizations, narratives, documents, hasNetwork };
+    // Get person/org IDs for network graph
+    const personIds = persons.map(p => p.id);
+    const orgIds = organizations.map(o => o.id);
+
+    // All events including this one and sub-events for timeline
+    const allEvents = [event, ...subEvents];
+
+    return { 
+      parentEvent, subEvents, location, persons, organizations, 
+      narratives, documents, hasNetwork, personIds, orgIds, allEvents 
+    };
   }
 
   /**
-   * Build cards for the Dashboard tab (all cards except documents)
+   * Set up card components for Dashboard tab
    */
-  buildDashboardCards(event, data) {
-    const cards = [];
+  setupDashboardCards(event, data) {
+    // Reset card manager for fresh setup
+    this.cardManager = new CardManager(this);
 
-    // Timeline always shows (includes main event)
+    // Event Timeline (full width)
     const timelineTitle = data.subEvents.length > 0 
       ? `Event Timeline (${data.subEvents.length} sub-events)` 
       : 'Event Timeline';
-    cards.push(CardBuilder.create(timelineTitle, 'event-timeline'));
-
-    if (data.location) {
-      cards.push(CardBuilder.create('Location', 'event-map', { halfWidth: true, noPadding: true }));
-    }
-
-    if (data.hasNetwork) {
-      const entityCount = data.persons.length + data.organizations.length;
-      cards.push(CardBuilder.create('People & Organizations Involved', 'event-network', { 
-        halfWidth: true,
-        count: entityCount,
-        actions: this.getNetworkToggleHtml('event-network')
-      }));
-    }
-
-    if (data.narratives.length > 0) {
-      cards.push(CardBuilder.create('Related Narratives', 'event-narratives', {
-        count: data.narratives.length,
-        noPadding: true
-      }));
-    }
-
-    return cards.join('');
-  }
-
-  /**
-   * Build card for the Documents tab (full-width document table)
-   */
-  buildDocumentsCard(data) {
-    if (data.documents.length === 0) {
-      return '<div class="empty-state"><p class="empty-state-text">No documents found</p></div>';
-    }
-
-    // Column filter in card header
-    const actionsHtml = `<div class="filter-control" id="event-docs-column-filter"></div>`;
-
-    return CardBuilder.create('Source Documents', 'event-documents', {
-      count: data.documents.length,
-      fullWidth: true,
-      noPadding: true,
-      actions: actionsHtml
-    });
-  }
-
-  async initializeComponents() {
-    const { event, subEvents, location, persons, organizations, narratives, documents } = this._prefetchedData;
-
-    // Documents Tab: Only initialize document table with column filter
-    if (this.isDocumentsTab()) {
-      if (documents.length > 0) {
-        // Check if classification should be shown
-        const settings = dataStore.getSettings();
-        const showClassification = settings.showClassification;
-        
-        // Filter available columns based on settings
-        const availableColumns = { ...DOCUMENT_AVAILABLE_COLUMNS };
-        if (!showClassification) {
-          delete availableColumns.classification;
-        }
-        
-        // Filter default columns based on settings
-        const defaultColumns = showClassification 
-          ? DOCUMENT_DEFAULT_COLUMNS 
-          : DOCUMENT_DEFAULT_COLUMNS.filter(col => col !== 'classification');
-        
-        // Initialize selected columns (start with defaults)
-        this._selectedDocColumns = [...defaultColumns];
-        
-        // Initialize column filter
-        const filterContainer = document.getElementById('event-docs-column-filter');
-        if (filterContainer) {
-          this.components.columnFilter = new ColumnFilter('event-docs-column-filter', {
-            availableColumns: availableColumns,
-            defaultColumns: defaultColumns,
-            requiredColumns: ['title'],
-            onChange: (columns) => {
-              this._selectedDocColumns = columns;
-              if (this.components.documentTable) {
-                this.components.documentTable.setColumns(columns);
-              }
-            }
-          });
-          this.components.columnFilter.setSelectedColumns(this._selectedDocColumns);
-          this.components.columnFilter.render();
-        }
-        
-        // Initialize document table
-        this.components.documentTable = new DocumentTable('event-documents', {
-          columns: this._selectedDocColumns,
-          maxItems: 50,
-          enableViewerMode: true,
-          onDocumentClick: (doc) => {
-            window.location.hash = `#/document/${doc.id}`;
-          }
-        });
-        this.components.documentTable.update({ documents });
-      }
-      return;
-    }
-
-    // Dashboard Tab: Initialize all other components
-
-    // Timeline with this event and its sub-events
-    const allEvents = [event, ...subEvents];
-    
-    this.components.timeline = new Timeline('event-timeline', {
+    this.cardManager.add(new TimelineCard(this, 'event-timeline', {
+      title: timelineTitle,
+      events: data.allEvents,
       height: 280,
-      onEventClick: (e) => {
-        if (e.id !== this.eventId) {
-          window.location.hash = `#/event/${e.id}`;
-        }
-      }
-    });
-    this.components.timeline.update({ events: allEvents });
+      excludeId: null // Don't exclude any - show all including main event
+    }));
 
-    // Map
-    if (location) {
-      this.components.map = new MapView('event-map', {
+    // Location Map (half-width)
+    if (data.location) {
+      this.cardManager.add(new MapCard(this, 'event-map', {
+        title: 'Location',
+        locations: [{ ...data.location, isEvent: true, eventText: event.text }],
+        halfWidth: true,
         height: 350,
         defaultZoom: 12
-      });
-      this.components.map.update({
-        locations: [{ ...location, isEvent: true, eventText: event.text }]
-      });
+      }));
     }
 
-    // Network Graph
-    if (persons.length > 0 || organizations.length > 0) {
-      const personIds = persons.map(p => p.id);
-      const orgIds = organizations.map(o => o.id);
-      
-      this._networkData = {
-        personIds,
-        orgIds,
-        persons,
-        orgs: organizations,
-        graphData: DataService.buildNetworkGraph(personIds, orgIds)
-      };
-      
-      this.renderNetworkView();
-      this.setupNetworkToggle('event-network');
+    // People & Organizations Network (half-width)
+    if (data.hasNetwork) {
+      this.cardManager.add(new NetworkGraphCard(this, 'event-network', {
+        title: 'People & Organizations Involved',
+        personIds: data.personIds,
+        orgIds: data.orgIds,
+        halfWidth: true,
+        height: 350
+      }));
     }
 
-    // Narratives List
-    if (narratives.length > 0) {
-      this.components.narrativeList = new NarrativeList('event-narratives', {
-        maxItems: 8,
-        onItemClick: (n) => {
-          window.location.hash = `#/narrative/${n.id}`;
-        }
-      });
-      this.components.narrativeList.update({ narratives });
+    // Related Narratives (full-width)
+    if (data.narratives.length > 0) {
+      this.cardManager.add(new NarrativeListCard(this, 'event-narratives', {
+        title: 'Related Narratives',
+        narratives: data.narratives,
+        showCount: true,
+        maxItems: 8
+      }));
     }
   }
 
   /**
-   * Get the HTML for the network view toggle buttons
+   * Set up card for Documents tab (full-width document table)
    */
-  getNetworkToggleHtml(containerId) {
-    return `
-      <div class="view-toggle network-view-toggle" data-container="${containerId}">
-        <button class="view-toggle-btn ${this.networkViewMode === 'graph' ? 'active' : ''}" data-view="graph" title="Network Graph">
-          <svg viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.5">
-            <circle cx="8" cy="4" r="2"/>
-            <circle cx="4" cy="12" r="2"/>
-            <circle cx="12" cy="12" r="2"/>
-            <path d="M8 6v2M6 10l-1 1M10 10l1 1"/>
-          </svg>
-        </button>
-        <button class="view-toggle-btn ${this.networkViewMode === 'list' ? 'active' : ''}" data-view="list" title="List View">
-          <svg viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.5">
-            <path d="M2 4h12M2 8h12M2 12h12"/>
-          </svg>
-        </button>
-      </div>
-    `;
-  }
+  setupDocumentsCard(event, data) {
+    // Reset card manager for fresh setup
+    this.cardManager = new CardManager(this);
 
-  /**
-   * Render the network view based on current mode
-   */
-  renderNetworkView() {
-    const container = document.getElementById('event-network');
-    if (!container || !this._networkData) return;
-
-    if (this.components.network) {
-      this.components.network.destroy();
-      this.components.network = null;
-    }
-
-    if (this.networkViewMode === 'graph') {
-      this.components.network = new NetworkGraph('event-network', {
-        height: 350,
-        onNodeClick: (node) => {
-          const route = node.type === 'person' ? 'person' : 'organization';
-          window.location.hash = `#/${route}/${node.id}`;
-        },
-        onLinkClick: (link) => {
-          this.showConnectingNarrativesModal(link);
-        }
-      });
-      this.components.network.update(this._networkData.graphData);
-    } else {
-      this.renderNetworkListView(container);
+    if (data.documents.length > 0) {
+      this.cardManager.add(new DocumentTableCard(this, 'event-documents', {
+        title: 'Source Documents',
+        documents: data.documents,
+        showCount: true,
+        fullWidth: true,
+        maxItems: 50,
+        enableViewerMode: true
+      }));
     }
   }
 
-  /**
-   * Render list view for people and organizations
-   */
-  renderNetworkListView(container) {
-    const { persons, orgs } = this._networkData;
-    const allEntities = [
-      ...persons.map(p => ({ ...p, _type: 'person' })),
-      ...orgs.map(o => ({ ...o, _type: 'organization' }))
-    ];
-
-    container.innerHTML = renderEntityList(allEntities, { sortByName: true });
-
-    container.querySelectorAll('.entity-list-item').forEach(item => {
-      item.addEventListener('click', () => {
-        const id = item.dataset.id;
-        const type = item.dataset.type;
-        window.location.hash = `#/${type}/${id}`;
-      });
-    });
-  }
-
-  /**
-   * Set up network view toggle listeners
-   */
-  setupNetworkToggle(containerId) {
-    const toggleContainer = document.querySelector(`.network-view-toggle[data-container="${containerId}"]`);
-    if (!toggleContainer) return;
-
-    toggleContainer.querySelectorAll('.view-toggle-btn').forEach(btn => {
-      btn.addEventListener('click', () => {
-        const newView = btn.dataset.view;
-        if (newView !== this.networkViewMode) {
-          this.networkViewMode = newView;
-          toggleContainer.querySelectorAll('.view-toggle-btn').forEach(b => {
-            b.classList.toggle('active', b.dataset.view === newView);
-          });
-          this.renderNetworkView();
-        }
-      });
-    });
+  destroy() {
+    this.cardManager.destroyAll();
+    super.destroy();
   }
 }
 

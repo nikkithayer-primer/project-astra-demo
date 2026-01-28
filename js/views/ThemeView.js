@@ -1,27 +1,29 @@
 /**
  * ThemeView.js
- * Detail view for a theme (similar to NarrativeView but with parent link)
+ * Detail view for a theme using the CardManager pattern
  */
 
 import { BaseView } from './BaseView.js';
 import { DataService } from '../data/DataService.js';
 import { PageHeader } from '../utils/PageHeader.js';
-import { CardBuilder } from '../utils/CardBuilder.js';
-import { StackedAreaChart } from '../components/StackedAreaChart.js';
-import { SentimentChart } from '../components/SentimentChart.js';
-import { VennDiagram } from '../components/VennDiagram.js';
-import { MapView } from '../components/MapView.js';
-import { Timeline } from '../components/Timeline.js';
-import { NetworkGraph } from '../components/NetworkGraph.js';
-import { getSourceViewer } from '../components/SourceViewerModal.js';
 import { initAllCardToggles } from '../utils/cardWidthToggle.js';
-import { renderEntityList } from '../utils/entityRenderer.js';
+import { getSourceViewer } from '../components/SourceViewerModal.js';
+import {
+  CardManager,
+  NetworkGraphCard,
+  MapCard,
+  TimelineCard,
+  SentimentChartCard,
+  VennDiagramCard,
+  StackedAreaChartCard,
+  DocumentTableCard
+} from '../components/CardComponents.js';
 
 export class ThemeView extends BaseView {
   constructor(container, themeId, options = {}) {
     super(container, options);
     this.themeId = themeId;
-    this.networkViewMode = 'graph'; // 'graph' or 'list'
+    this.cardManager = new CardManager(this);
   }
 
   async render() {
@@ -34,9 +36,24 @@ export class ThemeView extends BaseView {
     // Fetch all data upfront
     const data = this.fetchThemeData(theme);
     
-    // Build cards HTML
-    const cardsHtml = this.buildCardsHtml(theme, data);
-
+    // Store data for card setup
+    this._themeData = { theme, data };
+    
+    // Determine active tab
+    const activeTab = this.getCurrentTab();
+    const hasDocuments = data.documents.length > 0;
+    
+    // Build cards based on active tab
+    if (this.isDocumentsTab()) {
+      this.setupDocumentsCard(theme, data);
+    } else {
+      this.setupDashboardCards(theme, data);
+    }
+    
+    // Generate tabs config
+    const baseHref = `#/theme/${this.themeId}`;
+    const tabsConfig = hasDocuments ? this.getTabsConfig(baseHref, true) : null;
+    
     // Build breadcrumbs with optional parent narrative
     const breadcrumbs = [
       { label: 'Dashboard', href: '#/dashboard' },
@@ -55,37 +72,42 @@ export class ThemeView extends BaseView {
       description: theme.description,
       descriptionLink: theme.description 
         ? `<a href="#" class="source-link" id="theme-source-link">View source</a>` 
-        : ''
+        : '',
+      tabs: tabsConfig,
+      activeTab: activeTab
     });
 
-    // Build parent link HTML if applicable
-    const parentLinkHtml = data.parentNarrative ? `
+    // Build parent link HTML if applicable (only on dashboard tab)
+    const parentLinkHtml = data.parentNarrative && this.isDashboardTab() ? `
       <div class="parent-link" onclick="window.location.hash='#/narrative/${data.parentNarrative.id}'">
         <span class="parent-link-icon">↑</span>
         <span class="parent-link-text">${data.parentNarrative.text}</span>
       </div>
     ` : '';
 
+    // Render page
     this.container.innerHTML = `
       ${headerHtml}
       <div class="content-area">
         ${parentLinkHtml}
         <div class="content-grid">
-          ${cardsHtml}
+          ${this.cardManager.getHtml()}
         </div>
       </div>
     `;
 
     // Initialize card width toggles
-    if (cardsHtml) {
-      const contentGrid = this.container.querySelector('.content-grid');
-      initAllCardToggles(contentGrid, `theme-${this.themeId}`);
+    const contentGrid = this.container.querySelector('.content-grid');
+    if (contentGrid) {
+      const tabSuffix = this.isDocumentsTab() ? '-docs' : '';
+      // First 2 cards default to half-width for theme views (dashboard only)
+      const defaults = this.isDocumentsTab() ? {} : { 0: 'half', 1: 'half' };
+      initAllCardToggles(contentGrid, `theme-${this.themeId}${tabSuffix}`, defaults);
     }
 
-    // Store pre-fetched data for component initialization
-    this._prefetchedData = { theme, ...data };
-
-    await this.initializeComponents();
+    // Initialize all card components
+    const components = this.cardManager.initializeAll();
+    Object.assign(this.components, components);
 
     // Set up source link handler
     const sourceLink = this.container.querySelector('#theme-source-link');
@@ -95,11 +117,11 @@ export class ThemeView extends BaseView {
         getSourceViewer().open(theme, 'theme');
       });
     }
-
-    // Initialize drag-and-drop for cards
-    this.initDragDrop();
   }
 
+  /**
+   * Fetch all data related to the theme
+   */
   fetchThemeData(theme) {
     const parentNarrative = DataService.getParentNarrative(this.themeId);
     const factionData = DataService.getFactionsForTheme(theme.id);
@@ -119,236 +141,127 @@ export class ThemeView extends BaseView {
     const orgIds = theme.organizationIds || [];
     const hasNetwork = personIds.length > 0 || orgIds.length > 0;
 
+    // Get documents for the theme
+    const documents = DataService.getDocumentsForTheme(this.themeId);
+
+    // Prepare volume chart data if available
+    let volumeChartData = null;
+    if (hasVolumeData) {
+      volumeChartData = {
+        dates: volumeOverTime.map(d => d.date),
+        series: factions.map(f =>
+          volumeOverTime.map(d => (d.factionVolumes || {})[f.id] || 0)
+        ),
+        factions: factions
+      };
+    }
+
+    // Build sentiment data for the sentiment chart
+    const sentimentFactions = factionData.map(fd => ({
+      ...fd.faction,
+      sentiment: fd.sentiment
+    }));
+
     return {
       parentNarrative, factionData, factions, factionOverlaps,
-      volumeOverTime, hasVolumeData, locations, events, personIds, orgIds, hasNetwork
+      volumeOverTime, hasVolumeData, volumeChartData, locations, events, 
+      personIds, orgIds, hasNetwork, documents, sentimentFactions
     };
   }
 
-  buildCardsHtml(theme, data) {
-    const cards = [];
+  /**
+   * Set up card components for Dashboard tab
+   */
+  setupDashboardCards(theme, data) {
+    // Reset card manager for fresh setup
+    this.cardManager = new CardManager(this);
 
-    if (data.hasVolumeData) {
-      cards.push(CardBuilder.create('Volume by Faction Over Time', 'sub-volume-chart'));
+    // Volume Over Time Chart (half-width)
+    if (data.volumeChartData) {
+      this.cardManager.add(new StackedAreaChartCard(this, 'theme-volume-chart', {
+        title: 'Volume by Faction Over Time',
+        chartData: data.volumeChartData,
+        halfWidth: true,
+        height: 250
+      }));
     }
 
-    if (data.factionData.length > 0) {
-      cards.push(CardBuilder.create('Sentiment by Faction', 'sub-sentiment-chart'));
+    // Sentiment by Faction (half-width)
+    if (data.sentimentFactions.length > 0) {
+      this.cardManager.add(new SentimentChartCard(this, 'theme-sentiment-chart', {
+        title: 'Sentiment by Faction',
+        factions: data.sentimentFactions,
+        halfWidth: true,
+        clickRoute: 'faction'
+      }));
     }
 
+    // Faction Overlaps Venn Diagram (half-width)
     if (data.factions.length >= 2) {
-      cards.push(CardBuilder.create('Faction Overlaps', 'sub-venn'));
+      this.cardManager.add(new VennDiagramCard(this, 'theme-venn', {
+        title: 'Faction Overlaps',
+        factions: data.factions,
+        overlaps: data.factionOverlaps,
+        halfWidth: true,
+        height: 300
+      }));
     }
 
-    if (data.locations.length > 0) {
-      cards.push(CardBuilder.create('Related Locations', 'sub-map', { noPadding: true }));
-    }
-
-    if (data.events.length > 0) {
-      cards.push(CardBuilder.create('Related Events', 'sub-timeline'));
-    }
-
+    // People & Organizations Network (half-width)
     if (data.hasNetwork) {
-      const entityCount = data.personIds.length + data.orgIds.length;
-      cards.push(CardBuilder.create('People & Organizations', 'sub-network', {
-        count: entityCount,
-        actions: this.getNetworkToggleHtml('sub-network')
+      this.cardManager.add(new NetworkGraphCard(this, 'theme-network', {
+        title: 'People & Organizations',
+        personIds: data.personIds,
+        orgIds: data.orgIds,
+        halfWidth: true,
+        height: 400
       }));
     }
 
-    return cards.join('');
-  }
-
-  async initializeComponents() {
-    const {
-      theme, factionData, factions, factionOverlaps,
-      volumeOverTime, hasVolumeData, locations, events, personIds, orgIds
-    } = this._prefetchedData;
-
-    // Volume Over Time Chart - uses document-based aggregation
-    if (hasVolumeData) {
-      const dates = volumeOverTime.map(d => d.date);
-      const series = factions.map(f =>
-        volumeOverTime.map(d => (d.factionVolumes || {})[f.id] || 0)
-      );
-
-      this.components.volumeChart = new StackedAreaChart('sub-volume-chart', {
-        height: 250,
-        onFactionClick: (f) => {
-          window.location.hash = `#/faction/${f.id}`;
-        }
-      });
-      this.components.volumeChart.update({ dates, series, factions });
-      this.components.volumeChart.enableAutoResize();
-    }
-
-    // Sentiment Chart
-    if (factionData.length > 0) {
-      const sentimentFactions = factionData.map(fd => ({
-        ...fd.faction,
-        sentiment: fd.sentiment
-      }));
-
-      this.components.sentimentChart = new SentimentChart('sub-sentiment-chart', {
-        height: Math.max(150, factionData.length * 50),
-        onFactionClick: (f) => {
-          window.location.hash = `#/faction/${f.id}`;
-        }
-      });
-      this.components.sentimentChart.update({ factions: sentimentFactions });
-      this.components.sentimentChart.enableAutoResize();
-    }
-
-    // Venn Diagram
-    if (factions.length >= 2) {
-      this.components.venn = new VennDiagram('sub-venn', {
-        height: 300,
-        onFactionClick: (f) => {
-          window.location.hash = `#/faction/${f.id}`;
-        }
-      });
-      this.components.venn.update({
-        sets: factions.map(f => ({
-          id: f.id,
-          name: f.name,
-          size: f.memberCount || 1000,
-          color: f.color
-        })),
-        overlaps: factionOverlaps
-      });
-      this.components.venn.enableAutoResize();
-    }
-
-    // Map
-    if (locations.length > 0) {
-      this.components.map = new MapView('sub-map', {
+    // Related Locations Map (half-width)
+    if (data.locations.length > 0) {
+      this.cardManager.add(new MapCard(this, 'theme-map', {
+        title: 'Related Locations',
+        locations: data.locations,
+        halfWidth: true,
         height: 350
-      });
-      this.components.map.update({ locations });
+      }));
     }
 
-    // Timeline
-    if (events.length > 0) {
-      this.components.timeline = new Timeline('sub-timeline', {
+    // Related Events Timeline (half-width)
+    if (data.events.length > 0) {
+      this.cardManager.add(new TimelineCard(this, 'theme-timeline', {
+        title: 'Related Events',
+        events: data.events,
+        halfWidth: true,
         height: 250,
-        onEventClick: (e) => {
-          window.location.hash = `#/event/${e.id}`;
-        }
-      });
-      this.components.timeline.update({ events });
-    }
-
-    // Network Graph
-    if (personIds.length > 0 || orgIds.length > 0) {
-      const persons = personIds.map(id => DataService.getPerson(id)).filter(Boolean);
-      const orgs = orgIds.map(id => DataService.getOrganization(id)).filter(Boolean);
-      
-      this._networkData = {
-        personIds,
-        orgIds,
-        persons,
-        orgs,
-        graphData: DataService.buildNetworkGraph(personIds, orgIds)
-      };
-      
-      this.renderNetworkView();
-      this.setupNetworkToggle('sub-network');
+        showCount: true
+      }));
     }
   }
 
   /**
-   * Get the HTML for the network view toggle buttons
+   * Set up card for Documents tab (full-width document table)
    */
-  getNetworkToggleHtml(containerId) {
-    return `
-      <div class="view-toggle network-view-toggle" data-container="${containerId}">
-        <button class="view-toggle-btn ${this.networkViewMode === 'graph' ? 'active' : ''}" data-view="graph" title="Network Graph">
-          <svg viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.5">
-            <circle cx="8" cy="4" r="2"/>
-            <circle cx="4" cy="12" r="2"/>
-            <circle cx="12" cy="12" r="2"/>
-            <path d="M8 6v2M6 10l-1 1M10 10l1 1"/>
-          </svg>
-        </button>
-        <button class="view-toggle-btn ${this.networkViewMode === 'list' ? 'active' : ''}" data-view="list" title="List View">
-          <svg viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.5">
-            <path d="M2 4h12M2 8h12M2 12h12"/>
-          </svg>
-        </button>
-      </div>
-    `;
-  }
+  setupDocumentsCard(theme, data) {
+    // Reset card manager for fresh setup
+    this.cardManager = new CardManager(this);
 
-  /**
-   * Render the network view based on current mode
-   */
-  renderNetworkView() {
-    const container = document.getElementById('sub-network');
-    if (!container || !this._networkData) return;
-
-    if (this.components.network) {
-      this.components.network.destroy();
-      this.components.network = null;
-    }
-
-    if (this.networkViewMode === 'graph') {
-      this.components.network = new NetworkGraph('sub-network', {
-        height: 400,
-        onNodeClick: (node) => {
-          const route = node.type === 'person' ? 'person' : 'organization';
-          window.location.hash = `#/${route}/${node.id}`;
-        },
-        onLinkClick: (link) => {
-          this.showConnectingNarrativesModal(link);
-        }
-      });
-      this.components.network.update(this._networkData.graphData);
-      this.components.network.enableAutoResize();
-    } else {
-      this.renderNetworkListView(container);
+    if (data.documents.length > 0) {
+      this.cardManager.add(new DocumentTableCard(this, 'theme-documents', {
+        title: 'Source Documents',
+        documents: data.documents,
+        showCount: true,
+        fullWidth: true,
+        maxItems: 50,
+        enableViewerMode: true
+      }));
     }
   }
 
-  /**
-   * Render list view for people and organizations
-   */
-  renderNetworkListView(container) {
-    const { persons, orgs } = this._networkData;
-    const allEntities = [
-      ...persons.map(p => ({ ...p, _type: 'person' })),
-      ...orgs.map(o => ({ ...o, _type: 'organization' }))
-    ];
-
-    container.innerHTML = renderEntityList(allEntities, { sortByName: true });
-
-    container.querySelectorAll('.entity-list-item').forEach(item => {
-      item.addEventListener('click', () => {
-        const id = item.dataset.id;
-        const type = item.dataset.type;
-        window.location.hash = `#/${type}/${id}`;
-      });
-    });
-  }
-
-  /**
-   * Set up network view toggle listeners
-   */
-  setupNetworkToggle(containerId) {
-    const toggleContainer = document.querySelector(`.network-view-toggle[data-container="${containerId}"]`);
-    if (!toggleContainer) return;
-
-    toggleContainer.querySelectorAll('.view-toggle-btn').forEach(btn => {
-      btn.addEventListener('click', () => {
-        const newView = btn.dataset.view;
-        if (newView !== this.networkViewMode) {
-          this.networkViewMode = newView;
-          toggleContainer.querySelectorAll('.view-toggle-btn').forEach(b => {
-            b.classList.toggle('active', b.dataset.view === newView);
-          });
-          this.renderNetworkView();
-        }
-      });
-    });
+  destroy() {
+    this.cardManager.destroyAll();
+    super.destroy();
   }
 }
 

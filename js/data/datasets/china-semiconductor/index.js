@@ -16,6 +16,7 @@ import { events } from './events.js';
 import { documents } from './documents.js';
 import { monitors, alerts } from './monitors.js';
 import { topics } from './topics.js';
+import { searchFilters } from './searchFilters.js';
 
 // Workspaces - saved search results with document collections
 export const workspaces = [
@@ -75,7 +76,8 @@ export const mockData = {
   monitors,
   alerts,
   topics,
-  workspaces
+  workspaces,
+  searchFilters
 };
 
 export default mockData;

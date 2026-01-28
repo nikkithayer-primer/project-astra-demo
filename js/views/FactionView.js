@@ -1,48 +1,26 @@
 /**
  * FactionView.js
- * Detail view for a faction
+ * Detail view for a faction using the CardManager pattern
  */
 
 import { BaseView } from './BaseView.js';
 import { DataService } from '../data/DataService.js';
-import { dataStore } from '../data/DataStore.js';
 import { PageHeader } from '../utils/PageHeader.js';
-import { CardBuilder } from '../utils/CardBuilder.js';
-import { VennDiagram } from '../components/VennDiagram.js';
-import { NetworkGraph } from '../components/NetworkGraph.js';
-import { NarrativeList } from '../components/NarrativeList.js';
-import { SentimentChart } from '../components/SentimentChart.js';
-import { DocumentTable } from '../components/DocumentTable.js';
-import { ColumnFilter } from '../components/ColumnFilter.js';
 import { initAllCardToggles } from '../utils/cardWidthToggle.js';
-import { renderEntityList } from '../utils/entityRenderer.js';
-
-// Column configuration for document tables
-const DOCUMENT_AVAILABLE_COLUMNS = {
-  classification: 'Classification',
-  documentType: 'Doc Type',
-  publisherName: 'Publisher',
-  publisherType: 'Publisher Type',
-  title: 'Title',
-  excerpt: 'Excerpt',
-  publishedDate: 'Published',
-  narratives: 'Narratives',
-  themes: 'Themes',
-  events: 'Events',
-  locations: 'Locations',
-  persons: 'People',
-  organizations: 'Organizations',
-  factions: 'Factions',
-  topics: 'Topics'
-};
-
-const DOCUMENT_DEFAULT_COLUMNS = ['classification', 'publisherName', 'publisherType', 'title', 'publishedDate'];
+import {
+  CardManager,
+  NetworkGraphCard,
+  NarrativeListCard,
+  SentimentChartCard,
+  VennDiagramCard,
+  DocumentTableCard
+} from '../components/CardComponents.js';
 
 export class FactionView extends BaseView {
   constructor(container, factionId, options = {}) {
     super(container, options);
     this.factionId = factionId;
-    this.networkViewMode = 'graph'; // 'graph' or 'list'
+    this.cardManager = new CardManager(this);
   }
 
   async render() {
@@ -55,13 +33,20 @@ export class FactionView extends BaseView {
     // Fetch all data upfront
     const data = this.fetchFactionData(faction);
     
-    // Determine active tab and build appropriate cards
+    // Store data for card setup
+    this._factionData = { faction, data };
+    
+    // Determine active tab
     const activeTab = this.getCurrentTab();
     const hasDocuments = data.documents.length > 0;
-    const cardsHtml = this.isDocumentsTab() 
-      ? this.buildDocumentsCard(data)
-      : this.buildDashboardCards(faction, data);
-
+    
+    // Build cards based on active tab
+    if (this.isDocumentsTab()) {
+      this.setupDocumentsCard(faction, data);
+    } else {
+      this.setupDashboardCards(faction, data);
+    }
+    
     // Generate tabs config
     const baseHref = `#/faction/${this.factionId}`;
     const tabsConfig = hasDocuments ? this.getTabsConfig(baseHref, true) : null;
@@ -80,31 +65,31 @@ export class FactionView extends BaseView {
       activeTab: activeTab
     });
 
+    // Render page
     this.container.innerHTML = `
       ${headerHtml}
       <div class="content-area">
         <div class="content-grid">
-          ${cardsHtml}
+          ${this.cardManager.getHtml()}
         </div>
       </div>
     `;
 
     // Initialize card width toggles
-    if (cardsHtml) {
-      const contentGrid = this.container.querySelector('.content-grid');
+    const contentGrid = this.container.querySelector('.content-grid');
+    if (contentGrid) {
       const tabSuffix = this.isDocumentsTab() ? '-docs' : '';
       initAllCardToggles(contentGrid, `faction-${this.factionId}${tabSuffix}`, { 0: 'half', 1: 'half' });
     }
 
-    // Store pre-fetched data for component initialization
-    this._prefetchedData = { faction, ...data };
-
-    await this.initializeComponents();
-
-    // Initialize drag-and-drop for cards
-    this.initDragDrop();
+    // Initialize all card components
+    const components = this.cardManager.initializeAll();
+    Object.assign(this.components, components);
   }
 
+  /**
+   * Fetch all data related to the faction
+   */
   fetchFactionData(faction) {
     const relatedFactions = DataService.getRelatedFactions(this.factionId);
     const factionOverlaps = DataService.getFactionOverlapsFor(this.factionId);
@@ -133,298 +118,100 @@ export class FactionView extends BaseView {
     const hasNetwork = affiliatedPersons.length > 0 || affiliatedOrgs.length > 0;
     const allFactions = [faction, ...relatedFactions];
 
+    // Get person/org IDs for network graph
+    const personIds = affiliatedPersons.map(p => p.id);
+    const orgIds = affiliatedOrgs.map(o => o.id);
+
     return {
       relatedFactions, factionOverlaps, narratives, documents,
       affiliatedPersons, affiliatedOrgs, personsWithSentiment,
-      orgsWithSentiment, hasNetwork, allFactions
+      orgsWithSentiment, hasNetwork, allFactions, personIds, orgIds
     };
   }
 
   /**
-   * Build cards for the Dashboard tab (all cards except documents)
+   * Set up card components for Dashboard tab
    */
-  buildDashboardCards(faction, data) {
-    const cards = [];
+  setupDashboardCards(faction, data) {
+    // Reset card manager for fresh setup
+    this.cardManager = new CardManager(this);
 
+    // Related Factions Venn Diagram (half-width)
     if (data.allFactions.length >= 1) {
-      cards.push(CardBuilder.create('Related Factions', 'faction-venn', { halfWidth: true }));
-    }
-
-    if (data.hasNetwork) {
-      const entityCount = data.affiliatedPersons.length + data.affiliatedOrgs.length;
-      cards.push(CardBuilder.create('Affiliated Entities', 'faction-network', { 
+      this.cardManager.add(new VennDiagramCard(this, 'faction-venn', {
+        title: 'Related Factions',
+        factions: data.allFactions,
+        overlaps: data.factionOverlaps,
         halfWidth: true,
-        count: entityCount,
-        actions: this.getNetworkToggleHtml('faction-network')
-      }));
-    }
-
-    if (data.narratives.length > 0) {
-      cards.push(CardBuilder.create('Narratives', 'faction-narratives', {
-        count: data.narratives.length,
-        noPadding: true
-      }));
-    }
-
-    if (data.personsWithSentiment.length > 0) {
-      cards.push(CardBuilder.create('Sentiment Toward People', 'faction-person-sentiment', { halfWidth: true }));
-    }
-
-    if (data.orgsWithSentiment.length > 0) {
-      cards.push(CardBuilder.create('Sentiment Toward Organizations', 'faction-org-sentiment', { halfWidth: true }));
-    }
-
-    return cards.join('');
-  }
-
-  /**
-   * Build card for the Documents tab (full-width document table)
-   */
-  buildDocumentsCard(data) {
-    if (data.documents.length === 0) {
-      return '<div class="empty-state"><p class="empty-state-text">No documents found</p></div>';
-    }
-
-    // Column filter in card header
-    const actionsHtml = `<div class="filter-control" id="faction-docs-column-filter"></div>`;
-
-    return CardBuilder.create('Source Documents', 'faction-documents', {
-      count: data.documents.length,
-      fullWidth: true,
-      noPadding: true,
-      actions: actionsHtml
-    });
-  }
-
-  async initializeComponents() {
-    const {
-      faction, factionOverlaps, narratives, documents,
-      affiliatedPersons, affiliatedOrgs, personsWithSentiment, orgsWithSentiment, allFactions
-    } = this._prefetchedData;
-
-    // Documents Tab: Only initialize document table with column filter
-    if (this.isDocumentsTab()) {
-      if (documents.length > 0) {
-        // Check if classification should be shown
-        const settings = dataStore.getSettings();
-        const showClassification = settings.showClassification;
-        
-        // Filter available columns based on settings
-        const availableColumns = { ...DOCUMENT_AVAILABLE_COLUMNS };
-        if (!showClassification) {
-          delete availableColumns.classification;
-        }
-        
-        // Filter default columns based on settings
-        const defaultColumns = showClassification 
-          ? DOCUMENT_DEFAULT_COLUMNS 
-          : DOCUMENT_DEFAULT_COLUMNS.filter(col => col !== 'classification');
-        
-        // Initialize selected columns (start with defaults)
-        this._selectedDocColumns = [...defaultColumns];
-        
-        // Initialize column filter
-        const filterContainer = document.getElementById('faction-docs-column-filter');
-        if (filterContainer) {
-          this.components.columnFilter = new ColumnFilter('faction-docs-column-filter', {
-            availableColumns: availableColumns,
-            defaultColumns: defaultColumns,
-            requiredColumns: ['title'],
-            onChange: (columns) => {
-              this._selectedDocColumns = columns;
-              if (this.components.documentTable) {
-                this.components.documentTable.setColumns(columns);
-              }
-            }
-          });
-          this.components.columnFilter.setSelectedColumns(this._selectedDocColumns);
-          this.components.columnFilter.render();
-        }
-        
-        // Initialize document table
-        this.components.documentTable = new DocumentTable('faction-documents', {
-          columns: this._selectedDocColumns,
-          maxItems: 50,
-          enableViewerMode: true,
-          onDocumentClick: (doc) => {
-            window.location.hash = `#/document/${doc.id}`;
-          }
-        });
-        this.components.documentTable.update({ documents });
-      }
-      return;
-    }
-
-    // Dashboard Tab: Initialize all other components
-
-    // Venn Diagram
-    if (allFactions.length >= 1) {
-      this.components.venn = new VennDiagram('faction-venn', {
         height: 300,
-        onFactionClick: (f) => {
-          if (f.id !== this.factionId) {
-            window.location.hash = `#/faction/${f.id}`;
-          }
-        }
-      });
-      this.components.venn.update({
-        sets: allFactions.map(f => ({
-          id: f.id,
-          name: f.name,
-          size: f.memberCount || 1000,
-          color: f.color
-        })),
-        overlaps: factionOverlaps
-      });
-      this.components.venn.enableAutoResize();
+        excludeId: this.factionId
+      }));
     }
 
-    // Network Graph of affiliated entities
-    if (affiliatedPersons.length > 0 || affiliatedOrgs.length > 0) {
-      const personIds = affiliatedPersons.map(p => p.id);
-      const orgIds = affiliatedOrgs.map(o => o.id);
-      
-      this._networkData = {
-        personIds,
-        orgIds,
-        persons: affiliatedPersons,
-        orgs: affiliatedOrgs,
-        graphData: DataService.buildNetworkGraph(personIds, orgIds)
-      };
-      
-      this.renderNetworkView();
-      this.setupNetworkToggle('faction-network');
+    // Affiliated Entities Network (half-width)
+    if (data.hasNetwork) {
+      this.cardManager.add(new NetworkGraphCard(this, 'faction-network', {
+        title: 'Affiliated Entities',
+        personIds: data.personIds,
+        orgIds: data.orgIds,
+        halfWidth: true,
+        height: 350
+      }));
     }
 
-    // Narratives List
-    if (narratives.length > 0) {
-      this.components.narrativeList = new NarrativeList('faction-narratives', {
-        maxItems: 8,
-        onItemClick: (n) => {
-          window.location.hash = `#/narrative/${n.id}`;
-        }
-      });
-      this.components.narrativeList.update({ narratives });
+    // Narratives List (full-width)
+    if (data.narratives.length > 0) {
+      this.cardManager.add(new NarrativeListCard(this, 'faction-narratives', {
+        title: 'Narratives',
+        narratives: data.narratives,
+        showCount: true,
+        maxItems: 8
+      }));
     }
 
-    // Person Sentiment Chart
-    if (personsWithSentiment.length > 0) {
-      this.components.personSentiment = new SentimentChart('faction-person-sentiment', {
-        height: Math.max(150, personsWithSentiment.length * 50),
-        onFactionClick: (p) => {
-          window.location.hash = `#/person/${p.id}`;
-        }
-      });
-      this.components.personSentiment.update({ factions: personsWithSentiment });
-      this.components.personSentiment.enableAutoResize();
+    // Sentiment Toward People (half-width)
+    if (data.personsWithSentiment.length > 0) {
+      this.cardManager.add(new SentimentChartCard(this, 'faction-person-sentiment', {
+        title: 'Sentiment Toward People',
+        factions: data.personsWithSentiment,
+        halfWidth: true,
+        clickRoute: 'person'
+      }));
     }
 
-    // Org Sentiment Chart
-    if (orgsWithSentiment.length > 0) {
-      this.components.orgSentiment = new SentimentChart('faction-org-sentiment', {
-        height: Math.max(150, orgsWithSentiment.length * 50),
-        onFactionClick: (o) => {
-          window.location.hash = `#/organization/${o.id}`;
-        }
-      });
-      this.components.orgSentiment.update({ factions: orgsWithSentiment });
-      this.components.orgSentiment.enableAutoResize();
+    // Sentiment Toward Organizations (half-width)
+    if (data.orgsWithSentiment.length > 0) {
+      this.cardManager.add(new SentimentChartCard(this, 'faction-org-sentiment', {
+        title: 'Sentiment Toward Organizations',
+        factions: data.orgsWithSentiment,
+        halfWidth: true,
+        clickRoute: 'organization'
+      }));
     }
   }
 
   /**
-   * Get the HTML for the network view toggle buttons
+   * Set up card for Documents tab (full-width document table)
    */
-  getNetworkToggleHtml(containerId) {
-    return `
-      <div class="view-toggle network-view-toggle" data-container="${containerId}">
-        <button class="view-toggle-btn ${this.networkViewMode === 'graph' ? 'active' : ''}" data-view="graph" title="Network Graph">
-          <svg viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.5">
-            <circle cx="8" cy="4" r="2"/>
-            <circle cx="4" cy="12" r="2"/>
-            <circle cx="12" cy="12" r="2"/>
-            <path d="M8 6v2M6 10l-1 1M10 10l1 1"/>
-          </svg>
-        </button>
-        <button class="view-toggle-btn ${this.networkViewMode === 'list' ? 'active' : ''}" data-view="list" title="List View">
-          <svg viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.5">
-            <path d="M2 4h12M2 8h12M2 12h12"/>
-          </svg>
-        </button>
-      </div>
-    `;
-  }
+  setupDocumentsCard(faction, data) {
+    // Reset card manager for fresh setup
+    this.cardManager = new CardManager(this);
 
-  /**
-   * Render the network view based on current mode
-   */
-  renderNetworkView() {
-    const container = document.getElementById('faction-network');
-    if (!container || !this._networkData) return;
-
-    if (this.components.network) {
-      this.components.network.destroy();
-      this.components.network = null;
-    }
-
-    if (this.networkViewMode === 'graph') {
-      this.components.network = new NetworkGraph('faction-network', {
-        height: 350,
-        onNodeClick: (node) => {
-          const route = node.type === 'person' ? 'person' : 'organization';
-          window.location.hash = `#/${route}/${node.id}`;
-        },
-        onLinkClick: (link) => {
-          this.showConnectingNarrativesModal(link);
-        }
-      });
-      this.components.network.update(this._networkData.graphData);
-      this.components.network.enableAutoResize();
-    } else {
-      this.renderNetworkListView(container);
+    if (data.documents.length > 0) {
+      this.cardManager.add(new DocumentTableCard(this, 'faction-documents', {
+        title: 'Source Documents',
+        documents: data.documents,
+        showCount: true,
+        fullWidth: true,
+        maxItems: 50,
+        enableViewerMode: true
+      }));
     }
   }
 
-  /**
-   * Render list view for people and organizations
-   */
-  renderNetworkListView(container) {
-    const { persons, orgs } = this._networkData;
-    const allEntities = [
-      ...persons.map(p => ({ ...p, _type: 'person' })),
-      ...orgs.map(o => ({ ...o, _type: 'organization' }))
-    ];
-
-    container.innerHTML = renderEntityList(allEntities, { sortByName: true });
-
-    container.querySelectorAll('.entity-list-item').forEach(item => {
-      item.addEventListener('click', () => {
-        const id = item.dataset.id;
-        const type = item.dataset.type;
-        window.location.hash = `#/${type}/${id}`;
-      });
-    });
-  }
-
-  /**
-   * Set up network view toggle listeners
-   */
-  setupNetworkToggle(containerId) {
-    const toggleContainer = document.querySelector(`.network-view-toggle[data-container="${containerId}"]`);
-    if (!toggleContainer) return;
-
-    toggleContainer.querySelectorAll('.view-toggle-btn').forEach(btn => {
-      btn.addEventListener('click', () => {
-        const newView = btn.dataset.view;
-        if (newView !== this.networkViewMode) {
-          this.networkViewMode = newView;
-          toggleContainer.querySelectorAll('.view-toggle-btn').forEach(b => {
-            b.classList.toggle('active', b.dataset.view === newView);
-          });
-          this.renderNetworkView();
-        }
-      });
-    });
+  destroy() {
+    this.cardManager.destroyAll();
+    super.destroy();
   }
 }
 

@@ -1,10 +1,11 @@
 /**
  * MonitorEditorModal.js
  * Modal component for creating and editing monitors
+ * Uses ScopeSelector component for entity/keyword selection
  */
 
-import { DataService } from '../data/DataService.js';
 import { dataStore } from '../data/DataStore.js';
+import { ScopeSelector } from './ScopeSelector.js';
 
 export class MonitorEditorModal {
   constructor() {
@@ -15,23 +16,14 @@ export class MonitorEditorModal {
     // Current monitor being edited (null for create mode)
     this.editingMonitor = null;
     
-    // Form state
+    // Form state (name and logic only - scope managed by ScopeSelector)
     this.formState = {
       name: '',
-      scope: {
-        personIds: [],
-        organizationIds: [],
-        factionIds: [],
-        locationIds: [],
-        eventIds: [],
-        narrativeIds: [],
-        themeIds: [],
-        logic: 'OR'
-      }
+      logic: 'OR'
     };
     
-    // Expanded sections state
-    this.expandedSections = new Set(['persons']); // Start with persons expanded
+    // ScopeSelector instance
+    this.scopeSelector = null;
     
     // Callback for when save completes
     this.onSaveCallback = null;
@@ -50,19 +42,12 @@ export class MonitorEditorModal {
     this.onSaveCallback = onSave;
     this.formState = {
       name: '',
-      scope: {
-        personIds: [],
-        organizationIds: [],
-        factionIds: [],
-        locationIds: [],
-        eventIds: [],
-        narrativeIds: [],
-        themeIds: [],
-        logic: 'OR'
-      }
+      logic: 'OR'
     };
-    this.expandedSections = new Set(['persons']);
     this.render('Create Monitor');
+    
+    // Initialize ScopeSelector with empty scope
+    this.initScopeSelector({});
   }
 
   /**
@@ -74,37 +59,39 @@ export class MonitorEditorModal {
     this.editingMonitor = monitor;
     this.onSaveCallback = onSave;
     
-    // Deep clone the scope to avoid mutating original
     this.formState = {
       name: monitor.name || '',
-      scope: {
-        personIds: [...(monitor.scope?.personIds || [])],
-        organizationIds: [...(monitor.scope?.organizationIds || [])],
-        factionIds: [...(monitor.scope?.factionIds || [])],
-        locationIds: [...(monitor.scope?.locationIds || [])],
-        eventIds: [...(monitor.scope?.eventIds || [])],
-        narrativeIds: [...(monitor.scope?.narrativeIds || [])],
-        themeIds: [...(monitor.scope?.themeIds || [])],
-        logic: monitor.scope?.logic || 'OR'
-      }
+      logic: monitor.scope?.logic || 'OR'
     };
     
-    // Expand sections that have items
-    this.expandedSections = new Set();
-    if (this.formState.scope.personIds.length > 0) this.expandedSections.add('persons');
-    if (this.formState.scope.organizationIds.length > 0) this.expandedSections.add('organizations');
-    if (this.formState.scope.factionIds.length > 0) this.expandedSections.add('factions');
-    if (this.formState.scope.locationIds.length > 0) this.expandedSections.add('locations');
-    if (this.formState.scope.eventIds.length > 0) this.expandedSections.add('events');
-    if (this.formState.scope.narrativeIds.length > 0) this.expandedSections.add('narratives');
-    if (this.formState.scope.themeIds.length > 0) this.expandedSections.add('themes');
+    this.render('Edit Monitor');
     
-    // If nothing expanded, expand persons by default
-    if (this.expandedSections.size === 0) {
-      this.expandedSections.add('persons');
+    // Initialize ScopeSelector with monitor's scope
+    this.initScopeSelector(monitor.scope || {});
+  }
+
+  /**
+   * Initialize the ScopeSelector component
+   */
+  initScopeSelector(scope) {
+    const container = this.modalContent?.querySelector('#scope-selector-container');
+    if (!container) {
+      console.error('MonitorEditorModal: Scope selector container not found');
+      return;
     }
     
-    this.render('Edit Monitor');
+    // Create ScopeSelector instance
+    this.scopeSelector = new ScopeSelector(container, {
+      showSaveFilter: true,
+      showSearchFilters: true,
+      onChange: (newScope) => {
+        // Scope changes are handled internally by ScopeSelector
+        // We just need to get the scope when saving
+      }
+    });
+    
+    // Set initial scope and render
+    this.scopeSelector.setScope(scope);
   }
 
   /**
@@ -144,11 +131,11 @@ export class MonitorEditorModal {
                   type="radio" 
                   name="scope-logic" 
                   value="OR" 
-                  ${this.formState.scope.logic === 'OR' ? 'checked' : ''}
+                  ${this.formState.logic === 'OR' ? 'checked' : ''}
                 />
                 <span class="radio-text">
                   <strong>OR</strong>
-                  <span class="radio-desc">Match any selected entity</span>
+                  <span class="radio-desc">Match any selected item</span>
                 </span>
               </label>
               <label class="radio-label">
@@ -156,28 +143,21 @@ export class MonitorEditorModal {
                   type="radio" 
                   name="scope-logic" 
                   value="AND" 
-                  ${this.formState.scope.logic === 'AND' ? 'checked' : ''}
+                  ${this.formState.logic === 'AND' ? 'checked' : ''}
                 />
                 <span class="radio-text">
                   <strong>AND</strong>
-                  <span class="radio-desc">Match all selected entities</span>
+                  <span class="radio-desc">Match all selected items</span>
                 </span>
               </label>
             </div>
           </div>
           
-          <!-- Entity Selector -->
+          <!-- Scope Selector -->
           <div class="form-group">
-            <label class="form-label">Scope Entities</label>
-            <div class="entity-selector">
-              ${this.renderEntitySection('persons', 'Persons', 'personIds', DataService.getPersons())}
-              ${this.renderEntitySection('organizations', 'Organizations', 'organizationIds', DataService.getOrganizations())}
-              ${this.renderEntitySection('factions', 'Factions', 'factionIds', DataService.getFactions())}
-              ${this.renderEntitySection('locations', 'Locations', 'locationIds', DataService.getLocations())}
-              ${this.renderEntitySection('events', 'Events', 'eventIds', DataService.getEvents())}
-              ${this.renderEntitySection('narratives', 'Narratives', 'narrativeIds', DataService.getNarratives())}
-              ${this.renderEntitySection('themes', 'Themes', 'themeIds', DataService.getThemes())}
-            </div>
+            <label class="form-label">Scope</label>
+            <p class="form-help-text">Type to filter entities or press Enter to add as keyword</p>
+            <div id="scope-selector-container"></div>
           </div>
         </div>
       </div>
@@ -193,105 +173,6 @@ export class MonitorEditorModal {
 
     // Add event listeners
     this.attachEventListeners();
-  }
-
-  /**
-   * Render an entity section (collapsible)
-   */
-  renderEntitySection(sectionId, label, scopeKey, entities) {
-    const selectedIds = this.formState.scope[scopeKey] || [];
-    const isExpanded = this.expandedSections.has(sectionId);
-    const selectedCount = selectedIds.length;
-    const totalCount = entities.length;
-    
-    // Get display text for entities
-    const getEntityText = (entity) => {
-      return entity.name || entity.text || entity.headline || 'Unnamed';
-    };
-    
-    // Render selected entity chips
-    const selectedChips = selectedIds.map(id => {
-      const entity = entities.find(e => e.id === id);
-      if (!entity) return '';
-      return `
-        <span class="entity-chip" data-id="${id}" data-scope-key="${scopeKey}">
-          ${this.escapeHtml(getEntityText(entity))}
-          <button class="chip-remove" aria-label="Remove">&times;</button>
-        </span>
-      `;
-    }).join('');
-
-    return `
-      <div class="entity-section ${isExpanded ? 'expanded' : ''}" data-section="${sectionId}">
-        <button class="entity-section-header" data-section="${sectionId}">
-          <svg class="section-chevron" viewBox="0 0 16 16" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2">
-            <path d="M4 6l4 4 4-4"/>
-          </svg>
-          <span class="section-label">${label}</span>
-          <span class="section-count-total" title="Total available">(${totalCount})</span>
-          <span class="section-count-selected" title="Selected">${selectedCount} selected</span>
-        </button>
-        <div class="entity-section-content">
-          <div class="selected-entities">
-            ${selectedChips}
-          </div>
-          <div class="entity-list-wrapper">
-            <input 
-              type="text" 
-              class="entity-search-input" 
-              placeholder="Filter ${label.toLowerCase()}..."
-              data-scope-key="${scopeKey}"
-              data-section="${sectionId}"
-            />
-            <div class="entity-list" data-scope-key="${scopeKey}">
-              ${this.renderEntityList(entities, selectedIds, scopeKey)}
-            </div>
-          </div>
-        </div>
-      </div>
-    `;
-  }
-
-  /**
-   * Render entity list (visible, scrollable)
-   */
-  renderEntityList(entities, selectedIds, scopeKey, filterText = '') {
-    const getEntityText = (entity) => {
-      return entity.name || entity.text || entity.headline || 'Unnamed';
-    };
-    
-    // Filter by search text
-    const filteredEntities = filterText
-      ? entities.filter(e => getEntityText(e).toLowerCase().includes(filterText.toLowerCase()))
-      : entities;
-    
-    // Sort: unselected first, then selected (so users can easily find what to add)
-    const sortedEntities = [...filteredEntities].sort((a, b) => {
-      const aSelected = selectedIds.includes(a.id);
-      const bSelected = selectedIds.includes(b.id);
-      if (aSelected && !bSelected) return 1;
-      if (!aSelected && bSelected) return -1;
-      return getEntityText(a).localeCompare(getEntityText(b));
-    });
-    
-    if (sortedEntities.length === 0) {
-      return `<div class="entity-list-empty">No ${filterText ? 'matching ' : ''}items found</div>`;
-    }
-    
-    return sortedEntities.map(entity => {
-      const isSelected = selectedIds.includes(entity.id);
-      return `
-        <button class="entity-list-item ${isSelected ? 'selected' : ''}" 
-                data-id="${entity.id}" 
-                data-scope-key="${scopeKey}"
-                ${isSelected ? 'disabled' : ''}>
-          ${isSelected 
-            ? '<span class="entity-list-item-check">✓</span>' 
-            : '<span class="entity-list-item-add">+</span>'}
-          <span class="entity-list-item-name">${this.escapeHtml(getEntityText(entity))}</span>
-        </button>
-      `;
-    }).join('');
   }
 
   /**
@@ -320,44 +201,8 @@ export class MonitorEditorModal {
     const logicRadios = this.modalContent.querySelectorAll('input[name="scope-logic"]');
     logicRadios.forEach(radio => {
       radio.addEventListener('change', (e) => {
-        this.formState.scope.logic = e.target.value;
+        this.formState.logic = e.target.value;
       });
-    });
-    
-    // Section headers (collapse/expand)
-    const sectionHeaders = this.modalContent.querySelectorAll('.entity-section-header');
-    sectionHeaders.forEach(header => {
-      header.addEventListener('click', (e) => {
-        e.preventDefault();
-        const sectionId = header.dataset.section;
-        this.toggleSection(sectionId);
-      });
-    });
-    
-    // Entity search inputs - filter the list as user types
-    const searchInputs = this.modalContent.querySelectorAll('.entity-search-input');
-    searchInputs.forEach(input => {
-      input.addEventListener('input', (e) => this.filterEntityList(input, e.target.value));
-    });
-    
-    // Entity list item clicks and chip remove clicks
-    this.modalContent.addEventListener('click', (e) => {
-      // Handle list item click (add entity)
-      const listItem = e.target.closest('.entity-list-item');
-      if (listItem && !listItem.disabled) {
-        e.preventDefault();
-        this.selectEntity(listItem.dataset.id, listItem.dataset.scopeKey);
-      }
-      
-      // Handle chip remove click
-      const chipRemove = e.target.closest('.chip-remove');
-      if (chipRemove) {
-        e.preventDefault();
-        const chip = chipRemove.closest('.entity-chip');
-        if (chip) {
-          this.removeEntity(chip.dataset.id, chip.dataset.scopeKey);
-        }
-      }
     });
     
     // Backdrop click
@@ -368,158 +213,44 @@ export class MonitorEditorModal {
   }
 
   /**
-   * Toggle section expand/collapse
-   */
-  toggleSection(sectionId) {
-    if (this.expandedSections.has(sectionId)) {
-      this.expandedSections.delete(sectionId);
-    } else {
-      this.expandedSections.add(sectionId);
-    }
-    
-    const section = this.modalContent.querySelector(`.entity-section[data-section="${sectionId}"]`);
-    if (section) {
-      section.classList.toggle('expanded', this.expandedSections.has(sectionId));
-    }
-  }
-
-  /**
-   * Filter entity list based on search input
-   */
-  filterEntityList(input, filterText) {
-    const scopeKey = input.dataset.scopeKey;
-    const listContainer = input.parentElement.querySelector('.entity-list');
-    if (!listContainer) return;
-    
-    // Get entities based on scope key
-    const entitiesMap = {
-      personIds: DataService.getPersons(),
-      organizationIds: DataService.getOrganizations(),
-      factionIds: DataService.getFactions(),
-      locationIds: DataService.getLocations(),
-      eventIds: DataService.getEvents(),
-      narrativeIds: DataService.getNarratives(),
-      themeIds: DataService.getThemes()
-    };
-    
-    const entities = entitiesMap[scopeKey] || [];
-    const selectedIds = this.formState.scope[scopeKey] || [];
-    
-    listContainer.innerHTML = this.renderEntityList(entities, selectedIds, scopeKey, filterText);
-  }
-
-  /**
-   * Select an entity
-   */
-  selectEntity(id, scopeKey) {
-    if (!this.formState.scope[scopeKey].includes(id)) {
-      this.formState.scope[scopeKey].push(id);
-      this.refreshSection(scopeKey);
-    }
-  }
-
-  /**
-   * Remove an entity
-   */
-  removeEntity(id, scopeKey) {
-    this.formState.scope[scopeKey] = this.formState.scope[scopeKey].filter(eid => eid !== id);
-    this.refreshSection(scopeKey);
-  }
-
-  /**
-   * Refresh a section after selection change
-   */
-  refreshSection(scopeKey) {
-    const sectionMap = {
-      personIds: 'persons',
-      organizationIds: 'organizations',
-      factionIds: 'factions',
-      locationIds: 'locations',
-      eventIds: 'events',
-      narrativeIds: 'narratives',
-      themeIds: 'themes'
-    };
-    
-    const entitiesMap = {
-      personIds: DataService.getPersons(),
-      organizationIds: DataService.getOrganizations(),
-      factionIds: DataService.getFactions(),
-      locationIds: DataService.getLocations(),
-      eventIds: DataService.getEvents(),
-      narrativeIds: DataService.getNarratives(),
-      themeIds: DataService.getThemes()
-    };
-    
-    const sectionId = sectionMap[scopeKey];
-    const section = this.modalContent.querySelector(`.entity-section[data-section="${sectionId}"]`);
-    if (!section) return;
-    
-    const entities = entitiesMap[scopeKey];
-    const selectedIds = this.formState.scope[scopeKey];
-    
-    // Update selected count
-    const selectedCountEl = section.querySelector('.section-count-selected');
-    if (selectedCountEl) {
-      selectedCountEl.textContent = `${selectedIds.length} selected`;
-    }
-    
-    // Update chips
-    const getEntityText = (entity) => {
-      return entity.name || entity.text || entity.headline || 'Unnamed';
-    };
-    
-    const chipsContainer = section.querySelector('.selected-entities');
-    if (chipsContainer) {
-      chipsContainer.innerHTML = selectedIds.map(id => {
-        const entity = entities.find(e => e.id === id);
-        if (!entity) return '';
-        return `
-          <span class="entity-chip" data-id="${id}" data-scope-key="${scopeKey}">
-            ${this.escapeHtml(getEntityText(entity))}
-            <button class="chip-remove" aria-label="Remove">&times;</button>
-          </span>
-        `;
-      }).join('');
-    }
-    
-    // Update entity list (preserving current filter)
-    const searchInput = section.querySelector('.entity-search-input');
-    if (searchInput) {
-      this.filterEntityList(searchInput, searchInput.value);
-    }
-  }
-
-  /**
    * Save the monitor
    */
   save() {
-    // Validate
+    // Validate name
     if (!this.formState.name.trim()) {
       alert('Please enter a monitor name');
       return;
     }
     
-    // Check if at least one entity is selected
-    const hasEntities = Object.keys(this.formState.scope)
-      .filter(k => k !== 'logic')
-      .some(k => this.formState.scope[k].length > 0);
+    // Get scope from ScopeSelector
+    const scope = this.scopeSelector?.getScope() || {};
+    
+    // Check if at least one entity or keyword is selected
+    const hasEntities = Object.keys(scope)
+      .some(k => Array.isArray(scope[k]) && scope[k].length > 0);
     
     if (!hasEntities) {
-      alert('Please select at least one entity to monitor');
+      alert('Please select at least one entity or keyword to monitor');
       return;
     }
+    
+    // Build the full scope with logic
+    const fullScope = {
+      ...scope,
+      logic: this.formState.logic
+    };
     
     if (this.editingMonitor) {
       // Update existing monitor
       dataStore.updateMonitor(this.editingMonitor.id, {
         name: this.formState.name.trim(),
-        scope: { ...this.formState.scope }
+        scope: fullScope
       });
     } else {
       // Create new monitor
       dataStore.createMonitor({
         name: this.formState.name.trim(),
-        scope: { ...this.formState.scope }
+        scope: fullScope
       });
     }
     
@@ -539,6 +270,12 @@ export class MonitorEditorModal {
     }
     if (this.modalContent) {
       this.modalContent.classList.remove('monitor-editor-modal');
+    }
+    
+    // Clean up ScopeSelector
+    if (this.scopeSelector) {
+      this.scopeSelector.destroy();
+      this.scopeSelector = null;
     }
     
     // Remove event listeners

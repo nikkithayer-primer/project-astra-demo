@@ -49,6 +49,7 @@ Each entity type uses a specific ID prefix. IDs are generated as `{prefix}-{time
 | Document | `doc-` | `doc-1706234567890-abc123def` |
 | Repository | `repo-` | `repo-news`, `repo-osint`, `repo-edl` |
 | Monitor | `monitor-` | `monitor-1706234567890-abc123def` |
+| SearchFilter | `filter-` | `filter-1706234567890-abc123def` |
 | Workspace | `workspace-` | `workspace-1706234567890-abc123def` |
 | Publisher | `pub-` | `pub-facebook`, `pub-nat-cnn` |
 | User | `user-` | `user-001` |
@@ -413,14 +414,13 @@ Automated tracking configuration for entities and conditions.
   id: string,              // Required. Prefix: 'monitor-'
   name: string,            // Required. Monitor name
   description: string,     // Optional. What this monitor tracks
-  scope: {                 // Required. What entities to watch
+  scope: {                 // Required. What entities/keywords to watch
     personIds: string[],
     organizationIds: string[],
     factionIds: string[],
     locationIds: string[],
     eventIds: string[],
-    narrativeIds: string[],
-    themeIds: string[],
+    keywords: string[],    // Free-text keywords/phrases to match
     logic: 'AND' | 'OR'    // How to combine scope conditions
   },
   options: {               // Optional. Additional settings
@@ -492,6 +492,31 @@ User-defined collections for focused analysis.
 }
 ```
 
+### SearchFilter
+
+Reusable entity/keyword selections that can be applied across monitors and other searches.
+
+```javascript
+{
+  id: string,              // Required. Prefix: 'filter-'
+  name: string,            // Required. User-provided filter name
+  description: string,     // Optional. Filter description
+  scope: {                 // Required. What entities/keywords are in this filter
+    personIds: string[],
+    organizationIds: string[],
+    factionIds: string[],
+    locationIds: string[],
+    eventIds: string[],
+    keywords: string[]
+    // Note: No 'logic' field - logic is determined by the consumer (e.g., Monitor)
+  },
+  createdAt: datetime,
+  updatedAt: datetime
+}
+```
+
+**Usage:** SearchFilters are created from the ScopeSelector component and can be applied to monitors or other scope-based features. When applied, the filter's entities and keywords are merged into the current selection.
+
 ---
 
 ## Relationship Map
@@ -519,7 +544,7 @@ User-defined collections for focused analysis.
 - Organization ↔ Faction (`organization.affiliatedFactionIds`, `faction.affiliatedOrganizationIds`)
 - Organization ↔ Location (`organization.relatedLocationIds`)
 - Topic ↔ Document (`topic.documentIds`)
-- Monitor → Person/Organization/Faction/Location/Event/Narrative/Theme (via `scope`)
+- Monitor → Person/Organization/Faction/Location/Event (via `scope`)
 
 ---
 
@@ -547,6 +572,7 @@ dataStore.createTopic(topic)
 dataStore.createDocument(doc)
 dataStore.createMonitor(monitor)
 dataStore.createWorkspace(workspace)
+dataStore.createSearchFilter(filter)
 
 // Update and delete follow pattern: updateX(id, updates), deleteX(id)
 ```
