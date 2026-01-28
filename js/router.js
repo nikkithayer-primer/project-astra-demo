@@ -95,9 +95,12 @@ export class Router {
     try {
       // Get default page from settings
       const settings = dataStore.getSettings();
-      const defaultPage = settings.dashboardEnabled 
-        ? settings.defaultStartPage 
-        : 'monitors';
+      let defaultPage = settings.defaultStartPage || 'monitors';
+      
+      // If dashboard is disabled and was set as start page, fall back to monitors
+      if (!settings.dashboardEnabled && defaultPage === 'dashboard') {
+        defaultPage = 'monitors';
+      }
       
       // Navigate to current hash or default based on settings
       if (!window.location.hash || window.location.hash === '#/') {
@@ -533,9 +536,11 @@ export class Router {
 
       default:
         // Default to start page based on settings
-        const defaultPage = settings.dashboardEnabled 
-          ? settings.defaultStartPage 
-          : 'monitors';
+        let defaultPage = settings.defaultStartPage || 'monitors';
+        // If dashboard is disabled and was set as start page, fall back to monitors
+        if (!settings.dashboardEnabled && defaultPage === 'dashboard') {
+          defaultPage = 'monitors';
+        }
         window.location.hash = `#/${defaultPage}`;
         return;
     }

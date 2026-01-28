@@ -6,6 +6,8 @@
 import { BaseView } from './BaseView.js';
 import { DataService } from '../data/DataService.js';
 import { dataStore } from '../data/DataStore.js';
+import { TimeRangeFilter } from '../components/TimeRangeFilter.js';
+import { formatDate } from '../utils/formatters.js';
 
 export class SearchView extends BaseView {
   constructor(container, options = {}) {
@@ -15,6 +17,9 @@ export class SearchView extends BaseView {
     this.debounceTimer = null;
     // All repositories selected by default
     this.selectedRepositories = new Set();
+    // Time range filter
+    this.timeRange = null;
+    this.timeRangeFilter = null;
   }
 
   /**
@@ -60,7 +65,7 @@ export class SearchView extends BaseView {
                 placeholder="Search documents..." 
                 value="${this.escapeHtml(this.searchQuery)}"
               />
-              <button class="search-clear-btn ${this.searchQuery ? '' : 'hidden'}" id="search-clear">
+              <button class="btn-icon search-clear-btn ${this.searchQuery ? '' : 'hidden'}" id="search-clear">
                 <svg viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.5">
                   <path d="M4 4l8 8M12 4l-8 8"/>
                 </svg>
@@ -76,6 +81,15 @@ export class SearchView extends BaseView {
             ${this.renderRepositoryCheckboxes()}
           </div>
           
+          <div class="search-filters" style="margin-top: var(--space-md);">
+            <div style="display: flex; align-items: center; gap: var(--space-sm); margin-bottom: var(--space-xs);">
+              <span class="text-secondary text-sm">Date Range:</span>
+              <span class="text-sm" id="time-range-label">${this.timeRange ? `${formatDate(this.timeRange.start)} - ${formatDate(this.timeRange.end)}` : 'All Time'}</span>
+              <button class="btn-link text-sm ${this.timeRange ? '' : 'hidden'}" id="clear-time-range">Clear</button>
+            </div>
+            <div id="search-time-filter"></div>
+          </div>
+          
           <div class="search-hint">
             <p class="text-secondary text-sm">Type a query and press <kbd>Enter</kbd> to create a workspace with matching documents.</p>
           </div>
@@ -84,10 +98,89 @@ export class SearchView extends BaseView {
     `;
 
     this.setupEventHandlers();
+    this.initTimeRangeFilter();
     
     // Focus the search input
     const input = document.getElementById('search-input');
     if (input) input.focus();
+  }
+
+  /**
+   * Get document volume data for the histogram
+   */
+  getDocumentVolumeData() {
+    const documents = DataService.getDocuments();
+    if (!documents || documents.length === 0) return null;
+    
+    // Group documents by date
+    const dateMap = new Map();
+    documents.forEach(doc => {
+      if (!doc.publishedDate) return;
+      const date = doc.publishedDate.split('T')[0];
+      dateMap.set(date, (dateMap.get(date) || 0) + 1);
+    });
+    
+    // Sort dates and create arrays
+    const dates = [...dateMap.keys()].sort();
+    const volumes = dates.map(d => dateMap.get(d));
+    
+    return { dates, volumes };
+  }
+
+  /**
+   * Initialize the time range filter histogram
+   */
+  initTimeRangeFilter() {
+    const container = document.getElementById('search-time-filter');
+    if (!container) return;
+    
+    const volumeData = this.getDocumentVolumeData();
+    if (!volumeData || !volumeData.dates || volumeData.dates.length === 0) {
+      container.innerHTML = '<div class="text-muted text-sm">No date data available</div>';
+      return;
+    }
+    
+    // Create time range filter
+    this.timeRangeFilter = new TimeRangeFilter('search-time-filter', {
+      height: 60,
+      onChange: (range) => this.onTimeRangeChanged(range)
+    });
+    
+    this.timeRangeFilter.update(volumeData);
+    
+    // Restore previous selection if exists
+    if (this.timeRange) {
+      this.timeRangeFilter.setSelection(this.timeRange.start, this.timeRange.end);
+    }
+  }
+
+  /**
+   * Handle time range selection change
+   */
+  onTimeRangeChanged(range) {
+    this.timeRange = range;
+    this.updateTimeRangeLabel();
+    this.updateMatchCount();
+  }
+
+  /**
+   * Update the time range label display
+   */
+  updateTimeRangeLabel() {
+    const label = document.getElementById('time-range-label');
+    const clearBtn = document.getElementById('clear-time-range');
+    
+    if (label) {
+      if (this.timeRange) {
+        label.textContent = `${formatDate(this.timeRange.start)} - ${formatDate(this.timeRange.end)}`;
+      } else {
+        label.textContent = 'All Time';
+      }
+    }
+    
+    if (clearBtn) {
+      clearBtn.classList.toggle('hidden', !this.timeRange);
+    }
   }
 
   /**
@@ -172,6 +265,19 @@ export class SearchView extends BaseView {
         this.updateMatchCount();
       });
     });
+    
+    // Clear time range button
+    const clearTimeBtn = document.getElementById('clear-time-range');
+    if (clearTimeBtn) {
+      clearTimeBtn.addEventListener('click', () => {
+        this.timeRange = null;
+        if (this.timeRangeFilter) {
+          this.timeRangeFilter.clearSelection();
+        }
+        this.updateTimeRangeLabel();
+        this.updateMatchCount();
+      });
+    }
   }
 
   /**
@@ -202,7 +308,8 @@ export class SearchView extends BaseView {
     }
 
     const results = DataService.search(query, {
-      repositoryIds: this.getSelectedRepositoryIds()
+      repositoryIds: this.getSelectedRepositoryIds(),
+      timeRange: this.timeRange
     });
     this.matchCount = results.documents.length;
     
@@ -220,16 +327,21 @@ export class SearchView extends BaseView {
     if (query.length < 2) return;
 
     const repositoryIds = this.getSelectedRepositoryIds();
-    const results = DataService.search(query, { repositoryIds });
+    const results = DataService.search(query, { repositoryIds, timeRange: this.timeRange });
     const documentIds = results.documents.map(d => d.id);
 
-    // Build description including repository filter info
+    // Build description including filter info
     const repositories = DataService.getRepositories();
     const selectedRepos = repositories.filter(r => repositoryIds.includes(r.id));
     const repoNames = selectedRepos.map(r => r.code).join(', ');
-    const description = repositoryIds.length === repositories.length
-      ? `Search results for "${query}"`
-      : `Search results for "${query}" in ${repoNames}`;
+    
+    let description = `Search results for "${query}"`;
+    if (repositoryIds.length !== repositories.length) {
+      description += ` in ${repoNames}`;
+    }
+    if (this.timeRange) {
+      description += ` (${formatDate(this.timeRange.start)} - ${formatDate(this.timeRange.end)})`;
+    }
 
     // Create the workspace (even if no documents match)
     const workspaceId = dataStore.createWorkspace({
@@ -237,7 +349,7 @@ export class SearchView extends BaseView {
       query: query,
       description: description,
       documentIds: documentIds,
-      filters: { repositoryIds },
+      filters: { repositoryIds, timeRange: this.timeRange },
       status: 'active'
     });
 
@@ -274,6 +386,20 @@ export class SearchView extends BaseView {
     if (clearBtn) {
       clearBtn.classList.toggle('hidden', !this.searchQuery);
     }
+  }
+
+  /**
+   * Clean up resources when view is destroyed
+   */
+  destroy() {
+    if (this.timeRangeFilter) {
+      this.timeRangeFilter.destroy();
+      this.timeRangeFilter = null;
+    }
+    if (this.debounceTimer) {
+      clearTimeout(this.debounceTimer);
+    }
+    super.destroy();
   }
 }
 

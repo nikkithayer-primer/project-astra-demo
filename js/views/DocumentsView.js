@@ -9,6 +9,7 @@ import { BaseView } from './BaseView.js';
 import { DataService } from '../data/DataService.js';
 import { DocumentTable } from '../components/DocumentTable.js';
 import { ColumnFilter } from '../components/ColumnFilter.js';
+import { dataStore } from '../data/DataStore.js';
 
 // All available columns with labels
 const AVAILABLE_COLUMNS = {
@@ -126,10 +127,30 @@ export class DocumentsView extends BaseView {
       </div>
     `;
 
+    // Check if classification should be shown
+    const settings = dataStore.getSettings();
+    const showClassification = settings.showClassification;
+    
+    // Filter available columns based on settings
+    const availableColumns = { ...AVAILABLE_COLUMNS };
+    if (!showClassification) {
+      delete availableColumns.classification;
+    }
+    
+    // Filter default columns based on settings
+    const defaultColumns = showClassification 
+      ? DEFAULT_COLUMNS 
+      : DEFAULT_COLUMNS.filter(col => col !== 'classification');
+    
+    // Filter selected columns if classification is now hidden
+    if (!showClassification && this.selectedColumns.includes('classification')) {
+      this.selectedColumns = this.selectedColumns.filter(col => col !== 'classification');
+    }
+    
     // Initialize Column Filter component
     this.columnFilter = new ColumnFilter('column-filter-container', {
-      availableColumns: AVAILABLE_COLUMNS,
-      defaultColumns: DEFAULT_COLUMNS,
+      availableColumns: availableColumns,
+      defaultColumns: defaultColumns,
       requiredColumns: ['title'],
       onChange: (columns) => {
         this.selectedColumns = columns;

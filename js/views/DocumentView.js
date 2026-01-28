@@ -285,12 +285,8 @@ export class DocumentView extends BaseView {
       </div>
     ` : '';
 
-    // Document type badge
-    const typeBadgeHtml = `
-      <span class="doc-type-badge doc-type-badge-${docType.replace('_', '-')}">
-        ${typeInfo.label}
-      </span>
-    `;
+    // Document type label
+    const typeBadgeHtml = typeInfo.label;
 
     // Classification badge (small, in header)
     const classification = doc.classification || 'U';

@@ -40,6 +40,9 @@ class App {
    * Initialize the application
    */
   async init() {
+    // Initialize theme (before other UI to prevent flash)
+    this.initTheme();
+    
     // Initialize with the currently selected dataset
     this.initializeDataset();
     
@@ -58,6 +61,9 @@ class App {
     
     // Initialize settings modal
     this.initSettingsModal();
+    
+    // Initialize theme toggle
+    this.initThemeToggle();
     
     // Update navigation based on settings
     this.updateNavigationForSettings();
@@ -298,7 +304,7 @@ class App {
           <div class="settings-row">
             <div class="settings-label">
               <span class="settings-label-text">Enable Dashboard Page</span>
-              <span class="settings-label-description">Show Dashboard in navigation. When disabled, Monitors becomes the default start page.</span>
+              <span class="settings-label-description">Show Dashboard in navigation and enable it as a start page option.</span>
             </div>
             <label class="toggle-switch">
               <input type="checkbox" id="setting-dashboard-enabled" ${settings.dashboardEnabled ? 'checked' : ''}>
@@ -306,14 +312,15 @@ class App {
             </label>
           </div>
           
-          <div class="settings-row" id="start-page-row" ${!settings.dashboardEnabled ? 'style="display:none"' : ''}>
+          <div class="settings-row" id="start-page-row">
             <div class="settings-label">
               <span class="settings-label-text">Default Start Page</span>
               <span class="settings-label-description">Page to show when opening the app</span>
             </div>
             <select id="setting-start-page" class="settings-select">
-              <option value="dashboard" ${settings.defaultStartPage === 'dashboard' ? 'selected' : ''}>Dashboard</option>
+              <option value="dashboard" ${settings.defaultStartPage === 'dashboard' ? 'selected' : ''} ${!settings.dashboardEnabled ? 'disabled' : ''}>Dashboard</option>
               <option value="monitors" ${settings.defaultStartPage === 'monitors' ? 'selected' : ''}>Monitors</option>
+              <option value="search" ${settings.defaultStartPage === 'search' ? 'selected' : ''}>Search</option>
             </select>
           </div>
           
@@ -350,15 +357,18 @@ class App {
       </div>
     `);
     
-    // Handle dashboard toggle showing/hiding start page option
+    // Handle dashboard toggle enabling/disabling dashboard as start page option
     const dashboardToggle = document.getElementById('setting-dashboard-enabled');
-    const startPageRow = document.getElementById('start-page-row');
+    const startPageSelect = document.getElementById('setting-start-page');
+    const dashboardOption = startPageSelect?.querySelector('option[value="dashboard"]');
     
     dashboardToggle?.addEventListener('change', () => {
-      if (dashboardToggle.checked) {
-        startPageRow.style.display = '';
-      } else {
-        startPageRow.style.display = 'none';
+      if (dashboardOption) {
+        dashboardOption.disabled = !dashboardToggle.checked;
+      }
+      // If dashboard was selected but is now disabled, switch to monitors
+      if (!dashboardToggle.checked && startPageSelect?.value === 'dashboard') {
+        startPageSelect.value = 'monitors';
       }
     });
     
@@ -373,13 +383,18 @@ class App {
    */
   saveSettings() {
     const dashboardEnabled = document.getElementById('setting-dashboard-enabled')?.checked ?? true;
-    const defaultStartPage = document.getElementById('setting-start-page')?.value || 'dashboard';
+    let defaultStartPage = document.getElementById('setting-start-page')?.value || 'dashboard';
     const defaultViewTab = document.getElementById('setting-default-tab')?.value || 'dashboard';
     const showClassification = document.getElementById('setting-show-classification')?.checked ?? true;
     
+    // If dashboard is disabled and was selected as start page, fall back to monitors
+    if (!dashboardEnabled && defaultStartPage === 'dashboard') {
+      defaultStartPage = 'monitors';
+    }
+    
     this.dataStore.updateSettings({
       dashboardEnabled,
-      defaultStartPage: dashboardEnabled ? defaultStartPage : 'monitors',
+      defaultStartPage,
       defaultViewTab,
       showClassification
     });
@@ -497,6 +512,63 @@ class App {
         });
       });
     });
+  }
+
+  /**
+   * Initialize theme from localStorage or system preference
+   */
+  initTheme() {
+    const savedTheme = localStorage.getItem('theme');
+    
+    if (savedTheme) {
+      // Use saved preference
+      document.documentElement.setAttribute('data-theme', savedTheme);
+    } else {
+      // Check system preference
+      const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+      if (prefersDark) {
+        document.documentElement.setAttribute('data-theme', 'dark');
+      }
+    }
+    
+    // Listen for system theme changes (only if no saved preference)
+    window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (e) => {
+      if (!localStorage.getItem('theme')) {
+        document.documentElement.setAttribute('data-theme', e.matches ? 'dark' : 'light');
+      }
+    });
+  }
+
+  /**
+   * Initialize theme toggle button
+   */
+  initThemeToggle() {
+    const themeToggle = document.getElementById('theme-toggle');
+    
+    if (themeToggle) {
+      themeToggle.addEventListener('click', () => this.toggleTheme());
+    }
+  }
+
+  /**
+   * Toggle between light and dark themes
+   */
+  toggleTheme() {
+    const currentTheme = document.documentElement.getAttribute('data-theme');
+    const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+    
+    document.documentElement.setAttribute('data-theme', newTheme);
+    localStorage.setItem('theme', newTheme);
+    
+    this.showToast(`Switched to ${newTheme} mode`, 'success');
+  }
+
+  /**
+   * Get the current theme
+   * @returns {string} 'light' or 'dark'
+   */
+  getTheme() {
+    return document.documentElement.getAttribute('data-theme') || 'light';
   }
 
   /**

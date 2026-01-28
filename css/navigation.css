@@ -323,3 +323,18 @@
   display: flex;
   gap: var(--space-sm);
 }
+
+/* Theme Toggle Button - use .btn-icon class */
+
+/* Show/hide sun/moon icons based on theme */
+.theme-icon-dark {
+  display: none;
+}
+
+[data-theme="dark"] .theme-icon-light {
+  display: none;
+}
+
+[data-theme="dark"] .theme-icon-dark {
+  display: block;
+}

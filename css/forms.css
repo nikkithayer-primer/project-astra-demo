@@ -53,26 +53,7 @@
   min-width: 90px;
 }
 
-.clear-filter-btn {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 24px;
-  height: 24px;
-  padding: 0;
-  background: transparent;
-  border: 1px solid transparent;
-  border-radius: var(--border-radius);
-  color: var(--text-muted);
-  cursor: pointer;
-  transition: all 0.15s ease;
-}
-
-.clear-filter-btn:hover {
-  background: var(--bg-hover);
-  border-color: var(--border-color);
-  color: var(--text-primary);
-}
+/* Clear filter button - use .btn-icon class */
 
 /* Time Range Filter Component Styles */
 .time-range-filter {

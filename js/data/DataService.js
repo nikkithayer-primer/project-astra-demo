@@ -2377,6 +2377,7 @@ export const DataService = {
    * @param {string} query - Search query string
    * @param {Object} options - Optional search options
    * @param {string[]} options.repositoryIds - Filter documents to these repositories (empty = all)
+   * @param {Object} options.timeRange - Filter documents to this date range { start: Date, end: Date }
    * @returns {Object} Search results by entity type
    */
   search: (query, options = {}) => {
@@ -2396,7 +2397,7 @@ export const DataService = {
       return results;
     }
 
-    const { repositoryIds = [] } = options;
+    const { repositoryIds = [], timeRange = null } = options;
 
     try {
       const lowerQuery = query.toLowerCase();
@@ -2408,6 +2409,15 @@ export const DataService = {
       // Apply repository filter if specified
       if (repositoryIds.length > 0) {
         documents = documents.filter(doc => repositoryIds.includes(doc.repositoryId));
+      }
+      
+      // Apply time range filter if specified
+      if (timeRange && timeRange.start && timeRange.end) {
+        documents = documents.filter(doc => {
+          if (!doc.publishedDate) return false;
+          const docDate = new Date(doc.publishedDate);
+          return docDate >= timeRange.start && docDate <= timeRange.end;
+        });
       }
       
       results.documents = documents.filter(doc => {

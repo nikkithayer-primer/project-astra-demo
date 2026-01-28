@@ -507,9 +507,7 @@ export class DocumentTable extends BaseComponent {
     const docType = doc.documentType || 'news_article';
     const typeInfo = getDocumentTypeInfo(docType);
     return `
-      <td class="doc-col-documentType">
-        <span class="doc-type-badge doc-type-badge-${docType.replace('_', '-')}">${typeInfo.label}</span>
-      </td>
+      <td class="doc-col-documentType">${typeInfo.label}</td>
     `;
   }
 
@@ -598,7 +596,13 @@ export class DocumentTable extends BaseComponent {
       return;
     }
 
-    const columns = this.options.columns.filter(col => COLUMN_CONFIG[col]);
+    // Filter out classification column if showClassification setting is disabled
+    const showClassification = this.shouldShowClassification();
+    const columns = this.options.columns.filter(col => {
+      if (!COLUMN_CONFIG[col]) return false;
+      if (col === 'classification' && !showClassification) return false;
+      return true;
+    });
 
     // Sort and limit documents
     const sortedDocs = this.sortDocuments(this.data.documents);
@@ -887,7 +891,7 @@ export class DocumentTable extends BaseComponent {
     sidebarHeader.className = 'document-viewer-sidebar-header';
     sidebarHeader.innerHTML = `
       <span class="document-viewer-sidebar-title">Documents (${documents.length})</span>
-      <button class="document-viewer-close-btn" title="Close viewer">
+      <button class="btn-icon document-viewer-close-btn" title="Close viewer">
         <svg viewBox="0 0 16 16" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2">
           <path d="M4 4l8 8M12 4l-8 8"/>
         </svg>

@@ -5,6 +5,7 @@
 
 import { BaseView } from './BaseView.js';
 import { DataService } from '../data/DataService.js';
+import { dataStore } from '../data/DataStore.js';
 import { NarrativeList } from '../components/NarrativeList.js';
 import { TopicList } from '../components/TopicList.js';
 import { Timeline } from '../components/Timeline.js';
@@ -315,7 +316,7 @@ export class MonitorsView extends BaseView {
       // Build actions HTML with visualization dropdown, edit button, and description toggle
       const descToggleId = `desc-toggle-${monitor.id}`;
       const editBtnHtml = `
-        <button class="monitor-edit-btn" data-monitor-id="${monitor.id}" title="Edit monitor">
+        <button class="btn-icon monitor-edit-btn" data-monitor-id="${monitor.id}" title="Edit monitor">
           <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5">
             <path d="M11.5 2.5l2 2M2 11l-.5 3.5L5 14l9-9-2-2-10 10z"/>
           </svg>
@@ -924,8 +925,17 @@ export class MonitorsView extends BaseView {
       .sort((a, b) => new Date(b.publishedDate) - new Date(a.publishedDate));
     
     if (documents.length > 0) {
+      // Check if classification should be shown
+      const settings = dataStore.getSettings();
+      const showClassification = settings.showClassification;
+      
+      // Build columns based on classification setting
+      const columns = showClassification
+        ? ['classification', 'publisherName', 'title', 'excerpt', 'publishedDate']
+        : ['publisherName', 'title', 'excerpt', 'publishedDate'];
+      
       const docTable = new DocumentTable(container, {
-        columns: ['publisherName', 'title', 'excerpt', 'publishedDate'],
+        columns: columns,
         maxItems: 8,
         enableViewerMode: true,
         onDocumentClick: (doc) => {

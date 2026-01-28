@@ -127,7 +127,7 @@ export class DashboardView extends BaseView {
             <div class="time-filter-wrapper">
               <div id="time-range-filter"></div>
               <span id="time-range-label" class="time-range-label">All Time</span>
-              <button id="clear-time-filter" class="clear-filter-btn" title="Clear time filter">
+              <button id="clear-time-filter" class="btn-icon clear-filter-btn" title="Clear time filter">
                 <svg viewBox="0 0 16 16" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2">
                   <path d="M4 4l8 8M12 4l-8 8"/>
                 </svg>
@@ -193,7 +193,7 @@ export class DashboardView extends BaseView {
             noPadding: true, 
             bodyClass: 'card-body-scrollable',
             actions: `
-              <button class="card-action-btn topic-bullets-toggle" title="Toggle bullet points" data-target="dashboard-topic-list">
+              <button class="btn-icon card-action-btn topic-bullets-toggle" title="Toggle bullet points" data-target="dashboard-topic-list">
                 <svg viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.5">
                   <path d="M5 4h9M5 8h9M5 12h9"/>
                   <circle cx="2" cy="4" r="1" fill="currentColor"/>

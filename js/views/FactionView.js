@@ -5,6 +5,7 @@
 
 import { BaseView } from './BaseView.js';
 import { DataService } from '../data/DataService.js';
+import { dataStore } from '../data/DataStore.js';
 import { PageHeader } from '../utils/PageHeader.js';
 import { CardBuilder } from '../utils/CardBuilder.js';
 import { VennDiagram } from '../components/VennDiagram.js';
@@ -35,7 +36,7 @@ const DOCUMENT_AVAILABLE_COLUMNS = {
   topics: 'Topics'
 };
 
-const DOCUMENT_DEFAULT_COLUMNS = ['publisherName', 'publisherType', 'title', 'publishedDate'];
+const DOCUMENT_DEFAULT_COLUMNS = ['classification', 'publisherName', 'publisherType', 'title', 'publishedDate'];
 
 export class FactionView extends BaseView {
   constructor(container, factionId, options = {}) {
@@ -204,15 +205,30 @@ export class FactionView extends BaseView {
     // Documents Tab: Only initialize document table with column filter
     if (this.isDocumentsTab()) {
       if (documents.length > 0) {
+        // Check if classification should be shown
+        const settings = dataStore.getSettings();
+        const showClassification = settings.showClassification;
+        
+        // Filter available columns based on settings
+        const availableColumns = { ...DOCUMENT_AVAILABLE_COLUMNS };
+        if (!showClassification) {
+          delete availableColumns.classification;
+        }
+        
+        // Filter default columns based on settings
+        const defaultColumns = showClassification 
+          ? DOCUMENT_DEFAULT_COLUMNS 
+          : DOCUMENT_DEFAULT_COLUMNS.filter(col => col !== 'classification');
+        
         // Initialize selected columns (start with defaults)
-        this._selectedDocColumns = [...DOCUMENT_DEFAULT_COLUMNS];
+        this._selectedDocColumns = [...defaultColumns];
         
         // Initialize column filter
         const filterContainer = document.getElementById('faction-docs-column-filter');
         if (filterContainer) {
           this.components.columnFilter = new ColumnFilter('faction-docs-column-filter', {
-            availableColumns: DOCUMENT_AVAILABLE_COLUMNS,
-            defaultColumns: DOCUMENT_DEFAULT_COLUMNS,
+            availableColumns: availableColumns,
+            defaultColumns: defaultColumns,
             requiredColumns: ['title'],
             onChange: (columns) => {
               this._selectedDocColumns = columns;

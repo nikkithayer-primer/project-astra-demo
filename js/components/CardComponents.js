@@ -7,6 +7,7 @@
 import { CardBuilder } from '../utils/CardBuilder.js';
 import { DragDropManager } from '../utils/DragDropManager.js';
 import { DataService } from '../data/DataService.js';
+import { dataStore } from '../data/DataStore.js';
 import { NetworkGraph } from './NetworkGraph.js';
 import { NarrativeList } from './NarrativeList.js';
 import { DocumentTable } from './DocumentTable.js';
@@ -36,7 +37,7 @@ const DOCUMENT_AVAILABLE_COLUMNS = {
   topics: 'Topics'
 };
 
-const DOCUMENT_DEFAULT_COLUMNS = ['publisherName', 'publisherType', 'title', 'publishedDate'];
+const DOCUMENT_DEFAULT_COLUMNS = ['classification', 'publisherName', 'publisherType', 'title', 'publishedDate'];
 
 /**
  * Base class for card components
@@ -372,29 +373,44 @@ export class DocumentTableCard extends BaseCardComponent {
   initialize() {
     if (!this.hasData()) return null;
 
+    // Check if classification should be shown
+    const settings = dataStore.getSettings();
+    const showClassification = settings.showClassification;
+    
+    // Filter available columns based on settings
+    let availableColumns = { ...this.availableColumns };
+    if (!showClassification) {
+      delete availableColumns.classification;
+    }
+    
+    // Filter columns based on settings
+    let columns = showClassification 
+      ? this.columns 
+      : this.columns.filter(col => col !== 'classification');
+
     // Initialize column filter if enabled
     if (this.showColumnFilter) {
       const filterContainer = document.getElementById(this.columnFilterId);
       if (filterContainer) {
         this.columnFilter = new ColumnFilter(this.columnFilterId, {
-          availableColumns: this.availableColumns,
-          defaultColumns: this.columns,
+          availableColumns: availableColumns,
+          defaultColumns: columns,
           requiredColumns: ['title'],
-          onChange: (columns) => {
-            this.columns = columns;
+          onChange: (cols) => {
+            this.columns = cols;
             if (this.component) {
-              this.component.setColumns(columns);
+              this.component.setColumns(cols);
             }
           }
         });
-        this.columnFilter.setSelectedColumns(this.columns);
+        this.columnFilter.setSelectedColumns(columns);
         this.columnFilter.render();
       }
     }
 
     // Initialize document table
     this.component = new DocumentTable(this.containerId, {
-      columns: this.columns,
+      columns: columns,
       maxItems: this.maxItems,
       enableViewerMode: this.enableViewerMode,
       onDocumentClick: (doc) => {

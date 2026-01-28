@@ -42,19 +42,41 @@
 }
 
 .btn-primary {
-  background: var(--accent-muted);
-  border-color: var(--accent-secondary);
-  color: var(--text-primary);
+  background: var(--accent-primary);
+  border-color: var(--accent-primary);
+  color: white;
 }
 
 .btn-primary:hover {
-  background: var(--accent-secondary);
+  background: var(--accent-hover);
+  border-color: var(--accent-hover);
 }
 
 .btn-icon {
-  padding: var(--space-sm);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  padding: 0;
   background: transparent;
-  border: none;
+  border: 1px solid transparent;
+  border-radius: var(--border-radius);
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: background 0.15s, border-color 0.15s, color 0.15s;
+  flex-shrink: 0;
+}
+
+.btn-icon:hover {
+  background: var(--bg-hover);
+  color: var(--text-primary);
+}
+
+.btn-icon.active {
+  background: var(--accent-muted);
+  border-color: var(--accent-secondary);
+  color: var(--text-primary);
 }
 
 .btn-ghost {
@@ -77,6 +99,17 @@
 .btn-secondary:hover {
   background: var(--bg-hover);
   color: var(--text-primary);
+}
+
+.btn-danger {
+  background: var(--accent-danger);
+  border-color: var(--accent-danger);
+  color: white;
+}
+
+.btn-danger:hover {
+  background: #b91c1c;
+  border-color: #b91c1c;
 }
 
 /* Cards */
@@ -799,40 +832,6 @@
    Document Type Styles
    ============================================ */
 
-/* Document Type Badge */
-.doc-type-badge {
-  display: inline-flex;
-  align-items: center;
-  gap: 4px;
-  font-size: 10px;
-  font-weight: 500;
-  padding: 2px 8px;
-  border-radius: 10px;
-  background: var(--bg-tertiary);
-  color: var(--text-secondary);
-  text-transform: uppercase;
-  letter-spacing: 0.3px;
-}
-
-.doc-type-badge-social {
-  background: rgba(0, 0, 0, 0.1);
-  color: var(--text-secondary);
-}
-
-.doc-type-badge-tiktok {
-  background: rgba(0, 242, 234, 0.15);
-  color: #00a8a1;
-}
-
-.doc-type-badge-news {
-  background: rgba(59, 130, 246, 0.15);
-  color: #3b82f6;
-}
-
-.doc-type-badge-internal {
-  background: rgba(107, 114, 128, 0.15);
-  color: #6b7280;
-}
 
 /* ============================================
    Social Post Styles
@@ -1637,23 +1636,10 @@
   left: 14px;
 }
 
+/* Search clear button - extends .btn-icon, adds positioning */
 .search-clear-btn {
   position: absolute;
   right: 8px;
-  padding: var(--space-xs);
-  background: transparent;
-  border: none;
-  color: var(--text-muted);
-  cursor: pointer;
-  border-radius: var(--border-radius);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.search-clear-btn:hover {
-  background: var(--bg-hover);
-  color: var(--text-primary);
 }
 
 .search-clear-btn.hidden {
@@ -3661,35 +3647,7 @@
   gap: var(--space-xs);
 }
 
-/* Card Action Buttons (description toggle, etc.) */
-.card-action-btn {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 24px;
-  height: 24px;
-  padding: 0;
-  background: transparent;
-  border: 1px solid transparent;
-  border-radius: var(--border-radius);
-  color: var(--text-muted);
-  cursor: pointer;
-  transition: background 0.1s, border-color 0.1s, color 0.1s;
-  flex-shrink: 0;
-}
-
-.card-action-btn:hover {
-  background: var(--bg-hover);
-  border-color: var(--border-subtle);
-  color: var(--text-secondary);
-}
-
-.card-action-btn.active {
-  background: var(--accent-muted);
-  border-color: var(--accent-secondary);
-  color: var(--text-primary);
-}
-
+/* Card Action Buttons - extends .btn-icon */
 .card-action-btn svg {
   width: 14px;
   height: 14px;
@@ -4375,26 +4333,7 @@
   color: var(--text-secondary);
 }
 
-.document-viewer-close-btn {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 28px;
-  height: 28px;
-  padding: 0;
-  background: transparent;
-  border: 1px solid transparent;
-  border-radius: var(--border-radius);
-  color: var(--text-muted);
-  cursor: pointer;
-  transition: background 0.15s, border-color 0.15s, color 0.15s;
-}
-
-.document-viewer-close-btn:hover {
-  background: var(--bg-hover);
-  border-color: var(--border-subtle);
-  color: var(--text-primary);
-}
+/* Document viewer close button - use .btn-icon class */
 
 /* Sidebar filter bar */
 .document-viewer-sidebar-filters {

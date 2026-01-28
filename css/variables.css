@@ -20,6 +20,7 @@
   
   --accent-primary: #3169ED;
   --accent-secondary: #2855C5;
+  --accent-hover: #1E4AC0;
   --accent-muted: #E8EEFF;
   --accent-success: #16a34a;
   --accent-danger: #dc2626;
@@ -59,4 +60,39 @@
   --navbar-height: 48px;
   --header-height: 32px;
   --border-radius: 3px;
+}
+
+/* Dark mode palette */
+[data-theme="dark"] {
+  --bg-primary: #0D1117;
+  --bg-secondary: #161B22;
+  --bg-tertiary: #21262D;
+  --bg-hover: #30363D;
+  
+  --border-color: #30363D;
+  --border-subtle: #21262D;
+  
+  --text-strong: #F0F6FC;
+  --text-primary: #C9D1D9;
+  --text-secondary: #8B949E;
+  --text-muted: #6E7681;
+  --chart-label: #8B949E;
+  --chart-axis: #30363D;
+  
+  --accent-primary: #58A6FF;
+  --accent-secondary: #388BFD;
+  --accent-hover: #2D7BE0;
+  --accent-muted: #1F3D5C;
+  --accent-success: #3FB950;
+  --accent-danger: #F85149;
+  --accent-warning: #D29922;
+  
+  /* Sentiment colors (adjusted for dark mode) */
+  --sentiment-positive: #3FB950;
+  --sentiment-negative: #F85149;
+  
+  --status-high: #F85149;
+  --status-medium: #D29922;
+  --status-low: #3FB950;
+  --status-neutral: #8B949E;
 }

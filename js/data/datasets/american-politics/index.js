@@ -78,12 +78,4 @@ export const mockData = {
   workspaces
 };
 
-/**
- * Initialize the data store with mock data
- */
-export function initializeMockData(dataStore) {
-  dataStore.data = { ...mockData };
-  dataStore.save();
-}
-
 export default mockData;
