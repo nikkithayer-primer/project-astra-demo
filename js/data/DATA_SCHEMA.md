@@ -135,11 +135,13 @@ Groups pushing specific narratives or viewpoints.
 {
   id: string,              // Required. Prefix: 'faction-'
   name: string,            // Required. Faction name
+  description: string,     // Optional. Detailed description
   color: string,           // Optional. Hex color (auto-generated)
   relatedFactionIds: string[], // Optional. FKs to related Factions
   memberCount: number,     // Optional. Estimated members
   affiliatedPersonIds: string[],       // Optional. FKs to Person
   affiliatedOrganizationIds: string[], // Optional. FKs to Organization
+  documentIds: string[],   // Optional. FKs to Document (source of truth for volume)
   createdAt: datetime,
   updatedAt: datetime
 }
@@ -167,11 +169,13 @@ Geographic locations referenced in narratives.
 {
   id: string,              // Required. Prefix: 'loc-'
   name: string,            // Required. Location name
+  description: string,     // Optional. Detailed description
   type: enum,              // Optional. 'country' | 'region' | 'city' | 'facility' | 'virtual' | 'general'
   coordinates: {           // Optional.
     lat: number,
     lng: number
   },
+  documentIds: string[],   // Optional. FKs to Document (source of truth for volume)
   createdAt: datetime,
   updatedAt: datetime
 }
@@ -185,12 +189,14 @@ Significant events referenced by narratives.
 {
   id: string,              // Required. Prefix: 'event-'
   text: string,            // Required. Event title/description
+  description: string,     // Optional. Detailed description
   date: datetime,          // Required. ISO 8601 timestamp
   parentEventId: string,   // Optional. FK to parent Event (for sub-events)
   subEventIds: string[],   // Auto-managed. FKs to child Events
   locationId: string,      // Optional. FK to Location
   personIds: string[],     // Optional. FKs to Person
   organizationIds: string[], // Optional. FKs to Organization
+  documentIds: string[],   // Optional. FKs to Document (source of truth for volume)
   createdAt: datetime,
   updatedAt: datetime
 }
@@ -204,6 +210,7 @@ Individuals mentioned in narratives.
 {
   id: string,              // Required. Prefix: 'person-'
   name: string,            // Required. Person's name
+  description: string,     // Optional. Detailed description/bio
   type: enum,              // Optional. 'politician' | 'executive' | 'government_official' | 
                            //           'judge' | 'analyst' | 'journalist' | 'activist' | 
                            //           'labor_leader' | 'civilian' | 'employee' | 'legal_professional' | 'general'
@@ -229,6 +236,7 @@ Organizations mentioned in narratives.
 {
   id: string,              // Required. Prefix: 'org-'
   name: string,            // Required. Organization name
+  description: string,     // Optional. Detailed description
   type: enum,              // Optional. 'corporation' | 'government' | 'political' | 'judicial' | 
                            //           'nonprofit' | 'union' | 'media' | 'research' | 'religious' | 
                            //           'financial' | 'law_enforcement' | 'military' | 'general'
@@ -256,7 +264,8 @@ Aggregated story clusters from documents.
 {
   id: string,              // Required. Prefix: 'topic-'
   headline: string,        // Required. Main headline
-  bulletPoints: string[],  // Optional. Key summary points
+  description: string,     // Optional. Detailed description/summary
+  bulletPoints: string[],  // Optional. Key summary points (one-sentence debriefs)
   documentIds: string[],   // Optional. FKs to Document
   startDate: string,       // Optional. ISO date 'YYYY-MM-DD'
   endDate: string,         // Optional. ISO date (null if ongoing)
@@ -462,14 +471,21 @@ Generated when monitor conditions are met.
   type: enum,              // Required. 'volume_spike' | 'new_event' | 'new_narrative' | 
                            //           'sentiment_shift' | 'faction_engagement'
   title: string,           // Required. Alert title
-  description: string,     // Optional. Alert details
-  severity: enum,          // Required. 'critical' | 'high' | 'medium' | 'low'
+  description: string,     // Optional. Alert details (supports entity linking)
   triggeredAt: datetime,   // Required. When alert was generated
-  acknowledged: boolean,   // Required. Has user acknowledged?
-  relatedNarrativeIds: string[],
-  relatedThemeIds: string[],
-  relatedEventIds: string[],
-  relatedSubEventIds: string[],
+  
+  // Related intelligence entities
+  relatedNarrativeIds: string[],  // FKs to Narrative
+  relatedThemeIds: string[],      // FKs to Theme
+  relatedEventIds: string[],      // FKs to Event
+  relatedSubEventIds: string[],   // FKs to sub-events
+  
+  // Entity references for linking in description
+  relatedPersonIds: string[],        // FKs to Person - for entity linking
+  relatedOrganizationIds: string[],  // FKs to Organization - for entity linking
+  relatedFactionIds: string[],       // FKs to Faction - for entity linking
+  relatedLocationIds: string[],      // FKs to Location - for entity linking
+  
   metadata: object         // Type-specific data (threshold, actualValue, etc.)
 }
 ```

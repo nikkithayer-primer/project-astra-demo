@@ -13,6 +13,9 @@ import {
   NarrativeListCard,
   SentimentChartCard,
   VennDiagramCard,
+  TimelineVolumeCompositeCard,
+  TopicListCard,
+  MapCard,
   DocumentTableCard
 } from '../components/CardComponents.js';
 
@@ -61,6 +64,10 @@ export class FactionView extends BaseView {
       title: faction.name,
       iconColor: faction.color,
       subtitle: faction.memberCount ? `${this.formatNumber(faction.memberCount)} members` : '',
+      description: faction.description,
+      descriptionLink: faction.description 
+        ? `<a href="#" class="btn btn-small btn-secondary source-link" data-source-type="faction" data-source-id="${faction.id}">View source</a>` 
+        : '',
       tabs: tabsConfig,
       activeTab: activeTab
     });
@@ -79,7 +86,7 @@ export class FactionView extends BaseView {
     const contentGrid = this.container.querySelector('.content-grid');
     if (contentGrid) {
       const tabSuffix = this.isDocumentsTab() ? '-docs' : '';
-      initAllCardToggles(contentGrid, `faction-${this.factionId}${tabSuffix}`, { 0: 'half', 1: 'half' });
+      initAllCardToggles(contentGrid, `faction-${this.factionId}${tabSuffix}`);
     }
 
     // Initialize all card components
@@ -122,10 +129,74 @@ export class FactionView extends BaseView {
     const personIds = affiliatedPersons.map(p => p.id);
     const orgIds = affiliatedOrgs.map(o => o.id);
 
+    // Prepare publisher volume data for the composite chart (by source)
+    const publishers = DataService.getPublishers ? DataService.getPublishers() : [];
+    const dateMap = new Map();
+    const publisherIds = new Set();
+    
+    documents.forEach(doc => {
+      if (!doc.publishedDate) return;
+      const date = doc.publishedDate.split('T')[0];
+      if (!dateMap.has(date)) {
+        dateMap.set(date, {});
+      }
+      if (doc.publisherId) {
+        publisherIds.add(doc.publisherId);
+        const dayData = dateMap.get(date);
+        dayData[doc.publisherId] = (dayData[doc.publisherId] || 0) + 1;
+      }
+    });
+
+    const dates = [...dateMap.keys()].sort();
+    const relevantPublishers = [...publisherIds].map(id => publishers.find(p => p.id === id)).filter(Boolean);
+    const series = relevantPublishers.map(publisher =>
+      dates.map(date => (dateMap.get(date) || {})[publisher.id] || 0)
+    );
+
+    const publisherData = dates.length > 0 ? { dates, series, publishers: relevantPublishers } : null;
+    const hasPublisherData = publisherData && publisherData.dates.length > 0;
+
+    // Get events from narratives related to this faction
+    const allEvents = narratives.flatMap(n => {
+      const eventIds = n.eventIds || [];
+      return eventIds.map(eid => DataService.getEvent(eid)).filter(Boolean)
+        .flatMap(e => [e, ...DataService.getSubEventsForEvent(e.id)]);
+    });
+
+    const hasVolumeTimeline = hasPublisherData || allEvents.length > 0;
+
+    // Get topics related to this faction (topics that share documents)
+    const factionDocIds = new Set(documents.map(d => d.id));
+    const allTopics = DataService.getTopics ? DataService.getTopics() : [];
+    const topics = allTopics.filter(topic =>
+      (topic.documentIds || []).some(dId => factionDocIds.has(dId))
+    );
+
+    // Get locations from documents and narratives
+    const locationIds = new Set();
+    documents.forEach(doc => {
+      (doc.locationIds || []).forEach(lid => locationIds.add(lid));
+    });
+    narratives.forEach(n => {
+      (n.locationIds || []).forEach(lid => locationIds.add(lid));
+    });
+    const locations = [...locationIds].map(lid => DataService.getLocation(lid)).filter(Boolean);
+
+    // Build map locations including events
+    const mapLocations = [
+      ...locations.map(l => ({ ...l, isEvent: false })),
+      ...allEvents.filter(e => e.locationId).map(e => {
+        const loc = DataService.getLocation(e.locationId);
+        return loc ? { ...loc, isEvent: true, eventText: e.text } : null;
+      }).filter(Boolean)
+    ];
+
     return {
       relatedFactions, factionOverlaps, narratives, documents,
       affiliatedPersons, affiliatedOrgs, personsWithSentiment,
-      orgsWithSentiment, hasNetwork, allFactions, personIds, orgIds
+      orgsWithSentiment, hasNetwork, allFactions, personIds, orgIds,
+      publisherData, hasPublisherData, allEvents, hasVolumeTimeline,
+      topics, locations, mapLocations
     };
   }
 
@@ -136,7 +207,63 @@ export class FactionView extends BaseView {
     // Reset card manager for fresh setup
     this.cardManager = new CardManager(this);
 
-    // Related Factions Venn Diagram (half-width)
+    // 1. Volume & Events Chart (full-width)
+    if (data.hasVolumeTimeline) {
+      this.cardManager.add(new TimelineVolumeCompositeCard(this, 'faction-volume-events', {
+        title: 'Volume & Events',
+        publisherData: data.publisherData,
+        events: data.allEvents,
+        fullWidth: true,
+        height: 450,
+        volumeHeight: 180,
+        timelineHeight: 180,
+        showViewToggle: false
+      }));
+    }
+
+    // 2. Sentiment Toward People (half-width)
+    if (data.personsWithSentiment.length > 0) {
+      this.cardManager.add(new SentimentChartCard(this, 'faction-person-sentiment', {
+        title: 'Faction Sentiment for People',
+        factions: data.personsWithSentiment,
+        halfWidth: true,
+        clickRoute: 'person'
+      }));
+    }
+
+    // 3. Sentiment Toward Organizations (half-width)
+    if (data.orgsWithSentiment.length > 0) {
+      this.cardManager.add(new SentimentChartCard(this, 'faction-org-sentiment', {
+        title: 'Faction Sentiment for Orgs',
+        factions: data.orgsWithSentiment,
+        halfWidth: true,
+        clickRoute: 'organization'
+      }));
+    }
+
+    // 4. Narratives List (full-width)
+    if (data.narratives.length > 0) {
+      this.cardManager.add(new NarrativeListCard(this, 'faction-narratives', {
+        title: 'Narratives',
+        narratives: data.narratives,
+        showCount: true,
+        fullWidth: true,
+        maxItems: 8
+      }));
+    }
+
+    // 5. Related People & Orgs Network (half-width)
+    if (data.hasNetwork) {
+      this.cardManager.add(new NetworkGraphCard(this, 'faction-network', {
+        title: 'Related People & Orgs',
+        personIds: data.personIds,
+        orgIds: data.orgIds,
+        halfWidth: true,
+        height: 350
+      }));
+    }
+
+    // 6. Related Factions Venn Diagram (half-width)
     if (data.allFactions.length >= 1) {
       this.cardManager.add(new VennDiagramCard(this, 'faction-venn', {
         title: 'Related Factions',
@@ -148,44 +275,23 @@ export class FactionView extends BaseView {
       }));
     }
 
-    // Affiliated Entities Network (half-width)
-    if (data.hasNetwork) {
-      this.cardManager.add(new NetworkGraphCard(this, 'faction-network', {
-        title: 'Affiliated Entities',
-        personIds: data.personIds,
-        orgIds: data.orgIds,
+    // 7. Topics (half-width)
+    if (data.topics.length > 0) {
+      this.cardManager.add(new TopicListCard(this, 'faction-topics', {
+        title: 'Topics',
+        topics: data.topics,
+        halfWidth: true,
+        showCount: true
+      }));
+    }
+
+    // 8. Locations Map (half-width)
+    if (data.mapLocations.length > 0) {
+      this.cardManager.add(new MapCard(this, 'faction-map', {
+        title: 'Locations',
+        locations: data.mapLocations,
         halfWidth: true,
         height: 350
-      }));
-    }
-
-    // Narratives List (full-width)
-    if (data.narratives.length > 0) {
-      this.cardManager.add(new NarrativeListCard(this, 'faction-narratives', {
-        title: 'Narratives',
-        narratives: data.narratives,
-        showCount: true,
-        maxItems: 8
-      }));
-    }
-
-    // Sentiment Toward People (half-width)
-    if (data.personsWithSentiment.length > 0) {
-      this.cardManager.add(new SentimentChartCard(this, 'faction-person-sentiment', {
-        title: 'Sentiment Toward People',
-        factions: data.personsWithSentiment,
-        halfWidth: true,
-        clickRoute: 'person'
-      }));
-    }
-
-    // Sentiment Toward Organizations (half-width)
-    if (data.orgsWithSentiment.length > 0) {
-      this.cardManager.add(new SentimentChartCard(this, 'faction-org-sentiment', {
-        title: 'Sentiment Toward Organizations',
-        factions: data.orgsWithSentiment,
-        halfWidth: true,
-        clickRoute: 'organization'
       }));
     }
   }

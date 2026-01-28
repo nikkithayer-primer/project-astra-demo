@@ -5,10 +5,12 @@
 
 import { dataStore } from './data/DataStore.js';
 import { DataService } from './data/DataService.js';
+import { getMonitorEditor } from './components/MonitorEditorModal.js';
 import { mockData as americanPoliticsData, datasetId as americanPoliticsId, datasetName as americanPoliticsName } from './data/datasets/american-politics/index.js';
 import { mockData as chinaSemiconductorData, datasetId as chinaSemiconductorId, datasetName as chinaSemiconductorName } from './data/datasets/china-semiconductor/index.js';
 import { mockData as walmartBrandData, datasetId as walmartBrandId, datasetName as walmartBrandName } from './data/datasets/walmart-brand/index.js';
 import { Router } from './router.js';
+import { getSourceViewer } from './components/SourceViewerModal.js';
 
 // Dataset registry
 const DATASETS = {
@@ -59,11 +61,17 @@ class App {
     // Initialize dropdown navigation
     this.initDropdowns();
     
+    // Populate filters dropdown
+    this.populateFiltersDropdown();
+    
     // Initialize settings modal
     this.initSettingsModal();
     
     // Initialize theme toggle
     this.initThemeToggle();
+    
+    // Initialize delegated source link handler
+    this.initSourceLinkHandler();
     
     // Update navigation based on settings
     this.updateNavigationForSettings();
@@ -85,6 +93,8 @@ class App {
       }
       // Update navigation when settings change
       this.updateNavigationForSettings();
+      // Refresh filters dropdown
+      this.populateFiltersDropdown();
     });
   }
 
@@ -456,6 +466,100 @@ class App {
       chatSend.addEventListener('click', () => this.sendChatMessage());
     }
 
+    // Initialize chat panel resize functionality
+    this.initChatResize();
+
+    // Restore saved chat width
+    const savedWidth = localStorage.getItem('chatPanelWidth');
+    if (savedWidth) {
+      document.documentElement.style.setProperty('--chat-width', `${savedWidth}px`);
+    }
+  }
+
+  /**
+   * Initialize chat panel resize functionality
+   */
+  initChatResize() {
+    const chatPanel = document.getElementById('chat-panel');
+    const resizeHandle = document.getElementById('chat-resize-handle');
+    
+    if (!chatPanel || !resizeHandle) return;
+    
+    let isResizing = false;
+    let startX, startWidth;
+    
+    const minWidth = 350;
+    const getMaxWidth = () => window.innerWidth * 0.5; // 50vw
+    
+    resizeHandle.addEventListener('mousedown', (e) => {
+      isResizing = true;
+      startX = e.clientX;
+      startWidth = chatPanel.offsetWidth;
+      resizeHandle.classList.add('dragging');
+      chatPanel.classList.add('resizing');
+      document.body.classList.add('chat-resizing');
+      document.body.style.cursor = 'ew-resize';
+      document.body.style.userSelect = 'none';
+      e.preventDefault();
+    });
+    
+    document.addEventListener('mousemove', (e) => {
+      if (!isResizing) return;
+      
+      // Calculate new width (dragging left increases width)
+      const newWidth = startWidth - (e.clientX - startX);
+      const clampedWidth = Math.max(minWidth, Math.min(getMaxWidth(), newWidth));
+      
+      // Update CSS variable for both panel and content wrapper
+      document.documentElement.style.setProperty('--chat-width', `${clampedWidth}px`);
+    });
+    
+    document.addEventListener('mouseup', () => {
+      if (isResizing) {
+        isResizing = false;
+        resizeHandle.classList.remove('dragging');
+        chatPanel.classList.remove('resizing');
+        document.body.classList.remove('chat-resizing');
+        document.body.style.cursor = '';
+        document.body.style.userSelect = '';
+        
+        // Save width to localStorage
+        const currentWidth = chatPanel.offsetWidth;
+        localStorage.setItem('chatPanelWidth', currentWidth);
+      }
+    });
+
+    // Touch support for mobile
+    resizeHandle.addEventListener('touchstart', (e) => {
+      isResizing = true;
+      startX = e.touches[0].clientX;
+      startWidth = chatPanel.offsetWidth;
+      resizeHandle.classList.add('dragging');
+      chatPanel.classList.add('resizing');
+      document.body.classList.add('chat-resizing');
+      e.preventDefault();
+    }, { passive: false });
+    
+    document.addEventListener('touchmove', (e) => {
+      if (!isResizing) return;
+      
+      const newWidth = startWidth - (e.touches[0].clientX - startX);
+      const clampedWidth = Math.max(minWidth, Math.min(getMaxWidth(), newWidth));
+      
+      document.documentElement.style.setProperty('--chat-width', `${clampedWidth}px`);
+    }, { passive: true });
+    
+    document.addEventListener('touchend', () => {
+      if (isResizing) {
+        isResizing = false;
+        resizeHandle.classList.remove('dragging');
+        chatPanel.classList.remove('resizing');
+        document.body.classList.remove('chat-resizing');
+        
+        const currentWidth = chatPanel.offsetWidth;
+        localStorage.setItem('chatPanelWidth', currentWidth);
+      }
+    });
   }
 
   /**
@@ -515,6 +619,86 @@ class App {
   }
 
   /**
+   * Populate the filters dropdown with search filters
+   */
+  populateFiltersDropdown() {
+    const menu = document.getElementById('filters-dropdown-menu');
+    if (!menu) return;
+
+    const filters = DataService.getSearchFilters();
+    
+    if (filters.length === 0) {
+      menu.innerHTML = `
+        <div class="dropdown-empty-state">
+          <span class="text-muted">No saved filters</span>
+          <p class="text-muted text-small">Create filters from the Monitor editor</p>
+        </div>
+      `;
+      return;
+    }
+
+    const filterLinks = filters.map(filter => {
+      const scope = filter.scope || {};
+      const itemCount = (scope.personIds?.length || 0) + 
+                        (scope.organizationIds?.length || 0) + 
+                        (scope.factionIds?.length || 0) + 
+                        (scope.locationIds?.length || 0) + 
+                        (scope.eventIds?.length || 0) + 
+                        (scope.keywords?.length || 0);
+      
+      return `
+        <div class="filter-dropdown-item" data-filter-id="${filter.id}">
+          <div class="filter-dropdown-info">
+            <span class="filter-dropdown-name">${this.escapeHtml(filter.name)}</span>
+            <span class="filter-dropdown-count">${itemCount} item${itemCount !== 1 ? 's' : ''}</span>
+          </div>
+        </div>
+      `;
+    }).join('');
+
+    menu.innerHTML = filterLinks;
+
+    // Add click handlers for filter items
+    menu.querySelectorAll('.filter-dropdown-item').forEach(item => {
+      item.addEventListener('click', (e) => {
+        const filterId = item.dataset.filterId;
+        const filter = filters.find(f => f.id === filterId);
+        if (filter) {
+          this.openMonitorEditorWithFilter(filter);
+        }
+        // Close the dropdown
+        const dropdown = item.closest('.nav-dropdown');
+        if (dropdown) {
+          dropdown.classList.remove('open');
+        }
+      });
+    });
+  }
+
+  /**
+   * Open the monitor editor with a pre-populated filter scope
+   */
+  openMonitorEditorWithFilter(filter) {
+    const editor = getMonitorEditor();
+    editor.openCreate(() => {
+      // Refresh the current view after saving
+      if (this.router) {
+        this.router.handleRoute();
+      }
+    }, filter.scope || {});
+  }
+
+  /**
+   * Escape HTML to prevent XSS
+   */
+  escapeHtml(text) {
+    if (!text) return '';
+    const div = document.createElement('div');
+    div.textContent = text;
+    return div.innerHTML;
+  }
+
+  /**
    * Initialize theme from localStorage or system preference
    */
   initTheme() {
@@ -548,6 +732,59 @@ class App {
     if (themeToggle) {
       themeToggle.addEventListener('click', () => this.toggleTheme());
     }
+  }
+
+  /**
+   * Initialize delegated event listener for source links
+   * Handles all .source-link clicks with data-source-type and data-source-id attributes
+   */
+  initSourceLinkHandler() {
+    document.addEventListener('click', (e) => {
+      const link = e.target.closest('.source-link[data-source-type]');
+      if (!link) return;
+      
+      e.preventDefault();
+      const type = link.dataset.sourceType;
+      const id = link.dataset.sourceId;
+      
+      if (!type || !id) return;
+      
+      // Get the entity based on type
+      let entity = null;
+      switch (type) {
+        case 'narrative':
+          entity = DataService.getNarrativeById(id);
+          break;
+        case 'theme':
+          entity = DataService.getThemeById(id);
+          break;
+        case 'topic':
+          entity = DataService.getTopicById(id);
+          break;
+        case 'person':
+          entity = DataService.getPerson(id);
+          break;
+        case 'organization':
+          entity = DataService.getOrganization(id);
+          break;
+        case 'event':
+          entity = DataService.getEvent(id);
+          break;
+        case 'faction':
+          entity = DataService.getFaction(id);
+          break;
+        case 'location':
+          entity = DataService.getLocation(id);
+          break;
+        default:
+          console.warn(`Unknown source type: ${type}`);
+          return;
+      }
+      
+      if (entity) {
+        getSourceViewer().open(entity, type);
+      }
+    });
   }
 
   /**

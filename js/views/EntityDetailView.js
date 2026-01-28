@@ -14,9 +14,10 @@ import {
   NarrativeListCard,
   DocumentTableCard,
   MapCard,
-  TimelineCard,
   SentimentChartCard,
-  FactionCardsCard
+  VennDiagramCard,
+  TimelineVolumeCompositeCard,
+  TopicListCard
 } from '../components/CardComponents.js';
 
 export class EntityDetailView extends BaseView {
@@ -130,6 +131,114 @@ export class EntityDetailView extends BaseView {
       data.networkPersonIds = data.relatedPersons.map(p => p.id);
       data.networkOrgIds = [this.entityId, ...data.relatedOrgs.map(o => o.id)];
     }
+    data.hasNetwork = data.relatedPersons.length > 0 || data.relatedOrgs.length > 0;
+
+    // Build publisher volume data for the composite chart (by source)
+    const publishers = DataService.getPublishers ? DataService.getPublishers() : [];
+    const dateMap = new Map();
+    const publisherIds = new Set();
+    
+    data.documents.forEach(doc => {
+      if (!doc.publishedDate) return;
+      const date = doc.publishedDate.split('T')[0];
+      if (!dateMap.has(date)) {
+        dateMap.set(date, {});
+      }
+      if (doc.publisherId) {
+        publisherIds.add(doc.publisherId);
+        const dayData = dateMap.get(date);
+        dayData[doc.publisherId] = (dayData[doc.publisherId] || 0) + 1;
+      }
+    });
+
+    const dates = [...dateMap.keys()].sort();
+    const relevantPublishers = [...publisherIds].map(id => publishers.find(p => p.id === id)).filter(Boolean);
+    const series = relevantPublishers.map(publisher =>
+      dates.map(date => (dateMap.get(date) || {})[publisher.id] || 0)
+    );
+
+    data.publisherData = dates.length > 0 ? { dates, series, publishers: relevantPublishers } : null;
+    data.hasPublisherData = data.publisherData && data.publisherData.dates.length > 0;
+
+    // Build faction volume data for the composite chart (by faction)
+    const factionDateMap = new Map();
+    const factionIds = new Set();
+    
+    data.documents.forEach(doc => {
+      if (!doc.publishedDate || !doc.factionMentions) return;
+      const date = doc.publishedDate.split('T')[0];
+      if (!factionDateMap.has(date)) {
+        factionDateMap.set(date, {});
+      }
+      Object.keys(doc.factionMentions).forEach(factionId => {
+        factionIds.add(factionId);
+        const dayData = factionDateMap.get(date);
+        dayData[factionId] = (dayData[factionId] || 0) + 1;
+      });
+    });
+
+    const factionDates = [...factionDateMap.keys()].sort();
+    const relevantFactions = [...factionIds].map(id => DataService.getFaction(id)).filter(Boolean);
+    const factionSeries = relevantFactions.map(faction =>
+      factionDates.map(date => (factionDateMap.get(date) || {})[faction.id] || 0)
+    );
+
+    data.volumeData = factionDates.length > 0 ? { dates: factionDates, series: factionSeries, factions: relevantFactions } : null;
+    data.hasVolumeData = data.volumeData && data.volumeData.dates.length > 0;
+
+    // Get events from related narratives
+    data.allEvents = data.narratives.flatMap(n => {
+      const eventIds = n.eventIds || [];
+      return eventIds.map(eid => DataService.getEvent(eid)).filter(Boolean)
+        .flatMap(e => [e, ...DataService.getSubEventsForEvent(e.id)]);
+    });
+
+    data.hasVolumeTimeline = data.hasPublisherData || data.hasVolumeData || data.allEvents.length > 0;
+
+    // Get topics related to this entity (topics that share documents)
+    const entityDocIds = new Set(data.documents.map(d => d.id));
+    const allTopics = DataService.getTopics ? DataService.getTopics() : [];
+    data.topics = allTopics.filter(topic =>
+      (topic.documentIds || []).some(dId => entityDocIds.has(dId))
+    );
+
+    // Build factions for Venn diagram from document factionMentions
+    const factionMentionMap = new Map();
+    data.documents.forEach(doc => {
+      if (!doc.factionMentions) return;
+      Object.entries(doc.factionMentions).forEach(([factionId, mentions]) => {
+        if (!factionMentionMap.has(factionId)) {
+          factionMentionMap.set(factionId, { volume: 0, sentiment: 0, count: 0 });
+        }
+        const entry = factionMentionMap.get(factionId);
+        entry.volume += mentions.volume || 1;
+        entry.sentiment += mentions.sentiment || 0;
+        entry.count += 1;
+      });
+    });
+
+    data.factions = [...factionMentionMap.entries()].map(([factionId, stats]) => {
+      const faction = DataService.getFaction(factionId);
+      if (!faction) return null;
+      return {
+        ...faction,
+        volume: stats.volume,
+        sentiment: stats.count > 0 ? stats.sentiment / stats.count : 0
+      };
+    }).filter(Boolean);
+
+    // Get faction overlaps from the factions found
+    const factionIdsForOverlaps = data.factions.map(f => f.id);
+    data.factionOverlaps = (DataService.getFactionOverlaps ? DataService.getFactionOverlaps() : [])
+      .filter(o => o.factionIds.some(fid => factionIdsForOverlaps.includes(fid)));
+
+    // Build map locations from entity locations
+    data.mapLocations = data.locations.map(loc => ({
+      id: loc.id,
+      name: loc.name,
+      coordinates: loc.coordinates,
+      type: loc.type || 'location'
+    })).filter(loc => loc.coordinates);
 
     return data;
   }
@@ -142,10 +251,9 @@ export class EntityDetailView extends BaseView {
     this.cardManager = new CardManager(this);
     
     const prefix = this.isPerson ? 'person' : 'org';
-    const hasNetwork = data.relatedPersons.length > 0 || data.relatedOrgs.length > 0;
 
-    // Row 1: Network Graph + Sentiment (both half-width)
-    if (hasNetwork) {
+    // 1. People & Organizations Network (half-width)
+    if (data.hasNetwork) {
       this.cardManager.add(new NetworkGraphCard(this, `${prefix}-network`, {
         title: 'Related People & Organizations',
         personIds: data.networkPersonIds,
@@ -156,6 +264,7 @@ export class EntityDetailView extends BaseView {
       }));
     }
 
+    // 2. Faction Sentiment (half-width)
     if (data.factionSentimentData.length > 0) {
       this.cardManager.add(new SentimentChartCard(this, `${prefix}-sentiment`, {
         title: `Faction Sentiment Toward ${entity.name}`,
@@ -165,38 +274,74 @@ export class EntityDetailView extends BaseView {
       }));
     }
 
-    // Row 2: Affiliated Factions + Map (both half-width)
-    if (data.affiliatedFactions.length > 0) {
-      this.cardManager.add(new FactionCardsCard(this, `${prefix}-factions`, {
-        title: 'Affiliated Factions',
-        factions: data.affiliatedFactions,
-        halfWidth: true
+    // 3. Volume & Events Chart (w/ factions and source) - full-width
+    if (data.hasVolumeTimeline) {
+      this.cardManager.add(new TimelineVolumeCompositeCard(this, `${prefix}-volume-events`, {
+        title: 'Volume & Events',
+        volumeData: data.volumeData,
+        publisherData: data.publisherData,
+        events: data.allEvents,
+        fullWidth: true,
+        height: 450,
+        volumeHeight: 180,
+        timelineHeight: 180,
+        showViewToggle: data.hasVolumeData && data.hasPublisherData
       }));
     }
 
-    if (data.locations.length > 0) {
-      this.cardManager.add(new MapCard(this, `${prefix}-map`, {
-        title: 'Associated Locations',
-        locations: data.locations,
-        halfWidth: true
-      }));
-    }
-
-    // Events (Person only)
-    if (this.isPerson && data.events.length > 0) {
-      this.cardManager.add(new TimelineCard(this, `${prefix}-timeline`, {
-        title: 'Related Events',
-        events: data.events,
-        showCount: true
-      }));
-    }
-
-    // Narratives
+    // 4. Narratives (half-width)
     if (data.narratives.length > 0) {
       this.cardManager.add(new NarrativeListCard(this, `${prefix}-narratives`, {
         title: 'Related Narratives',
         narratives: data.narratives,
-        showCount: true
+        showCount: true,
+        halfWidth: true
+      }));
+    }
+
+    // 5. Topics (half-width)
+    if (data.topics.length > 0) {
+      this.cardManager.add(new TopicListCard(this, `${prefix}-topics`, {
+        title: 'Related Topics',
+        topics: data.topics,
+        showCount: true,
+        halfWidth: true
+      }));
+    }
+
+    // 6. Affiliated Factions Venn Diagram (half-width)
+    if (data.affiliatedFactions.length >= 1) {
+      // Get overlaps between affiliated factions
+      const affiliatedFactionIds = data.affiliatedFactions.map(f => f.id);
+      const affiliatedOverlaps = (DataService.getFactionOverlaps ? DataService.getFactionOverlaps() : [])
+        .filter(o => o.factionIds.every(fid => affiliatedFactionIds.includes(fid)));
+      
+      this.cardManager.add(new VennDiagramCard(this, `${prefix}-affiliated-factions`, {
+        title: 'Affiliated Factions',
+        factions: data.affiliatedFactions,
+        overlaps: affiliatedOverlaps,
+        halfWidth: true,
+        height: 300
+      }));
+    }
+
+    // 7. Related Factions Venn Diagram (half-width) - factions from document mentions
+    if (data.factions.length >= 1) {
+      this.cardManager.add(new VennDiagramCard(this, `${prefix}-venn`, {
+        title: 'Related Factions',
+        factions: data.factions,
+        overlaps: data.factionOverlaps,
+        halfWidth: true,
+        height: 300
+      }));
+    }
+
+    // 8. Locations Map (half-width)
+    if (data.mapLocations.length > 0) {
+      this.cardManager.add(new MapCard(this, `${prefix}-map`, {
+        title: 'Associated Locations',
+        locations: data.mapLocations,
+        halfWidth: true
       }));
     }
   }
@@ -275,6 +420,10 @@ export class EntityDetailView extends BaseView {
       imageUrl: entity.imageUrl || null,
       imageAlt: entity.name,
       subtitle: typeLabel,
+      description: entity.description,
+      descriptionLink: entity.description 
+        ? `<a href="#" class="btn btn-small btn-secondary source-link" data-source-type="${this.entityType}" data-source-id="${entity.id}">View source</a>` 
+        : '',
       tabs: tabsConfig,
       activeTab: activeTab
     });

@@ -48,7 +48,7 @@ export class ThemeList extends BaseItemList {
           ${item.description && this.showDescription ? `
             <p class="narrative-description">
               ${item.description}
-              <a href="#" class="source-link" data-id="${item.id}" data-type="theme">View source</a>
+              <a href="#" class="btn btn-small btn-secondary source-link" data-id="${item.id}" data-type="theme">View source</a>
             </p>
           ` : ''}
         </div>

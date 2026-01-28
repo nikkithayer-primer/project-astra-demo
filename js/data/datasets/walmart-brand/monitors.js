@@ -161,143 +161,209 @@ export const alerts = [
     id: 'alert-001',
     monitorId: 'monitor-001',
     type: 'volume_spike',
-    triggeredAt: '2026-01-14T16:00:00Z',
-    severity: 'high',
+    title: 'Volume spike: Self-checkout detention video',
     description: 'Viral TikTok shows customer detained at self-checkout - 8M+ views with negative sentiment',
-    documentIds: ['doc-001'],
-    narrativeIds: ['narr-001'],
-    acknowledged: true,
-    acknowledgedBy: 'user-001',
-    acknowledgedAt: '2026-01-14T17:30:00Z'
+    triggeredAt: '2026-01-14T16:00:00Z',
+    relatedNarrativeIds: ['narr-001'],
+    relatedThemeIds: [],
+    relatedEventIds: [],
+    relatedSubEventIds: [],
+    relatedPersonIds: [],
+    relatedOrganizationIds: [],
+    relatedFactionIds: [],
+    relatedLocationIds: [],
+    metadata: {
+      documentIds: ['doc-001']
+    }
   },
   {
     id: 'alert-002',
     monitorId: 'monitor-001',
     type: 'new_event',
-    triggeredAt: '2026-01-18T10:30:00Z',
-    severity: 'critical',
+    title: 'New event: Self-checkout class-action lawsuit',
     description: 'Class-action lawsuit filed: 500+ plaintiffs alleging systematic false detention at self-checkout',
-    documentIds: ['doc-003'],
-    narrativeIds: ['narr-001'],
-    acknowledged: true,
-    acknowledgedBy: 'user-006',
-    acknowledgedAt: '2026-01-18T11:00:00Z'
+    triggeredAt: '2026-01-18T10:30:00Z',
+    relatedNarrativeIds: ['narr-001'],
+    relatedThemeIds: [],
+    relatedEventIds: [],
+    relatedSubEventIds: [],
+    relatedPersonIds: [],
+    relatedOrganizationIds: [],
+    relatedFactionIds: [],
+    relatedLocationIds: [],
+    metadata: {
+      documentIds: ['doc-003']
+    }
   },
   {
     id: 'alert-003',
     monitorId: 'monitor-002',
     type: 'volume_spike',
-    triggeredAt: '2026-01-15T13:00:00Z',
-    severity: 'medium',
+    title: 'Volume spike: Empty shelves in Chicago',
     description: 'Viral X post showing empty grocery aisles in Chicago-area stores - 2.5M views',
-    documentIds: ['doc-005'],
-    narrativeIds: ['narr-002'],
-    acknowledged: true,
-    acknowledgedBy: 'user-001',
-    acknowledgedAt: '2026-01-15T14:00:00Z'
+    triggeredAt: '2026-01-15T13:00:00Z',
+    relatedNarrativeIds: ['narr-002'],
+    relatedThemeIds: [],
+    relatedEventIds: [],
+    relatedSubEventIds: [],
+    relatedPersonIds: [],
+    relatedOrganizationIds: [],
+    relatedFactionIds: [],
+    relatedLocationIds: ['loc-004'], // Chicago
+    metadata: {
+      documentIds: ['doc-005']
+    }
   },
   {
     id: 'alert-004',
     monitorId: 'monitor-003',
     type: 'volume_spike',
+    title: 'Volume spike: Walmart Employees staffing complaint',
+    description: 'Walmart Employees TikTok about working alone in 3 departments goes viral - 5.2M views',
     triggeredAt: '2026-01-13T19:30:00Z',
-    severity: 'high',
-    description: 'Employee TikTok about working alone in 3 departments goes viral - 5.2M views',
-    documentIds: ['doc-008'],
-    narrativeIds: ['narr-003'],
-    acknowledged: true,
-    acknowledgedBy: 'user-003',
-    acknowledgedAt: '2026-01-13T20:00:00Z'
+    relatedNarrativeIds: ['narr-003'],
+    relatedThemeIds: [],
+    relatedEventIds: [],
+    relatedSubEventIds: [],
+    relatedPersonIds: [],
+    relatedOrganizationIds: [],
+    relatedFactionIds: ['faction-002'], // Walmart Employees
+    relatedLocationIds: [],
+    metadata: {
+      documentIds: ['doc-008']
+    }
   },
   {
     id: 'alert-005',
     monitorId: 'monitor-003',
     type: 'faction_engagement',
+    title: 'High faction engagement: UFCW campaign',
+    description: 'United Food and Commercial Workers International Union (UFCW) launches #RespectWalmartWorkers campaign amplifying employee stories',
     triggeredAt: '2026-01-15T12:00:00Z',
-    severity: 'high',
-    description: 'UFCW launches #RespectWalmartWorkers campaign amplifying employee stories',
-    documentIds: ['doc-010'],
-    narrativeIds: ['narr-003'],
-    acknowledged: true,
-    acknowledgedBy: 'user-002',
-    acknowledgedAt: '2026-01-15T13:00:00Z'
+    relatedNarrativeIds: ['narr-003'],
+    relatedThemeIds: [],
+    relatedEventIds: [],
+    relatedSubEventIds: [],
+    relatedPersonIds: [],
+    relatedOrganizationIds: ['org-005'],
+    relatedFactionIds: [],
+    relatedLocationIds: [],
+    metadata: {
+      documentIds: ['doc-010']
+    }
   },
   {
     id: 'alert-006',
     monitorId: 'monitor-004',
     type: 'new_event',
+    title: 'New event: FDA recall announcement',
+    description: 'U.S. Food and Drug Administration (FDA) announces Great Value frozen vegetables recall due to Listeria contamination',
     triggeredAt: '2026-01-16T10:30:00Z',
-    severity: 'critical',
-    description: 'FDA announces Great Value frozen vegetables recall due to Listeria contamination',
-    documentIds: ['doc-012'],
-    narrativeIds: ['narr-004'],
-    acknowledged: true,
-    acknowledgedBy: 'user-004',
-    acknowledgedAt: '2026-01-16T11:00:00Z'
+    relatedNarrativeIds: ['narr-004'],
+    relatedThemeIds: [],
+    relatedEventIds: [],
+    relatedSubEventIds: [],
+    relatedPersonIds: [],
+    relatedOrganizationIds: ['org-007'],
+    relatedFactionIds: [],
+    relatedLocationIds: [],
+    metadata: {
+      documentIds: ['doc-012']
+    }
   },
   {
     id: 'alert-007',
     monitorId: 'monitor-004',
     type: 'volume_spike',
-    triggeredAt: '2026-01-18T14:30:00Z',
-    severity: 'critical',
+    title: 'Volume spike: Great Value recall expansion',
     description: 'Great Value recall expanded to 15 products - 3 hospitalizations reported',
-    documentIds: ['doc-013'],
-    narrativeIds: ['narr-004'],
-    acknowledged: true,
-    acknowledgedBy: 'user-004',
-    acknowledgedAt: '2026-01-18T15:00:00Z'
+    triggeredAt: '2026-01-18T14:30:00Z',
+    relatedNarrativeIds: ['narr-004'],
+    relatedThemeIds: [],
+    relatedEventIds: [],
+    relatedSubEventIds: [],
+    relatedPersonIds: [],
+    relatedOrganizationIds: ['org-001'], // Walmart (Great Value)
+    relatedFactionIds: [],
+    relatedLocationIds: [],
+    metadata: {
+      documentIds: ['doc-013']
+    }
   },
   {
     id: 'alert-008',
     monitorId: 'monitor-005',
     type: 'sentiment_shift',
+    title: 'Sentiment shift: Price comparison with Aldi',
+    description: 'Viral price comparison TikTok shows Walmart losing to Aldi US on most items - 4.8M views',
     triggeredAt: '2026-01-17T16:00:00Z',
-    severity: 'high',
-    description: 'Viral price comparison TikTok shows Walmart losing to Aldi on most items - 4.8M views',
-    documentIds: ['doc-015'],
-    narrativeIds: ['narr-005'],
-    acknowledged: true,
-    acknowledgedBy: 'user-002',
-    acknowledgedAt: '2026-01-17T17:00:00Z'
+    relatedNarrativeIds: ['narr-005'],
+    relatedThemeIds: [],
+    relatedEventIds: [],
+    relatedSubEventIds: [],
+    relatedPersonIds: [],
+    relatedOrganizationIds: ['org-010'],
+    relatedFactionIds: [],
+    relatedLocationIds: [],
+    metadata: {
+      documentIds: ['doc-015']
+    }
   },
   {
     id: 'alert-009',
     monitorId: 'monitor-006',
     type: 'new_event',
+    title: 'New event: Target delivery announcement',
+    description: 'Target Corporation announces industry-leading 98% on-time delivery rates for same-day service',
     triggeredAt: '2026-01-14T09:00:00Z',
-    severity: 'medium',
-    description: 'Target announces industry-leading 98% on-time delivery rates for same-day service',
-    documentIds: ['doc-018'],
-    narrativeIds: ['narr-006'],
-    acknowledged: true,
-    acknowledgedBy: 'user-005',
-    acknowledgedAt: '2026-01-14T10:00:00Z'
+    relatedNarrativeIds: ['narr-006'],
+    relatedThemeIds: [],
+    relatedEventIds: [],
+    relatedSubEventIds: [],
+    relatedPersonIds: [],
+    relatedOrganizationIds: ['org-003'],
+    relatedFactionIds: [],
+    relatedLocationIds: [],
+    metadata: {
+      documentIds: ['doc-018']
+    }
   },
   {
     id: 'alert-010',
     monitorId: 'monitor-006',
     type: 'new_event',
+    title: 'New event: Amazon delivery expansion',
+    description: 'Amazon.com Inc. announces sub-24-hour delivery now available to 85% of US households',
     triggeredAt: '2026-01-16T11:00:00Z',
-    severity: 'medium',
-    description: 'Amazon announces sub-24-hour delivery now available to 85% of US households',
-    documentIds: ['doc-019'],
-    narrativeIds: ['narr-006'],
-    acknowledged: true,
-    acknowledgedBy: 'user-005',
-    acknowledgedAt: '2026-01-16T12:00:00Z'
+    relatedNarrativeIds: ['narr-006'],
+    relatedThemeIds: [],
+    relatedEventIds: [],
+    relatedSubEventIds: [],
+    relatedPersonIds: [],
+    relatedOrganizationIds: ['org-004'],
+    relatedFactionIds: [],
+    relatedLocationIds: [],
+    metadata: {
+      documentIds: ['doc-019']
+    }
   },
   {
     id: 'alert-011',
     monitorId: 'monitor-007',
     type: 'new_narrative',
-    triggeredAt: '2026-01-18T13:00:00Z',
-    severity: 'high',
+    title: 'New narrative: Missouri food desert',
     description: 'Missouri town faces food desert after Walmart closure - community protests emerging',
-    documentIds: ['doc-021', 'doc-022'],
-    narrativeIds: ['narr-007'],
-    acknowledged: false,
-    acknowledgedBy: null,
-    acknowledgedAt: null
+    triggeredAt: '2026-01-18T13:00:00Z',
+    relatedNarrativeIds: ['narr-007'],
+    relatedThemeIds: [],
+    relatedEventIds: [],
+    relatedSubEventIds: [],
+    relatedPersonIds: [],
+    relatedOrganizationIds: ['org-001'], // Walmart
+    relatedFactionIds: [],
+    relatedLocationIds: [],
+    metadata: {
+      documentIds: ['doc-021', 'doc-022']
+    }
   }
 ];

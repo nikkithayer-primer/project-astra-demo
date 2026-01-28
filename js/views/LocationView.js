@@ -11,8 +11,10 @@ import {
   CardManager,
   NetworkGraphCard,
   NarrativeListCard,
+  TopicListCard,
   MapCard,
-  TimelineCard,
+  VennDiagramCard,
+  TimelineVolumeCompositeCard,
   DocumentTableCard
 } from '../components/CardComponents.js';
 
@@ -66,6 +68,10 @@ export class LocationView extends BaseView {
       ],
       title: location.name,
       subtitle: subtitleParts,
+      description: location.description,
+      descriptionLink: location.description 
+        ? `<a href="#" class="btn btn-small btn-secondary source-link" data-source-type="location" data-source-id="${location.id}">View source</a>` 
+        : '',
       tabs: tabsConfig,
       activeTab: activeTab
     });
@@ -84,7 +90,7 @@ export class LocationView extends BaseView {
     const contentGrid = this.container.querySelector('.content-grid');
     if (contentGrid) {
       const tabSuffix = this.isDocumentsTab() ? '-docs' : '';
-      initAllCardToggles(contentGrid, `location-${this.locationId}${tabSuffix}`, { 2: 'half', 3: 'half' });
+      initAllCardToggles(contentGrid, `location-${this.locationId}${tabSuffix}`);
     }
 
     // Initialize all card components
@@ -108,7 +114,61 @@ export class LocationView extends BaseView {
     const personIds = persons.map(p => p.id);
     const orgIds = organizations.map(o => o.id);
 
-    return { narratives, events, allEvents, persons, organizations, documents, hasNetwork, personIds, orgIds };
+    // Prepare publisher volume data for the composite chart (by source)
+    const publishers = DataService.getPublishers ? DataService.getPublishers() : [];
+    const dateMap = new Map();
+    const publisherIds = new Set();
+    
+    documents.forEach(doc => {
+      if (!doc.publishedDate) return;
+      const date = doc.publishedDate.split('T')[0];
+      if (!dateMap.has(date)) {
+        dateMap.set(date, {});
+      }
+      if (doc.publisherId) {
+        publisherIds.add(doc.publisherId);
+        const dayData = dateMap.get(date);
+        dayData[doc.publisherId] = (dayData[doc.publisherId] || 0) + 1;
+      }
+    });
+
+    const dates = [...dateMap.keys()].sort();
+    const relevantPublishers = [...publisherIds].map(id => publishers.find(p => p.id === id)).filter(Boolean);
+    const series = relevantPublishers.map(publisher =>
+      dates.map(date => (dateMap.get(date) || {})[publisher.id] || 0)
+    );
+
+    const publisherData = dates.length > 0 ? { dates, series, publishers: relevantPublishers } : null;
+    const hasPublisherData = publisherData && publisherData.dates.length > 0;
+    const hasVolumeTimeline = hasPublisherData || allEvents.length > 0;
+
+    // Get related topics (topics that share documents with this location's documents)
+    const locationDocIds = new Set(documents.map(d => d.id));
+    const allTopics = DataService.getTopics ? DataService.getTopics() : [];
+    const topics = allTopics.filter(topic =>
+      (topic.documentIds || []).some(dId => locationDocIds.has(dId))
+    );
+
+    // Get factions from documents and compute overlaps
+    // Note: factionMentions is an object with factionId keys, not an array
+    const factionIdSet = new Set();
+    documents.forEach(doc => {
+      Object.keys(doc.factionMentions || {}).forEach(factionId => {
+        factionIdSet.add(factionId);
+      });
+    });
+    const factions = [...factionIdSet].map(id => DataService.getFaction(id)).filter(Boolean);
+    const factionOverlaps = factions.length >= 2
+      ? DataService.getFactionOverlapsFor(factions[0]?.id).filter(o =>
+          o.factionIds.every(fid => factions.some(f => f.id === fid))
+        )
+      : [];
+
+    return {
+      narratives, events, allEvents, persons, organizations, documents,
+      hasNetwork, personIds, orgIds, publisherData, hasPublisherData,
+      hasVolumeTimeline, topics, factions, factionOverlaps
+    };
   }
 
   /**
@@ -118,24 +178,41 @@ export class LocationView extends BaseView {
     // Reset card manager for fresh setup
     this.cardManager = new CardManager(this);
 
+    // Volume & Events Chart (full-width)
+    if (data.hasVolumeTimeline) {
+      this.cardManager.add(new TimelineVolumeCompositeCard(this, 'location-volume-events', {
+        title: 'Volume & Events',
+        volumeData: null, // No faction data for locations
+        publisherData: data.publisherData,
+        events: data.allEvents,
+        fullWidth: true,
+        height: 450,
+        volumeHeight: 180,
+        timelineHeight: 180,
+        showViewToggle: false // Only show by publisher for locations
+      }));
+    }
+
     // Location Map (full width)
     if (location.coordinates) {
       this.cardManager.add(new MapCard(this, 'location-map', {
-        title: 'Location Map',
+        title: 'Location',
         locations: [location],
+        fullWidth: true,
         height: 400,
         defaultZoom: 12,
         centerOn: { lat: location.coordinates.lat, lng: location.coordinates.lng, zoom: 12 }
       }));
     }
 
-    // Events Timeline (full width)
-    if (data.allEvents.length > 0) {
-      this.cardManager.add(new TimelineCard(this, 'location-timeline', {
-        title: 'Events at this Location',
-        events: data.allEvents,
-        showCount: true,
-        height: 280
+    // People & Organizations Network (half-width)
+    if (data.hasNetwork) {
+      this.cardManager.add(new NetworkGraphCard(this, 'location-network', {
+        title: 'People & Organizations',
+        personIds: data.personIds,
+        orgIds: data.orgIds,
+        halfWidth: true,
+        height: 350
       }));
     }
 
@@ -150,14 +227,24 @@ export class LocationView extends BaseView {
       }));
     }
 
-    // Associated People & Organizations Network (half-width)
-    if (data.hasNetwork) {
-      this.cardManager.add(new NetworkGraphCard(this, 'location-network', {
-        title: 'Associated People & Organizations',
-        personIds: data.personIds,
-        orgIds: data.orgIds,
+    // Related Topics (half-width)
+    if (data.topics.length > 0) {
+      this.cardManager.add(new TopicListCard(this, 'location-topics', {
+        title: 'Related Topics',
+        topics: data.topics,
         halfWidth: true,
-        height: 350
+        showCount: true
+      }));
+    }
+
+    // Faction Overlaps Venn Diagram (half-width)
+    if (data.factions.length >= 2) {
+      this.cardManager.add(new VennDiagramCard(this, 'location-venn', {
+        title: 'Faction Overlaps',
+        factions: data.factions,
+        overlaps: data.factionOverlaps,
+        halfWidth: true,
+        height: 300
       }));
     }
   }

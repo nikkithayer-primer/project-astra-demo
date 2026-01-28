@@ -7,15 +7,14 @@ import { BaseView } from './BaseView.js';
 import { DataService } from '../data/DataService.js';
 import { PageHeader } from '../utils/PageHeader.js';
 import { initAllCardToggles } from '../utils/cardWidthToggle.js';
-import { getSourceViewer } from '../components/SourceViewerModal.js';
 import {
   CardManager,
   NetworkGraphCard,
   MapCard,
-  TimelineCard,
   SentimentChartCard,
   VennDiagramCard,
-  StackedAreaChartCard,
+  TimelineVolumeCompositeCard,
+  TopicListCard,
   DocumentTableCard
 } from '../components/CardComponents.js';
 
@@ -71,7 +70,7 @@ export class ThemeView extends BaseView {
       subtitle: `<span class="badge badge-${this.getSentimentClass(theme.sentiment)}">${this.formatSentiment(theme.sentiment)}</span>`,
       description: theme.description,
       descriptionLink: theme.description 
-        ? `<a href="#" class="source-link" id="theme-source-link">View source</a>` 
+        ? `<a href="#" class="btn btn-small btn-secondary source-link" data-source-type="theme" data-source-id="${theme.id}">View source</a>` 
         : '',
       tabs: tabsConfig,
       activeTab: activeTab
@@ -100,23 +99,12 @@ export class ThemeView extends BaseView {
     const contentGrid = this.container.querySelector('.content-grid');
     if (contentGrid) {
       const tabSuffix = this.isDocumentsTab() ? '-docs' : '';
-      // First 2 cards default to half-width for theme views (dashboard only)
-      const defaults = this.isDocumentsTab() ? {} : { 0: 'half', 1: 'half' };
-      initAllCardToggles(contentGrid, `theme-${this.themeId}${tabSuffix}`, defaults);
+      initAllCardToggles(contentGrid, `theme-${this.themeId}${tabSuffix}`);
     }
 
     // Initialize all card components
     const components = this.cardManager.initializeAll();
     Object.assign(this.components, components);
-
-    // Set up source link handler
-    const sourceLink = this.container.querySelector('#theme-source-link');
-    if (sourceLink) {
-      sourceLink.addEventListener('click', (e) => {
-        e.preventDefault();
-        getSourceViewer().open(theme, 'theme');
-      });
-    }
   }
 
   /**
@@ -137,6 +125,7 @@ export class ThemeView extends BaseView {
     const hasVolumeData = volumeOverTime.length > 0 && factions.length > 0;
     const locations = (theme.locationIds || []).map(lid => DataService.getLocation(lid)).filter(Boolean);
     const events = (theme.eventIds || []).map(eid => DataService.getEvent(eid)).filter(Boolean);
+    const allEvents = events.flatMap(e => [e, ...DataService.getSubEventsForEvent(e.id)]);
     const personIds = theme.personIds || [];
     const orgIds = theme.organizationIds || [];
     const hasNetwork = personIds.length > 0 || orgIds.length > 0;
@@ -144,10 +133,10 @@ export class ThemeView extends BaseView {
     // Get documents for the theme
     const documents = DataService.getDocumentsForTheme(this.themeId);
 
-    // Prepare volume chart data if available
-    let volumeChartData = null;
+    // Prepare volume data for the composite chart (by faction)
+    let volumeData = null;
     if (hasVolumeData) {
-      volumeChartData = {
+      volumeData = {
         dates: volumeOverTime.map(d => d.date),
         series: factions.map(f =>
           volumeOverTime.map(d => (d.factionVolumes || {})[f.id] || 0)
@@ -156,16 +145,61 @@ export class ThemeView extends BaseView {
       };
     }
 
+    // Prepare publisher volume data for the composite chart (by source)
+    const publishers = DataService.getPublishers ? DataService.getPublishers() : [];
+    const dateMap = new Map();
+    const publisherIds = new Set();
+    
+    documents.forEach(doc => {
+      if (!doc.publishedDate) return;
+      const date = doc.publishedDate.split('T')[0];
+      if (!dateMap.has(date)) {
+        dateMap.set(date, {});
+      }
+      if (doc.publisherId) {
+        publisherIds.add(doc.publisherId);
+        const dayData = dateMap.get(date);
+        dayData[doc.publisherId] = (dayData[doc.publisherId] || 0) + 1;
+      }
+    });
+
+    const dates = [...dateMap.keys()].sort();
+    const relevantPublishers = [...publisherIds].map(id => publishers.find(p => p.id === id)).filter(Boolean);
+    const series = relevantPublishers.map(publisher =>
+      dates.map(date => (dateMap.get(date) || {})[publisher.id] || 0)
+    );
+
+    const publisherData = dates.length > 0 ? { dates, series, publishers: relevantPublishers } : null;
+    const hasPublisherData = publisherData && publisherData.dates.length > 0;
+    const hasVolumeTimeline = hasVolumeData || hasPublisherData || allEvents.length > 0;
+
     // Build sentiment data for the sentiment chart
     const sentimentFactions = factionData.map(fd => ({
       ...fd.faction,
       sentiment: fd.sentiment
     }));
 
+    // Get related topics (topics that share documents with this theme's documents)
+    const themeDocIds = new Set(documents.map(d => d.id));
+    const allTopics = DataService.getTopics ? DataService.getTopics() : [];
+    const topics = allTopics.filter(topic =>
+      (topic.documentIds || []).some(dId => themeDocIds.has(dId))
+    );
+
+    // Build map locations including events
+    const mapLocations = [
+      ...locations.map(l => ({ ...l, isEvent: false })),
+      ...events.filter(e => e.locationId).map(e => {
+        const loc = DataService.getLocation(e.locationId);
+        return loc ? { ...loc, isEvent: true, eventText: e.text } : null;
+      }).filter(Boolean)
+    ];
+
     return {
       parentNarrative, factionData, factions, factionOverlaps,
-      volumeOverTime, hasVolumeData, volumeChartData, locations, events, 
-      personIds, orgIds, hasNetwork, documents, sentimentFactions
+      volumeOverTime, hasVolumeData, volumeData, publisherData, hasPublisherData,
+      hasVolumeTimeline, locations, mapLocations, events, allEvents,
+      personIds, orgIds, hasNetwork, documents, sentimentFactions, topics
     };
   }
 
@@ -176,17 +210,22 @@ export class ThemeView extends BaseView {
     // Reset card manager for fresh setup
     this.cardManager = new CardManager(this);
 
-    // Volume Over Time Chart (half-width)
-    if (data.volumeChartData) {
-      this.cardManager.add(new StackedAreaChartCard(this, 'theme-volume-chart', {
-        title: 'Volume by Faction Over Time',
-        chartData: data.volumeChartData,
-        halfWidth: true,
-        height: 250
+    // 1. Volume & Events Chart (full-width)
+    if (data.hasVolumeTimeline) {
+      this.cardManager.add(new TimelineVolumeCompositeCard(this, 'theme-volume-events', {
+        title: 'Volume & Events',
+        volumeData: data.volumeData,
+        publisherData: data.publisherData,
+        events: data.allEvents,
+        fullWidth: true,
+        height: 450,
+        volumeHeight: 180,
+        timelineHeight: 180,
+        showViewToggle: !!(data.volumeData && data.hasPublisherData)
       }));
     }
 
-    // Sentiment by Faction (half-width)
+    // 2. Sentiment by Faction (half-width)
     if (data.sentimentFactions.length > 0) {
       this.cardManager.add(new SentimentChartCard(this, 'theme-sentiment-chart', {
         title: 'Sentiment by Faction',
@@ -196,7 +235,7 @@ export class ThemeView extends BaseView {
       }));
     }
 
-    // Faction Overlaps Venn Diagram (half-width)
+    // 3. Faction Overlaps Venn Diagram (half-width)
     if (data.factions.length >= 2) {
       this.cardManager.add(new VennDiagramCard(this, 'theme-venn', {
         title: 'Faction Overlaps',
@@ -207,7 +246,7 @@ export class ThemeView extends BaseView {
       }));
     }
 
-    // People & Organizations Network (half-width)
+    // 4. People & Organizations Network (half-width)
     if (data.hasNetwork) {
       this.cardManager.add(new NetworkGraphCard(this, 'theme-network', {
         title: 'People & Organizations',
@@ -218,23 +257,22 @@ export class ThemeView extends BaseView {
       }));
     }
 
-    // Related Locations Map (half-width)
-    if (data.locations.length > 0) {
+    // 5. Locations Map (half-width)
+    if (data.mapLocations.length > 0) {
       this.cardManager.add(new MapCard(this, 'theme-map', {
-        title: 'Related Locations',
-        locations: data.locations,
+        title: 'Locations',
+        locations: data.mapLocations,
         halfWidth: true,
         height: 350
       }));
     }
 
-    // Related Events Timeline (half-width)
-    if (data.events.length > 0) {
-      this.cardManager.add(new TimelineCard(this, 'theme-timeline', {
-        title: 'Related Events',
-        events: data.events,
+    // 6. Related Topics (half-width)
+    if (data.topics.length > 0) {
+      this.cardManager.add(new TopicListCard(this, 'theme-topics', {
+        title: 'Related Topics',
+        topics: data.topics,
         halfWidth: true,
-        height: 250,
         showCount: true
       }));
     }

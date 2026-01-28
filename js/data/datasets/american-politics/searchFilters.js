@@ -8,7 +8,7 @@ export const searchFilters = [
     name: 'Key Politicians',
     description: 'Major political figures in current coverage',
     scope: {
-      personIds: ['person-001', 'person-003', 'person-019', 'person-021'],
+      personIds: ['person-003', 'person-019', 'person-021'],
       organizationIds: [],
       factionIds: [],
       locationIds: [],

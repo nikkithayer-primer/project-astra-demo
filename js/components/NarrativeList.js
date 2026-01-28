@@ -115,7 +115,7 @@ export class NarrativeList extends BaseItemList {
             ${item.description ? `
               <p class="narrative-description">
                 ${item.description}
-                <a href="#" class="source-link" data-id="${item.id}" data-type="narrative">View source</a>
+                <a href="#" class="btn btn-small btn-secondary source-link" data-id="${item.id}" data-type="narrative">View source</a>
               </p>
             ` : ''}
           ` : ''}

@@ -301,6 +301,11 @@ export const DataService = {
       .slice(0, limit);
   },
 
+  // Search Filters
+  getSearchFilters: () => dataStore.data.searchFilters || [],
+  getSearchFilter: (id) => findById('searchFilters', id),
+  getSearchFilterById: (id) => findById('searchFilters', id),
+
   // Topics
   getTopics: () => dataStore.data.topics || [],
   getTopic: (id) => findById('topics', id),
@@ -786,9 +791,22 @@ export const DataService = {
 
   /**
    * Get documents for an event
+   * Prefers event.documentIds if available, falls back to reverse lookup
    */
   getDocumentsForEvent: (eventId) => {
     const documents = dataStore.data.documents || [];
+    const events = dataStore.data.events || [];
+    const event = events.find(e => e.id === eventId);
+    
+    // Use documentIds if available
+    if (event && event.documentIds && event.documentIds.length > 0) {
+      return event.documentIds
+        .map(docId => documents.find(d => d.id === docId))
+        .filter(Boolean)
+        .sort((a, b) => new Date(b.publishedDate) - new Date(a.publishedDate));
+    }
+    
+    // Fallback to reverse lookup
     return documents
       .filter(d => (d.eventIds || []).includes(eventId))
       .sort((a, b) => new Date(b.publishedDate) - new Date(a.publishedDate));
@@ -796,21 +814,45 @@ export const DataService = {
 
   /**
    * Get documents for a location
+   * Prefers location.documentIds if available, falls back to reverse lookup
    */
   getDocumentsForLocation: (locationId) => {
     const documents = dataStore.data.documents || [];
+    const locations = dataStore.data.locations || [];
+    const location = locations.find(l => l.id === locationId);
+    
+    // Use documentIds if available
+    if (location && location.documentIds && location.documentIds.length > 0) {
+      return location.documentIds
+        .map(docId => documents.find(d => d.id === docId))
+        .filter(Boolean)
+        .sort((a, b) => new Date(b.publishedDate) - new Date(a.publishedDate));
+    }
+    
+    // Fallback to reverse lookup
     return documents
       .filter(d => (d.locationIds || []).includes(locationId))
       .sort((a, b) => new Date(b.publishedDate) - new Date(a.publishedDate));
   },
 
   /**
-   * Get documents that mention a faction (directly from document factionMentions)
+   * Get documents that mention a faction
+   * Prefers faction.documentIds if available, falls back to reverse lookup
    */
   getDocumentsForFaction: (factionId) => {
     const documents = dataStore.data.documents || [];
+    const factions = dataStore.data.factions || [];
+    const faction = factions.find(f => f.id === factionId);
     
-    // Return documents that mention this faction
+    // Use documentIds if available
+    if (faction && faction.documentIds && faction.documentIds.length > 0) {
+      return faction.documentIds
+        .map(docId => documents.find(d => d.id === docId))
+        .filter(Boolean)
+        .sort((a, b) => new Date(b.publishedDate) - new Date(a.publishedDate));
+    }
+    
+    // Fallback to reverse lookup (via factionMentions)
     return documents
       .filter(d => d.factionMentions && d.factionMentions[factionId])
       .sort((a, b) => new Date(b.publishedDate) - new Date(a.publishedDate));
@@ -1356,30 +1398,32 @@ export const DataService = {
     
     documents.forEach(doc => {
       if (!doc.publishedDate) return;
-      const date = doc.publishedDate.split('T')[0]; // Extract YYYY-MM-DD
+      // Use full ISO timestamp to preserve time precision
+      // This allows the chart to show individual document times when zoomed in
+      const timestamp = doc.publishedDate;
       
-      if (!dateMap.has(date)) {
-        dateMap.set(date, { factionVolumes: {}, publisherVolumes: {} });
+      if (!dateMap.has(timestamp)) {
+        dateMap.set(timestamp, { factionVolumes: {}, publisherVolumes: {} });
       }
-      const dayData = dateMap.get(date);
+      const timeData = dateMap.get(timestamp);
       
       // Count toward each faction this doc mentions
       Object.keys(doc.factionMentions || {}).forEach(factionId => {
-        dayData.factionVolumes[factionId] = (dayData.factionVolumes[factionId] || 0) + 1;
+        timeData.factionVolumes[factionId] = (timeData.factionVolumes[factionId] || 0) + 1;
       });
       
       // Count toward publisher
       if (doc.publisherId) {
-        dayData.publisherVolumes[doc.publisherId] = (dayData.publisherVolumes[doc.publisherId] || 0) + 1;
+        timeData.publisherVolumes[doc.publisherId] = (timeData.publisherVolumes[doc.publisherId] || 0) + 1;
       }
     });
     
     // Convert to sorted array
-    const dates = [...dateMap.keys()].sort();
-    return dates.map(date => ({
-      date,
-      factionVolumes: dateMap.get(date).factionVolumes,
-      publisherVolumes: dateMap.get(date).publisherVolumes
+    const timestamps = [...dateMap.keys()].sort();
+    return timestamps.map(timestamp => ({
+      date: timestamp,
+      factionVolumes: dateMap.get(timestamp).factionVolumes,
+      publisherVolumes: dateMap.get(timestamp).publisherVolumes
     }));
   },
 
@@ -1701,7 +1745,7 @@ export const DataService = {
     });
   },
 
-  // Get recent events (with time range and status support)
+  // Get events sorted by document volume (with time range and status support)
   getRecentEvents: (limit = 10, timeRange = null, statusFilter = null) => {
     let events = [...dataStore.data.events];
     
@@ -1717,9 +1761,30 @@ export const DataService = {
       });
     }
     
-    return events
-      .sort((a, b) => new Date(b.date) - new Date(a.date))
-      .slice(0, limit);
+    // Calculate document volume within ±1 day for each event
+    const documents = dataStore.data.documents || [];
+    const dayMs = 24 * 60 * 60 * 1000;
+    
+    const eventsWithVolume = events.map(event => {
+      const eventTime = new Date(event.date).getTime();
+      const docCount = documents.filter(doc => {
+        const docTime = new Date(doc.publishedAt).getTime();
+        return Math.abs(docTime - eventTime) <= dayMs;
+      }).length;
+      return { ...event, _docVolume: docCount };
+    });
+    
+    // Sort by document volume (descending), then by date (descending) as tiebreaker
+    const sorted = eventsWithVolume
+      .sort((a, b) => {
+        if (b._docVolume !== a._docVolume) {
+          return b._docVolume - a._docVolume;
+        }
+        return new Date(b.date) - new Date(a.date);
+      });
+    
+    // If limit is null or 0, return all events
+    return limit ? sorted.slice(0, limit) : sorted;
   },
 
   // Calculate total volume for a narrative from documents

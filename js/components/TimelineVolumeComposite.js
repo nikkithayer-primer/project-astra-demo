@@ -22,17 +22,52 @@ export class TimelineVolumeComposite extends BaseComponent {
       ...options
     });
     this.currentTransform = d3.zoomIdentity;
-    this.currentView = 'factions'; // 'factions' or 'publishers'
+    // Default view will be set in render() based on available data
+    this.currentView = options.defaultView || null;
+    this.maxEventVolume = 0;
+  }
+
+  /**
+   * Calculate the volume threshold for event visibility based on zoom level.
+   * At zoom 1x, only show events with volume >= 50% of max volume.
+   * At zoom 5x+, show all events.
+   */
+  getVolumeThreshold() {
+    const zoomLevel = this.currentTransform.k;
+    // Linear interpolation: at zoom 1, threshold = 0.5 * maxVolume; at zoom 5+, threshold = 0
+    const thresholdPercent = Math.max(0, 0.5 - (zoomLevel - 1) * 0.125);
+    return this.maxEventVolume * thresholdPercent;
+  }
+
+  /**
+   * Check if an event should be visible at the current zoom level
+   */
+  isEventVisible(event) {
+    const volume = event._docVolume || 0;
+    return volume >= this.getVolumeThreshold();
   }
 
   render() {
-    const { volumeData, events } = this.data || {};
+    const { volumeData, events, publisherData } = this.data || {};
     
-    // Need at least volume data or events to render
-    if ((!volumeData || !volumeData.dates || !volumeData.dates.length) && 
-        (!events || !events.length)) {
+    // Check what data is available
+    const hasFactionData = volumeData && volumeData.dates && volumeData.dates.length > 0;
+    const hasPublisherData = publisherData && publisherData.dates && publisherData.dates.length > 0;
+    
+    // Auto-detect currentView based on available data if not set
+    if (!this.currentView) {
+      this.currentView = hasFactionData ? 'factions' : (hasPublisherData ? 'publishers' : 'factions');
+    }
+    
+    // Need at least volume data, publisher data, or events to render
+    if (!hasFactionData && !hasPublisherData && (!events || !events.length)) {
       this.showEmptyState('No data to display');
       return;
+    }
+
+    // Calculate max event volume for threshold scaling
+    if (events && events.length) {
+      this.maxEventVolume = Math.max(...events.map(e => e._docVolume || 0));
     }
 
     const { width, margin, volumeHeight, timelineHeight, axisHeight, legendHeight, minZoom, maxZoom } = this.options;
@@ -73,9 +108,7 @@ export class TimelineVolumeComposite extends BaseComponent {
     const controlsDiv = document.createElement('div');
     controlsDiv.className = 'composite-controls';
     
-    // Determine if we should show view toggle
-    const hasPublisherData = this.data.publisherData && this.data.publisherData.dates && this.data.publisherData.dates.length > 0;
-    const hasFactionData = volumeData && volumeData.dates && volumeData.dates.length > 0;
+    // Determine if we should show view toggle (both faction and publisher data must exist)
     const showToggle = this.options.showViewToggle && hasPublisherData && hasFactionData;
     
     controlsDiv.innerHTML = `
@@ -188,10 +221,16 @@ export class TimelineVolumeComposite extends BaseComponent {
   }
 
   calculateTimeExtent(volumeData, events) {
+    const { publisherData } = this.data || {};
     const dates = [];
 
     if (volumeData && volumeData.dates) {
       volumeData.dates.forEach(d => dates.push(new Date(d)));
+    }
+
+    // Include publisherData dates in time extent calculation
+    if (publisherData && publisherData.dates) {
+      publisherData.dates.forEach(d => dates.push(new Date(d)));
     }
 
     if (events && events.length) {
@@ -200,7 +239,8 @@ export class TimelineVolumeComposite extends BaseComponent {
 
     if (dates.length === 0) return null;
 
-    return d3.extent(dates);
+    const extent = d3.extent(dates);
+    return extent;
   }
 
   renderVolumeArea(volumeData) {
@@ -249,13 +289,124 @@ export class TimelineVolumeComposite extends BaseComponent {
     this.currentDataItems = items;
 
     // Prepare data for stacking
-    const stackData = dates.map((date, i) => {
+    let stackData = dates.map((date, i) => {
       const point = { date: new Date(date) };
       items.forEach((item, fi) => {
         point[item.id] = series[fi] ? series[fi][i] : 0;
       });
       return point;
     });
+
+    // When we have multiple discrete data points (like individual documents),
+    // insert zero-value points between them to create distinct spikes instead of a continuous block
+    if (stackData.length > 1) {
+      const [extentMin, extentMax] = this.xScale.domain();
+      const timeRange = extentMax.getTime() - extentMin.getTime();
+      
+      // Create a zero-value point
+      const createZeroPoint = (date) => {
+        const point = { date: new Date(date) };
+        items.forEach(item => { point[item.id] = 0; });
+        return point;
+      };
+      
+      // Calculate gap duration - points need gaps between them to show as spikes
+      // Use 2% of the time range or minimum 1 minute
+      const gapDuration = Math.max(timeRange * 0.02, 60 * 1000);
+      
+      // Build new stack data with zeros between each point
+      const spikedData = [];
+      
+      // Add zero at start if needed
+      const firstPointTime = stackData[0].date.getTime();
+      if (firstPointTime > extentMin.getTime() + gapDuration) {
+        spikedData.push(createZeroPoint(extentMin));
+      }
+      spikedData.push(createZeroPoint(new Date(firstPointTime - gapDuration)));
+      
+      stackData.forEach((point, i) => {
+        spikedData.push(point);
+        
+        if (i < stackData.length - 1) {
+          // Add zeros between this point and the next
+          const nextPointTime = stackData[i + 1].date.getTime();
+          const currentTime = point.date.getTime();
+          
+          // Only add gap points if there's enough space between points
+          if (nextPointTime - currentTime > gapDuration * 3) {
+            spikedData.push(createZeroPoint(new Date(currentTime + gapDuration)));
+            spikedData.push(createZeroPoint(new Date(nextPointTime - gapDuration)));
+          }
+        }
+      });
+      
+      // Add zero after last point if needed
+      const lastPointTime = stackData[stackData.length - 1].date.getTime();
+      spikedData.push(createZeroPoint(new Date(lastPointTime + gapDuration)));
+      if (lastPointTime < extentMax.getTime() - gapDuration) {
+        spikedData.push(createZeroPoint(extentMax));
+      }
+      
+      stackData = spikedData;
+    }
+    
+    // Handle single-point data: create a spike pattern so the area is visible
+    // Shows zero before, spike at the data point, zero after
+    else if (stackData.length === 1) {
+      const singlePoint = stackData[0];
+      const [extentMin, extentMax] = this.xScale.domain();
+      
+      // Try to align spike with event times if available
+      let effectiveCenter;
+      const events = this.data?.events;
+      if (events && events.length > 0) {
+        // Use average event time as spike center
+        const eventTimes = events.map(e => new Date(e.date).getTime());
+        const avgTime = eventTimes.reduce((a, b) => a + b, 0) / eventTimes.length;
+        effectiveCenter = new Date(avgTime);
+      } else {
+        // Fall back to center of visible extent
+        effectiveCenter = new Date((extentMin.getTime() + extentMax.getTime()) / 2);
+      }
+      
+      // Ensure center is within visible extent
+      if (effectiveCenter < extentMin) effectiveCenter = new Date(extentMin.getTime() + (extentMax.getTime() - extentMin.getTime()) * 0.2);
+      if (effectiveCenter > extentMax) effectiveCenter = new Date(extentMax.getTime() - (extentMax.getTime() - extentMin.getTime()) * 0.2);
+      
+      // Create a zero-value point
+      const createZeroPoint = (date) => {
+        const point = { date: new Date(date) };
+        items.forEach(item => { point[item.id] = 0; });
+        return point;
+      };
+      
+      // Create a point with the same values as the single point
+      const createValuePoint = (date) => {
+        const point = { date: new Date(date) };
+        items.forEach(item => { point[item.id] = singlePoint[item.id]; });
+        return point;
+      };
+      
+      // Calculate spike width (use ~10% of visible range, min 1 hour)
+      const timeRange = extentMax.getTime() - extentMin.getTime();
+      const spikeHalfWidth = Math.max(timeRange * 0.05, 30 * 60 * 1000); // 5% of range or 30 min
+      
+      const spikeStart = new Date(effectiveCenter.getTime() - spikeHalfWidth);
+      const spikeEnd = new Date(effectiveCenter.getTime() + spikeHalfWidth);
+      
+      // Build spike pattern: zero → rise → peak → fall → zero
+      stackData = [];
+      if (extentMin < spikeStart) {
+        stackData.push(createZeroPoint(extentMin));
+      }
+      stackData.push(createZeroPoint(spikeStart));
+      stackData.push(createValuePoint(effectiveCenter));
+      stackData.push(createZeroPoint(spikeEnd));
+      if (extentMax > spikeEnd) {
+        stackData.push(createZeroPoint(extentMax));
+      }
+    }
+
     this.stackData = stackData;
 
     // Stack generator
@@ -356,7 +507,10 @@ export class TimelineVolumeComposite extends BaseComponent {
       .join('g')
       .attr('class', d => `timeline-event ${d.parentEventId ? 'sub-event' : 'main-event'}`)
       .attr('transform', d => `translate(${this.xScale(new Date(d.date))}, ${axisY})`)
-      .style('cursor', 'pointer');
+      .attr('data-event-id', d => d.id)
+      .style('cursor', 'pointer')
+      .style('opacity', d => this.isEventVisible(d) ? 1 : 0)
+      .style('pointer-events', d => this.isEventVisible(d) ? 'auto' : 'none');
 
     // Event connectors and dots
     this.eventGroups.each((d, i, nodes) => {
@@ -491,7 +645,9 @@ export class TimelineVolumeComposite extends BaseComponent {
       .data(events)
       .join('g')
       .attr('class', 'event-marker')
-      .attr('data-event-id', d => d.id);
+      .attr('data-event-id', d => d.id)
+      .style('opacity', d => this.isEventVisible(d) ? 1 : 0)
+      .style('pointer-events', d => this.isEventVisible(d) ? 'auto' : 'none');
 
     this.eventMarkers.append('line')
       .attr('x1', d => this.xScale(new Date(d.date)))
@@ -533,9 +689,28 @@ export class TimelineVolumeComposite extends BaseComponent {
   renderSharedAxis() {
     this.axisGroup.selectAll('*').remove();
     
+    // Determine time format based on the visible time range
+    const [domainMin, domainMax] = this.xScale.domain();
+    const rangeMs = domainMax.getTime() - domainMin.getTime();
+    const rangeHours = rangeMs / (1000 * 60 * 60);
+    const rangeDays = rangeHours / 24;
+    
+    // Choose format based on range:
+    // < 2 days: show time (HH:MM)
+    // 2-7 days: show day and time (Mon HH:MM)
+    // > 7 days: show date (Mon DD)
+    let timeFormat;
+    if (rangeDays < 2) {
+      timeFormat = '%H:%M'; // Show hours:minutes
+    } else if (rangeDays < 7) {
+      timeFormat = '%a %H:%M'; // Show day name and time
+    } else {
+      timeFormat = '%b %d'; // Show month and day
+    }
+    
     this.axisGroup.call(d3.axisBottom(this.xScale)
       .ticks(Math.min(10, Math.max(5, this.innerWidth / 80)))
-      .tickFormat(getTimeFormatter('%b %d')))
+      .tickFormat(getTimeFormatter(timeFormat)))
       .selectAll('text')
       .attr('fill', 'var(--text-muted)')
       .attr('font-size', '10px')
@@ -907,7 +1082,7 @@ export class TimelineVolumeComposite extends BaseComponent {
       this.volumeLayers.attr('d', this.areaGenerator);
     }
 
-    // Update event markers
+    // Update event markers positions and visibility
     if (this.eventMarkers) {
       this.eventMarkers.select('line')
         .attr('x1', d => this.xScale(new Date(d.date)))
@@ -915,13 +1090,23 @@ export class TimelineVolumeComposite extends BaseComponent {
 
       this.eventMarkers.select('path')
         .attr('transform', d => `translate(${this.xScale(new Date(d.date))}, 8)`);
+      
+      // Update visibility based on zoom level
+      this.eventMarkers
+        .style('opacity', d => this.isEventVisible(d) ? 1 : 0)
+        .style('pointer-events', d => this.isEventVisible(d) ? 'auto' : 'none');
     }
 
-    // Update timeline events
+    // Update timeline events positions and visibility
     if (this.eventGroups) {
       this.eventGroups.attr('transform', d => 
         `translate(${this.xScale(new Date(d.date))}, ${this.timelineHeight / 2})`
       );
+      
+      // Update visibility based on zoom level
+      this.eventGroups
+        .style('opacity', d => this.isEventVisible(d) ? 1 : 0)
+        .style('pointer-events', d => this.isEventVisible(d) ? 'auto' : 'none');
     }
 
     // Update shared axis

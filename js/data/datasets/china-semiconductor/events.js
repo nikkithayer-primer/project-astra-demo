@@ -11,7 +11,8 @@ export const events = [
     subEventIds: ['event-002'],
     locationId: 'loc-001',
     personIds: ['person-001', 'person-002'],
-    organizationIds: ['org-001']
+    organizationIds: ['org-001'],
+    documentIds: ['doc-001', 'doc-002', 'doc-031']
   },
   {
     id: 'event-002',
@@ -21,7 +22,8 @@ export const events = [
     subEventIds: [],
     locationId: 'loc-001',
     personIds: ['person-011'],
-    organizationIds: ['org-001', 'org-010']
+    organizationIds: ['org-001', 'org-010'],
+    documentIds: ['doc-025', 'doc-029', 'doc-031']
   },
   {
     id: 'event-003',
@@ -31,7 +33,8 @@ export const events = [
     subEventIds: ['event-004', 'event-005'],
     locationId: 'loc-005',
     personIds: ['person-007'],
-    organizationIds: ['org-002', 'org-004']
+    organizationIds: ['org-002', 'org-004'],
+    documentIds: ['doc-005', 'doc-032']
   },
   {
     id: 'event-004',
@@ -41,7 +44,8 @@ export const events = [
     subEventIds: [],
     locationId: 'loc-003',
     personIds: ['person-004'],
-    organizationIds: ['org-002']
+    organizationIds: ['org-002'],
+    documentIds: ['doc-006', 'doc-028', 'doc-032']
   },
   {
     id: 'event-005',
@@ -51,7 +55,8 @@ export const events = [
     subEventIds: [],
     locationId: 'loc-002',
     personIds: ['person-008'],
-    organizationIds: ['org-022']
+    organizationIds: ['org-022'],
+    documentIds: ['doc-032']
   },
   {
     id: 'event-006',
@@ -61,7 +66,8 @@ export const events = [
     subEventIds: ['event-007'],
     locationId: 'loc-006',
     personIds: ['person-008', 'person-009'],
-    organizationIds: ['org-007']
+    organizationIds: ['org-007'],
+    documentIds: ['doc-009', 'doc-033']
   },
   {
     id: 'event-007',
@@ -71,7 +77,8 @@ export const events = [
     subEventIds: [],
     locationId: 'loc-006',
     personIds: ['person-010'],
-    organizationIds: ['org-009']
+    organizationIds: ['org-009'],
+    documentIds: ['doc-010', 'doc-033']
   },
   {
     id: 'event-008',
@@ -81,7 +88,8 @@ export const events = [
     subEventIds: ['event-009'],
     locationId: 'loc-001',
     personIds: ['person-011', 'person-012'],
-    organizationIds: ['org-010']
+    organizationIds: ['org-010'],
+    documentIds: ['doc-012', 'doc-032']
   },
   {
     id: 'event-009',
@@ -91,7 +99,8 @@ export const events = [
     subEventIds: [],
     locationId: 'loc-004',
     personIds: ['person-005'],
-    organizationIds: ['org-005', 'org-010']
+    organizationIds: ['org-005', 'org-010'],
+    documentIds: ['doc-013', 'doc-032']
   },
   {
     id: 'event-010',
@@ -101,7 +110,8 @@ export const events = [
     subEventIds: ['event-011'],
     locationId: 'loc-007',
     personIds: ['person-013'],
-    organizationIds: ['org-013']
+    organizationIds: ['org-013'],
+    documentIds: ['doc-015', 'doc-016', 'doc-034']
   },
   {
     id: 'event-011',
@@ -111,7 +121,8 @@ export const events = [
     subEventIds: [],
     locationId: 'loc-004',
     personIds: ['person-014'],
-    organizationIds: ['org-013', 'org-015']
+    organizationIds: ['org-013', 'org-015'],
+    documentIds: ['doc-016', 'doc-017', 'doc-034']
   },
   {
     id: 'event-012',
@@ -121,7 +132,8 @@ export const events = [
     subEventIds: [],
     locationId: 'loc-002',
     personIds: ['person-015'],
-    organizationIds: ['org-016']
+    organizationIds: ['org-016'],
+    documentIds: ['doc-018']
   },
   {
     id: 'event-013',
@@ -131,7 +143,8 @@ export const events = [
     subEventIds: ['event-014'],
     locationId: 'loc-009',
     personIds: ['person-017', 'person-018'],
-    organizationIds: ['org-020']
+    organizationIds: ['org-020'],
+    documentIds: ['doc-020', 'doc-021', 'doc-030', 'doc-035']
   },
   {
     id: 'event-014',
@@ -141,7 +154,8 @@ export const events = [
     subEventIds: [],
     locationId: 'loc-009',
     personIds: ['person-019'],
-    organizationIds: ['org-020', 'org-021']
+    organizationIds: ['org-020', 'org-021'],
+    documentIds: ['doc-022', 'doc-035']
   },
   {
     id: 'event-015',
@@ -151,7 +165,8 @@ export const events = [
     subEventIds: ['event-020'],
     locationId: 'loc-012',
     personIds: ['person-020'],
-    organizationIds: ['org-027']
+    organizationIds: ['org-027'],
+    documentIds: ['doc-036', 'doc-037']
   },
   {
     id: 'event-016',
@@ -161,7 +176,8 @@ export const events = [
     subEventIds: ['event-017'],
     locationId: 'loc-011',
     personIds: ['person-022'],
-    organizationIds: ['org-014']
+    organizationIds: ['org-014'],
+    documentIds: ['doc-038']
   },
   {
     id: 'event-017',
@@ -171,7 +187,8 @@ export const events = [
     subEventIds: [],
     locationId: 'loc-004',
     personIds: [],
-    organizationIds: ['org-005', 'org-032']
+    organizationIds: ['org-005', 'org-032'],
+    documentIds: ['doc-039']
   },
   {
     id: 'event-018',
@@ -181,7 +198,8 @@ export const events = [
     subEventIds: ['event-019', 'event-023'],
     locationId: 'loc-006',
     personIds: ['person-025'],
-    organizationIds: ['org-030']
+    organizationIds: ['org-030'],
+    documentIds: ['doc-040']
   },
   {
     id: 'event-019',
@@ -191,7 +209,8 @@ export const events = [
     subEventIds: [],
     locationId: 'loc-004',
     personIds: ['person-024'],
-    organizationIds: ['org-005', 'org-006']
+    organizationIds: ['org-005', 'org-006'],
+    documentIds: ['doc-041']
   },
   {
     id: 'event-020',
@@ -201,7 +220,8 @@ export const events = [
     subEventIds: [],
     locationId: 'loc-012',
     personIds: ['person-020'],
-    organizationIds: ['org-027']
+    organizationIds: ['org-027'],
+    documentIds: ['doc-043']
   },
   {
     id: 'event-021',
@@ -211,7 +231,8 @@ export const events = [
     subEventIds: [],
     locationId: 'loc-012',
     personIds: ['person-021'],
-    organizationIds: ['org-028']
+    organizationIds: ['org-028'],
+    documentIds: ['doc-044']
   },
   {
     id: 'event-022',
@@ -221,7 +242,8 @@ export const events = [
     subEventIds: [],
     locationId: 'loc-011',
     personIds: ['person-023'],
-    organizationIds: ['org-029']
+    organizationIds: ['org-029'],
+    documentIds: ['doc-046']
   },
   {
     id: 'event-023',
@@ -231,7 +253,8 @@ export const events = [
     subEventIds: [],
     locationId: 'loc-006',
     personIds: ['person-025'],
-    organizationIds: ['org-030', 'org-009']
+    organizationIds: ['org-030', 'org-009'],
+    documentIds: ['doc-047']
   },
   {
     id: 'event-024',
@@ -241,7 +264,8 @@ export const events = [
     subEventIds: [],
     locationId: 'loc-003',
     personIds: ['person-028'],
-    organizationIds: ['org-002']
+    organizationIds: ['org-002'],
+    documentIds: ['doc-050']
   },
   {
     id: 'event-025',
@@ -251,7 +275,8 @@ export const events = [
     subEventIds: [],
     locationId: 'loc-012',
     personIds: ['person-026'],
-    organizationIds: ['org-031']
+    organizationIds: ['org-031'],
+    documentIds: ['doc-051']
   },
   {
     id: 'event-026',
@@ -261,6 +286,7 @@ export const events = [
     subEventIds: [],
     locationId: 'loc-004',
     personIds: ['person-020'],
-    organizationIds: ['org-027', 'org-005']
+    organizationIds: ['org-027', 'org-005'],
+    documentIds: ['doc-053']
   }
 ];

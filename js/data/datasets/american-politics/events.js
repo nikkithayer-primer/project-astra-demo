@@ -4,24 +4,16 @@
 
 export const events = [
   {
-    id: 'event-001',
-    text: 'Biden press conference gaffe',
-    date: '2024-01-05T14:00:00Z',
-    parentEventId: null,
-    subEventIds: [],
-    locationId: 'loc-001',
-    personIds: ['person-001'],
-    organizationIds: []
-  },
-  {
     id: 'event-006',
     text: 'Macron criticizes Trump foreign policy at Davos',
+    description: 'French President Emmanuel Macron delivered a pointed speech at the World Economic Forum in Davos, warning that Trump\'s territorial ambitions toward Greenland threaten the rules-based international order. The speech was widely interpreted as a call for European unity in the face of American pressure.',
     date: '2026-01-20T10:00:00Z',
     parentEventId: null,
     subEventIds: [],
     locationId: 'loc-005',
     personIds: ['person-004', 'person-003'],
-    organizationIds: ['org-009']
+    organizationIds: ['org-009'],
+    documentIds: ['doc-001', 'doc-027']
   },
   {
     id: 'event-007',
@@ -31,7 +23,8 @@ export const events = [
     subEventIds: [],
     locationId: 'loc-001',
     personIds: ['person-003', 'person-004'],
-    organizationIds: []
+    organizationIds: [],
+    documentIds: ['doc-002', 'doc-027']
   },
   {
     id: 'event-008',
@@ -41,7 +34,8 @@ export const events = [
     subEventIds: [],
     locationId: 'loc-006',
     personIds: ['person-006'],
-    organizationIds: []
+    organizationIds: [],
+    documentIds: ['doc-004', 'doc-027']
   },
   {
     id: 'event-009',
@@ -51,7 +45,8 @@ export const events = [
     subEventIds: [],
     locationId: 'loc-005',
     personIds: ['person-005'],
-    organizationIds: ['org-008']
+    organizationIds: ['org-008'],
+    documentIds: ['doc-003', 'doc-027']
   },
   {
     id: 'event-010',
@@ -61,7 +56,8 @@ export const events = [
     subEventIds: [],
     locationId: 'loc-002',
     personIds: ['person-007'],
-    organizationIds: ['org-010']
+    organizationIds: ['org-010'],
+    documentIds: ['doc-005', 'doc-026', 'doc-028']
   },
   {
     id: 'event-011',
@@ -71,7 +67,8 @@ export const events = [
     subEventIds: [],
     locationId: 'loc-002',
     personIds: [],
-    organizationIds: ['org-010', 'org-011']
+    organizationIds: ['org-010', 'org-011'],
+    documentIds: ['doc-006', 'doc-026', 'doc-028']
   },
   {
     id: 'event-012',
@@ -81,17 +78,20 @@ export const events = [
     subEventIds: [],
     locationId: 'loc-002',
     personIds: [],
-    organizationIds: ['org-010', 'org-011']
+    organizationIds: ['org-010', 'org-011'],
+    documentIds: []
   },
   {
     id: 'event-013',
     text: 'Protester Renee Good fatally shot by ICE agent',
+    description: 'During anti-ICE protests in Minneapolis, demonstrator Renee Good was fatally shot by an Immigration and Customs Enforcement agent. The incident sparked national outrage and intensified debates about federal enforcement tactics, with the FBI\'s subsequent investigation facing criticism for focusing on the victim rather than the agent involved.',
     date: '2026-01-15T00:00:00Z',
     parentEventId: null,
     subEventIds: ['event-014'],
     locationId: 'loc-002',
     personIds: ['person-008'],
-    organizationIds: ['org-011']
+    organizationIds: ['org-011'],
+    documentIds: ['doc-007', 'doc-026', 'doc-031']
   },
   {
     id: 'event-014',
@@ -101,7 +101,8 @@ export const events = [
     subEventIds: [],
     locationId: 'loc-002',
     personIds: ['person-008'],
-    organizationIds: ['org-012']
+    organizationIds: ['org-012'],
+    documentIds: ['doc-007', 'doc-031']
   },
   {
     id: 'event-015',
@@ -111,7 +112,8 @@ export const events = [
     subEventIds: ['event-016'],
     locationId: 'loc-007',
     personIds: ['person-009', 'person-010'],
-    organizationIds: ['org-013', 'org-015']
+    organizationIds: ['org-013', 'org-015'],
+    documentIds: ['doc-013', 'doc-029']
   },
   {
     id: 'event-016',
@@ -121,7 +123,8 @@ export const events = [
     subEventIds: [],
     locationId: 'loc-007',
     personIds: ['person-011'],
-    organizationIds: ['org-014']
+    organizationIds: ['org-014'],
+    documentIds: ['doc-014', 'doc-029']
   },
   {
     id: 'event-017',
@@ -131,7 +134,8 @@ export const events = [
     subEventIds: ['event-018', 'event-019', 'event-020'],
     locationId: 'loc-008',
     personIds: ['person-014', 'person-015', 'person-016'],
-    organizationIds: ['org-016', 'org-011']
+    organizationIds: ['org-016', 'org-011'],
+    documentIds: ['doc-008', 'doc-012', 'doc-024']
   },
   {
     id: 'event-018',
@@ -141,7 +145,8 @@ export const events = [
     subEventIds: [],
     locationId: 'loc-001',
     personIds: ['person-012', 'person-013'],
-    organizationIds: ['org-010']
+    organizationIds: ['org-010'],
+    documentIds: ['doc-009']
   },
   {
     id: 'event-019',
@@ -151,7 +156,8 @@ export const events = [
     subEventIds: [],
     locationId: 'loc-001',
     personIds: ['person-012', 'person-016'],
-    organizationIds: ['org-010']
+    organizationIds: ['org-010'],
+    documentIds: ['doc-010']
   },
   {
     id: 'event-020',
@@ -161,7 +167,8 @@ export const events = [
     subEventIds: [],
     locationId: 'loc-001',
     personIds: ['person-003'],
-    organizationIds: []
+    organizationIds: [],
+    documentIds: ['doc-011']
   },
   {
     id: 'event-021',
@@ -171,7 +178,8 @@ export const events = [
     subEventIds: ['event-022'],
     locationId: 'loc-002',
     personIds: ['person-021', 'person-022', 'person-023'],
-    organizationIds: ['org-017', 'org-011', 'org-020']
+    organizationIds: ['org-017', 'org-011', 'org-020'],
+    documentIds: ['doc-015']
   },
   {
     id: 'event-022',
@@ -181,7 +189,8 @@ export const events = [
     subEventIds: [],
     locationId: 'loc-009',
     personIds: ['person-025', 'person-024'],
-    organizationIds: ['org-017']
+    organizationIds: ['org-017'],
+    documentIds: ['doc-015']
   },
   {
     id: 'event-023',
@@ -191,7 +200,8 @@ export const events = [
     subEventIds: [],
     locationId: 'loc-002',
     personIds: ['person-007', 'person-017'],
-    organizationIds: ['org-010']
+    organizationIds: ['org-010'],
+    documentIds: ['doc-016']
   },
   {
     id: 'event-024',
@@ -201,7 +211,8 @@ export const events = [
     subEventIds: [],
     locationId: 'loc-002',
     personIds: ['person-017'],
-    organizationIds: ['org-010', 'org-021']
+    organizationIds: ['org-010', 'org-021'],
+    documentIds: []
   },
   {
     id: 'event-025',
@@ -211,7 +222,8 @@ export const events = [
     subEventIds: [],
     locationId: 'loc-001',
     personIds: ['person-018'],
-    organizationIds: ['org-017']
+    organizationIds: ['org-017'],
+    documentIds: ['doc-017']
   },
   {
     id: 'event-026',
@@ -221,7 +233,8 @@ export const events = [
     subEventIds: [],
     locationId: 'loc-001',
     personIds: ['person-026'],
-    organizationIds: ['org-022']
+    organizationIds: ['org-022'],
+    documentIds: ['doc-018']
   },
   {
     id: 'event-027',
@@ -231,7 +244,8 @@ export const events = [
     subEventIds: ['event-031'],
     locationId: 'loc-011',
     personIds: ['person-027'],
-    organizationIds: ['org-024', 'org-029']
+    organizationIds: ['org-024', 'org-029'],
+    documentIds: ['doc-032', 'doc-033']
   },
   {
     id: 'event-028',
@@ -241,7 +255,8 @@ export const events = [
     subEventIds: [],
     locationId: null,
     personIds: ['person-028'],
-    organizationIds: ['org-025']
+    organizationIds: ['org-025'],
+    documentIds: ['doc-034']
   },
   {
     id: 'event-029',
@@ -251,7 +266,8 @@ export const events = [
     subEventIds: [],
     locationId: 'loc-009',
     personIds: ['person-029'],
-    organizationIds: ['org-026']
+    organizationIds: ['org-026'],
+    documentIds: ['doc-037']
   },
   {
     id: 'event-030',
@@ -261,7 +277,8 @@ export const events = [
     subEventIds: [],
     locationId: 'loc-001',
     personIds: ['person-030'],
-    organizationIds: ['org-010']
+    organizationIds: ['org-010'],
+    documentIds: ['doc-038']
   },
   {
     id: 'event-031',
@@ -271,7 +288,8 @@ export const events = [
     subEventIds: [],
     locationId: 'loc-010',
     personIds: ['person-027', 'person-028'],
-    organizationIds: ['org-024', 'org-025']
+    organizationIds: ['org-024', 'org-025'],
+    documentIds: ['doc-040']
   },
   {
     id: 'event-032',
@@ -281,7 +299,8 @@ export const events = [
     subEventIds: ['event-033'],
     locationId: 'loc-004',
     personIds: ['person-032'],
-    organizationIds: ['org-020']
+    organizationIds: ['org-020'],
+    documentIds: ['doc-041']
   },
   {
     id: 'event-033',
@@ -291,7 +310,8 @@ export const events = [
     subEventIds: [],
     locationId: 'loc-004',
     personIds: ['person-033'],
-    organizationIds: ['org-020']
+    organizationIds: ['org-020'],
+    documentIds: ['doc-042']
   },
   {
     id: 'event-034',
@@ -301,7 +321,8 @@ export const events = [
     subEventIds: [],
     locationId: 'loc-001',
     personIds: ['person-032', 'person-033'],
-    organizationIds: ['org-020']
+    organizationIds: ['org-020'],
+    documentIds: ['doc-044']
   },
   {
     id: 'event-035',
@@ -311,7 +332,8 @@ export const events = [
     subEventIds: ['event-036'],
     locationId: 'loc-001',
     personIds: ['person-034', 'person-035'],
-    organizationIds: ['org-028', 'org-022']
+    organizationIds: ['org-028', 'org-022'],
+    documentIds: ['doc-035', 'doc-036']
   },
   {
     id: 'event-036',
@@ -321,7 +343,8 @@ export const events = [
     subEventIds: [],
     locationId: 'loc-009',
     personIds: [],
-    organizationIds: ['org-027']
+    organizationIds: ['org-027'],
+    documentIds: ['doc-039']
   },
   {
     id: 'event-037',
@@ -331,7 +354,8 @@ export const events = [
     subEventIds: [],
     locationId: 'loc-009',
     personIds: ['person-031'],
-    organizationIds: ['org-027']
+    organizationIds: ['org-027'],
+    documentIds: ['doc-047']
   },
   {
     id: 'event-038',
@@ -341,6 +365,7 @@ export const events = [
     subEventIds: [],
     locationId: 'loc-001',
     personIds: ['person-036'],
-    organizationIds: ['org-012']
+    organizationIds: ['org-012'],
+    documentIds: ['doc-050']
   }
 ];

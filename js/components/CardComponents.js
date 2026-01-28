@@ -19,7 +19,6 @@ import { Timeline } from './Timeline.js';
 import { TimelineVolumeComposite } from './TimelineVolumeComposite.js';
 import { StackedAreaChart } from './StackedAreaChart.js';
 import { SentimentChart } from './SentimentChart.js';
-import { FactionCards } from './FactionCards.js';
 import { VennDiagram } from './VennDiagram.js';
 
 // Standard column configuration for document tables
@@ -41,7 +40,7 @@ const DOCUMENT_AVAILABLE_COLUMNS = {
   topics: 'Topics'
 };
 
-const DOCUMENT_DEFAULT_COLUMNS = ['classification', 'publisherName', 'publisherType', 'title', 'publishedDate'];
+const DOCUMENT_DEFAULT_COLUMNS = ['classification', 'documentType', 'publisherName', 'title', 'publishedDate'];
 
 /**
  * Base class for card components
@@ -332,6 +331,14 @@ export class NarrativeListCard extends BaseCardComponent {
   }
 }
 
+// Document type labels for display
+const DOCUMENT_TYPE_LABELS = {
+  news_article: 'News Article',
+  social_post: 'Social Post',
+  tiktok: 'TikTok',
+  internal: 'Internal'
+};
+
 /**
  * Document Table Card Component
  */
@@ -347,26 +354,77 @@ export class DocumentTableCard extends BaseCardComponent {
     this.fullWidth = options.fullWidth || false;
     this.enableViewerMode = options.enableViewerMode || false;
     this.showColumnFilter = options.showColumnFilter !== false; // Show filter by default
+    this.showTypeFilter = options.showTypeFilter !== false; // Show type filter by default
     this.columns = options.columns || [...DOCUMENT_DEFAULT_COLUMNS];
     this.availableColumns = options.availableColumns || DOCUMENT_AVAILABLE_COLUMNS;
     this.columnFilterId = `${containerId}-column-filter`;
+    this.typeFilterId = `${containerId}-type-filter`;
     this.columnFilter = null;
+    this.documentTypeFilter = 'all';
   }
 
   hasData() {
     return this.documents.length > 0;
   }
 
+  /**
+   * Get document type options from available documents
+   */
+  getDocumentTypeOptions() {
+    const types = new Set(this.documents.map(d => d.documentType).filter(Boolean));
+    const options = { all: 'All Types' };
+    for (const type of types) {
+      options[type] = DOCUMENT_TYPE_LABELS[type] || type.replace(/_/g, ' ').replace(/\b\w/g, c => c.toUpperCase());
+    }
+    return options;
+  }
+
+  /**
+   * Get filtered documents based on current type filter
+   */
+  getFilteredDocuments() {
+    if (this.documentTypeFilter === 'all') {
+      return this.documents;
+    }
+    return this.documents.filter(doc => {
+      const docType = doc.documentType || 'news_article';
+      return docType === this.documentTypeFilter;
+    });
+  }
+
   getCardHtml() {
     if (!this.hasData()) return '';
     
-    // Build actions HTML with column filter placeholder
-    const actionsHtml = this.showColumnFilter 
-      ? `<div class="filter-control" id="${this.columnFilterId}"></div>`
-      : '';
+    // Build type filter dropdown HTML
+    const typeOptions = this.getDocumentTypeOptions();
+    const typeOptionsHtml = Object.entries(typeOptions).map(([key, label]) => {
+      const selected = this.documentTypeFilter === key ? 'selected' : '';
+      return `<option value="${key}" ${selected}>${label}</option>`;
+    }).join('');
+    
+    // Build actions HTML with type filter and column filter
+    let actionsHtml = '';
+    
+    // Only show type filter if there are multiple types
+    if (this.showTypeFilter && Object.keys(typeOptions).length > 2) {
+      actionsHtml += `
+        <div class="filter-control">
+          <label class="filter-label">Type</label>
+          <select id="${this.typeFilterId}" class="filter-select">
+            ${typeOptionsHtml}
+          </select>
+        </div>
+      `;
+    }
+    
+    if (this.showColumnFilter) {
+      actionsHtml += `<div class="filter-control" id="${this.columnFilterId}"></div>`;
+    }
+    
+    const filteredDocs = this.getFilteredDocuments();
     
     return CardBuilder.create(this.title, this.containerId, {
-      count: this.showCount ? this.documents.length : undefined,
+      count: this.showCount ? filteredDocs.length : undefined,
       noPadding: true,
       halfWidth: this.halfWidth,
       fullWidth: this.fullWidth,
@@ -412,7 +470,8 @@ export class DocumentTableCard extends BaseCardComponent {
       }
     }
 
-    // Initialize document table
+    // Initialize document table with filtered documents
+    const filteredDocs = this.getFilteredDocuments();
     this.component = new DocumentTable(this.containerId, {
       columns: columns,
       maxItems: this.maxItems,
@@ -421,9 +480,39 @@ export class DocumentTableCard extends BaseCardComponent {
         window.location.hash = `#/document/${doc.id}`;
       }
     });
-    this.component.update({ documents: this.documents });
+    this.component.update({ documents: filteredDocs });
+
+    // Attach type filter listener
+    this.attachTypeFilterListener();
 
     return this.component;
+  }
+
+  /**
+   * Attach event listener for type filter dropdown
+   */
+  attachTypeFilterListener() {
+    const typeSelect = document.getElementById(this.typeFilterId);
+    if (typeSelect) {
+      typeSelect.addEventListener('change', (e) => {
+        this.documentTypeFilter = e.target.value;
+        const filteredDocs = this.getFilteredDocuments();
+        
+        // Update document count in card header
+        const card = document.getElementById(this.containerId)?.closest('.card');
+        if (card) {
+          const countEl = card.querySelector('.card-count');
+          if (countEl) {
+            countEl.textContent = filteredDocs.length;
+          }
+        }
+        
+        // Update table with filtered documents
+        if (this.component) {
+          this.component.update({ documents: filteredDocs });
+        }
+      });
+    }
   }
 
   destroy() {
@@ -566,43 +655,6 @@ export class SentimentChartCard extends BaseCardComponent {
 }
 
 /**
- * Faction Cards Card Component
- */
-export class FactionCardsCard extends BaseCardComponent {
-  constructor(view, containerId, options = {}) {
-    super(view, containerId);
-    this.options = options;
-    this.factions = options.factions || [];
-    this.title = options.title || 'Affiliated Factions';
-    this.halfWidth = options.halfWidth || false;
-  }
-
-  hasData() {
-    return this.factions.length > 0;
-  }
-
-  getCardHtml() {
-    if (!this.hasData()) return '';
-    return CardBuilder.create(this.title, this.containerId, {
-      halfWidth: this.halfWidth
-    });
-  }
-
-  initialize() {
-    if (!this.hasData()) return null;
-
-    this.component = new FactionCards(this.containerId, {
-      onFactionClick: (f) => {
-        window.location.hash = `#/faction/${f.id}`;
-      }
-    });
-    this.component.update({ factions: this.factions });
-
-    return this.component;
-  }
-}
-
-/**
  * Venn Diagram Card Component
  */
 export class VennDiagramCard extends BaseCardComponent {
@@ -618,7 +670,8 @@ export class VennDiagramCard extends BaseCardComponent {
   }
 
   hasData() {
-    return this.factions.length >= 1;
+    // Ensure we have at least one valid faction with id and name
+    return this.factions.some(f => f && f.id && f.name);
   }
 
   getCardHtml() {
@@ -638,14 +691,24 @@ export class VennDiagramCard extends BaseCardComponent {
         window.location.hash = `#/faction/${f.id}`;
       }
     });
+    
+    // Filter out any undefined/null factions and ensure valid data
+    const validFactions = this.factions.filter(f => f && f.id && f.name);
+    const validFactionIds = new Set(validFactions.map(f => f.id));
+    
+    // Only include overlaps where all faction IDs exist in our valid factions
+    const validOverlaps = (this.overlaps || []).filter(o => 
+      o && o.factionIds && o.factionIds.every(fid => validFactionIds.has(fid))
+    );
+    
     this.component.update({
-      sets: this.factions.map(f => ({
+      sets: validFactions.map(f => ({
         id: f.id,
         name: f.name,
         size: f.memberCount || 1000,
         color: f.color
       })),
-      overlaps: this.overlaps
+      overlaps: validOverlaps
     });
     
     if (this.options.enableAutoResize !== false) {
@@ -892,6 +955,8 @@ export class BulletPointsCard extends BaseCardComponent {
     this.options = options;
     this.bulletPoints = options.bulletPoints || [];
     this.title = options.title || 'Key Points';
+    this.sourceType = options.sourceType || null;
+    this.sourceId = options.sourceId || null;
   }
 
   hasData() {
@@ -920,75 +985,15 @@ export class BulletPointsCard extends BaseCardComponent {
       return div.innerHTML;
     };
 
+    // Build source link HTML if sourceType and sourceId are provided
+    const sourceLinkHtml = (this.sourceType && this.sourceId) 
+      ? `<a href="#" class="btn btn-small btn-secondary source-link bullet-source-link" data-source-type="${this.sourceType}" data-source-id="${this.sourceId}">View source</a>`
+      : '';
+
     container.innerHTML = `
       <ul class="bullet-points-list">
-        ${this.bulletPoints.map(bp => `<li class="bullet-point-item">${escapeHtml(bp)}</li>`).join('')}
+        ${this.bulletPoints.map(bp => `<li class="bullet-point-item">${escapeHtml(bp)} ${sourceLinkHtml}</li>`).join('')}
       </ul>
-    `;
-
-    return null; // No component to return, just rendered HTML
-  }
-}
-
-/**
- * Summary Stats Card Component
- * Displays summary statistics with labels
- */
-export class SummaryStatsCard extends BaseCardComponent {
-  constructor(view, containerId, options = {}) {
-    super(view, containerId);
-    this.options = options;
-    this.stats = options.stats || []; // Array of { value, label } objects
-    this.title = options.title || 'Summary';
-    this.footer = options.footer || null; // Optional footer text/html
-  }
-
-  hasData() {
-    return this.stats && this.stats.length > 0;
-  }
-
-  getCardHtml() {
-    if (!this.hasData()) return '';
-    return CardBuilder.create(this.title, this.containerId, {
-      fullWidth: this.options.fullWidth || false,
-      halfWidth: this.options.halfWidth || false
-    });
-  }
-
-  initialize() {
-    if (!this.hasData()) return null;
-
-    const container = document.getElementById(this.containerId);
-    if (!container) return null;
-
-    // Escape HTML helper
-    const escapeHtml = (text) => {
-      if (!text) return '';
-      const div = document.createElement('div');
-      div.textContent = text;
-      return div.innerHTML;
-    };
-
-    const statsHtml = this.stats.map(stat => `
-      <div class="summary-stat">
-        <span class="summary-stat-value">${escapeHtml(String(stat.value))}</span>
-        <span class="summary-stat-label">${escapeHtml(stat.label)}</span>
-      </div>
-    `).join('');
-
-    const footerHtml = this.footer ? `
-      <div class="summary-footer">
-        ${this.footer}
-      </div>
-    ` : '';
-
-    container.innerHTML = `
-      <div class="summary-stats-container">
-        <div class="summary-stats-grid">
-          ${statsHtml}
-        </div>
-        ${footerHtml}
-      </div>
     `;
 
     return null; // No component to return, just rendered HTML
@@ -1112,9 +1117,7 @@ export default {
   TimelineVolumeCompositeCard,
   StackedAreaChartCard,
   SentimentChartCard,
-  FactionCardsCard,
   VennDiagramCard,
   BulletPointsCard,
-  SummaryStatsCard,
   CardManager
 };

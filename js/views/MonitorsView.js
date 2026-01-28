@@ -19,6 +19,7 @@ import { MapView } from '../components/MapView.js';
 import { CardBuilder } from '../utils/CardBuilder.js';
 import { initAllCardToggles } from '../utils/cardWidthToggle.js';
 import { getMonitorEditor } from '../components/MonitorEditorModal.js';
+import { formatAlertDescriptionWithLinks } from './MonitorView.js';
 
 // Available visualization types for monitors
 const VISUALIZATION_TYPES = [
@@ -275,7 +276,7 @@ export class MonitorsView extends BaseView {
         ? monitor.alerts.slice(0, 3).map(alert => `
             <div class="monitor-alert-item">
               <span class="alert-type-badge ${this.getAlertTypeClass(alert.type)}">${this.getAlertTypeLabel(alert.type)}</span>
-              <span class="alert-description">${alert.description}</span>
+              <span class="alert-description">${formatAlertDescriptionWithLinks(alert, DataService)}</span>
               <span class="alert-time">${this.formatRelativeTime(alert.triggeredAt)}</span>
             </div>
           `).join('')
@@ -495,11 +496,6 @@ export class MonitorsView extends BaseView {
                 <span class="text-xs text-muted">Watch specific events</span>
               </div>
             </div>
-          </div>
-          
-          <div class="view-header-stats">
-            <span class="badge badge-status-active">${enrichedMonitors.filter(m => m.enabled).length} Active Monitors</span>
-            <span class="badge badge-status-high">${todayAlerts.length} Alert${todayAlerts.length !== 1 ? 's' : ''} Today</span>
           </div>
         </div>
       </div>

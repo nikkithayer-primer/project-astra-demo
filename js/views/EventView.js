@@ -12,7 +12,10 @@ import {
   NetworkGraphCard,
   NarrativeListCard,
   MapCard,
-  TimelineCard,
+  TimelineVolumeCompositeCard,
+  TopicListCard,
+  SentimentChartCard,
+  VennDiagramCard,
   DocumentTableCard
 } from '../components/CardComponents.js';
 
@@ -82,6 +85,10 @@ export class EventView extends BaseView {
       breadcrumbs: breadcrumbs,
       title: event.text,
       subtitle: subtitleParts,
+      description: event.description,
+      descriptionLink: event.description 
+        ? `<a href="#" class="btn btn-small btn-secondary source-link" data-source-type="event" data-source-id="${event.id}">View source</a>` 
+        : '',
       tabs: tabsConfig,
       activeTab: activeTab
     });
@@ -109,7 +116,7 @@ export class EventView extends BaseView {
     const contentGrid = this.container.querySelector('.content-grid');
     if (contentGrid) {
       const tabSuffix = this.isDocumentsTab() ? '-docs' : '';
-      initAllCardToggles(contentGrid, `event-${this.eventId}${tabSuffix}`, { 1: 'half', 2: 'half' });
+      initAllCardToggles(contentGrid, `event-${this.eventId}${tabSuffix}`);
     }
 
     // Initialize all card components
@@ -137,9 +144,86 @@ export class EventView extends BaseView {
     // All events including this one and sub-events for timeline
     const allEvents = [event, ...subEvents];
 
+    // Prepare publisher volume data for the composite chart (by source)
+    const publishers = DataService.getPublishers ? DataService.getPublishers() : [];
+    const dateMap = new Map();
+    const publisherIds = new Set();
+    
+    documents.forEach(doc => {
+      if (!doc.publishedDate) return;
+      const date = doc.publishedDate.split('T')[0];
+      if (!dateMap.has(date)) {
+        dateMap.set(date, {});
+      }
+      if (doc.publisherId) {
+        publisherIds.add(doc.publisherId);
+        const dayData = dateMap.get(date);
+        dayData[doc.publisherId] = (dayData[doc.publisherId] || 0) + 1;
+      }
+    });
+
+    const dates = [...dateMap.keys()].sort();
+    const relevantPublishers = [...publisherIds].map(id => publishers.find(p => p.id === id)).filter(Boolean);
+    const series = relevantPublishers.map(publisher =>
+      dates.map(date => (dateMap.get(date) || {})[publisher.id] || 0)
+    );
+
+    const publisherData = dates.length > 0 ? { dates, series, publishers: relevantPublishers } : null;
+    const hasPublisherData = publisherData && publisherData.dates.length > 0;
+    const hasVolumeTimeline = hasPublisherData || allEvents.length > 0;
+
+    // Get topics related to this event (topics that share documents)
+    const eventDocIds = new Set(documents.map(d => d.id));
+    const allTopics = DataService.getTopics ? DataService.getTopics() : [];
+    const topics = allTopics.filter(topic =>
+      (topic.documentIds || []).some(dId => eventDocIds.has(dId))
+    );
+
+    // Get factions from documents and compute sentiment
+    const factionMap = new Map();
+    documents.forEach(doc => {
+      Object.keys(doc.factionMentions || {}).forEach(factionId => {
+        const mention = doc.factionMentions[factionId];
+        if (!factionMap.has(factionId)) {
+          factionMap.set(factionId, { volume: 0, sentimentSum: 0, count: 0 });
+        }
+        const data = factionMap.get(factionId);
+        data.volume += 1;
+        if (mention.sentiment !== undefined) {
+          data.sentimentSum += mention.sentiment;
+          data.count += 1;
+        }
+      });
+    });
+
+    const factions = [];
+    const sentimentFactions = [];
+    factionMap.forEach((data, factionId) => {
+      const faction = DataService.getFaction(factionId);
+      if (faction) {
+        factions.push(faction);
+        sentimentFactions.push({
+          ...faction,
+          sentiment: data.count > 0 ? data.sentimentSum / data.count : 0
+        });
+      }
+    });
+
+    // Get faction overlaps
+    const factionOverlaps = factions.length > 1
+      ? DataService.getFactionOverlapsFor(factions[0]?.id).filter(o =>
+          o.factionIds.every(fid => factions.some(f => f.id === fid))
+        )
+      : [];
+
+    // Build map locations
+    const mapLocations = location ? [{ ...location, isEvent: true, eventText: event.text }] : [];
+
     return { 
       parentEvent, subEvents, location, persons, organizations, 
-      narratives, documents, hasNetwork, personIds, orgIds, allEvents 
+      narratives, documents, hasNetwork, personIds, orgIds, allEvents,
+      publisherData, hasPublisherData, hasVolumeTimeline, topics,
+      factions, sentimentFactions, factionOverlaps, mapLocations
     };
   }
 
@@ -150,32 +234,45 @@ export class EventView extends BaseView {
     // Reset card manager for fresh setup
     this.cardManager = new CardManager(this);
 
-    // Event Timeline (full width)
-    const timelineTitle = data.subEvents.length > 0 
-      ? `Event Timeline (${data.subEvents.length} sub-events)` 
-      : 'Event Timeline';
-    this.cardManager.add(new TimelineCard(this, 'event-timeline', {
-      title: timelineTitle,
-      events: data.allEvents,
-      height: 280,
-      excludeId: null // Don't exclude any - show all including main event
-    }));
-
-    // Location Map (half-width)
-    if (data.location) {
-      this.cardManager.add(new MapCard(this, 'event-map', {
-        title: 'Location',
-        locations: [{ ...data.location, isEvent: true, eventText: event.text }],
-        halfWidth: true,
-        height: 350,
-        defaultZoom: 12
+    // 1. Volume & Events Chart (full-width)
+    if (data.hasVolumeTimeline) {
+      this.cardManager.add(new TimelineVolumeCompositeCard(this, 'event-volume-events', {
+        title: 'Volume & Events',
+        publisherData: data.publisherData,
+        events: data.allEvents,
+        fullWidth: true,
+        height: 450,
+        volumeHeight: 180,
+        timelineHeight: 180,
+        showViewToggle: false
       }));
     }
 
-    // People & Organizations Network (half-width)
+    // 2. Related Narratives (half-width)
+    if (data.narratives.length > 0) {
+      this.cardManager.add(new NarrativeListCard(this, 'event-narratives', {
+        title: 'Narratives',
+        narratives: data.narratives,
+        halfWidth: true,
+        showCount: true,
+        maxItems: 8
+      }));
+    }
+
+    // 3. Topics (half-width)
+    if (data.topics.length > 0) {
+      this.cardManager.add(new TopicListCard(this, 'event-topics', {
+        title: 'Topics',
+        topics: data.topics,
+        halfWidth: true,
+        showCount: true
+      }));
+    }
+
+    // 4. People & Organizations Network (half-width)
     if (data.hasNetwork) {
       this.cardManager.add(new NetworkGraphCard(this, 'event-network', {
-        title: 'People & Organizations Involved',
+        title: 'People & Orgs',
         personIds: data.personIds,
         orgIds: data.orgIds,
         halfWidth: true,
@@ -183,13 +280,35 @@ export class EventView extends BaseView {
       }));
     }
 
-    // Related Narratives (full-width)
-    if (data.narratives.length > 0) {
-      this.cardManager.add(new NarrativeListCard(this, 'event-narratives', {
-        title: 'Related Narratives',
-        narratives: data.narratives,
-        showCount: true,
-        maxItems: 8
+    // 5. Faction Sentiment (half-width)
+    if (data.sentimentFactions.length > 0) {
+      this.cardManager.add(new SentimentChartCard(this, 'event-sentiment', {
+        title: 'Faction Sentiment',
+        factions: data.sentimentFactions,
+        halfWidth: true,
+        clickRoute: 'faction'
+      }));
+    }
+
+    // 6. Faction Overlaps Venn Diagram (half-width)
+    if (data.factions.length >= 2) {
+      this.cardManager.add(new VennDiagramCard(this, 'event-venn', {
+        title: 'Faction Overlaps',
+        factions: data.factions,
+        overlaps: data.factionOverlaps,
+        halfWidth: true,
+        height: 300
+      }));
+    }
+
+    // 7. Location Map (half-width)
+    if (data.mapLocations.length > 0) {
+      this.cardManager.add(new MapCard(this, 'event-map', {
+        title: 'Locations',
+        locations: data.mapLocations,
+        halfWidth: true,
+        height: 350,
+        defaultZoom: 12
       }));
     }
   }

@@ -57,18 +57,30 @@ export class VennDiagram extends BaseComponent {
     // Format data for venn.js
     // Single sets: { sets: ['A'], size: 10, label: 'Name' }
     // Overlaps: { sets: ['A', 'B'], size: 2 }
-    const vennSets = sets.map(s => ({
+    
+    // Filter out any invalid sets and ensure required properties
+    const validSets = sets.filter(s => s && s.id && s.name);
+    if (validSets.length === 0) {
+      this.showEmptyState('No valid faction data');
+      return;
+    }
+    
+    const validSetIds = new Set(validSets.map(s => s.id));
+    
+    const vennSets = validSets.map(s => ({
       sets: [s.id],
       size: s.size || s.memberCount || 1000,
       label: s.name
     }));
 
-    // Add intersections
+    // Add intersections - only those where all factions exist in our sets
     (overlaps || []).forEach(overlap => {
-      vennSets.push({
-        sets: overlap.factionIds,
-        size: overlap.overlapSize || 100
-      });
+      if (overlap && overlap.factionIds && overlap.factionIds.every(fid => validSetIds.has(fid))) {
+        vennSets.push({
+          sets: overlap.factionIds,
+          size: overlap.overlapSize || 100
+        });
+      }
     });
 
     // Create color map

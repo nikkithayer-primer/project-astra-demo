@@ -7,7 +7,7 @@ import { BaseView } from './BaseView.js';
 import { DataService } from '../data/DataService.js';
 import { PageHeader } from '../utils/PageHeader.js';
 import { initAllCardToggles } from '../utils/cardWidthToggle.js';
-import { getSourceViewer } from '../components/SourceViewerModal.js';
+// Source viewer handled by delegated event listener in app.js
 import {
   CardManager,
   NetworkGraphCard,
@@ -75,7 +75,7 @@ export class NarrativeView extends BaseView {
       subtitle: subtitleParts,
       description: narrative.description,
       descriptionLink: narrative.description 
-        ? `<a href="#" class="source-link" id="narrative-source-link">View source</a>` 
+        ? `<a href="#" class="btn btn-small btn-secondary source-link" data-source-type="narrative" data-source-id="${narrative.id}">View source</a>` 
         : '',
       tabs: tabsConfig,
       activeTab: activeTab
@@ -102,14 +102,6 @@ export class NarrativeView extends BaseView {
     const components = this.cardManager.initializeAll();
     Object.assign(this.components, components);
 
-    // Set up source link handler
-    const sourceLink = this.container.querySelector('#narrative-source-link');
-    if (sourceLink) {
-      sourceLink.addEventListener('click', (e) => {
-        e.preventDefault();
-        getSourceViewer().open(narrative, 'narrative');
-      });
-    }
   }
 
   /**

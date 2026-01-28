@@ -334,7 +334,8 @@ export class DashboardView extends BaseView {
     // Volume Over Time & Events Combined (with time range and status filtering)
     const volumeData = DataService.getAggregateVolumeOverTime(this.missionId, this.timeRange, statusFilterArray);
     const publisherData = DataService.getAggregatePublisherVolumeOverTime(this.missionId, this.timeRange, statusFilterArray);
-    const recentEvents = DataService.getRecentEvents(15, this.timeRange, statusFilterArray);
+    // Pass all events with volume scores - component will filter based on zoom level
+    const recentEvents = DataService.getRecentEvents(null, this.timeRange, statusFilterArray);
 
     const hasVolumeData = volumeData.dates.length > 0 && volumeData.factions.length > 0;
     const hasPublisherData = publisherData.dates.length > 0 && publisherData.publishers.length > 0;
@@ -407,10 +408,10 @@ export class DashboardView extends BaseView {
       return;
     }
 
-    // Sort events by date (newest first) and limit to 10
+    // Sort events by date (newest first) and limit to 25
     const sortedEvents = [...events]
       .sort((a, b) => new Date(b.date) - new Date(a.date))
-      .slice(0, 10);
+      .slice(0, 25);
 
     if (this.eventsViewMode === 'horizontal') {
       container.innerHTML = '<div id="dashboard-events-timeline" style="min-height: 350px;"></div>';

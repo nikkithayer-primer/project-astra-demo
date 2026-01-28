@@ -20,6 +20,113 @@ import {
   DocumentTableCard
 } from '../components/CardComponents.js';
 
+/**
+ * Helper to format alert descriptions with entity links
+ * Links events, narratives, factions, persons, organizations, and locations
+ * when their text/name appears in the description
+ */
+function formatAlertDescriptionWithLinks(alert, DataServiceRef) {
+  let description = alert.description || '';
+  const DS = DataServiceRef || DataService;
+  
+  // Build a map of entity names/text to their links
+  const entityReplacements = [];
+  
+  // Process events (use event text)
+  if (alert.relatedEventIds && alert.relatedEventIds.length > 0) {
+    alert.relatedEventIds.forEach(id => {
+      const event = DS.getEvent(id);
+      if (event && event.text) {
+        entityReplacements.push({
+          name: event.text,
+          link: `<a href="#/event/${id}">${event.text}</a>`
+        });
+      }
+    });
+  }
+  
+  // Process narratives (use narrative text)
+  if (alert.relatedNarrativeIds && alert.relatedNarrativeIds.length > 0) {
+    alert.relatedNarrativeIds.forEach(id => {
+      const narrative = DS.getNarrative(id);
+      if (narrative && narrative.text) {
+        entityReplacements.push({
+          name: narrative.text,
+          link: `<a href="#/narrative/${id}">${narrative.text}</a>`
+        });
+      }
+    });
+  }
+  
+  // Process factions
+  if (alert.relatedFactionIds && alert.relatedFactionIds.length > 0) {
+    alert.relatedFactionIds.forEach(id => {
+      const faction = DS.getFaction(id);
+      if (faction) {
+        entityReplacements.push({
+          name: faction.name,
+          link: `<a href="#/faction/${id}">${faction.name}</a>`
+        });
+      }
+    });
+  }
+  
+  // Process persons
+  if (alert.relatedPersonIds && alert.relatedPersonIds.length > 0) {
+    alert.relatedPersonIds.forEach(id => {
+      const person = DS.getPerson(id);
+      if (person) {
+        entityReplacements.push({
+          name: person.name,
+          link: `<a href="#/person/${id}">${person.name}</a>`
+        });
+      }
+    });
+  }
+  
+  // Process organizations
+  if (alert.relatedOrganizationIds && alert.relatedOrganizationIds.length > 0) {
+    alert.relatedOrganizationIds.forEach(id => {
+      const org = DS.getOrganization(id);
+      if (org) {
+        entityReplacements.push({
+          name: org.name,
+          link: `<a href="#/organization/${id}">${org.name}</a>`
+        });
+      }
+    });
+  }
+  
+  // Process locations
+  if (alert.relatedLocationIds && alert.relatedLocationIds.length > 0) {
+    alert.relatedLocationIds.forEach(id => {
+      const location = DS.getLocation(id);
+      if (location) {
+        entityReplacements.push({
+          name: location.name,
+          link: `<a href="#/location/${id}">${location.name}</a>`
+        });
+      }
+    });
+  }
+  
+  // Sort by name length (longest first) to avoid partial replacements
+  entityReplacements.sort((a, b) => b.name.length - a.name.length);
+  
+  // Replace entity names with links (case-insensitive)
+  entityReplacements.forEach(({ name, link }) => {
+    // Escape special regex characters in the name
+    const escapedName = name.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    const regex = new RegExp(escapedName, 'gi');
+    description = description.replace(regex, link);
+  });
+  
+  return description;
+}
+
+// Export for use in other views
+export { formatAlertDescriptionWithLinks };
+
 export class MonitorView extends BaseView {
   constructor(container, monitorId, options = {}) {
     super(container, options);
@@ -44,17 +151,20 @@ export class MonitorView extends BaseView {
     // Determine active tab
     const activeTab = this.getCurrentTab();
     const hasDocuments = data.documents.length > 0;
+    const hasAlerts = data.alerts.length > 0;
     
     // Build cards based on active tab
     if (this.isDocumentsTab()) {
       this.setupDocumentsCard(monitor, data);
+    } else if (this.isAlertsTab()) {
+      this.setupAlertsCard(monitor, data);
     } else {
       this.setupDashboardCards(monitor, data);
     }
     
-    // Generate tabs config
+    // Generate tabs config - always show tabs for monitors
     const baseHref = `#/monitor/${this.monitorId}`;
-    const tabsConfig = hasDocuments ? this.getTabsConfig(baseHref, true) : null;
+    const tabsConfig = this.getMonitorTabsConfig(baseHref, hasAlerts, hasDocuments);
 
     // Build subtitle with scope info
     const scopeLogic = monitor.scope?.logic || 'OR';
@@ -100,7 +210,7 @@ export class MonitorView extends BaseView {
       <div class="content-area">
         <div class="content-grid">
           ${this.cardManager.getHtml()}
-          ${this.isDashboardTab() ? this.getCustomCardsHtml(data) : ''}
+          ${this.isAlertsTab() ? this.getAlertsTabHtml(data.alerts) : ''}
         </div>
       </div>
     `;
@@ -108,7 +218,7 @@ export class MonitorView extends BaseView {
     // Initialize card width toggles
     const contentGrid = this.container.querySelector('.content-grid');
     if (contentGrid) {
-      const tabSuffix = this.isDocumentsTab() ? '-docs' : '';
+      const tabSuffix = this.isDocumentsTab() ? '-docs' : (this.isAlertsTab() ? '-alerts' : '');
       initAllCardToggles(contentGrid, `monitor-${this.monitorId}${tabSuffix}`);
     }
 
@@ -119,11 +229,8 @@ export class MonitorView extends BaseView {
     // Set up edit button handler
     this.setupEditButton(monitor);
 
-    // Initialize custom components (alerts)
+    // Set up description toggle for narratives (Dashboard tab)
     if (this.isDashboardTab()) {
-      this.initializeCustomComponents(data);
-      
-      // Set up description toggle for narratives
       const descToggle = this.container.querySelector('#narrative-desc-toggle');
       if (descToggle && this.components['monitor-narratives']) {
         descToggle.addEventListener('click', () => {
@@ -268,58 +375,94 @@ export class MonitorView extends BaseView {
   }
 
   /**
-   * Get HTML for custom cards (alerts) that aren't managed by CardManager
+   * Override getTabsConfig to include Alerts tab for monitors
    */
-  getCustomCardsHtml(data) {
-    const cards = [];
-
-    // Recent Alerts
-    if (data.alerts.length > 0) {
-      cards.push(CardBuilder.create('Recent Alerts', 'monitor-alerts', {
-        count: data.alerts.length,
-        halfWidth: true,
-        noPadding: true
-      }));
+  getMonitorTabsConfig(baseHref, hasAlerts, hasDocuments) {
+    const tabs = [
+      { id: 'dashboard', label: 'Dashboard', href: `${baseHref}?tab=dashboard` }
+    ];
+    
+    if (hasAlerts) {
+      tabs.push({ id: 'alerts', label: 'Alerts', href: `${baseHref}?tab=alerts` });
     }
-
-    return cards.join('');
+    
+    if (hasDocuments) {
+      tabs.push({ id: 'documents', label: 'Documents', href: `${baseHref}?tab=documents` });
+    }
+    
+    return tabs;
   }
 
   /**
-   * Initialize custom components (alerts)
+   * Check if we're on the Alerts tab
    */
-  initializeCustomComponents(data) {
-    // Alerts List
-    if (data.alerts.length > 0) {
-      this.renderAlertsList(data.alerts);
-    }
+  isAlertsTab() {
+    return this.getCurrentTab() === 'alerts';
   }
 
   /**
-   * Render the alerts list manually (no dedicated component)
+   * Set up card for Alerts tab
    */
-  renderAlertsList(alerts) {
-    const container = document.getElementById('monitor-alerts');
-    if (!container) return;
+  setupAlertsCard(monitor, data) {
+    // Reset card manager - alerts tab uses custom HTML, not cards
+    this.cardManager = new CardManager(this);
+  }
 
-    const alertsHtml = alerts.slice(0, 5).map(alert => {
+  /**
+   * Get HTML for the Alerts tab content
+   */
+  getAlertsTabHtml(alerts) {
+    if (!alerts || alerts.length === 0) {
+      return `
+        <div class="card full-width">
+          <div class="card-header">
+            <h3 class="card-title">Alerts</h3>
+          </div>
+          <div class="card-body">
+            <p class="text-muted">No alerts have been triggered for this monitor.</p>
+          </div>
+        </div>
+      `;
+    }
+
+    const alertsHtml = alerts.map(alert => {
       const typeClass = this.getAlertTypeClass(alert.type);
       const typeLabel = this.getAlertTypeLabel(alert.type);
       const timeAgo = this.formatRelativeTime(alert.triggeredAt);
+      const formattedDate = new Date(alert.triggeredAt).toLocaleDateString('en-US', {
+        year: 'numeric',
+        month: 'short',
+        day: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit'
+      });
+      const descriptionWithLinks = formatAlertDescriptionWithLinks(alert);
       
       return `
-        <div class="alert-item ${alert.acknowledged ? 'acknowledged' : ''}">
-          <div class="alert-item-header">
+        <div class="alert-item-full">
+          <div class="alert-item-full-header">
             <span class="alert-type-badge ${typeClass}">${typeLabel}</span>
-            <span class="alert-severity alert-severity-${alert.severity}">${alert.severity}</span>
-            <span class="alert-time">${timeAgo}</span>
+            <span class="alert-title">${this.escapeHtml(alert.title || '')}</span>
+            <span class="alert-time" title="${formattedDate}">${timeAgo}</span>
           </div>
-          <div class="alert-item-description">${this.escapeHtml(alert.description)}</div>
+          <div class="alert-item-full-description">${descriptionWithLinks}</div>
         </div>
       `;
     }).join('');
 
-    container.innerHTML = `<div class="alerts-list">${alertsHtml}</div>`;
+    return `
+      <div class="card full-width">
+        <div class="card-header">
+          <h3 class="card-title">Alerts</h3>
+          <span class="card-count">${alerts.length}</span>
+        </div>
+        <div class="card-body no-padding">
+          <div class="alerts-list-full">
+            ${alertsHtml}
+          </div>
+        </div>
+      </div>
+    `;
   }
 
   /**

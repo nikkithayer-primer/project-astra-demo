@@ -2,7 +2,7 @@
    Chat toggle, panel, messages, and input for Primer Dashboard */
 
 /* ============================================
-   Chat Toggle Button
+   Chat Toggle Button - uses btn classes for base styling
    ============================================ */
 
 .chat-toggle-group {
@@ -14,27 +14,7 @@
   margin-left: var(--space-md);
 }
 
-.chat-toggle-btn {
-  display: flex;
-  align-items: center;
-  gap: var(--space-sm);
-  padding: var(--space-sm) var(--space-md);
-  background: var(--bg-tertiary);
-  border: 1px solid var(--border-color);
-  border-radius: var(--border-radius);
-  color: var(--text-secondary);
-  font-size: var(--text-sm);
-  font-family: var(--font-sans);
-  cursor: pointer;
-  transition: background 0.15s, border-color 0.15s, color 0.15s;
-}
-
-.chat-toggle-btn:hover {
-  background: var(--bg-hover);
-  border-color: var(--accent-muted);
-  color: var(--text-primary);
-}
-
+/* Active state when chat panel is open */
 .chat-toggle-btn.active {
   background: var(--accent-muted);
   border-color: var(--accent-secondary);
@@ -53,7 +33,9 @@
   position: fixed;
   top: 0;
   right: 0;
-  width: 360px;
+  width: var(--chat-width, 500px);
+  min-width: 350px;
+  max-width: 50vw;
   height: 100vh;
   background: var(--bg-secondary);
   border-left: 1px solid var(--border-color);
@@ -62,6 +44,34 @@
   z-index: 900;
   transform: translateX(100%);
   transition: transform 0.25s ease;
+}
+
+/* Resize handle on the left edge of chat panel */
+.chat-resize-handle {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 4px;
+  height: 100%;
+  cursor: ew-resize;
+  background: transparent;
+  transition: background 0.15s;
+  z-index: 10;
+}
+
+.chat-resize-handle:hover,
+.chat-resize-handle.dragging {
+  background: var(--accent-primary);
+}
+
+/* Disable transitions during resize for smoother dragging */
+.chat-panel.resizing {
+  transition: none;
+}
+
+.chat-panel.resizing + .content-wrapper,
+body.chat-resizing .content-wrapper {
+  transition: none;
 }
 
 .chat-panel.open {
@@ -349,7 +359,7 @@
    ============================================ */
 
 body.chat-open .content-wrapper {
-  margin-right: 360px;
+  margin-right: var(--chat-width, 500px);
   transition: margin-right 0.25s ease;
 }
 

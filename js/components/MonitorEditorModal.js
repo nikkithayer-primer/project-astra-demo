@@ -36,8 +36,9 @@ export class MonitorEditorModal {
   /**
    * Open the modal for creating a new monitor
    * @param {Function} onSave - Callback when monitor is saved
+   * @param {Object} initialScope - Optional initial scope to pre-populate
    */
-  openCreate(onSave) {
+  openCreate(onSave, initialScope = {}) {
     this.editingMonitor = null;
     this.onSaveCallback = onSave;
     this.formState = {
@@ -46,8 +47,8 @@ export class MonitorEditorModal {
     };
     this.render('Create Monitor');
     
-    // Initialize ScopeSelector with empty scope
-    this.initScopeSelector({});
+    // Initialize ScopeSelector with initial scope (empty or from filter)
+    this.initScopeSelector(initialScope);
   }
 
   /**

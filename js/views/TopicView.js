@@ -9,9 +9,13 @@ import { PageHeader } from '../utils/PageHeader.js';
 import { initAllCardToggles } from '../utils/cardWidthToggle.js';
 import {
   CardManager,
-  StackedAreaChartCard,
   BulletPointsCard,
-  SummaryStatsCard,
+  NetworkGraphCard,
+  VennDiagramCard,
+  MapCard,
+  NarrativeListCard,
+  SentimentChartCard,
+  TimelineVolumeCompositeCard,
   DocumentTableCard
 } from '../components/CardComponents.js';
 
@@ -67,6 +71,10 @@ export class TopicView extends BaseView {
       ],
       title: topic.headline,
       subtitle: `${dateRange} · ${duration} ${statusBadge}`,
+      description: topic.description,
+      descriptionLink: topic.description 
+        ? `<a href="#" class="btn btn-small btn-secondary source-link" data-source-type="topic" data-source-id="${topic.id}">View source</a>` 
+        : '',
       tabs: tabsConfig,
       activeTab: activeTab
     });
@@ -85,7 +93,7 @@ export class TopicView extends BaseView {
     const contentGrid = this.container.querySelector('.content-grid');
     if (contentGrid) {
       const tabSuffix = this.isDocumentsTab() ? '-docs' : '';
-      initAllCardToggles(contentGrid, `topic-${this.topicId}${tabSuffix}`, { 0: 'half', 1: 'half' });
+      initAllCardToggles(contentGrid, `topic-${this.topicId}${tabSuffix}`);
     }
 
     // Initialize all card components
@@ -98,48 +106,126 @@ export class TopicView extends BaseView {
    */
   fetchTopicData(topic) {
     const documents = DataService.getDocumentsForTopic(this.topicId);
-    const volumeOverTime = DataService.getTopicVolumeOverTime(this.topicId, this.timeRange);
-    const totalVolume = DataService.getTopicTotalVolume(this.topicId, this.timeRange);
 
-    // Prepare volume chart data
-    let volumeChartData = null;
-    if (volumeOverTime && volumeOverTime.length > 0) {
-      volumeChartData = {
-        dates: volumeOverTime.map(d => d.date),
-        series: [volumeOverTime.map(d => d.volume || 0)],
-        factions: [{ id: 'volume', name: 'Volume', color: 'var(--accent-primary)' }]
-      };
-    }
-
-    // Calculate publisher stats for summary
-    const publishers = [...new Set(documents.map(d => d.publisherId))];
-    const publisherNames = publishers.map(pId => {
-      const pub = DataService.getPublisherById(pId);
-      return pub ? pub.name : 'Unknown';
+    // Prepare publisher volume data for the composite chart (by source)
+    const publishers = DataService.getPublishers ? DataService.getPublishers() : [];
+    const dateMap = new Map();
+    const publisherIds = new Set();
+    
+    documents.forEach(doc => {
+      if (!doc.publishedDate) return;
+      const date = doc.publishedDate.split('T')[0];
+      if (!dateMap.has(date)) {
+        dateMap.set(date, {});
+      }
+      if (doc.publisherId) {
+        publisherIds.add(doc.publisherId);
+        const dayData = dateMap.get(date);
+        dayData[doc.publisherId] = (dayData[doc.publisherId] || 0) + 1;
+      }
     });
 
-    // Build summary stats
-    const summaryStats = [
-      { value: documents.length, label: 'Documents' },
-      { value: publishers.length, label: 'Publishers' },
-      { value: totalVolume.toLocaleString(), label: 'Total Volume' }
-    ];
+    const dates = [...dateMap.keys()].sort();
+    const relevantPublishers = [...publisherIds].map(id => publishers.find(p => p.id === id)).filter(Boolean);
+    const series = relevantPublishers.map(publisher =>
+      dates.map(date => (dateMap.get(date) || {})[publisher.id] || 0)
+    );
 
-    // Build publisher footer text
-    let publisherFooter = null;
-    if (publisherNames.length > 0) {
-      const displayNames = publisherNames.slice(0, 5).join(', ');
-      const moreCount = publisherNames.length > 5 ? ` +${publisherNames.length - 5} more` : '';
-      publisherFooter = `<span class="summary-footer-label">Sources:</span> <span class="summary-footer-text">${displayNames}${moreCount}</span>`;
-    }
+    const publisherData = dates.length > 0 ? { dates, series, publishers: relevantPublishers } : null;
+    const hasPublisherData = publisherData && publisherData.dates.length > 0;
+
+    // Get related narratives (narratives that share documents with this topic)
+    const topicDocIds = new Set(documents.map(d => d.id));
+    const allNarratives = DataService.getNarratives ? DataService.getNarratives() : [];
+    const narratives = allNarratives.filter(narr =>
+      (narr.documentIds || []).some(dId => topicDocIds.has(dId))
+    );
+
+    // Get events from related narratives
+    const eventIds = new Set();
+    narratives.forEach(n => {
+      (n.eventIds || []).forEach(eId => eventIds.add(eId));
+    });
+    const events = [...eventIds].map(id => DataService.getEvent(id)).filter(Boolean);
+    const allEvents = events.flatMap(e => [e, ...DataService.getSubEventsForEvent(e.id)]);
+
+    const hasVolumeTimeline = hasPublisherData || allEvents.length > 0;
+
+    // Collect person and org IDs from documents and narratives
+    const personIds = new Set();
+    const orgIds = new Set();
+    documents.forEach(doc => {
+      (doc.personIds || []).forEach(id => personIds.add(id));
+      (doc.organizationIds || []).forEach(id => orgIds.add(id));
+    });
+    narratives.forEach(narr => {
+      (narr.personIds || []).forEach(id => personIds.add(id));
+      (narr.organizationIds || []).forEach(id => orgIds.add(id));
+    });
+    const hasNetwork = personIds.size > 0 || orgIds.size > 0;
+
+    // Get factions and sentiment from documents
+    const factionSentimentMap = new Map();
+    documents.forEach(doc => {
+      Object.entries(doc.factionMentions || {}).forEach(([factionId, data]) => {
+        if (!factionSentimentMap.has(factionId)) {
+          factionSentimentMap.set(factionId, { sum: 0, count: 0 });
+        }
+        const entry = factionSentimentMap.get(factionId);
+        if (data.sentiment !== undefined) {
+          entry.sum += data.sentiment;
+          entry.count += 1;
+        }
+      });
+    });
+
+    const factions = [...factionSentimentMap.keys()].map(id => DataService.getFaction(id)).filter(Boolean);
+    const sentimentFactions = factions.map(f => {
+      const entry = factionSentimentMap.get(f.id);
+      return {
+        ...f,
+        sentiment: entry.count > 0 ? entry.sum / entry.count : 0
+      };
+    });
+
+    // Compute faction overlaps
+    const factionOverlaps = factions.length >= 2
+      ? DataService.getFactionOverlapsFor(factions[0]?.id).filter(o =>
+          o.factionIds.every(fid => factions.some(f => f.id === fid))
+        )
+      : [];
+
+    // Get locations from documents and events
+    const locationIds = new Set();
+    documents.forEach(doc => {
+      (doc.locationIds || []).forEach(id => locationIds.add(id));
+    });
+    events.forEach(e => {
+      if (e.locationId) locationIds.add(e.locationId);
+    });
+    const locations = [...locationIds].map(id => DataService.getLocation(id)).filter(Boolean);
+    const mapLocations = [
+      ...locations.map(l => ({ ...l, isEvent: false })),
+      ...events.filter(e => e.locationId).map(e => {
+        const loc = DataService.getLocation(e.locationId);
+        return loc ? { ...loc, isEvent: true, eventText: e.text } : null;
+      }).filter(Boolean)
+    ];
 
     return {
       documents,
-      volumeOverTime,
-      volumeChartData,
-      totalVolume,
-      summaryStats,
-      publisherFooter
+      publisherData,
+      hasPublisherData,
+      hasVolumeTimeline,
+      allEvents,
+      narratives,
+      personIds: [...personIds],
+      orgIds: [...orgIds],
+      hasNetwork,
+      factions,
+      sentimentFactions,
+      factionOverlaps,
+      mapLocations
     };
   }
 
@@ -179,35 +265,81 @@ export class TopicView extends BaseView {
     // Reset card manager for fresh setup
     this.cardManager = new CardManager(this);
 
-    // Key Points (bullet points) - half-width
+    // 1. Volume & Events Chart (by source) - full-width
+    if (data.hasVolumeTimeline) {
+      this.cardManager.add(new TimelineVolumeCompositeCard(this, 'topic-volume-events', {
+        title: 'Volume & Events',
+        volumeData: null, // No faction data for topics
+        publisherData: data.publisherData,
+        events: data.allEvents,
+        fullWidth: true,
+        height: 450,
+        volumeHeight: 180,
+        timelineHeight: 180,
+        showViewToggle: false // Only show by publisher for topics
+      }));
+    }
+
+    // 2. Key Points (bullet points) - half-width
     if (topic.bulletPoints && topic.bulletPoints.length > 0) {
       this.cardManager.add(new BulletPointsCard(this, 'topic-bullets', {
         title: 'Key Points',
         bulletPoints: topic.bulletPoints,
-        halfWidth: true
-      }));
-    }
-
-    // Volume Over Time Chart - half-width
-    if (data.volumeChartData) {
-      this.cardManager.add(new StackedAreaChartCard(this, 'topic-volume', {
-        title: 'Volume Over Time',
-        chartData: data.volumeChartData,
         halfWidth: true,
-        height: 200,
-        showLegend: false,
-        showCount: true,
-        count: data.totalVolume
+        sourceType: 'topic',
+        sourceId: topic.id
       }));
     }
 
-    // Summary stats - half-width
-    if (data.documents.length > 0) {
-      this.cardManager.add(new SummaryStatsCard(this, 'topic-summary', {
-        title: 'Summary',
-        stats: data.summaryStats,
-        footer: data.publisherFooter,
-        halfWidth: true
+    // 3. People & Organizations Network - half-width
+    if (data.hasNetwork) {
+      this.cardManager.add(new NetworkGraphCard(this, 'topic-network', {
+        title: 'People & Organizations',
+        personIds: data.personIds,
+        orgIds: data.orgIds,
+        halfWidth: true,
+        height: 400
+      }));
+    }
+
+    // 4. Faction Overlaps Venn Diagram - half-width
+    if (data.factions.length >= 2) {
+      this.cardManager.add(new VennDiagramCard(this, 'topic-venn', {
+        title: 'Faction Overlaps',
+        factions: data.factions,
+        overlaps: data.factionOverlaps,
+        halfWidth: true,
+        height: 300
+      }));
+    }
+
+    // 5. Locations Map - half-width
+    if (data.mapLocations.length > 0) {
+      this.cardManager.add(new MapCard(this, 'topic-map', {
+        title: 'Locations',
+        locations: data.mapLocations,
+        halfWidth: true,
+        height: 350
+      }));
+    }
+
+    // 6. Related Narratives - half-width
+    if (data.narratives.length > 0) {
+      this.cardManager.add(new NarrativeListCard(this, 'topic-narratives', {
+        title: 'Related Narratives',
+        narratives: data.narratives,
+        halfWidth: true,
+        showCount: true
+      }));
+    }
+
+    // 7. Sentiment by Faction - half-width
+    if (data.sentimentFactions.length > 0) {
+      this.cardManager.add(new SentimentChartCard(this, 'topic-sentiment', {
+        title: 'Sentiment by Faction',
+        factions: data.sentimentFactions,
+        halfWidth: true,
+        clickRoute: 'faction'
       }));
     }
   }

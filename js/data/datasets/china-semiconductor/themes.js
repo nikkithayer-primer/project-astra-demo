@@ -1,5 +1,6 @@
 /**
  * Themes for China Semiconductor dataset
+ * Note: factionMentions and volumeOverTime are computed from documentIds via DataService
  */
 
 export const themes = [
@@ -9,20 +10,11 @@ export const themes = [
     description: 'Industry analysts detail SMIC\'s innovative use of multiple DUV exposures to achieve feature sizes previously thought to require EUV lithography, though at significant cost and yield penalties.',
     parentNarrativeId: 'narr-001',
     sentiment: 0.35,
-    factionMentions: {
-      'faction-001': { volume: 185, sentiment: 0.82 },
-      'faction-003': { volume: 145, sentiment: 0.45 }
-    },
     personIds: ['person-001'],
     organizationIds: ['org-001'],
     locationIds: ['loc-001'],
     eventIds: ['event-001'],
-    volumeOverTime: [
-      { date: '2026-01-17', factionVolumes: { 'faction-001': 65, 'faction-003': 52 } },
-      { date: '2026-01-18', factionVolumes: { 'faction-001': 125, 'faction-003': 98 } },
-      { date: '2026-01-19', factionVolumes: { 'faction-001': 155, 'faction-003': 125 } },
-      { date: '2026-01-20', factionVolumes: { 'faction-001': 185, 'faction-003': 145 } }
-    ]
+    documentIds: ['doc-001', 'doc-002', 'doc-003', 'doc-023', 'doc-031']
   },
   {
     id: 'sub-002',
@@ -30,19 +22,11 @@ export const themes = [
     description: 'Tech reviewers conducting teardowns of Huawei\'s latest flagship smartphone have confirmed it contains a 5nm processor manufactured by SMIC, marking a significant milestone for China\'s semiconductor independence.',
     parentNarrativeId: 'narr-001',
     sentiment: 0.58,
-    factionMentions: {
-      'faction-001': { volume: 245, sentiment: 0.88 },
-      'faction-003': { volume: 125, sentiment: 0.32 }
-    },
     personIds: ['person-011'],
     organizationIds: ['org-001', 'org-010'],
     locationIds: ['loc-001'],
     eventIds: ['event-002'],
-    volumeOverTime: [
-      { date: '2026-01-18', factionVolumes: { 'faction-001': 85, 'faction-003': 42 } },
-      { date: '2026-01-19', factionVolumes: { 'faction-001': 165, 'faction-003': 85 } },
-      { date: '2026-01-20', factionVolumes: { 'faction-001': 245, 'faction-003': 125 } }
-    ]
+    documentIds: ['doc-025', 'doc-029', 'doc-031', 'doc-054']
   },
   {
     id: 'sub-003',
@@ -50,19 +34,11 @@ export const themes = [
     description: 'SMIC\'s breakthrough has sparked debate among US policymakers about whether export controls are achieving their intended goals or merely accelerating Chinese self-sufficiency efforts.',
     parentNarrativeId: 'narr-001',
     sentiment: -0.28,
-    factionMentions: {
-      'faction-002': { volume: 195, sentiment: -0.52 },
-      'faction-003': { volume: 85, sentiment: -0.15 }
-    },
     personIds: ['person-005', 'person-006'],
     organizationIds: ['org-005', 'org-006'],
     locationIds: ['loc-004'],
     eventIds: [],
-    volumeOverTime: [
-      { date: '2026-01-18', factionVolumes: { 'faction-002': 68, 'faction-003': 28 } },
-      { date: '2026-01-19', factionVolumes: { 'faction-002': 135, 'faction-003': 58 } },
-      { date: '2026-01-20', factionVolumes: { 'faction-002': 195, 'faction-003': 85 } }
-    ]
+    documentIds: ['doc-003', 'doc-004', 'doc-023', 'doc-024', 'doc-026', 'doc-027', 'doc-031']
   },
   {
     id: 'sub-004',
@@ -70,20 +46,11 @@ export const themes = [
     description: 'The Netherlands has agreed to block exports of advanced DUV lithography systems to China, expanding previous restrictions that only covered EUV machines, following months of negotiations with US officials.',
     parentNarrativeId: 'narr-002',
     sentiment: -0.42,
-    factionMentions: {
-      'faction-001': { volume: 165, sentiment: -0.85 },
-      'faction-002': { volume: 195, sentiment: 0.72 }
-    },
     personIds: ['person-004', 'person-007'],
     organizationIds: ['org-002', 'org-004'],
     locationIds: ['loc-003', 'loc-004'],
     eventIds: ['event-003'],
-    volumeOverTime: [
-      { date: '2026-01-14', factionVolumes: { 'faction-001': 55, 'faction-002': 68 } },
-      { date: '2026-01-15', factionVolumes: { 'faction-001': 98, 'faction-002': 125 } },
-      { date: '2026-01-16', factionVolumes: { 'faction-001': 135, 'faction-002': 165 } },
-      { date: '2026-01-17', factionVolumes: { 'faction-001': 165, 'faction-002': 195 } }
-    ]
+    documentIds: ['doc-005', 'doc-007', 'doc-032']
   },
   {
     id: 'sub-005',
@@ -91,19 +58,11 @@ export const themes = [
     description: 'ASML disclosed in its quarterly earnings call that expanded China export restrictions will reduce annual revenue by approximately $2.5 billion, prompting investor concerns about growth prospects.',
     parentNarrativeId: 'narr-002',
     sentiment: -0.55,
-    factionMentions: {
-      'faction-003': { volume: 145, sentiment: -0.42 },
-      'faction-006': { volume: 125, sentiment: -0.58 }
-    },
     personIds: ['person-004'],
     organizationIds: ['org-002'],
     locationIds: ['loc-003'],
     eventIds: ['event-004'],
-    volumeOverTime: [
-      { date: '2026-01-15', factionVolumes: { 'faction-003': 48, 'faction-006': 42 } },
-      { date: '2026-01-16', factionVolumes: { 'faction-003': 95, 'faction-006': 85 } },
-      { date: '2026-01-17', factionVolumes: { 'faction-003': 145, 'faction-006': 125 } }
-    ]
+    documentIds: ['doc-006', 'doc-028', 'doc-032']
   },
   {
     id: 'sub-006',
@@ -111,19 +70,11 @@ export const themes = [
     description: 'Chinese officials have announced increased funding for domestic lithography equipment development, with Shanghai Micro Electronics Equipment (SMEE) receiving priority support to accelerate its roadmap.',
     parentNarrativeId: 'narr-002',
     sentiment: 0.45,
-    factionMentions: {
-      'faction-001': { volume: 185, sentiment: 0.78 },
-      'faction-005': { volume: 95, sentiment: 0.62 }
-    },
     personIds: ['person-008'],
     organizationIds: ['org-022'],
     locationIds: ['loc-002'],
     eventIds: ['event-005'],
-    volumeOverTime: [
-      { date: '2026-01-15', factionVolumes: { 'faction-001': 62, 'faction-005': 32 } },
-      { date: '2026-01-16', factionVolumes: { 'faction-001': 125, 'faction-005': 65 } },
-      { date: '2026-01-17', factionVolumes: { 'faction-001': 185, 'faction-005': 95 } }
-    ]
+    documentIds: ['doc-032', 'doc-050']
   },
   {
     id: 'sub-007',
@@ -131,19 +82,11 @@ export const themes = [
     description: 'The third phase of China\'s National IC Fund will prioritize investment in advanced packaging technologies like chiplets and 2.5D/3D stacking, as well as domestic semiconductor manufacturing equipment.',
     parentNarrativeId: 'narr-003',
     sentiment: 0.65,
-    factionMentions: {
-      'faction-001': { volume: 215, sentiment: 0.88 },
-      'faction-005': { volume: 95, sentiment: 0.72 }
-    },
     personIds: ['person-008', 'person-009'],
     organizationIds: ['org-007', 'org-008'],
     locationIds: ['loc-002'],
     eventIds: ['event-006'],
-    volumeOverTime: [
-      { date: '2026-01-18', factionVolumes: { 'faction-001': 75, 'faction-005': 32 } },
-      { date: '2026-01-19', factionVolumes: { 'faction-001': 145, 'faction-005': 65 } },
-      { date: '2026-01-20', factionVolumes: { 'faction-001': 215, 'faction-005': 95 } }
-    ]
+    documentIds: ['doc-009', 'doc-010', 'doc-033']
   },
   {
     id: 'sub-008',
@@ -151,19 +94,11 @@ export const themes = [
     description: 'Analysis reveals that state-owned enterprises and government-linked investment vehicles are providing the majority of Big Fund III\'s 340 billion yuan, reflecting deepening state involvement in the semiconductor sector.',
     parentNarrativeId: 'narr-003',
     sentiment: 0.42,
-    factionMentions: {
-      'faction-001': { volume: 165, sentiment: 0.75 },
-      'faction-002': { volume: 125, sentiment: -0.45 }
-    },
     personIds: ['person-010'],
     organizationIds: ['org-009'],
     locationIds: ['loc-006'],
     eventIds: ['event-007'],
-    volumeOverTime: [
-      { date: '2026-01-18', factionVolumes: { 'faction-001': 55, 'faction-002': 42 } },
-      { date: '2026-01-19', factionVolumes: { 'faction-001': 115, 'faction-002': 85 } },
-      { date: '2026-01-20', factionVolumes: { 'faction-001': 165, 'faction-002': 125 } }
-    ]
+    documentIds: ['doc-009', 'doc-010', 'doc-033']
   },
   {
     id: 'sub-009',
@@ -171,19 +106,11 @@ export const themes = [
     description: 'Western analysts point to Big Fund\'s mixed track record and past corruption scandals, questioning whether massive capital injections can overcome technological gaps without access to cutting-edge equipment.',
     parentNarrativeId: 'narr-003',
     sentiment: -0.35,
-    factionMentions: {
-      'faction-002': { volume: 145, sentiment: -0.58 },
-      'faction-003': { volume: 85, sentiment: -0.22 }
-    },
     personIds: [],
     organizationIds: ['org-007'],
     locationIds: [],
     eventIds: [],
-    volumeOverTime: [
-      { date: '2026-01-18', factionVolumes: { 'faction-002': 48, 'faction-003': 28 } },
-      { date: '2026-01-19', factionVolumes: { 'faction-002': 98, 'faction-003': 58 } },
-      { date: '2026-01-20', factionVolumes: { 'faction-002': 145, 'faction-003': 85 } }
-    ]
+    documentIds: ['doc-011', 'doc-033']
   },
   {
     id: 'sub-010',
@@ -191,20 +118,11 @@ export const themes = [
     description: 'Sources reveal Huawei has accumulated semiconductor manufacturing equipment worth an estimated $5-8 billion in warehouses across China, purchased before expanded export restrictions took effect.',
     parentNarrativeId: 'narr-004',
     sentiment: -0.45,
-    factionMentions: {
-      'faction-001': { volume: 145, sentiment: -0.65 },
-      'faction-002': { volume: 195, sentiment: 0.72 }
-    },
     personIds: ['person-011', 'person-012'],
     organizationIds: ['org-010'],
     locationIds: ['loc-001'],
     eventIds: ['event-008'],
-    volumeOverTime: [
-      { date: '2026-01-16', factionVolumes: { 'faction-001': 48, 'faction-002': 65 } },
-      { date: '2026-01-17', factionVolumes: { 'faction-001': 95, 'faction-002': 135 } },
-      { date: '2026-01-18', factionVolumes: { 'faction-001': 125, 'faction-002': 165 } },
-      { date: '2026-01-19', factionVolumes: { 'faction-001': 145, 'faction-002': 195 } }
-    ]
+    documentIds: ['doc-012', 'doc-013', 'doc-032']
   },
   {
     id: 'sub-011',
@@ -212,19 +130,11 @@ export const themes = [
     description: 'The US Commerce Department has opened investigations into whether Huawei circumvented export controls by using third-party intermediaries to acquire restricted semiconductor equipment.',
     parentNarrativeId: 'narr-004',
     sentiment: -0.58,
-    factionMentions: {
-      'faction-002': { volume: 175, sentiment: 0.65 },
-      'faction-001': { volume: 95, sentiment: -0.78 }
-    },
     personIds: ['person-005'],
     organizationIds: ['org-005', 'org-010'],
     locationIds: ['loc-004'],
     eventIds: ['event-009'],
-    volumeOverTime: [
-      { date: '2026-01-17', factionVolumes: { 'faction-002': 58, 'faction-001': 32 } },
-      { date: '2026-01-18', factionVolumes: { 'faction-002': 115, 'faction-001': 65 } },
-      { date: '2026-01-19', factionVolumes: { 'faction-002': 175, 'faction-001': 95 } }
-    ]
+    documentIds: ['doc-013', 'doc-014', 'doc-032']
   },
   {
     id: 'sub-012',
@@ -232,19 +142,11 @@ export const themes = [
     description: 'Independent testing shows YMTC\'s 232-layer 3D NAND flash memory achieves performance and density metrics comparable to Samsung\'s latest offerings, validating China\'s memory chip capabilities.',
     parentNarrativeId: 'narr-005',
     sentiment: 0.42,
-    factionMentions: {
-      'faction-001': { volume: 125, sentiment: 0.72 },
-      'faction-003': { volume: 145, sentiment: 0.38 }
-    },
     personIds: ['person-013'],
     organizationIds: ['org-013', 'org-014'],
     locationIds: ['loc-007'],
     eventIds: ['event-010'],
-    volumeOverTime: [
-      { date: '2026-01-17', factionVolumes: { 'faction-001': 42, 'faction-003': 48 } },
-      { date: '2026-01-18', factionVolumes: { 'faction-001': 85, 'faction-003': 98 } },
-      { date: '2026-01-19', factionVolumes: { 'faction-001': 125, 'faction-003': 145 } }
-    ]
+    documentIds: ['doc-015', 'doc-016', 'doc-034']
   },
   {
     id: 'sub-013',
@@ -252,19 +154,11 @@ export const themes = [
     description: 'Researchers have identified YMTC memory chips in smartphones, SSDs, and other consumer electronics from multiple brands, raising questions about Entity List enforcement.',
     parentNarrativeId: 'narr-005',
     sentiment: -0.52,
-    factionMentions: {
-      'faction-002': { volume: 165, sentiment: -0.72 },
-      'faction-006': { volume: 115, sentiment: -0.55 }
-    },
     personIds: ['person-014'],
     organizationIds: ['org-013', 'org-015'],
     locationIds: ['loc-004'],
     eventIds: ['event-011'],
-    volumeOverTime: [
-      { date: '2026-01-17', factionVolumes: { 'faction-002': 55, 'faction-006': 38 } },
-      { date: '2026-01-18', factionVolumes: { 'faction-002': 115, 'faction-006': 78 } },
-      { date: '2026-01-19', factionVolumes: { 'faction-002': 165, 'faction-006': 115 } }
-    ]
+    documentIds: ['doc-016', 'doc-017', 'doc-034']
   },
   {
     id: 'sub-014',
@@ -272,18 +166,11 @@ export const themes = [
     description: 'Empyrean Technology and Huada Jiutian have emerged as leaders in China\'s push to develop indigenous EDA software, with combined government and private funding exceeding $2 billion.',
     parentNarrativeId: 'narr-006',
     sentiment: 0.55,
-    factionMentions: {
-      'faction-001': { volume: 165, sentiment: 0.85 },
-      'faction-005': { volume: 95, sentiment: 0.72 }
-    },
     personIds: ['person-015', 'person-016'],
     organizationIds: ['org-016', 'org-017'],
     locationIds: ['loc-002', 'loc-008'],
     eventIds: ['event-012'],
-    volumeOverTime: [
-      { date: '2026-01-19', factionVolumes: { 'faction-001': 55, 'faction-005': 32 } },
-      { date: '2026-01-20', factionVolumes: { 'faction-001': 165, 'faction-005': 95 } }
-    ]
+    documentIds: ['doc-018', 'doc-019']
   },
   {
     id: 'sub-015',
@@ -291,18 +178,11 @@ export const themes = [
     description: 'Industry analysts note that while Chinese EDA tools have made progress, they currently only support designs at 14nm and above, several generations behind leading-edge US software.',
     parentNarrativeId: 'narr-006',
     sentiment: -0.18,
-    factionMentions: {
-      'faction-002': { volume: 95, sentiment: -0.35 },
-      'faction-003': { volume: 125, sentiment: 0.12 }
-    },
     personIds: [],
     organizationIds: ['org-018', 'org-019'],
     locationIds: [],
     eventIds: [],
-    volumeOverTime: [
-      { date: '2026-01-19', factionVolumes: { 'faction-002': 32, 'faction-003': 42 } },
-      { date: '2026-01-20', factionVolumes: { 'faction-002': 95, 'faction-003': 125 } }
-    ]
+    documentIds: ['doc-019']
   },
   {
     id: 'sub-016',
@@ -310,20 +190,11 @@ export const themes = [
     description: 'TSMC has confirmed that production at its Arizona fab will begin in late 2025, a significant delay from the original 2024 target, citing construction challenges and supply chain issues.',
     parentNarrativeId: 'narr-007',
     sentiment: -0.48,
-    factionMentions: {
-      'faction-002': { volume: 145, sentiment: -0.42 },
-      'faction-006': { volume: 125, sentiment: -0.55 }
-    },
     personIds: ['person-017', 'person-018'],
     organizationIds: ['org-020'],
     locationIds: ['loc-009'],
     eventIds: ['event-013'],
-    volumeOverTime: [
-      { date: '2026-01-15', factionVolumes: { 'faction-002': 48, 'faction-006': 42 } },
-      { date: '2026-01-16', factionVolumes: { 'faction-002': 95, 'faction-006': 85 } },
-      { date: '2026-01-17', factionVolumes: { 'faction-002': 125, 'faction-006': 108 } },
-      { date: '2026-01-18', factionVolumes: { 'faction-002': 145, 'faction-006': 125 } }
-    ]
+    documentIds: ['doc-020', 'doc-021', 'doc-030', 'doc-035', 'doc-059']
   },
   {
     id: 'sub-017',
@@ -331,19 +202,11 @@ export const themes = [
     description: 'Reports of cultural clashes between TSMC\'s Taiwanese management and American workers have surfaced, with unions criticizing work practices and company officials lamenting productivity differences.',
     parentNarrativeId: 'narr-007',
     sentiment: -0.52,
-    factionMentions: {
-      'faction-001': { volume: 95, sentiment: 0.42 },
-      'faction-005': { volume: 115, sentiment: -0.62 }
-    },
     personIds: ['person-019'],
     organizationIds: ['org-020', 'org-021'],
     locationIds: ['loc-009'],
     eventIds: ['event-014'],
-    volumeOverTime: [
-      { date: '2026-01-16', factionVolumes: { 'faction-001': 32, 'faction-005': 38 } },
-      { date: '2026-01-17', factionVolumes: { 'faction-001': 65, 'faction-005': 78 } },
-      { date: '2026-01-18', factionVolumes: { 'faction-001': 95, 'faction-005': 115 } }
-    ]
+    documentIds: ['doc-021', 'doc-022', 'doc-030', 'doc-035']
   },
   {
     id: 'sub-018',
@@ -351,19 +214,11 @@ export const themes = [
     description: 'Intel announces major restructuring including 15,000 layoffs as its foundry business fails to compete with TSMC. CEO Pat Gelsinger faces investor pressure as quarterly losses mount and the stock price declines significantly.',
     parentNarrativeId: 'narr-008',
     sentiment: -0.58,
-    factionMentions: {
-      'faction-005': { volume: 185, sentiment: -0.62 },
-      'faction-006': { volume: 95, sentiment: 0.38 }
-    },
     personIds: ['person-020'],
     organizationIds: ['org-027'],
     locationIds: ['loc-012'],
     eventIds: ['event-015', 'event-020'],
-    volumeOverTime: [
-      { date: '2025-06-20', factionVolumes: { 'faction-005': 72, 'faction-006': 35 } },
-      { date: '2025-09-15', factionVolumes: { 'faction-005': 145, 'faction-006': 72 } },
-      { date: '2026-01-06', factionVolumes: { 'faction-005': 185, 'faction-006': 95 } }
-    ]
+    documentIds: ['doc-036', 'doc-037', 'doc-043']
   },
   {
     id: 'sub-019',
@@ -371,17 +226,11 @@ export const themes = [
     description: 'Intel secures $8.5 billion in CHIPS Act funding in December 2025, providing a lifeline for its US manufacturing ambitions. The funding supports new fab construction and research initiatives, though analysts question whether it\'s enough to close the gap with Asian competitors.',
     parentNarrativeId: 'narr-008',
     sentiment: 0.42,
-    factionMentions: {
-      'faction-002': { volume: 95, sentiment: 0.65 },
-      'faction-005': { volume: 125, sentiment: 0.58 }
-    },
     personIds: ['person-020'],
     organizationIds: ['org-027', 'org-005'],
     locationIds: ['loc-004'],
     eventIds: ['event-026'],
-    volumeOverTime: [
-      { date: '2025-12-10', factionVolumes: { 'faction-002': 95, 'faction-005': 125 } }
-    ]
+    documentIds: ['doc-037', 'doc-053', 'doc-057']
   },
   {
     id: 'sub-020',
@@ -389,18 +238,11 @@ export const themes = [
     description: 'Samsung and SK Hynix announce major domestic investments with government support, including $17 billion in new subsidies. The investments aim to maintain Korea\'s leadership in memory chips and expand into advanced logic manufacturing.',
     parentNarrativeId: 'narr-009',
     sentiment: 0.55,
-    factionMentions: {
-      'faction-006': { volume: 145, sentiment: 0.72 }
-    },
     personIds: ['person-022', 'person-023'],
     organizationIds: ['org-014', 'org-029', 'org-032'],
     locationIds: ['loc-011'],
     eventIds: ['event-016', 'event-022'],
-    volumeOverTime: [
-      { date: '2025-07-05', factionVolumes: { 'faction-006': 55 } },
-      { date: '2025-10-01', factionVolumes: { 'faction-006': 105 } },
-      { date: '2026-01-12', factionVolumes: { 'faction-006': 145 } }
-    ]
+    documentIds: ['doc-038', 'doc-039', 'doc-060']
   },
   {
     id: 'sub-021',
@@ -408,19 +250,11 @@ export const themes = [
     description: 'The United States objects to Korean semiconductor subsidies at the WTO, arguing they distort global competition. The dispute strains the technology alliance between the countries and complicates coordinated efforts to counter China\'s chip ambitions.',
     parentNarrativeId: 'narr-009',
     sentiment: -0.45,
-    factionMentions: {
-      'faction-002': { volume: 115, sentiment: -0.48 },
-      'faction-006': { volume: 85, sentiment: -0.55 }
-    },
     personIds: [],
     organizationIds: ['org-005', 'org-032'],
     locationIds: ['loc-004', 'loc-011'],
     eventIds: ['event-017'],
-    volumeOverTime: [
-      { date: '2025-07-25', factionVolumes: { 'faction-002': 72, 'faction-006': 55 } },
-      { date: '2025-10-25', factionVolumes: { 'faction-002': 98, 'faction-006': 72 } },
-      { date: '2025-12-28', factionVolumes: { 'faction-002': 115, 'faction-006': 85 } }
-    ]
+    documentIds: ['doc-039', 'doc-049', 'doc-055']
   },
   {
     id: 'sub-022',
@@ -428,20 +262,11 @@ export const themes = [
     description: 'China announces rare earth export quotas in August 2025 and tightens controls on gallium and germanium in October. The measures target materials essential for semiconductor manufacturing, with officials citing resource conservation while critics see retaliation for Western chip export controls.',
     parentNarrativeId: 'narr-010',
     sentiment: -0.62,
-    factionMentions: {
-      'faction-001': { volume: 195, sentiment: 0.78 },
-      'faction-002': { volume: 165, sentiment: -0.72 },
-      'faction-004': { volume: 145, sentiment: 0.82 }
-    },
     personIds: ['person-025'],
     organizationIds: ['org-030', 'org-009'],
     locationIds: ['loc-006'],
     eventIds: ['event-018', 'event-023'],
-    volumeOverTime: [
-      { date: '2025-08-10', factionVolumes: { 'faction-001': 75, 'faction-002': 62, 'faction-004': 55 } },
-      { date: '2025-10-15', factionVolumes: { 'faction-001': 155, 'faction-002': 135, 'faction-004': 115 } },
-      { date: '2026-01-08', factionVolumes: { 'faction-001': 195, 'faction-002': 165, 'faction-004': 145 } }
-    ]
+    documentIds: ['doc-040', 'doc-041', 'doc-047']
   },
   {
     id: 'sub-023',
@@ -449,19 +274,11 @@ export const themes = [
     description: 'US and allied semiconductor companies scramble to secure alternative sources of rare earth materials and develop recycling technologies. Industry leaders warn of potential production disruptions, while government officials discuss strategic reserves and supply chain diversification.',
     parentNarrativeId: 'narr-010',
     sentiment: -0.35,
-    factionMentions: {
-      'faction-002': { volume: 85, sentiment: -0.48 },
-      'faction-005': { volume: 105, sentiment: -0.42 }
-    },
     personIds: ['person-024'],
     organizationIds: ['org-005', 'org-006'],
     locationIds: ['loc-004'],
     eventIds: ['event-019'],
-    volumeOverTime: [
-      { date: '2025-08-25', factionVolumes: { 'faction-002': 48, 'faction-005': 55 } },
-      { date: '2025-10-20', factionVolumes: { 'faction-002': 72, 'faction-005': 85 } },
-      { date: '2026-01-08', factionVolumes: { 'faction-002': 85, 'faction-005': 105 } }
-    ]
+    documentIds: ['doc-041', 'doc-042', 'doc-048', 'doc-058']
   },
   {
     id: 'sub-024',
@@ -469,20 +286,11 @@ export const themes = [
     description: 'Nvidia reports record demand for its AI accelerators, with customers waiting months for deliveries. The shortage reflects explosive growth in AI applications and the challenges of scaling advanced chip production. TSMC and SK Hynix ramp capacity to meet demand.',
     parentNarrativeId: 'narr-011',
     sentiment: 0.48,
-    factionMentions: {
-      'faction-003': { volume: 125, sentiment: 0.65 },
-      'faction-005': { volume: 185, sentiment: 0.72 },
-      'faction-006': { volume: 145, sentiment: 0.68 }
-    },
     personIds: ['person-021', 'person-023'],
     organizationIds: ['org-028', 'org-029', 'org-020'],
     locationIds: ['loc-012', 'loc-011', 'loc-010'],
     eventIds: ['event-021', 'event-022'],
-    volumeOverTime: [
-      { date: '2025-09-20', factionVolumes: { 'faction-003': 48, 'faction-005': 72, 'faction-006': 55 } },
-      { date: '2025-10-01', factionVolumes: { 'faction-003': 85, 'faction-005': 125, 'faction-006': 98 } },
-      { date: '2026-01-10', factionVolumes: { 'faction-003': 125, 'faction-005': 185, 'faction-006': 145 } }
-    ]
+    documentIds: ['doc-044', 'doc-045', 'doc-046', 'doc-052', 'doc-056', 'doc-059']
   },
   {
     id: 'sub-025',
@@ -490,18 +298,10 @@ export const themes = [
     description: 'AMD and Intel race to offer alternatives to Nvidia\'s dominant AI chips. AMD\'s new accelerator receives positive reviews, while Intel leverages CHIPS Act funding for AI chip development. Analysts debate whether any competitor can meaningfully challenge Nvidia\'s market position.',
     parentNarrativeId: 'narr-011',
     sentiment: 0.35,
-    factionMentions: {
-      'faction-003': { volume: 85, sentiment: 0.58 },
-      'faction-005': { volume: 115, sentiment: 0.52 }
-    },
     personIds: ['person-026'],
     organizationIds: ['org-031', 'org-027'],
     locationIds: ['loc-012'],
     eventIds: ['event-025'],
-    volumeOverTime: [
-      { date: '2025-11-20', factionVolumes: { 'faction-003': 48, 'faction-005': 65 } },
-      { date: '2025-11-25', factionVolumes: { 'faction-003': 72, 'faction-005': 95 } },
-      { date: '2026-01-10', factionVolumes: { 'faction-003': 85, 'faction-005': 115 } }
-    ]
+    documentIds: ['doc-045', 'doc-051', 'doc-052']
   }
 ];
