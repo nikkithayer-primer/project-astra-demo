@@ -545,16 +545,6 @@ export class TagsView extends BaseView {
       this.render();
     }
   }
-
-  /**
-   * Escape HTML
-   */
-  escapeHtml(text) {
-    if (!text) return '';
-    const div = document.createElement('div');
-    div.textContent = text;
-    return div.innerHTML;
-  }
 }
 
 export default TagsView;

@@ -4,14 +4,13 @@
  * Uses ScopeSelector component for entity/keyword selection
  */
 
+import { BaseModal } from './BaseModal.js';
 import { dataStore } from '../data/DataStore.js';
 import { ScopeSelector } from './ScopeSelector.js';
 
-export class SearchFilterEditorModal {
+export class SearchFilterEditorModal extends BaseModal {
   constructor() {
-    this.modalContainer = document.getElementById('modal-container');
-    this.modalContent = this.modalContainer?.querySelector('.modal-content');
-    this.backdrop = this.modalContainer?.querySelector('.modal-backdrop');
+    super('lg'); // Large size modal for scope selector
     
     // Current filter being edited (null for create mode)
     this.editingFilter = null;
@@ -27,10 +26,6 @@ export class SearchFilterEditorModal {
     
     // Callback for when save/delete completes
     this.onSaveCallback = null;
-    
-    // Bind handlers
-    this.handleBackdropClick = this.handleBackdropClick.bind(this);
-    this.handleKeyDown = this.handleKeyDown.bind(this);
   }
 
   /**
@@ -45,6 +40,8 @@ export class SearchFilterEditorModal {
       description: ''
     };
     this.render('Create Search Filter');
+    this.attachFormListeners();
+    this.show();
     
     // Initialize ScopeSelector with empty scope
     this.initScopeSelector({});
@@ -65,6 +62,8 @@ export class SearchFilterEditorModal {
     };
     
     this.render('Edit Search Filter');
+    this.attachFormListeners();
+    this.show();
     
     // Initialize ScopeSelector with filter's scope
     this.initScopeSelector(filter.scope || {});
@@ -98,18 +97,10 @@ export class SearchFilterEditorModal {
    * Render the modal content
    */
   render(title) {
-    if (!this.modalContainer || !this.modalContent) {
-      console.error('Modal container not found');
-      return;
-    }
-
     const isEditing = this.editingFilter !== null;
 
     this.modalContent.innerHTML = `
-      <div class="modal-header">
-        <h3 class="modal-title">${title}</h3>
-        <button class="modal-close" aria-label="Close">&times;</button>
-      </div>
+      ${this.renderHeader(title)}
       <div class="modal-body monitor-editor-body">
         <div class="monitor-editor-form">
           <!-- Filter Name -->
@@ -157,22 +148,14 @@ export class SearchFilterEditorModal {
         `}
       </div>
     `;
-
-    // Show modal
-    this.modalContainer.classList.remove('hidden');
-    this.modalContent.classList.add('monitor-editor-modal');
-
-    // Add event listeners
-    this.attachEventListeners();
   }
 
   /**
-   * Attach event listeners
+   * Attach form-specific event listeners
    */
-  attachEventListeners() {
+  attachFormListeners() {
     // Close button
-    const closeBtn = this.modalContent.querySelector('.modal-close');
-    closeBtn?.addEventListener('click', () => this.close());
+    this.attachCloseListener();
     
     // Cancel button
     const cancelBtn = this.modalContent.querySelector('#filter-cancel');
@@ -197,12 +180,6 @@ export class SearchFilterEditorModal {
     descInput?.addEventListener('input', (e) => {
       this.formState.description = e.target.value;
     });
-    
-    // Backdrop click
-    this.backdrop?.addEventListener('click', this.handleBackdropClick);
-    
-    // Escape key
-    document.addEventListener('keydown', this.handleKeyDown);
   }
 
   /**
@@ -245,10 +222,11 @@ export class SearchFilterEditorModal {
       });
     }
     
+    const callback = this.onSaveCallback;
     this.close();
     
-    if (this.onSaveCallback) {
-      this.onSaveCallback();
+    if (callback) {
+      callback();
     }
   }
 
@@ -260,56 +238,27 @@ export class SearchFilterEditorModal {
     
     if (confirm(`Are you sure you want to delete "${this.editingFilter.name}"?`)) {
       dataStore.deleteSearchFilter(this.editingFilter.id);
+      const callback = this.onSaveCallback;
       this.close();
       
-      if (this.onSaveCallback) {
-        this.onSaveCallback();
+      if (callback) {
+        callback();
       }
     }
   }
 
   /**
-   * Close the modal
+   * Cleanup when modal closes
    */
-  close() {
-    if (this.modalContainer) {
-      this.modalContainer.classList.add('hidden');
-    }
-    if (this.modalContent) {
-      this.modalContent.classList.remove('monitor-editor-modal');
-    }
-    
+  onClose() {
     // Clean up ScopeSelector
     if (this.scopeSelector) {
       this.scopeSelector.destroy();
       this.scopeSelector = null;
     }
     
-    // Remove event listeners
-    this.backdrop?.removeEventListener('click', this.handleBackdropClick);
-    document.removeEventListener('keydown', this.handleKeyDown);
-  }
-
-  handleBackdropClick(e) {
-    if (e.target === this.backdrop) {
-      this.close();
-    }
-  }
-
-  handleKeyDown(e) {
-    if (e.key === 'Escape') {
-      this.close();
-    }
-  }
-
-  /**
-   * Escape HTML for safe rendering
-   */
-  escapeHtml(text) {
-    if (!text) return '';
-    const div = document.createElement('div');
-    div.textContent = text;
-    return div.innerHTML;
+    this.editingFilter = null;
+    this.onSaveCallback = null;
   }
 }
 

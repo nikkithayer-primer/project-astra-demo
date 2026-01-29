@@ -6,6 +6,7 @@
 
 import { DashboardView } from './views/DashboardView.js';
 import { NarrativeView } from './views/NarrativeView.js';
+import { escapeHtml } from './utils/htmlUtils.js';
 import { ThemeView } from './views/ThemeView.js';
 import { FactionView } from './views/FactionView.js';
 import { LocationView } from './views/LocationView.js';
@@ -127,10 +128,7 @@ export class Router {
    * Escape HTML to prevent XSS
    */
   escapeHtml(text) {
-    if (!text) return '';
-    const div = document.createElement('div');
-    div.textContent = text;
-    return div.innerHTML;
+    return escapeHtml(text);
   }
 
   /**

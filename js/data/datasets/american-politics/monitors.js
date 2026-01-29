@@ -8,6 +8,7 @@ export const monitors = [
     name: 'Immigration Enforcement Activity',
     description: 'Track narratives and events related to DOJ, ICE, and DHS immigration enforcement activities',
     scope: {
+      mode: 'simple',
       organizationIds: ['org-010', 'org-011', 'org-017'], // DOJ, ICE, DHS
       personIds: ['person-018'], // Kristi Noem
       locationIds: ['loc-002', 'loc-008'], // Minneapolis, St. Paul
@@ -34,6 +35,7 @@ export const monitors = [
     name: 'Trump Administration Actions',
     description: 'Monitor narratives mentioning President Trump and key administration officials',
     scope: {
+      mode: 'simple',
       personIds: ['person-003', 'person-012', 'person-013', 'person-018', 'person-026'], // Trump, Dhillon, Bondi, Noem, RFK Jr
       factionIds: ['faction-001'], // American Right Wing
       logic: 'OR' // Match narratives containing ANY of the above entities
@@ -59,6 +61,7 @@ export const monitors = [
     name: 'Public Health Policy',
     description: 'Track health-related narratives including dietary guidelines, FDA policy, and food safety',
     scope: {
+      mode: 'simple',
       organizationIds: ['org-003', 'org-022', 'org-023'], // FDA, HHS, World Resources Institute
       personIds: ['person-026'], // RFK Jr
       keywords: ['dietary guidelines', 'food preservatives', 'FDA policy', 'food safety'],
@@ -85,6 +88,7 @@ export const monitors = [
     name: 'Judicial Safety Watch',
     description: 'Monitor threats and incidents targeting judges and court officials',
     scope: {
+      mode: 'simple',
       organizationIds: ['org-013', 'org-014', 'org-015'], // Tippecanoe Superior Court, Indiana Supreme Court, Lafayette PD
       personIds: ['person-009', 'person-011'], // Judge Meyer, Chief Justice Rush
       locationIds: ['loc-007'], // Lafayette, Indiana
@@ -111,6 +115,7 @@ export const monitors = [
     name: 'US-European Relations',
     description: 'Track geopolitical tensions between US and European allies, particularly around Greenland',
     scope: {
+      mode: 'simple',
       personIds: ['person-004', 'person-005', 'person-006'], // Macron, von der Leyen, Greenland PM
       organizationIds: ['org-008', 'org-009'], // European Commission, World Economic Forum
       locationIds: ['loc-005', 'loc-006'], // Davos, Greenland

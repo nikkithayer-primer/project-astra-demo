@@ -86,7 +86,10 @@ export class BooleanParser {
         this.pos += 2;
         this.skipWhitespace();
         const right = this.parseAnd();
-        left = { type: 'OR', left, right };
+        // Flatten consecutive OR operations into a single node with children array
+        left = left.type === 'OR'
+          ? { type: 'OR', children: [...left.children, right] }
+          : { type: 'OR', children: [left, right] };
       } else {
         break;
       }
@@ -104,7 +107,10 @@ export class BooleanParser {
         this.pos += 3;
         this.skipWhitespace();
         const right = this.parseNot();
-        left = { type: 'AND', left, right };
+        // Flatten consecutive AND operations into a single node with children array
+        left = left.type === 'AND'
+          ? { type: 'AND', children: [...left.children, right] }
+          : { type: 'AND', children: [left, right] };
       } else {
         break;
       }
@@ -133,7 +139,8 @@ export class BooleanParser {
       throw this.createError('Unexpected end of expression');
     }
 
-    // Parenthesized expression
+    // Parenthesized expression - parse and return inner expression directly
+    // (parentheses are used for precedence, not as a node type)
     if (this.input[this.pos] === '(') {
       this.pos++;
       const expr = this.parseExpression();
@@ -144,7 +151,7 @@ export class BooleanParser {
       }
       
       this.pos++;
-      return { type: 'GROUP', expression: expr };
+      return expr;
     }
 
     // Entity reference (@entity-id)
@@ -210,12 +217,12 @@ export class BooleanParser {
   parseTerm() {
     let value = '';
     
+    // Read until we hit a delimiter (whitespace, parens, quotes)
+    // Keywords (AND, OR, NOT) are only recognized when separated by whitespace,
+    // so we don't check for them here - this allows terms like "terror", "hand", "cannot"
     while (
       this.pos < this.input.length &&
-      !/[\s()"]/.test(this.input[this.pos]) &&
-      !this.matchKeyword('AND') &&
-      !this.matchKeyword('OR') &&
-      !this.matchKeyword('NOT')
+      !/[\s()"]/.test(this.input[this.pos])
     ) {
       value += this.input[this.pos];
       this.pos++;
@@ -223,6 +230,14 @@ export class BooleanParser {
     
     if (!value) {
       throw this.createError('Expected term');
+    }
+    
+    // Check if the entire term is a reserved keyword - if so, it's a syntax error
+    // (e.g., someone wrote "AND" where a term was expected)
+    const upperValue = value.toUpperCase();
+    if (upperValue === 'AND' || upperValue === 'OR' || upperValue === 'NOT') {
+      this.pos -= value.length; // Put it back for better error positioning
+      throw this.createError(`Unexpected keyword "${value}" - expected a term`);
     }
     
     return { type: 'TERM', value, quoted: false };
@@ -252,13 +267,14 @@ export class BooleanParser {
         return `NOT ${BooleanParser.stringify(ast.operand, entityMap)}`;
       
       case 'AND':
-        return `${BooleanParser.stringify(ast.left, entityMap)} AND ${BooleanParser.stringify(ast.right, entityMap)}`;
+        return ast.children
+          .map(child => BooleanParser.stringify(child, entityMap))
+          .join(' AND ');
       
       case 'OR':
-        return `${BooleanParser.stringify(ast.left, entityMap)} OR ${BooleanParser.stringify(ast.right, entityMap)}`;
-      
-      case 'GROUP':
-        return `(${BooleanParser.stringify(ast.expression, entityMap)})`;
+        return ast.children
+          .map(child => BooleanParser.stringify(child, entityMap))
+          .join(' OR ');
       
       default:
         return '';
@@ -316,11 +332,7 @@ export class BooleanParser {
           break;
         case 'AND':
         case 'OR':
-          traverse(node.left);
-          traverse(node.right);
-          break;
-        case 'GROUP':
-          traverse(node.expression);
+          node.children.forEach(child => traverse(child));
           break;
       }
     }

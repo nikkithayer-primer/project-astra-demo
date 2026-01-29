@@ -13,14 +13,14 @@ export class MapView extends BaseComponent {
       margin: { top: 0, right: 0, bottom: 0, left: 0 },
       defaultCenter: [39.8283, -98.5795], // US center
       defaultZoom: 4,
-      showEvents: true, // Default to showing events
+      showLocations: false, // Show locations without events (checkbox option)
       ...options
     });
     this.map = null;
     this.markers = [];
-    this.markerLayer = null;
-    this.eventMarkerLayer = null;
-    this.showEvents = this.options.showEvents;
+    this.markerLayer = null; // For locations without events
+    this.eventMarkerLayer = null; // For events
+    this.showLocations = this.options.showLocations;
   }
 
   render() {
@@ -59,19 +59,32 @@ export class MapView extends BaseComponent {
     // Add custom zoom controls
     this.addCustomZoomControls();
 
-    // Add view toggle if we have events
-    if (hasEvents) {
-      this.addViewToggle();
+    // Marker layer groups
+    this.markerLayer = L.layerGroup(); // Locations without events - not added by default
+    this.eventMarkerLayer = L.layerGroup().addTo(this.map); // Events - always visible
+
+    // Build set of location IDs that have events
+    const locationIdsWithEvents = new Set();
+    (this.data.events || []).forEach(event => {
+      if (event.locationId) {
+        locationIdsWithEvents.add(event.locationId);
+      }
+    });
+
+    // Filter locations to only those WITHOUT associated events
+    const locationsWithoutEvents = (this.data.locations || []).filter(loc => 
+      !locationIdsWithEvents.has(loc.id)
+    );
+
+    // Add checkbox toggle if there are locations without events
+    if (locationsWithoutEvents.length > 0) {
+      this.addLocationsCheckbox(locationsWithoutEvents.length);
     }
 
-    // Marker layer groups
-    this.markerLayer = L.layerGroup().addTo(this.map);
-    this.eventMarkerLayer = L.layerGroup().addTo(this.map);
-
-    // Add location markers
+    // Add location markers (only for locations without events)
     const bounds = [];
 
-    (this.data.locations || []).forEach(loc => {
+    locationsWithoutEvents.forEach(loc => {
       if (!loc.coordinates || 
           typeof loc.coordinates.lat !== 'number' || 
           typeof loc.coordinates.lng !== 'number') {
@@ -206,13 +219,13 @@ export class MapView extends BaseComponent {
       this.markers.push({ marker, location: loc, type: 'location' });
     });
 
-    // Add event markers
+    // Add event markers (always shown)
     if (hasEvents) {
       this.renderEventMarkers(bounds);
     }
 
-    // Update event layer visibility based on toggle state
-    this.updateEventLayerVisibility();
+    // Update locations layer visibility based on checkbox state
+    this.updateLocationsLayerVisibility();
 
     // Store bounds for reset functionality
     this.initialBounds = bounds.length > 0 ? bounds : null;
@@ -275,55 +288,38 @@ export class MapView extends BaseComponent {
   }
 
   /**
-   * Add view toggle for Locations only vs Locations + Events
+   * Add checkbox for showing locations without events
    */
-  addViewToggle() {
-    const toggleDiv = document.createElement('div');
-    toggleDiv.className = 'map-view-toggle';
-    toggleDiv.innerHTML = `
-      <button class="map-toggle-btn ${!this.showEvents ? 'active' : ''}" data-mode="locations" title="Locations Only">
-        <span class="toggle-icon">&#x1F4CD;</span>
-        <span class="toggle-label">Locations</span>
-      </button>
-      <button class="map-toggle-btn ${this.showEvents ? 'active' : ''}" data-mode="all" title="Locations + Events">
-        <span class="toggle-icon">&#x1F4CD;</span><span class="toggle-icon event-icon">&#x26A1;</span>
-        <span class="toggle-label">+ Events</span>
-      </button>
+  addLocationsCheckbox(locationCount) {
+    const checkboxDiv = document.createElement('div');
+    checkboxDiv.className = 'map-locations-checkbox';
+    checkboxDiv.innerHTML = `
+      <label class="map-checkbox-label">
+        <input type="checkbox" class="map-checkbox" ${this.showLocations ? 'checked' : ''} />
+        <span class="map-checkbox-text">Show locations (${locationCount})</span>
+      </label>
     `;
-    this.container.appendChild(toggleDiv);
+    this.container.appendChild(checkboxDiv);
 
-    // Add click handlers
-    toggleDiv.querySelectorAll('.map-toggle-btn').forEach(btn => {
-      btn.addEventListener('click', (e) => {
-        e.stopPropagation();
-        const mode = btn.dataset.mode;
-        this.setViewMode(mode);
-        
-        // Update active state
-        toggleDiv.querySelectorAll('.map-toggle-btn').forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
-      });
+    // Add change handler
+    const checkbox = checkboxDiv.querySelector('.map-checkbox');
+    checkbox.addEventListener('change', (e) => {
+      e.stopPropagation();
+      this.showLocations = checkbox.checked;
+      this.updateLocationsLayerVisibility();
     });
   }
 
   /**
-   * Set the view mode (locations only or all)
+   * Update locations layer visibility based on checkbox state
    */
-  setViewMode(mode) {
-    this.showEvents = (mode === 'all');
-    this.updateEventLayerVisibility();
-  }
-
-  /**
-   * Update event layer visibility based on toggle state
-   */
-  updateEventLayerVisibility() {
-    if (!this.eventMarkerLayer) return;
+  updateLocationsLayerVisibility() {
+    if (!this.markerLayer) return;
     
-    if (this.showEvents) {
-      this.map.addLayer(this.eventMarkerLayer);
+    if (this.showLocations) {
+      this.map.addLayer(this.markerLayer);
     } else {
-      this.map.removeLayer(this.eventMarkerLayer);
+      this.map.removeLayer(this.markerLayer);
     }
   }
 

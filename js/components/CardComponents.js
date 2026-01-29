@@ -8,6 +8,7 @@ import { CardBuilder } from '../utils/CardBuilder.js';
 import { DragDropManager } from '../utils/DragDropManager.js';
 import { DataService } from '../data/DataService.js';
 import { dataStore } from '../data/DataStore.js';
+import { escapeHtml } from '../utils/htmlUtils.js';
 import { NetworkGraph } from './NetworkGraph.js';
 import { NarrativeList } from './NarrativeList.js';
 import { ThemeList } from './ThemeList.js';
@@ -15,7 +16,6 @@ import { TopicList } from './TopicList.js';
 import { DocumentTable } from './DocumentTable.js';
 import { ColumnFilter } from './ColumnFilter.js';
 import { MapView } from './MapView.js';
-import { Timeline } from './Timeline.js';
 import { TimelineVolumeComposite } from './TimelineVolumeComposite.js';
 import { StackedAreaChart } from './StackedAreaChart.js';
 import { SentimentChart } from './SentimentChart.js';
@@ -539,7 +539,7 @@ export class MapCard extends BaseCardComponent {
     this.fullWidth = options.fullWidth || false;
     this.defaultZoom = options.defaultZoom || null;
     this.centerOn = options.centerOn || null;
-    this.showEvents = options.showEvents !== false; // Default to true
+    this.showLocations = options.showLocations || false; // Show locations without events (checkbox)
   }
 
   hasData() {
@@ -560,7 +560,7 @@ export class MapCard extends BaseCardComponent {
 
     const mapOptions = { 
       height: this.height,
-      showEvents: this.showEvents
+      showLocations: this.showLocations
     };
     if (this.defaultZoom) mapOptions.defaultZoom = this.defaultZoom;
 
@@ -575,47 +575,6 @@ export class MapCard extends BaseCardComponent {
         this.component.centerOn(this.centerOn.lat, this.centerOn.lng, this.centerOn.zoom || 12);
       }, 200);
     }
-
-    return this.component;
-  }
-}
-
-/**
- * Timeline Card Component
- */
-export class TimelineCard extends BaseCardComponent {
-  constructor(view, containerId, options = {}) {
-    super(view, containerId);
-    this.options = options;
-    this.events = options.events || [];
-    this.title = options.title || 'Events';
-    this.height = options.height || 250;
-    this.showCount = options.showCount !== false;
-    this.excludeId = options.excludeId || null;
-  }
-
-  hasData() {
-    return this.events.length > 0;
-  }
-
-  getCardHtml() {
-    if (!this.hasData()) return '';
-    return CardBuilder.create(this.title, this.containerId, {
-      count: this.showCount ? this.events.length : undefined
-    });
-  }
-
-  initialize() {
-    if (!this.hasData()) return null;
-
-    this.component = new Timeline(this.containerId, {
-      height: this.height,
-      onEventClick: (e) => {
-        if (this.excludeId && e.id === this.excludeId) return;
-        window.location.hash = `#/event/${e.id}`;
-      }
-    });
-    this.component.update({ events: this.events });
 
     return this.component;
   }
@@ -987,13 +946,7 @@ export class BulletPointsCard extends BaseCardComponent {
     const container = document.getElementById(this.containerId);
     if (!container) return null;
 
-    // Escape HTML helper
-    const escapeHtml = (text) => {
-      if (!text) return '';
-      const div = document.createElement('div');
-      div.textContent = text;
-      return div.innerHTML;
-    };
+    // Note: Using imported escapeHtml from htmlUtils.js
 
     // Build source link HTML if sourceType and sourceId are provided
     const sourceLinkHtml = (this.sourceType && this.sourceId) 
@@ -1123,7 +1076,6 @@ export default {
   TopicListCard,
   DocumentTableCard,
   MapCard,
-  TimelineCard,
   TimelineVolumeCompositeCard,
   StackedAreaChartCard,
   SentimentChartCard,

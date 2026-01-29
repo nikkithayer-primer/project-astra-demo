@@ -129,21 +129,7 @@ export function destroyStickyHeader() {
   isTransitioning = false;
 }
 
-/**
- * Reset header to expanded state
- */
-export function resetStickyHeader() {
-  const pageHeader = document.querySelector('.page-header');
-  if (pageHeader) {
-    pageHeader.classList.remove('scrolled');
-  }
-  lastScrollTop = getScrollTop();
-  isCollapsed = false;
-  isTransitioning = false;
-}
-
 export default {
   initStickyHeader,
-  destroyStickyHeader,
-  resetStickyHeader
+  destroyStickyHeader
 };

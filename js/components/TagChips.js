@@ -4,6 +4,7 @@
  */
 
 import { DataService } from '../data/DataService.js';
+import { escapeHtml } from '../utils/htmlUtils.js';
 
 export class TagChips {
   /**
@@ -160,10 +161,7 @@ export class TagChips {
    * Escape HTML to prevent XSS
    */
   escapeHtml(text) {
-    if (!text) return '';
-    const div = document.createElement('div');
-    div.textContent = text;
-    return div.innerHTML;
+    return escapeHtml(text);
   }
 
   /**
@@ -173,13 +171,6 @@ export class TagChips {
    */
   static renderReadOnly(tags = []) {
     if (!tags || tags.length === 0) return '';
-    
-    const escapeHtml = (text) => {
-      if (!text) return '';
-      const div = document.createElement('div');
-      div.textContent = text;
-      return div.innerHTML;
-    };
 
     const chipsHtml = tags.map(tag => `
       <span class="tag-chip" style="--tag-color: ${tag.color || '#6b7280'}">

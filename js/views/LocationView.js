@@ -9,6 +9,7 @@ import { PageHeader } from '../utils/PageHeader.js';
 import { initAllCardToggles } from '../utils/cardWidthToggle.js';
 import { TagChips } from '../components/TagChips.js';
 import { getTagPicker } from '../components/TagPickerModal.js';
+import { aggregatePublisherVolumeData } from '../utils/volumeDataUtils.js';
 import {
   CardManager,
   NetworkGraphCard,
@@ -142,30 +143,7 @@ export class LocationView extends BaseView {
     const orgIds = organizations.map(o => o.id);
 
     // Prepare publisher volume data for the composite chart (by source)
-    const publishers = DataService.getPublishers ? DataService.getPublishers() : [];
-    const dateMap = new Map();
-    const publisherIds = new Set();
-    
-    documents.forEach(doc => {
-      if (!doc.publishedDate) return;
-      const date = doc.publishedDate.split('T')[0];
-      if (!dateMap.has(date)) {
-        dateMap.set(date, {});
-      }
-      if (doc.publisherId) {
-        publisherIds.add(doc.publisherId);
-        const dayData = dateMap.get(date);
-        dayData[doc.publisherId] = (dayData[doc.publisherId] || 0) + 1;
-      }
-    });
-
-    const dates = [...dateMap.keys()].sort();
-    const relevantPublishers = [...publisherIds].map(id => publishers.find(p => p.id === id)).filter(Boolean);
-    const series = relevantPublishers.map(publisher =>
-      dates.map(date => (dateMap.get(date) || {})[publisher.id] || 0)
-    );
-
-    const publisherData = dates.length > 0 ? { dates, series, publishers: relevantPublishers } : null;
+    const publisherData = aggregatePublisherVolumeData(documents);
     const hasPublisherData = publisherData && publisherData.dates.length > 0;
     const hasVolumeTimeline = hasPublisherData || allEvents.length > 0;
 

@@ -251,14 +251,6 @@
       <div class="nav-section">
         <span class="nav-section-title">Lists</span>
         <ul class="nav-links">
-          <li><a href="#faction-cards" class="nav-link" data-target="faction-cards">
-            <svg class="nav-icon" viewBox="0 0 16 16" fill="none" stroke="var(--text-secondary)" stroke-width="1">
-              <rect x="1" y="2" width="6" height="5" rx="1"/>
-              <rect x="9" y="2" width="6" height="5" rx="1"/>
-              <rect x="1" y="9" width="6" height="5" rx="1"/>
-              <rect x="9" y="9" width="6" height="5" rx="1"/>
-            </svg> Faction Cards
-          </a></li>
           <li><a href="#narrative-list" class="nav-link" data-target="narrative-list">
             <svg class="nav-icon" viewBox="0 0 16 16" fill="none" stroke="var(--text-secondary)" stroke-width="1">
               <rect x="1" y="2" width="14" height="3" rx="0.5"/>
@@ -515,39 +507,24 @@ composite.update({
     <!-- Map View -->
     <section id="map" class="component-section">
       <h2 class="section-title">Map View</h2>
-      <p class="section-description">Leaflet map component for location visualization with custom markers.</p>
+      <p class="section-description">Leaflet map component for events and locations. Events are always shown (red markers). Locations without associated events can be toggled via checkbox (blue markers).</p>
       <div class="demo-container">
         <div id="map-view" style="height: 400px;"></div>
         <div class="code-block">
           <pre><span class="key">const</span> map = <span class="key">new</span> MapView(<span class="string">'container'</span>, {
   height: <span class="number">400</span>,
-  defaultCenter: [<span class="number">48.8566</span>, <span class="number">2.3522</span>],
+  defaultCenter: [<span class="number">50</span>, <span class="number">10</span>],
   defaultZoom: <span class="number">4</span>,
-  onMarkerClick: (location) => console.log(location)
+  showLocations: <span class="number">false</span>,  <span class="comment">// Checkbox state for locations without events</span>
+  onEventClick: (event) => console.log(event)
 });
 map.update({
-  locations: [
-    { name: <span class="string">'Paris'</span>, coordinates: { lat: <span class="number">48.8566</span>, lng: <span class="number">2.3522</span> } }
-  ]
-});</pre>
-        </div>
-      </div>
-    </section>
-
-    <!-- Faction Cards -->
-    <section id="faction-cards" class="component-section">
-      <h2 class="section-title">Faction Cards</h2>
-      <p class="section-description">Display factions as clickable cards for quick selection and filtering.</p>
-      <div class="demo-container">
-        <div id="faction-cards-demo"></div>
-        <div class="code-block">
-          <pre><span class="key">const</span> cards = <span class="key">new</span> FactionCards(<span class="string">'container'</span>, {
-  showCount: <span class="number">true</span>,
-  onFactionClick: (faction) => console.log(faction)
-});
-cards.update({
-  factions: [
-    { id: <span class="string">'1'</span>, name: <span class="string">'State Actors'</span>, color: <span class="string">'#ef4444'</span>, memberCount: <span class="number">1250</span> }
+  locations: [  <span class="comment">// Locations without events shown via checkbox</span>
+    { id: <span class="string">'l1'</span>, name: <span class="string">'Paris'</span>, coordinates: { lat: <span class="number">48.8566</span>, lng: <span class="number">2.3522</span> } },
+    { id: <span class="string">'l2'</span>, name: <span class="string">'Berlin'</span>, coordinates: { lat: <span class="number">52.52</span>, lng: <span class="number">13.405</span> } }
+  ],
+  events: [  <span class="comment">// Events always shown (red markers)</span>
+    { id: <span class="string">'e1'</span>, text: <span class="string">'Campaign Launch'</span>, date: <span class="string">'2025-01-15'</span>, locationId: <span class="string">'l3'</span> }
   ]
 });</pre>
         </div>
@@ -827,7 +804,6 @@ list.update({
     import { Timeline } from './js/components/Timeline.js';
     import { TimelineVolumeComposite } from './js/components/TimelineVolumeComposite.js';
     import { MapView } from './js/components/MapView.js';
-    import { FactionCards } from './js/components/FactionCards.js';
     import { NarrativeList } from './js/components/NarrativeList.js';
     import { ThemeList } from './js/components/ThemeList.js';
     import { DocumentTable } from './js/components/DocumentTable.js';
@@ -1057,26 +1033,24 @@ list.update({
       height: 400,
       defaultCenter: [50, 10],
       defaultZoom: 4,
-      onMarkerClick: (location) => console.log('Clicked location:', location)
+      showLocations: false, // Checkbox unchecked by default
+      onEventClick: (event) => console.log('Clicked event:', event)
     });
     mapView.update({
+      // Locations without associated events (shown via checkbox)
       locations: [
-        { name: 'Moscow', coordinates: { lat: 55.7558, lng: 37.6173 }, eventCount: 45, isEvent: true },
-        { name: 'Berlin', coordinates: { lat: 52.5200, lng: 13.4050 }, narrativeCount: 12 },
-        { name: 'Paris', coordinates: { lat: 48.8566, lng: 2.3522 }, narrativeCount: 8 },
-        { name: 'Warsaw', coordinates: { lat: 52.2297, lng: 21.0122 }, eventCount: 23, isEvent: true },
-        { name: 'Kyiv', coordinates: { lat: 50.4501, lng: 30.5234 }, eventCount: 67, isEvent: true },
-        { name: 'London', coordinates: { lat: 51.5074, lng: -0.1278 }, narrativeCount: 15 },
-        { name: 'Brussels', coordinates: { lat: 50.8503, lng: 4.3517 }, narrativeCount: 6 }
+        { id: 'loc-berlin', name: 'Berlin', coordinates: { lat: 52.5200, lng: 13.4050 }, narrativeCount: 12 },
+        { id: 'loc-paris', name: 'Paris', coordinates: { lat: 48.8566, lng: 2.3522 }, narrativeCount: 8 },
+        { id: 'loc-london', name: 'London', coordinates: { lat: 51.5074, lng: -0.1278 }, narrativeCount: 15 },
+        { id: 'loc-brussels', name: 'Brussels', coordinates: { lat: 50.8503, lng: 4.3517 }, narrativeCount: 6 }
+      ],
+      // Events (always shown as red markers)
+      events: [
+        { id: 'evt-1', text: 'Disinformation campaign detected', date: '2025-01-10T08:00:00Z', locationId: 'loc-moscow', location: { id: 'loc-moscow', name: 'Moscow', coordinates: { lat: 55.7558, lng: 37.6173 } } },
+        { id: 'evt-2', text: 'Bot network activity spike', date: '2025-01-12T14:30:00Z', locationId: 'loc-warsaw', location: { id: 'loc-warsaw', name: 'Warsaw', coordinates: { lat: 52.2297, lng: 21.0122 } } },
+        { id: 'evt-3', text: 'Counter-narrative emerges', date: '2025-01-15T10:00:00Z', locationId: 'loc-kyiv', location: { id: 'loc-kyiv', name: 'Kyiv', coordinates: { lat: 50.4501, lng: 30.5234 } } }
       ]
     });
-
-    // Initialize Faction Cards
-    const factionCards = new FactionCards(document.getElementById('faction-cards-demo'), {
-      showCount: true,
-      onFactionClick: (faction) => console.log('Clicked faction:', faction)
-    });
-    factionCards.update({ factions: demoFactions });
 
     // Initialize Narrative List with expandable sub-narratives
     // Note: In the real app, sub-narratives are loaded via DataService.getSubNarrativesForNarrative()

@@ -3,13 +3,12 @@
  * Modal component for creating and editing workspaces
  */
 
+import { BaseModal } from './BaseModal.js';
 import { dataStore } from '../data/DataStore.js';
 
-export class WorkspaceEditorModal {
+export class WorkspaceEditorModal extends BaseModal {
   constructor() {
-    this.modalContainer = document.getElementById('modal-container');
-    this.modalContent = this.modalContainer?.querySelector('.modal-content');
-    this.backdrop = this.modalContainer?.querySelector('.modal-backdrop');
+    super('md'); // Medium size modal
     
     // Current workspace being edited (null for create mode)
     this.editingWorkspace = null;
@@ -24,10 +23,6 @@ export class WorkspaceEditorModal {
     
     // Callback for when save completes
     this.onSaveCallback = null;
-    
-    // Bind handlers
-    this.handleBackdropClick = this.handleBackdropClick.bind(this);
-    this.handleKeyDown = this.handleKeyDown.bind(this);
   }
 
   /**
@@ -45,6 +40,14 @@ export class WorkspaceEditorModal {
       documentIds: initialData.documentIds || []
     };
     this.render('Create Workspace');
+    this.setupFormListeners();
+    this.show();
+    
+    // Focus the name input after a short delay
+    setTimeout(() => {
+      const nameInput = document.getElementById('workspace-name');
+      if (nameInput) nameInput.focus();
+    }, 50);
   }
 
   /**
@@ -64,17 +67,20 @@ export class WorkspaceEditorModal {
     };
     
     this.render('Edit Workspace');
+    this.setupFormListeners();
+    this.show();
+    
+    // Focus the name input after a short delay
+    setTimeout(() => {
+      const nameInput = document.getElementById('workspace-name');
+      if (nameInput) nameInput.focus();
+    }, 50);
   }
 
   /**
    * Render the modal content
    */
   render(title) {
-    if (!this.modalContainer || !this.modalContent) {
-      console.error('Modal container not found');
-      return;
-    }
-
     const docCount = this.formState.documentIds.length;
     const docCountText = docCount > 0 
       ? `<span class="badge">${docCount} document${docCount !== 1 ? 's' : ''} selected</span>`
@@ -97,10 +103,7 @@ export class WorkspaceEditorModal {
     ` : '';
 
     this.modalContent.innerHTML = `
-      <div class="modal-header">
-        <h3 class="modal-title">${title}</h3>
-        <button class="modal-close" aria-label="Close">&times;</button>
-      </div>
+      ${this.renderHeader(title)}
       <div class="modal-body workspace-editor-body">
         <div class="workspace-editor-form">
           <!-- Workspace Name -->
@@ -148,111 +151,54 @@ export class WorkspaceEditorModal {
     if (document.activeElement) {
       document.activeElement.blur();
     }
-
-    // Show modal
-    this.modalContainer.classList.remove('hidden');
-    this.modalContent.classList.add('workspace-editor-modal');
-    document.body.style.overflow = 'hidden';
-
-    // Set up event listeners
-    this.setupEventListeners();
-
-    // Focus the name input after a short delay
-    setTimeout(() => {
-      const nameInput = document.getElementById('workspace-name');
-      if (nameInput) nameInput.focus();
-    }, 50);
   }
 
   /**
-   * Set up event listeners for the modal
+   * Set up form-specific event listeners
    */
-  setupEventListeners() {
+  setupFormListeners() {
     // Close button
-    const closeBtn = this.modalContent.querySelector('.modal-close');
-    if (closeBtn) {
-      closeBtn.addEventListener('click', () => this.close());
-    }
+    this.attachCloseListener();
 
     // Cancel button
     const cancelBtn = document.getElementById('workspace-cancel-btn');
-    if (cancelBtn) {
-      cancelBtn.addEventListener('click', () => this.close());
-    }
+    cancelBtn?.addEventListener('click', () => this.close());
 
     // Save button
     const saveBtn = document.getElementById('workspace-save-btn');
-    if (saveBtn) {
-      saveBtn.addEventListener('click', () => this.save());
-    }
+    saveBtn?.addEventListener('click', () => this.save());
 
     // Form inputs - update state on change
     const nameInput = document.getElementById('workspace-name');
     const queryInput = document.getElementById('workspace-query');
     const descInput = document.getElementById('workspace-description');
 
-    if (nameInput) {
-      nameInput.addEventListener('input', (e) => {
-        this.formState.name = e.target.value;
-      });
-    }
+    nameInput?.addEventListener('input', (e) => {
+      this.formState.name = e.target.value;
+    });
 
-    if (queryInput) {
-      queryInput.addEventListener('input', (e) => {
-        this.formState.query = e.target.value;
-      });
-    }
+    queryInput?.addEventListener('input', (e) => {
+      this.formState.query = e.target.value;
+    });
 
-    if (descInput) {
-      descInput.addEventListener('input', (e) => {
-        this.formState.description = e.target.value;
-      });
-    }
+    descInput?.addEventListener('input', (e) => {
+      this.formState.description = e.target.value;
+    });
 
     // Enter key to submit (in single-line inputs)
-    if (nameInput) {
-      nameInput.addEventListener('keydown', (e) => {
-        if (e.key === 'Enter') {
-          e.preventDefault();
-          this.save();
-        }
-      });
-    }
+    nameInput?.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        this.save();
+      }
+    });
 
-    if (queryInput) {
-      queryInput.addEventListener('keydown', (e) => {
-        if (e.key === 'Enter') {
-          e.preventDefault();
-          this.save();
-        }
-      });
-    }
-
-    // Backdrop click to close
-    if (this.backdrop) {
-      this.backdrop.addEventListener('click', this.handleBackdropClick);
-    }
-
-    // Escape key to close
-    document.addEventListener('keydown', this.handleKeyDown);
-  }
-
-  /**
-   * Handle backdrop click
-   */
-  handleBackdropClick(e) {
-    if (e.target === this.backdrop) {
-      this.close();
-    }
-  }
-
-  /**
-   * Handle keydown events
-   */
-  handleKeyDown(e) {
-    if (e.key === 'Escape') {
-      this.close();
-    }
+    queryInput?.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        this.save();
+      }
+    });
   }
 
   /**
@@ -264,7 +210,7 @@ export class WorkspaceEditorModal {
     if (!name) {
       this.showError('Please enter a workspace name');
       const nameInput = document.getElementById('workspace-name');
-      if (nameInput) nameInput.focus();
+      nameInput?.focus();
       return;
     }
 
@@ -339,35 +285,11 @@ export class WorkspaceEditorModal {
   }
 
   /**
-   * Close the modal
+   * Cleanup when modal closes
    */
-  close() {
-    // Clean up event listeners
-    if (this.backdrop) {
-      this.backdrop.removeEventListener('click', this.handleBackdropClick);
-    }
-    document.removeEventListener('keydown', this.handleKeyDown);
-
-    // Hide modal
-    if (this.modalContainer) {
-      this.modalContainer.classList.add('hidden');
-    }
-    document.body.style.overflow = '';
-
-    // Reset state
+  onClose() {
     this.editingWorkspace = null;
     this.onSaveCallback = null;
-  }
-
-  /**
-   * Escape HTML to prevent XSS
-   */
-  escapeHtml(text) {
-    if (!text) return '';
-    if (typeof text !== 'string') text = String(text);
-    const div = document.createElement('div');
-    div.textContent = text;
-    return div.innerHTML;
   }
 }
 

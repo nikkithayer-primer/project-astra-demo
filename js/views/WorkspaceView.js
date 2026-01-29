@@ -16,7 +16,6 @@ import {
   ThemeListCard,
   SentimentChartCard,
   MapCard,
-  TimelineCard,
   DocumentTableCard
 } from '../components/CardComponents.js';
 
@@ -300,17 +299,6 @@ export class WorkspaceView extends BaseView {
         events: data.events,
         halfWidth: true,
         height: 300
-      }));
-    }
-
-    // Related Events Timeline (half-width)
-    if (data.events.length > 0) {
-      this.cardManager.add(new TimelineCard(this, 'workspace-events', {
-        title: 'Related Events',
-        events: data.events,
-        showCount: true,
-        halfWidth: true,
-        height: 250
       }));
     }
   }

@@ -7,7 +7,7 @@
 import { BaseView } from './BaseView.js';
 import { DataService } from '../data/DataService.js';
 import { NarrativeList } from '../components/NarrativeList.js';
-import { Timeline } from '../components/Timeline.js';
+import { MapView } from '../components/MapView.js';
 import { renderVerticalTimeline } from '../utils/verticalTimeline.js';
 import { getEntityIcon } from '../utils/entityIcons.js';
 
@@ -24,8 +24,8 @@ export class ListView extends BaseView {
     this.entityType = entityType;
     this.searchQuery = '';
     this.narrativeList = null;
-    this.timeline = null;
-    this.eventsViewMode = 'vertical'; // 'vertical' or 'horizontal' timeline
+    this.eventsMap = null;
+    this.eventsViewMode = 'map'; // 'map' or 'list'
     
     // Filter state for entities view (matches DocumentsView pattern)
     this.entityTypeFilter = 'all';
@@ -100,8 +100,11 @@ export class ListView extends BaseView {
       return;
     }
 
-    // Special handling for events with horizontal/vertical timeline toggle
+    // Special handling for events - show on map or list with toggle
     if (this.entityType === 'events') {
+      // Get locations for the map
+      const locations = DataService.getAllLocationsWithCounts(this.timeRange);
+      
       this.container.innerHTML = `
         <div class="page-header">
           <div class="breadcrumb">
@@ -124,45 +127,34 @@ export class ListView extends BaseView {
                   value="${this.searchQuery}"
                 />
               </div>
-              <div class="view-toggle">
-                <button class="view-toggle-btn ${this.eventsViewMode === 'vertical' ? 'active' : ''}" data-view="vertical" title="Vertical Timeline">
+              <div class="view-toggle events-view-toggle">
+                <button class="view-toggle-btn ${this.eventsViewMode === 'map' ? 'active' : ''}" data-view="map" title="Map View">
                   <svg viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.5">
-                    <path d="M4 2v12"/>
-                    <circle cx="4" cy="4" r="2"/>
-                    <circle cx="4" cy="9" r="2"/>
-                    <circle cx="4" cy="14" r="1.5"/>
-                    <path d="M8 4h6M8 9h6M8 14h4"/>
+                    <path d="M8 1C5.2 1 3 3.2 3 6c0 4 5 9 5 9s5-5 5-9c0-2.8-2.2-5-5-5z"/>
+                    <circle cx="8" cy="6" r="2"/>
                   </svg>
                 </button>
-                <button class="view-toggle-btn ${this.eventsViewMode === 'horizontal' ? 'active' : ''}" data-view="horizontal" title="Horizontal Timeline">
+                <button class="view-toggle-btn ${this.eventsViewMode === 'list' ? 'active' : ''}" data-view="list" title="List View">
                   <svg viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.5">
-                    <path d="M2 8h12"/>
-                    <circle cx="4" cy="8" r="2"/>
-                    <circle cx="8" cy="8" r="2"/>
-                    <circle cx="12" cy="8" r="2"/>
+                    <path d="M2 4h12M2 8h12M2 12h12"/>
                   </svg>
                 </button>
               </div>
             </div>
-            <div class="card-body ${this.eventsViewMode === 'vertical' ? 'no-padding' : ''}" id="events-content">
-              ${this.eventsViewMode === 'vertical' ? `
-                ${this.renderVerticalTimeline(filteredItems)}
-              ` : `
-                <div id="events-timeline" style="min-height: 350px;"></div>
-              `}
-            </div>
+            <div class="card-body no-padding ${this.eventsViewMode === 'list' ? 'card-body-scrollable' : ''}" id="events-content"></div>
           </div>
         </div>
       `;
 
-      // Attach event listeners
-      this.attachEventListeners(config);
-      this.attachViewToggleListeners(filteredItems, config);
+      // Store data for view switching
+      this._eventsData = { events: filteredItems, locations };
 
-      // Initialize horizontal timeline if in that mode
-      if (this.eventsViewMode === 'horizontal') {
-        this.initializeHorizontalTimeline(filteredItems);
-      }
+      // Attach search listener and view toggle
+      this.attachEventListeners(config);
+      this.attachEventsViewToggle();
+
+      // Render current view (map or list)
+      this.renderEventsView();
       return;
     }
 
@@ -379,17 +371,10 @@ export class ListView extends BaseView {
     if (this.entityType === 'narratives' && this.narrativeList) {
       this.narrativeList.update({ narratives: filteredItems });
     } else if (this.entityType === 'events') {
-      if (this.eventsViewMode === 'vertical') {
-        // Update vertical timeline
-        const eventsContent = document.getElementById('events-content');
-        if (eventsContent) {
-          eventsContent.innerHTML = this.renderVerticalTimeline(filteredItems);
-          this.attachVerticalTimelineListeners();
-        }
-      } else {
-        // Update horizontal timeline
-        this.initializeHorizontalTimeline(filteredItems);
-      }
+      // Update stored data and re-render current view
+      const locations = DataService.getAllLocationsWithCounts(this.timeRange);
+      this._eventsData = { events: filteredItems, locations };
+      this.renderEventsView();
     } else {
       // Update the entity list for events (list view) and other entity types
       const entityList = document.getElementById('entity-list');
@@ -402,21 +387,117 @@ export class ListView extends BaseView {
   }
 
   /**
-   * Render vertical timeline for events
+   * Render the events view (map or list) based on current mode
    */
-  renderVerticalTimeline(events) {
-    return renderVerticalTimeline(events, { sortNewestFirst: true });
+  renderEventsView() {
+    if (this.eventsViewMode === 'map') {
+      this.renderEventsMap();
+    } else {
+      this.renderEventsList();
+    }
   }
 
   /**
-   * Attach click listeners for vertical timeline items
+   * Render events as a map
    */
-  attachVerticalTimelineListeners() {
-    const items = this.container.querySelectorAll('.vertical-timeline-item');
-    items.forEach(item => {
+  renderEventsMap() {
+    // Clean up existing map
+    if (this.eventsMap) {
+      this.eventsMap.destroy();
+      this.eventsMap = null;
+    }
+
+    const container = document.getElementById('events-content');
+    if (!container || !this._eventsData) return;
+
+    // Remove scrollable class for map view
+    container.classList.remove('card-body-scrollable');
+
+    const { events, locations } = this._eventsData;
+
+    if (events.length === 0 && locations.length === 0) {
+      container.innerHTML = `
+        <div class="empty-state" style="padding: 60px 20px;">
+          <div class="empty-state-icon">📍</div>
+          <p class="empty-state-text">No events with location data to display</p>
+        </div>
+      `;
+      return;
+    }
+
+    // Clear container and add map container
+    container.innerHTML = '<div id="events-map-container" style="height: 500px;"></div>';
+
+    this.eventsMap = new MapView('events-map-container', {
+      height: 500,
+      onEventClick: (event) => {
+        window.location.hash = `#/event/${event.id}`;
+      }
+    });
+    this.eventsMap.update({ locations, events });
+  }
+
+  /**
+   * Render events as a list
+   */
+  renderEventsList() {
+    // Clean up existing map
+    if (this.eventsMap) {
+      this.eventsMap.destroy();
+      this.eventsMap = null;
+    }
+
+    const container = document.getElementById('events-content');
+    if (!container || !this._eventsData) return;
+
+    // Add scrollable class for list view
+    container.classList.add('card-body-scrollable');
+
+    const { events } = this._eventsData;
+
+    if (events.length === 0) {
+      container.innerHTML = `
+        <div class="empty-state" style="padding: 60px 20px;">
+          <div class="empty-state-icon">📅</div>
+          <p class="empty-state-text">No events to display</p>
+        </div>
+      `;
+      return;
+    }
+
+    // Render vertical timeline
+    container.innerHTML = renderVerticalTimeline(events, { sortNewestFirst: true });
+
+    // Attach click listeners for timeline items
+    container.querySelectorAll('.vertical-timeline-item').forEach(item => {
       this.addListener(item, 'click', () => {
         const eventId = item.dataset.eventId;
         window.location.hash = `#/event/${eventId}`;
+      });
+    });
+  }
+
+  /**
+   * Attach view toggle listeners for events map/list
+   */
+  attachEventsViewToggle() {
+    const toggleContainer = this.container.querySelector('.events-view-toggle');
+    if (!toggleContainer) return;
+
+    toggleContainer.querySelectorAll('.view-toggle-btn').forEach(btn => {
+      this.addListener(btn, 'click', () => {
+        const newMode = btn.dataset.view;
+        if (newMode !== this.eventsViewMode) {
+          this.eventsViewMode = newMode;
+          
+          // Update button states
+          toggleContainer.querySelectorAll('.view-toggle-btn').forEach(b => {
+            b.classList.toggle('active', b.dataset.view === newMode);
+          });
+          
+          // Re-render the view
+          this.renderEventsView();
+        }
       });
     });
   }
@@ -485,59 +566,6 @@ export class ListView extends BaseView {
 
     // Item clicks (list view)
     this.attachItemClickListeners(config);
-
-    // Vertical timeline clicks (if in vertical view mode)
-    if (this.entityType === 'events' && this.eventsViewMode === 'vertical') {
-      this.attachVerticalTimelineListeners();
-    }
-  }
-
-  /**
-   * Attach view toggle listeners for events
-   */
-  attachViewToggleListeners(items, config) {
-    const toggleBtns = this.container.querySelectorAll('.view-toggle-btn');
-    toggleBtns.forEach(btn => {
-      this.addListener(btn, 'click', (e) => {
-        const newMode = btn.dataset.view;
-        if (newMode !== this.eventsViewMode) {
-          this.eventsViewMode = newMode;
-          // Re-render with new view mode
-          this.render();
-        }
-      });
-    });
-  }
-
-  /**
-   * Initialize the horizontal timeline component for events
-   */
-  initializeHorizontalTimeline(events) {
-    if (this.timeline) {
-      this.timeline.destroy();
-      this.timeline = null;
-    }
-
-    const timelineContainer = document.getElementById('events-timeline');
-    if (!timelineContainer || events.length === 0) {
-      if (timelineContainer && events.length === 0) {
-        timelineContainer.innerHTML = `
-          <div class="empty-state">
-            <div class="empty-state-icon">📅</div>
-            <p class="empty-state-text">No events to display</p>
-          </div>
-        `;
-      }
-      return;
-    }
-
-    this.timeline = new Timeline('events-timeline', {
-      height: Math.max(350, Math.min(events.length * 80, 600)),
-      onEventClick: (event) => {
-        window.location.hash = `#/event/${event.id}`;
-      }
-    });
-    this.timeline.update({ events });
   }
 
   destroy() {
@@ -545,9 +573,9 @@ export class ListView extends BaseView {
       this.narrativeList.destroy();
       this.narrativeList = null;
     }
-    if (this.timeline) {
-      this.timeline.destroy();
-      this.timeline = null;
+    if (this.eventsMap) {
+      this.eventsMap.destroy();
+      this.eventsMap = null;
     }
     super.destroy();
   }

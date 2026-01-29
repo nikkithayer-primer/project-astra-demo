@@ -13,6 +13,7 @@ import {
   formatNumber,
   formatDate
 } from '../utils/formatters.js';
+import { escapeHtml } from '../utils/htmlUtils.js';
 
 export class BaseComponent {
   constructor(containerId, options = {}) {
@@ -182,10 +183,7 @@ export class BaseComponent {
    * Escape HTML to prevent XSS
    */
   escapeHtml(text) {
-    if (!text) return '';
-    const div = document.createElement('div');
-    div.textContent = text;
-    return div.innerHTML;
+    return escapeHtml(text);
   }
 
   /**

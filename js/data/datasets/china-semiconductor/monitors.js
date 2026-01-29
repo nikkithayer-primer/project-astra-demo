@@ -8,6 +8,7 @@ export const monitors = [
     name: 'SMIC Technology Progress',
     description: 'Track breakthroughs and developments at SMIC, China\'s leading chip manufacturer',
     scope: {
+      mode: 'simple',
       organizationIds: ['org-001'], // SMIC
       personIds: ['person-001', 'person-002', 'person-003'], // SMIC leadership
       keywords: ['SMIC', '5nm', 'chip breakthrough', 'semiconductor manufacturing'],
@@ -34,6 +35,7 @@ export const monitors = [
     name: 'Export Controls Impact',
     description: 'Monitor narratives around US/Dutch export controls and their effects on Chinese chip industry',
     scope: {
+      mode: 'simple',
       organizationIds: ['org-002', 'org-004', 'org-005'], // ASML, US Commerce Dept, Dutch Govt
       personIds: ['person-004', 'person-005', 'person-006'], // Policy figures
       keywords: ['ASML', 'export controls', 'lithography', 'chip restrictions']
@@ -59,6 +61,7 @@ export const monitors = [
     name: 'Chinese Investment Watch',
     description: 'Track government funding, Big Fund allocations, and investment trends in Chinese semiconductors',
     scope: {
+      mode: 'simple',
       organizationIds: ['org-007', 'org-008', 'org-009'], // Big Fund, Ministry of Finance, MIIT
       personIds: ['person-008', 'person-009', 'person-010'], // Investment figures
       keywords: ['Big Fund', 'semiconductor investment', 'China chip funding']
@@ -84,6 +87,7 @@ export const monitors = [
     name: 'Huawei Sanctions Monitoring',
     description: 'Track Huawei\'s efforts to circumvent sanctions and develop indigenous chip capabilities',
     scope: {
+      mode: 'simple',
       organizationIds: ['org-010'], // Huawei
       personIds: ['person-011', 'person-012'], // Huawei leadership
       keywords: ['Huawei', 'sanctions', 'chip stockpiling', 'HiSilicon']
@@ -109,6 +113,7 @@ export const monitors = [
     name: 'Supply Chain & Manufacturing',
     description: 'Monitor TSMC Arizona, YMTC, and global semiconductor supply chain developments',
     scope: {
+      mode: 'simple',
       organizationIds: ['org-013', 'org-020'], // YMTC, TSMC
       locationIds: ['loc-009', 'loc-010'], // Arizona locations
       keywords: ['YMTC', 'TSMC Arizona', 'chip supply chain', 'fab construction']

@@ -14,6 +14,7 @@
 
 import { BooleanParser } from '../utils/BooleanParser.js';
 import { DataService } from '../data/DataService.js';
+import { escapeHtml } from '../utils/htmlUtils.js';
 
 // SVG icons for entity types
 const ENTITY_ICONS = {
@@ -91,6 +92,7 @@ export class BooleanExpressionEditor {
     this.handleInput = this.handleInput.bind(this);
     this.handleKeyDown = this.handleKeyDown.bind(this);
     this.handleBlur = this.handleBlur.bind(this);
+    this.handlePaste = this.handlePaste.bind(this);
     
     this.render();
   }
@@ -134,6 +136,7 @@ export class BooleanExpressionEditor {
     this.editorEl.addEventListener('input', this.handleInput);
     this.editorEl.addEventListener('keydown', this.handleKeyDown);
     this.editorEl.addEventListener('blur', this.handleBlur);
+    this.editorEl.addEventListener('paste', this.handlePaste);
     
     // Typeahead click handler
     this.typeaheadEl.addEventListener('click', (e) => {
@@ -225,6 +228,37 @@ export class BooleanExpressionEditor {
         this.hideTypeahead();
       }
     }, 150);
+  }
+
+  /**
+   * Handle paste events - ensure only plain text is pasted
+   */
+  handlePaste(e) {
+    e.preventDefault();
+    
+    // Get plain text from clipboard
+    const text = e.clipboardData?.getData('text/plain') || '';
+    
+    // Insert as plain text at cursor position
+    const selection = window.getSelection();
+    if (selection.rangeCount > 0) {
+      const range = selection.getRangeAt(0);
+      range.deleteContents();
+      
+      // Create a text node with the pasted content
+      const textNode = document.createTextNode(text);
+      range.insertNode(textNode);
+      
+      // Move cursor to end of pasted text
+      range.setStartAfter(textNode);
+      range.setEndAfter(textNode);
+      selection.removeAllRanges();
+      selection.addRange(range);
+    }
+    
+    // Trigger input handling
+    this.hideTypeahead();
+    this.parseAndNotify();
   }
 
   /**
@@ -382,15 +416,22 @@ export class BooleanExpressionEditor {
 
   /**
    * Get the current expression string (with entity IDs)
+   * Also returns a position map for error highlighting
    */
   getExpression() {
-    const result = { expression: '', entityMap: {} };
+    const result = { expression: '', entityMap: {}, positionMap: [] };
+    let text = '';
     
     const traverse = (node) => {
-      if (!node) return '';
+      if (!node) return;
       
       if (node.nodeType === Node.TEXT_NODE) {
-        return node.textContent;
+        const content = node.textContent;
+        for (let i = 0; i < content.length; i++) {
+          result.positionMap.push({ node, offset: i, isChip: false });
+        }
+        text += content;
+        return;
       }
       
       if (node.nodeType === Node.ELEMENT_NODE) {
@@ -400,26 +441,34 @@ export class BooleanExpressionEditor {
           const name = node.dataset.entityName;
           const type = node.dataset.entityType;
           result.entityMap[id] = { name, type };
-          return `@${id}`;
+          const entityRef = `@${id}`;
+          // Map all positions in entity reference to the chip node
+          for (let i = 0; i < entityRef.length; i++) {
+            result.positionMap.push({ node, offset: i, isChip: true });
+          }
+          text += entityRef;
+          return;
         }
         
         // Error marker - skip
         if (node.classList?.contains('error-marker')) {
-          return '';
+          return;
         }
         
         // Recurse into children
-        let text = '';
-        node.childNodes.forEach(child => {
-          text += traverse(child);
-        });
-        return text;
+        node.childNodes.forEach(child => traverse(child));
       }
-      
-      return '';
     };
     
-    result.expression = traverse(this.editorEl).trim();
+    traverse(this.editorEl);
+    
+    // Trim and adjust position map
+    const trimmedText = text.replace(/\u00A0/g, ' ').trim();
+    const startTrim = text.replace(/\u00A0/g, ' ').length - text.replace(/\u00A0/g, ' ').trimStart().length;
+    
+    result.expression = trimmedText;
+    result.positionMap = result.positionMap.slice(startTrim);
+    
     return result;
   }
 
@@ -493,7 +542,7 @@ export class BooleanExpressionEditor {
    * Parse the current expression and notify listeners
    */
   parseAndNotify() {
-    const { expression, entityMap } = this.getExpression();
+    const { expression, entityMap, positionMap } = this.getExpression();
     const { ast, error } = this.parser.parse(expression);
     
     // Update status display
@@ -503,8 +552,8 @@ export class BooleanExpressionEditor {
     this.clearErrorMarkers();
     
     // Add error marker if there's an error
-    if (error) {
-      this.insertErrorMarker(error.position);
+    if (error && typeof error.position === 'number') {
+      this.insertErrorMarker(positionMap, error.position);
     }
     
     // Notify listeners
@@ -551,11 +600,39 @@ export class BooleanExpressionEditor {
   }
 
   /**
-   * Insert an error marker at a position
+   * Insert an error marker at a position using the position map
    */
-  insertErrorMarker(position) {
-    // This is a simplified version - finding exact position in contenteditable is complex
-    // For now, we'll show the error in the status bar
+  insertErrorMarker(positionMap, errorPos) {
+    if (!positionMap || positionMap.length === 0) return;
+    
+    // Find the position in the map (clamp to valid range)
+    const mapIndex = Math.min(errorPos, positionMap.length - 1);
+    const posInfo = positionMap[mapIndex];
+    
+    if (!posInfo) return;
+    
+    // Create the error marker
+    const marker = document.createElement('span');
+    marker.className = 'error-marker';
+    marker.title = 'Error here';
+    
+    if (posInfo.isChip) {
+      // Insert after the chip
+      posInfo.node.after(marker);
+    } else if (posInfo.node.nodeType === Node.TEXT_NODE) {
+      // Split the text node and insert marker
+      const textNode = posInfo.node;
+      const offset = posInfo.offset;
+      
+      if (offset < textNode.textContent.length) {
+        // Split at the error position
+        const afterText = textNode.splitText(offset);
+        afterText.parentNode.insertBefore(marker, afterText);
+      } else {
+        // Insert at end
+        textNode.parentNode.insertBefore(marker, textNode.nextSibling);
+      }
+    }
   }
 
   /**
@@ -579,10 +656,7 @@ export class BooleanExpressionEditor {
    * Escape HTML for safe rendering
    */
   escapeHtml(text) {
-    if (!text) return '';
-    const div = document.createElement('div');
-    div.textContent = text;
-    return div.innerHTML;
+    return escapeHtml(text);
   }
 
   /**
@@ -593,6 +667,7 @@ export class BooleanExpressionEditor {
       this.editorEl.removeEventListener('input', this.handleInput);
       this.editorEl.removeEventListener('keydown', this.handleKeyDown);
       this.editorEl.removeEventListener('blur', this.handleBlur);
+      this.editorEl.removeEventListener('paste', this.handlePaste);
     }
     this.container.innerHTML = '';
   }

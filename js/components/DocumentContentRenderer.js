@@ -11,6 +11,7 @@ import {
   PLACEHOLDERS,
   formatPortionMark 
 } from '../utils/classification.js';
+import { escapeHtml } from '../utils/htmlUtils.js';
 import { renderPortionMark } from './ClassificationBanner.js';
 import { dataStore } from '../data/DataStore.js';
 
@@ -584,10 +585,7 @@ export class DocumentContentRenderer extends BaseComponent {
   }
 
   escapeHtml(text) {
-    if (!text) return '';
-    const div = document.createElement('div');
-    div.textContent = text;
-    return div.innerHTML;
+    return escapeHtml(text);
   }
 }
 

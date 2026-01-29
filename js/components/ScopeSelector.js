@@ -9,6 +9,7 @@ import { DataService } from '../data/DataService.js';
 import { dataStore } from '../data/DataStore.js';
 import { BooleanExpressionEditor } from './BooleanExpressionEditor.js';
 import { BooleanParser } from '../utils/BooleanParser.js';
+import { escapeHtml } from '../utils/htmlUtils.js';
 
 export class ScopeSelector {
   /**
@@ -59,6 +60,9 @@ export class ScopeSelector {
     this.saveFilterName = '';
     this.confirmDialogOpen = false;
     
+    // View toggle state for advanced mode: 'editor' or 'formatted'
+    this.advancedView = 'editor';
+    
     // BooleanExpressionEditor instance
     this.booleanEditor = null;
   }
@@ -87,23 +91,12 @@ export class ScopeSelector {
    * @param {Object} scope - The scope to set
    */
   setScope(scope) {
-    // Check if this is an advanced mode scope
-    if (scope?.mode === 'advanced' && scope?.booleanExpression) {
+    if (scope?.mode === 'advanced') {
       this.mode = 'advanced';
-      this.booleanExpression = scope.booleanExpression;
-      this.entityMap = { ...(scope.entityMap || {}) };
-      
-      // Reset simple mode state
-      this.scope = {
-        personIds: [],
-        organizationIds: [],
-        factionIds: [],
-        locationIds: [],
-        eventIds: [],
-        keywords: []
-      };
+      this.booleanExpression = scope.booleanExpression || '';
+      this.entityMap = { ...scope.entityMap };
+      this.scope = { personIds: [], organizationIds: [], factionIds: [], locationIds: [], eventIds: [], keywords: [] };
     } else {
-      // Simple mode
       this.mode = 'simple';
       this.scope = {
         personIds: [...(scope?.personIds || [])],
@@ -113,8 +106,6 @@ export class ScopeSelector {
         eventIds: [...(scope?.eventIds || [])],
         keywords: [...(scope?.keywords || [])]
       };
-      
-      // Reset advanced mode state
       this.booleanExpression = '';
       this.entityMap = {};
     }
@@ -341,14 +332,27 @@ export class ScopeSelector {
     this.container.innerHTML = `
       <div class="scope-selector">
         ${this.options.showModeToggle ? `
-          <!-- Mode Toggle -->
-          <div class="scope-mode-toggle">
-            <button class="scope-mode-btn ${this.mode === 'simple' ? 'active' : ''}" data-mode="simple">
-              Simple
-            </button>
-            <button class="scope-mode-btn ${this.mode === 'advanced' ? 'active' : ''}" data-mode="advanced">
-              Advanced
-            </button>
+          <!-- Mode Toggle Row -->
+          <div class="scope-mode-toggle-row">
+            <div class="scope-mode-toggle">
+              <button class="scope-mode-btn ${this.mode === 'simple' ? 'active' : ''}" data-mode="simple">
+                Simple
+              </button>
+              <button class="scope-mode-btn ${this.mode === 'advanced' ? 'active' : ''}" data-mode="advanced">
+                Advanced
+              </button>
+            </div>
+            
+            ${this.mode === 'advanced' ? `
+              <div class="scope-view-toggle">
+                <button class="scope-view-btn ${this.advancedView === 'editor' ? 'active' : ''}" data-view="editor">
+                  Edit
+                </button>
+                <button class="scope-view-btn ${this.advancedView === 'formatted' ? 'active' : ''}" data-view="formatted">
+                  Formatted
+                </button>
+              </div>
+            ` : ''}
           </div>
         ` : ''}
         
@@ -391,10 +395,18 @@ export class ScopeSelector {
         
         <!-- Advanced Mode Panel -->
         <div class="scope-mode-panel ${this.mode === 'advanced' ? 'active' : ''}" data-panel="advanced">
-          <div class="scope-boolean-editor-container"></div>
+          <!-- Editor View -->
+          <div class="scope-boolean-editor-container ${this.advancedView === 'editor' ? '' : 'hidden'}"></div>
           
-          <!-- Entity Browser for Advanced Mode -->
-          <div class="scope-entity-list scope-advanced-entity-list" style="margin-top: var(--space-md);">
+          <!-- Formatted View -->
+          <div class="boolean-tree-panel ${this.advancedView === 'formatted' ? 'visible' : ''}">
+            <div class="boolean-tree">
+              ${this.renderBooleanTree()}
+            </div>
+          </div>
+          
+          <!-- Entity Browser for Advanced Mode (only in editor view) -->
+          <div class="scope-entity-list scope-advanced-entity-list ${this.advancedView === 'editor' ? '' : 'hidden'}" style="margin-top: var(--space-md);">
             <div class="scope-entity-list-header" style="font-size: var(--text-xs); color: var(--text-muted); margin-bottom: var(--space-xs);">
               Click to insert entity into expression
             </div>
@@ -430,12 +442,94 @@ export class ScopeSelector {
         this.booleanAst = ast;
         this.booleanError = error;
         this.notifyChange();
+        
+        // Update formatted view if visible
+        if (this.advancedView === 'formatted') {
+          const treeEl = this.container.querySelector('.boolean-tree');
+          if (treeEl) {
+            treeEl.innerHTML = this.renderBooleanTree();
+          }
+        }
       }
     });
     
     // Set initial expression if any
     if (this.booleanExpression) {
       this.booleanEditor.setExpression(this.booleanExpression, this.entityMap);
+    }
+  }
+
+  /**
+   * Render the boolean expression as a tree
+   */
+  renderBooleanTree() {
+    if (!this.booleanAst) {
+      if (this.booleanExpression?.trim()) {
+        // Try to parse the expression
+        const parser = new BooleanParser();
+        const { ast, error } = parser.parse(this.booleanExpression);
+        if (ast) {
+          this.booleanAst = ast;
+        } else {
+          return `<div class="boolean-tree-empty" style="color: var(--accent-danger);">
+            ${this.escapeHtml(error?.message || 'Invalid expression')}
+          </div>`;
+        }
+      } else {
+        return '<div class="boolean-tree-empty">Enter an expression to see its structure</div>';
+      }
+    }
+    
+    return this.renderTreeNode(this.booleanAst, true);
+  }
+
+  /**
+   * Render a single AST node as HTML
+   */
+  renderTreeNode(node, isRoot = false) {
+    if (!node) return '';
+    
+    const rootClass = isRoot ? 'tree-root' : '';
+    
+    switch (node.type) {
+      case 'TERM':
+        // Show quotes only for quoted terms
+        const termDisplay = node.quoted 
+          ? `"${this.escapeHtml(node.value)}"` 
+          : this.escapeHtml(node.value);
+        return `<div class="tree-node ${rootClass}">
+          <span class="node-term">${termDisplay}</span>
+        </div>`;
+      
+      case 'ENTITY':
+        const entityInfo = this.entityMap[node.id];
+        const displayName = entityInfo?.name || node.id;
+        return `<div class="tree-node ${rootClass}">
+          <span class="node-entity">@${this.escapeHtml(displayName)}</span>
+        </div>`;
+      
+      case 'NOT':
+        return `<div class="tree-node ${rootClass}">
+          <span class="operator-badge operator-not">NOT</span>
+          ${this.renderTreeNode(node.operand, false)}
+        </div>`;
+      
+      case 'AND':
+        const andChildren = node.children.map(child => this.renderTreeNode(child, false)).join('');
+        return `<div class="tree-node ${rootClass}">
+          <span class="operator-badge operator-and">AND</span>
+          ${andChildren}
+        </div>`;
+      
+      case 'OR':
+        const orChildren = node.children.map(child => this.renderTreeNode(child, false)).join('');
+        return `<div class="tree-node ${rootClass}">
+          <span class="operator-badge operator-or">OR</span>
+          ${orChildren}
+        </div>`;
+      
+      default:
+        return '';
     }
   }
 
@@ -1038,6 +1132,39 @@ export class ScopeSelector {
       });
     });
     
+    // View toggle buttons (advanced mode: editor/formatted)
+    this.container.querySelectorAll('.scope-view-btn').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        e.preventDefault();
+        const newView = btn.dataset.view;
+        if (newView && newView !== this.advancedView) {
+          this.advancedView = newView;
+          
+          // Toggle visibility of editor and tree
+          const editorContainer = this.container.querySelector('.scope-boolean-editor-container');
+          const treePanel = this.container.querySelector('.boolean-tree-panel');
+          const entityBrowser = this.container.querySelector('.scope-advanced-entity-list');
+          
+          if (editorContainer) editorContainer.classList.toggle('hidden', newView === 'formatted');
+          if (treePanel) {
+            treePanel.classList.toggle('visible', newView === 'formatted');
+            if (newView === 'formatted') {
+              const treeEl = treePanel.querySelector('.boolean-tree');
+              if (treeEl) {
+                treeEl.innerHTML = this.renderBooleanTree();
+              }
+            }
+          }
+          if (entityBrowser) entityBrowser.classList.toggle('hidden', newView === 'formatted');
+          
+          // Update button states
+          this.container.querySelectorAll('.scope-view-btn').forEach(b => {
+            b.classList.toggle('active', b.dataset.view === newView);
+          });
+        }
+      });
+    });
+    
     // Search input (simple mode only)
     const searchInput = this.container.querySelector('.scope-search-input');
     if (searchInput) {
@@ -1306,10 +1433,7 @@ export class ScopeSelector {
    * Escape HTML for safe rendering
    */
   escapeHtml(text) {
-    if (!text) return '';
-    const div = document.createElement('div');
-    div.textContent = text;
-    return div.innerHTML;
+    return escapeHtml(text);
   }
 
   /**

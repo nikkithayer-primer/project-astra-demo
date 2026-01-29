@@ -196,16 +196,6 @@ export class TagDetailView extends BaseView {
       return dateStr;
     }
   }
-
-  /**
-   * Escape HTML
-   */
-  escapeHtml(text) {
-    if (!text) return '';
-    const div = document.createElement('div');
-    div.textContent = text;
-    return div.innerHTML;
-  }
 }
 
 export default TagDetailView;

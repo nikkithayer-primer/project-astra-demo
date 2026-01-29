@@ -13,6 +13,7 @@ import {
 } from '../utils/formatters.js';
 import { PageHeader } from '../utils/PageHeader.js';
 import { DragDropManager } from '../utils/DragDropManager.js';
+import { escapeHtml } from '../utils/htmlUtils.js';
 
 export class BaseView {
   /**
@@ -251,11 +252,7 @@ export class BaseView {
    * Escape HTML to prevent XSS
    */
   escapeHtml(text) {
-    if (!text) return '';
-    if (typeof text !== 'string') text = String(text);
-    const div = document.createElement('div');
-    div.textContent = text;
-    return div.innerHTML;
+    return escapeHtml(text);
   }
 
   /**

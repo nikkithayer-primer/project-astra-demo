@@ -8,6 +8,7 @@ export const searchFilters = [
     name: 'Key Politicians',
     description: 'Major political figures in current coverage',
     scope: {
+      mode: 'simple',
       personIds: ['person-003', 'person-019', 'person-021'],
       organizationIds: [],
       factionIds: [],
@@ -22,6 +23,7 @@ export const searchFilters = [
     name: 'Federal Agencies',
     description: 'Key federal government agencies',
     scope: {
+      mode: 'simple',
       personIds: [],
       organizationIds: ['org-010', 'org-011', 'org-012', 'org-017'],
       factionIds: [],
@@ -36,6 +38,7 @@ export const searchFilters = [
     name: 'Minnesota Focus',
     description: 'Minnesota-based entities and officials',
     scope: {
+      mode: 'simple',
       personIds: ['person-007', 'person-019', 'person-020'],
       organizationIds: ['org-002', 'org-018'],
       factionIds: [],

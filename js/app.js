@@ -11,6 +11,7 @@ import { mockData as chinaSemiconductorData, datasetId as chinaSemiconductorId, 
 import { mockData as walmartBrandData, datasetId as walmartBrandId, datasetName as walmartBrandName } from './data/datasets/walmart-brand/index.js';
 import { Router } from './router.js';
 import { getSourceViewer } from './components/SourceViewerModal.js';
+import { escapeHtml } from './utils/htmlUtils.js';
 
 // Dataset registry
 const DATASETS = {
@@ -692,10 +693,7 @@ class App {
    * Escape HTML to prevent XSS
    */
   escapeHtml(text) {
-    if (!text) return '';
-    const div = document.createElement('div');
-    div.textContent = text;
-    return div.innerHTML;
+    return escapeHtml(text);
   }
 
   /**
@@ -1313,15 +1311,6 @@ class App {
     ];
     
     return defaultResponses[Math.floor(Math.random() * defaultResponses.length)];
-  }
-
-  /**
-   * Escape HTML to prevent XSS
-   */
-  escapeHtml(text) {
-    const div = document.createElement('div');
-    div.textContent = text;
-    return div.innerHTML;
   }
 }
 

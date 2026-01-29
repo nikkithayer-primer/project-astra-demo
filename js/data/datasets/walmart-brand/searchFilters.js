@@ -8,6 +8,7 @@ export const searchFilters = [
     name: 'Walmart Leadership',
     description: 'Walmart corporate executives',
     scope: {
+      mode: 'simple',
       personIds: ['person-001', 'person-002', 'person-009'],
       organizationIds: ['org-001'],
       factionIds: [],
@@ -22,6 +23,7 @@ export const searchFilters = [
     name: 'Labor Advocates',
     description: 'Worker rights organizations and leaders',
     scope: {
+      mode: 'simple',
       personIds: ['person-003', 'person-004', 'person-005'],
       organizationIds: ['org-005', 'org-006'],
       factionIds: [],
@@ -36,6 +38,7 @@ export const searchFilters = [
     name: 'Major Competitors',
     description: 'Key retail competitors and their leadership',
     scope: {
+      mode: 'simple',
       personIds: ['person-013', 'person-014'],
       organizationIds: ['org-003', 'org-004', 'org-010', 'org-011'],
       factionIds: [],

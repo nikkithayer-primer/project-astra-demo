@@ -155,29 +155,7 @@ export function initAllCardToggles(container, viewPrefix, defaultWidths = {}) {
   });
 }
 
-/**
- * Create a card HTML string with the toggle-ready structure
- * @param {string} title - Card title
- * @param {string} bodyId - ID for the card body element
- * @param {Object} options - Additional options
- */
-export function createCardHTML(title, bodyId, options = {}) {
-  const { noBodyPadding = false, extraHeaderContent = '' } = options;
-  const bodyClass = noBodyPadding ? 'card-body no-padding' : 'card-body';
-  
-  return `
-    <div class="card">
-      <div class="card-header">
-        <h2 class="card-title">${title}</h2>
-        <div class="card-header-actions">${extraHeaderContent}</div>
-      </div>
-      <div class="${bodyClass}" id="${bodyId}"></div>
-    </div>
-  `;
-}
-
 export default {
   initCardWidthToggle,
-  initAllCardToggles,
-  createCardHTML
+  initAllCardToggles
 };

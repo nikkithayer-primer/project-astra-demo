@@ -12,6 +12,7 @@ export const monitors = [
     enabled: true,
     lastTriggered: '2026-01-18T10:30:00Z',
     scope: {
+      mode: 'simple',
       logic: 'OR',
       keywords: ['self-checkout', 'detained', 'theft', 'receipt check', 'loss prevention']
     },
@@ -34,6 +35,7 @@ export const monitors = [
     enabled: true,
     lastTriggered: '2026-01-15T13:00:00Z',
     scope: {
+      mode: 'simple',
       logic: 'OR',
       keywords: ['empty shelves', 'out of stock', 'can\'t find', 'no inventory', 'bare aisles']
     },
@@ -55,6 +57,7 @@ export const monitors = [
     enabled: true,
     lastTriggered: '2026-01-15T12:00:00Z',
     scope: {
+      mode: 'simple',
       logic: 'OR',
       keywords: ['walmart worker', 'walmart employee', 'understaffed', '#walmartlife', 'working conditions']
     },
@@ -77,6 +80,7 @@ export const monitors = [
     enabled: true,
     lastTriggered: '2026-01-18T14:30:00Z',
     scope: {
+      mode: 'simple',
       logic: 'OR',
       keywords: ['recall', 'contamination', 'FDA', 'safety', 'great value', 'private label']
     },
@@ -99,6 +103,7 @@ export const monitors = [
     enabled: true,
     lastTriggered: '2026-01-17T16:00:00Z',
     scope: {
+      mode: 'simple',
       logic: 'OR',
       keywords: ['walmart prices', 'everyday low prices', 'cheaper at', 'price comparison', 'expensive']
     },
@@ -120,6 +125,7 @@ export const monitors = [
     enabled: true,
     lastTriggered: '2026-01-16T11:00:00Z',
     scope: {
+      mode: 'simple',
       logic: 'OR',
       keywords: ['target', 'amazon', 'costco', 'aldi', 'delivery', 'same-day']
     },
@@ -141,6 +147,7 @@ export const monitors = [
     enabled: true,
     lastTriggered: '2026-01-18T13:00:00Z',
     scope: {
+      mode: 'simple',
       logic: 'OR',
       keywords: ['store closing', 'walmart closure', 'food desert', 'rural', 'community impact']
     },

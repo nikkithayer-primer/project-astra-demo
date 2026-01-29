@@ -413,9 +413,4 @@ export class DragDropManager {
   }
 }
 
-// Factory function for easy creation
-export function createDragDropManager(options) {
-  return new DragDropManager(options);
-}
-
 export default DragDropManager;

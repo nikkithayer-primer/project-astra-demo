@@ -4,14 +4,13 @@
  * Uses ScopeSelector component for entity/keyword selection
  */
 
+import { BaseModal } from './BaseModal.js';
 import { dataStore } from '../data/DataStore.js';
 import { ScopeSelector } from './ScopeSelector.js';
 
-export class MonitorEditorModal {
+export class MonitorEditorModal extends BaseModal {
   constructor() {
-    this.modalContainer = document.getElementById('modal-container');
-    this.modalContent = this.modalContainer?.querySelector('.modal-content');
-    this.backdrop = this.modalContainer?.querySelector('.modal-backdrop');
+    super('lg'); // Large size modal for scope selector
     
     // Current monitor being edited (null for create mode)
     this.editingMonitor = null;
@@ -27,10 +26,6 @@ export class MonitorEditorModal {
     
     // Callback for when save completes
     this.onSaveCallback = null;
-    
-    // Bind handlers
-    this.handleBackdropClick = this.handleBackdropClick.bind(this);
-    this.handleKeyDown = this.handleKeyDown.bind(this);
   }
 
   /**
@@ -46,6 +41,8 @@ export class MonitorEditorModal {
       logic: 'OR'
     };
     this.render('Create Monitor');
+    this.attachFormListeners();
+    this.show();
     
     // Initialize ScopeSelector with initial scope (empty or from filter)
     this.initScopeSelector(initialScope);
@@ -66,6 +63,8 @@ export class MonitorEditorModal {
     };
     
     this.render('Edit Monitor');
+    this.attachFormListeners();
+    this.show();
     
     // Initialize ScopeSelector with monitor's scope
     this.initScopeSelector(monitor.scope || {});
@@ -99,16 +98,8 @@ export class MonitorEditorModal {
    * Render the modal content
    */
   render(title) {
-    if (!this.modalContainer || !this.modalContent) {
-      console.error('Modal container not found');
-      return;
-    }
-
     this.modalContent.innerHTML = `
-      <div class="modal-header">
-        <h3 class="modal-title">${title}</h3>
-        <button class="modal-close" aria-label="Close">&times;</button>
-      </div>
+      ${this.renderHeader(title)}
       <div class="modal-body monitor-editor-body">
         <div class="monitor-editor-form">
           <!-- Monitor Name -->
@@ -167,22 +158,14 @@ export class MonitorEditorModal {
         <button class="btn btn-primary" id="monitor-save">Save Monitor</button>
       </div>
     `;
-
-    // Show modal
-    this.modalContainer.classList.remove('hidden');
-    this.modalContent.classList.add('monitor-editor-modal');
-
-    // Add event listeners
-    this.attachEventListeners();
   }
 
   /**
-   * Attach event listeners
+   * Attach form-specific event listeners
    */
-  attachEventListeners() {
+  attachFormListeners() {
     // Close button
-    const closeBtn = this.modalContent.querySelector('.modal-close');
-    closeBtn?.addEventListener('click', () => this.close());
+    this.attachCloseListener();
     
     // Cancel button
     const cancelBtn = this.modalContent.querySelector('#monitor-cancel');
@@ -205,12 +188,6 @@ export class MonitorEditorModal {
         this.formState.logic = e.target.value;
       });
     });
-    
-    // Backdrop click
-    this.backdrop?.addEventListener('click', this.handleBackdropClick);
-    
-    // Escape key
-    document.addEventListener('keydown', this.handleKeyDown);
   }
 
   /**
@@ -255,54 +232,26 @@ export class MonitorEditorModal {
       });
     }
     
+    const callback = this.onSaveCallback;
     this.close();
     
-    if (this.onSaveCallback) {
-      this.onSaveCallback();
+    if (callback) {
+      callback();
     }
   }
 
   /**
-   * Close the modal
+   * Cleanup when modal closes
    */
-  close() {
-    if (this.modalContainer) {
-      this.modalContainer.classList.add('hidden');
-    }
-    if (this.modalContent) {
-      this.modalContent.classList.remove('monitor-editor-modal');
-    }
-    
+  onClose() {
     // Clean up ScopeSelector
     if (this.scopeSelector) {
       this.scopeSelector.destroy();
       this.scopeSelector = null;
     }
     
-    // Remove event listeners
-    this.backdrop?.removeEventListener('click', this.handleBackdropClick);
-    document.removeEventListener('keydown', this.handleKeyDown);
-  }
-
-  handleBackdropClick(e) {
-    if (e.target === this.backdrop) {
-      this.close();
-    }
-  }
-
-  handleKeyDown(e) {
-    if (e.key === 'Escape') {
-      this.close();
-    }
-  }
-
-  /**
-   * Escape HTML for safe rendering
-   */
-  escapeHtml(text) {
-    const div = document.createElement('div');
-    div.textContent = text;
-    return div.innerHTML;
+    this.editingMonitor = null;
+    this.onSaveCallback = null;
   }
 }
 

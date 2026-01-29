@@ -350,10 +350,25 @@
   background: var(--bg-secondary);
   border: 1px solid var(--border-color);
   border-radius: var(--border-radius);
+  width: 90vw;
   max-width: 600px;
   max-height: 80vh;
   overflow-y: auto;
   z-index: 1;
+}
+
+/* Modal Size Variants */
+.modal-content.modal-sm {
+  max-width: 400px;
+}
+
+.modal-content.modal-md {
+  max-width: 500px;
+}
+
+.modal-content.modal-lg {
+  max-width: 640px;
+  max-height: 85vh;
 }
 
 .modal-header {

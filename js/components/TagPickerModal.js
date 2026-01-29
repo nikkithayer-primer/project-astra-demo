@@ -4,14 +4,13 @@
  * Supports multi-select and inline tag creation
  */
 
+import { BaseModal } from './BaseModal.js';
 import { DataService } from '../data/DataService.js';
 import { dataStore } from '../data/DataStore.js';
 
-export class TagPickerModal {
+export class TagPickerModal extends BaseModal {
   constructor() {
-    this.modalContainer = document.getElementById('modal-container');
-    this.modalContent = this.modalContainer?.querySelector('.modal-content');
-    this.backdrop = this.modalContainer?.querySelector('.modal-backdrop');
+    super('sm'); // Small size modal for tag picker
     
     // Current entity being edited
     this.entityType = null;
@@ -25,10 +24,6 @@ export class TagPickerModal {
     
     // Callbacks
     this.onSaveCallback = null;
-    
-    // Bind handlers
-    this.handleBackdropClick = this.handleBackdropClick.bind(this);
-    this.handleKeyDown = this.handleKeyDown.bind(this);
   }
 
   /**
@@ -49,27 +44,26 @@ export class TagPickerModal {
     
     this.render();
     this.attachEventListeners();
+    this.show();
+    
+    // Focus search input
+    setTimeout(() => {
+      const searchInput = this.modalContent.querySelector('#tag-search');
+      searchInput?.focus();
+    }, 100);
   }
 
   /**
    * Render the modal
    */
   render() {
-    if (!this.modalContainer || !this.modalContent) {
-      console.error('TagPickerModal: Modal container not found');
-      return;
-    }
-
     const allTags = DataService.getTags();
     const filteredTags = this.searchQuery
       ? allTags.filter(t => t.name.toLowerCase().includes(this.searchQuery.toLowerCase()))
       : allTags;
 
     this.modalContent.innerHTML = `
-      <div class="modal-header">
-        <h3 class="modal-title">Manage Tags</h3>
-        <button class="modal-close" aria-label="Close">&times;</button>
-      </div>
+      ${this.renderHeader('Manage Tags')}
       <div class="modal-body tag-picker-body">
         <div class="tag-picker-search">
           <input 
@@ -112,15 +106,6 @@ export class TagPickerModal {
         <button class="btn btn-primary" id="tag-picker-save">Apply Tags</button>
       </div>
     `;
-
-    // Show modal
-    this.modalContainer.classList.remove('hidden');
-    
-    // Focus search input
-    setTimeout(() => {
-      const searchInput = this.modalContent.querySelector('#tag-search');
-      searchInput?.focus();
-    }, 100);
   }
 
   /**
@@ -150,15 +135,12 @@ export class TagPickerModal {
    * Attach event listeners
    */
   attachEventListeners() {
-    // Close handlers
-    this.backdrop?.addEventListener('click', this.handleBackdropClick);
-    document.addEventListener('keydown', this.handleKeyDown);
+    // Close button
+    this.attachCloseListener();
     
-    const closeBtn = this.modalContent.querySelector('.modal-close');
     const cancelBtn = this.modalContent.querySelector('#tag-picker-cancel');
     const saveBtn = this.modalContent.querySelector('#tag-picker-save');
     
-    closeBtn?.addEventListener('click', () => this.close());
     cancelBtn?.addEventListener('click', () => this.close());
     saveBtn?.addEventListener('click', () => this.save());
     
@@ -290,45 +272,15 @@ export class TagPickerModal {
   }
 
   /**
-   * Close the modal
+   * Cleanup when modal closes
    */
-  close() {
-    if (this.modalContainer) {
-      this.modalContainer.classList.add('hidden');
-    }
-    
-    // Remove event listeners
-    this.backdrop?.removeEventListener('click', this.handleBackdropClick);
-    document.removeEventListener('keydown', this.handleKeyDown);
-    
+  onClose() {
     // Reset state
     this.entityType = null;
     this.entityId = null;
     this.selectedTagIds.clear();
     this.searchQuery = '';
     this.onSaveCallback = null;
-  }
-
-  handleBackdropClick(e) {
-    if (e.target === this.backdrop) {
-      this.close();
-    }
-  }
-
-  handleKeyDown(e) {
-    if (e.key === 'Escape') {
-      this.close();
-    }
-  }
-
-  /**
-   * Escape HTML to prevent XSS
-   */
-  escapeHtml(text) {
-    if (!text) return '';
-    const div = document.createElement('div');
-    div.textContent = text;
-    return div.innerHTML;
   }
 }
 

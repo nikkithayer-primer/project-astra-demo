@@ -9,7 +9,6 @@ import { NarrativeList } from '../components/NarrativeList.js';
 import { TopicList } from '../components/TopicList.js';
 import { MapView } from '../components/MapView.js';
 import { TimelineVolumeComposite } from '../components/TimelineVolumeComposite.js';
-import { Timeline } from '../components/Timeline.js';
 import { SentimentChart } from '../components/SentimentChart.js';
 import { initAllCardToggles } from '../utils/cardWidthToggle.js';
 import { formatDateWithYear } from '../utils/formatters.js';
@@ -19,8 +18,8 @@ import { renderVerticalTimeline } from '../utils/verticalTimeline.js';
 export class DashboardView extends BaseView {
   constructor(container, options = {}) {
     super(container, options);
-    // Events view mode: 'vertical' or 'horizontal' timeline
-    this.eventsViewMode = 'vertical';
+    // Events view mode: 'map' or 'list'
+    this.eventsViewMode = 'map';
     // Tag filter: Set of selected tag IDs
     this.selectedTags = new Set();
     // Tag dropdown open state
@@ -161,32 +160,24 @@ export class DashboardView extends BaseView {
               </button>
             `
           })}
-          ${CardBuilder.create('Recent Events', 'dashboard-events', { 
-            noPadding: true, 
-            bodyClass: 'card-body-scrollable',
+          ${CardBuilder.create('Events & Locations', 'dashboard-events-map', { 
+            noPadding: true,
             actions: `
-              <div class="view-toggle" id="events-view-toggle">
-                <button class="view-toggle-btn active" data-view="vertical" title="Vertical Timeline">
+              <div class="view-toggle dashboard-events-toggle">
+                <button class="view-toggle-btn ${this.eventsViewMode === 'map' ? 'active' : ''}" data-view="map" title="Map View">
                   <svg viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.5">
-                    <path d="M4 2v12"/>
-                    <circle cx="4" cy="4" r="2"/>
-                    <circle cx="4" cy="9" r="2"/>
-                    <circle cx="4" cy="14" r="1.5"/>
-                    <path d="M8 4h6M8 9h6M8 14h4"/>
+                    <path d="M8 1C5.2 1 3 3.2 3 6c0 4 5 9 5 9s5-5 5-9c0-2.8-2.2-5-5-5z"/>
+                    <circle cx="8" cy="6" r="2"/>
                   </svg>
                 </button>
-                <button class="view-toggle-btn" data-view="horizontal" title="Horizontal Timeline">
+                <button class="view-toggle-btn ${this.eventsViewMode === 'list' ? 'active' : ''}" data-view="list" title="List View">
                   <svg viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.5">
-                    <path d="M2 8h12"/>
-                    <circle cx="4" cy="8" r="2"/>
-                    <circle cx="8" cy="8" r="2"/>
-                    <circle cx="12" cy="8" r="2"/>
+                    <path d="M2 4h12M2 8h12M2 12h12"/>
                   </svg>
                 </button>
               </div>
             `
           })}
-          ${CardBuilder.create('Activity Locations', 'dashboard-map', { fullWidth: true, noPadding: true })}
         </div>
       </div>
     `;
@@ -198,8 +189,7 @@ export class DashboardView extends BaseView {
       1: 'half', // Top Narratives - half width
       2: 'half', // Sentiment by Faction - half width
       3: 'half', // Trending Topics - half width
-      4: 'half', // Recent Events - half width
-      5: 'full'  // Map - full width
+      4: 'half'  // Events & Locations Map - half width
     });
 
     // Add click handlers for stat cards (navigate to list views)
@@ -312,30 +302,78 @@ export class DashboardView extends BaseView {
       this.components.sentimentChart.enableAutoResize();
     }
 
-    // Recent Events (vertical timeline)
-    this.renderEventsCard(recentEvents);
-
-    // Map with all locations (filtered by time range)
+    // Events & Locations (Map or List)
     const locations = DataService.getAllLocationsWithCounts(this.timeRange);
-    if (locations.length > 0) {
-      this.components.map = new MapView('dashboard-map', {
-        height: 350
-      });
-      this.components.map.update({ locations });
+    if (locations.length > 0 || recentEvents.length > 0) {
+      // Store data for view switching
+      this._eventsData = { events: recentEvents, locations };
+      
+      // Render current view and set up toggle
+      this.renderEventsView();
+      this.attachEventsViewToggle();
     }
   }
 
   /**
-   * Render the events card with vertical or horizontal timeline
+   * Render the events view (map or list) based on current mode
    */
-  renderEventsCard(events) {
-    // Store events for re-rendering on toggle
-    this._dashboardEvents = events;
-    
-    const container = document.getElementById('dashboard-events');
-    if (!container) return;
+  renderEventsView() {
+    if (this.eventsViewMode === 'map') {
+      this.renderEventsMap();
+    } else {
+      this.renderEventsList();
+    }
+  }
 
-    if (!events || events.length === 0) {
+  /**
+   * Render events as a map
+   */
+  renderEventsMap() {
+    // Clean up existing map
+    if (this.components.eventsMap) {
+      this.components.eventsMap.destroy();
+      this.components.eventsMap = null;
+    }
+
+    const container = document.getElementById('dashboard-events-map');
+    if (!container || !this._eventsData) return;
+
+    // Remove scrollable class for map view
+    container.classList.remove('card-body-scrollable');
+
+    const { events, locations } = this._eventsData;
+
+    // Clear and render map
+    container.innerHTML = '';
+    
+    this.components.eventsMap = new MapView('dashboard-events-map', {
+      height: 350,
+      onEventClick: (e) => {
+        window.location.hash = `#/event/${e.id}`;
+      }
+    });
+    this.components.eventsMap.update({ locations, events });
+  }
+
+  /**
+   * Render events as a list
+   */
+  renderEventsList() {
+    // Clean up existing map
+    if (this.components.eventsMap) {
+      this.components.eventsMap.destroy();
+      this.components.eventsMap = null;
+    }
+
+    const container = document.getElementById('dashboard-events-map');
+    if (!container || !this._eventsData) return;
+
+    // Add scrollable class for list view
+    container.classList.add('card-body-scrollable');
+
+    const { events } = this._eventsData;
+
+    if (events.length === 0) {
       container.innerHTML = `
         <div class="vertical-timeline-empty">
           <div class="vertical-timeline-empty-icon">📅</div>
@@ -350,54 +388,13 @@ export class DashboardView extends BaseView {
       .sort((a, b) => new Date(b.date) - new Date(a.date))
       .slice(0, 25);
 
-    if (this.eventsViewMode === 'horizontal') {
-      container.innerHTML = '<div id="dashboard-events-timeline" style="min-height: 350px;"></div>';
-      this.initializeHorizontalTimeline(sortedEvents);
-    } else {
-      container.innerHTML = this.renderEventsVerticalTimeline(sortedEvents);
-      this.attachVerticalTimelineListeners(container);
-    }
-    
-    // Set up toggle listener
-    this.setupEventsViewToggle();
-  }
-
-  /**
-   * Initialize horizontal timeline component
-   */
-  initializeHorizontalTimeline(events) {
-    // Destroy existing timeline if any
-    if (this.components.eventsTimeline) {
-      this.components.eventsTimeline.destroy();
-      this.components.eventsTimeline = null;
-    }
-
-    const timelineContainer = document.getElementById('dashboard-events-timeline');
-    if (!timelineContainer || events.length === 0) return;
-
-    this.components.eventsTimeline = new Timeline('dashboard-events-timeline', {
-      height: Math.max(300, Math.min(events.length * 70, 450)),
-      onEventClick: (event) => {
-        window.location.hash = `#/event/${event.id}`;
-      }
-    });
-    this.components.eventsTimeline.update({ events });
-  }
-
-  /**
-   * Render vertical timeline view for events
-   */
-  renderEventsVerticalTimeline(events) {
-    return renderVerticalTimeline(events, { 
+    // Render vertical timeline
+    container.innerHTML = renderVerticalTimeline(sortedEvents, { 
       sortNewestFirst: true,
       emptyText: 'No recent events'
     });
-  }
 
-  /**
-   * Attach click listeners for vertical timeline items
-   */
-  attachVerticalTimelineListeners(container) {
+    // Attach click listeners for timeline items
     container.querySelectorAll('.vertical-timeline-item').forEach(item => {
       this.addListener(item, 'click', () => {
         const eventId = item.dataset.eventId;
@@ -407,27 +404,25 @@ export class DashboardView extends BaseView {
   }
 
   /**
-   * Set up the events view toggle listener
+   * Attach view toggle listeners for events map/list
    */
-  setupEventsViewToggle() {
-    const toggle = document.getElementById('events-view-toggle');
-    if (!toggle) return;
+  attachEventsViewToggle() {
+    const toggleContainer = this.container.querySelector('.dashboard-events-toggle');
+    if (!toggleContainer) return;
 
-    toggle.querySelectorAll('.view-toggle-btn').forEach(btn => {
+    toggleContainer.querySelectorAll('.view-toggle-btn').forEach(btn => {
       this.addListener(btn, 'click', () => {
         const newMode = btn.dataset.view;
         if (newMode !== this.eventsViewMode) {
           this.eventsViewMode = newMode;
           
           // Update button states
-          toggle.querySelectorAll('.view-toggle-btn').forEach(b => {
+          toggleContainer.querySelectorAll('.view-toggle-btn').forEach(b => {
             b.classList.toggle('active', b.dataset.view === newMode);
           });
           
-          // Re-render events card
-          if (this._dashboardEvents) {
-            this.renderEventsCard(this._dashboardEvents);
-          }
+          // Re-render the view
+          this.renderEventsView();
         }
       });
     });
@@ -551,16 +546,6 @@ export class DashboardView extends BaseView {
    */
   getSelectedTagIds() {
     return Array.from(this.selectedTags);
-  }
-
-  /**
-   * Escape HTML for safe rendering
-   */
-  escapeHtml(text) {
-    if (!text) return '';
-    const div = document.createElement('div');
-    div.textContent = text;
-    return div.innerHTML;
   }
 }
 

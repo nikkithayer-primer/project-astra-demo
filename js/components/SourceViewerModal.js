@@ -3,15 +3,11 @@
  * Modal for viewing the aggregated sources that contribute to a narrative/theme
  */
 
-export class SourceViewerModal {
+import { BaseModal } from './BaseModal.js';
+
+export class SourceViewerModal extends BaseModal {
   constructor() {
-    this.modalContainer = document.getElementById('modal-container');
-    this.modalContent = this.modalContainer?.querySelector('.modal-content');
-    this.backdrop = this.modalContainer?.querySelector('.modal-backdrop');
-    
-    // Bind close handlers
-    this.handleBackdropClick = this.handleBackdropClick.bind(this);
-    this.handleKeyDown = this.handleKeyDown.bind(this);
+    super('md'); // Medium size modal
   }
 
   /**
@@ -20,23 +16,15 @@ export class SourceViewerModal {
    * @param {string} type - 'narrative' or 'subnarrative'
    */
   open(item, type = 'narrative') {
-    if (!this.modalContainer || !this.modalContent) {
-      console.error('Modal container not found');
-      return;
-    }
-
     const typeLabel = type === 'subnarrative' ? 'Theme' : 'Narrative';
 
     this.modalContent.innerHTML = `
-      <div class="modal-header">
-        <h3 class="modal-title">Source Viewer</h3>
-        <button class="modal-close" aria-label="Close">&times;</button>
-      </div>
+      ${this.renderHeader('Source Viewer')}
       <div class="modal-body">
         <div class="source-viewer-content">
           <div class="source-viewer-item-info">
             <span class="source-viewer-type">${typeLabel}</span>
-            <h4 class="source-viewer-title">${item.text || 'Untitled'}</h4>
+            <h4 class="source-viewer-title">${this.escapeHtml(item.text) || 'Untitled'}</h4>
           </div>
           <div class="source-viewer-placeholder">
             <div class="source-viewer-icon">📄</div>
@@ -45,48 +33,15 @@ export class SourceViewerModal {
           </div>
         </div>
       </div>
-      <div class="modal-footer">
-        <button class="btn" id="source-viewer-close">Close</button>
-      </div>
+      ${this.renderFooter([{ text: 'Close', class: 'btn', id: 'source-viewer-close' }])}
     `;
 
-    // Show modal
-    this.modalContainer.classList.remove('hidden');
-
-    // Add event listeners
-    this.backdrop?.addEventListener('click', this.handleBackdropClick);
-    document.addEventListener('keydown', this.handleKeyDown);
-    
-    const closeBtn = this.modalContent.querySelector('.modal-close');
+    // Attach close button listeners
+    this.attachCloseListener();
     const footerCloseBtn = this.modalContent.querySelector('#source-viewer-close');
-    
-    closeBtn?.addEventListener('click', () => this.close());
     footerCloseBtn?.addEventListener('click', () => this.close());
-  }
 
-  /**
-   * Close the modal
-   */
-  close() {
-    if (this.modalContainer) {
-      this.modalContainer.classList.add('hidden');
-    }
-
-    // Remove event listeners
-    this.backdrop?.removeEventListener('click', this.handleBackdropClick);
-    document.removeEventListener('keydown', this.handleKeyDown);
-  }
-
-  handleBackdropClick(e) {
-    if (e.target === this.backdrop) {
-      this.close();
-    }
-  }
-
-  handleKeyDown(e) {
-    if (e.key === 'Escape') {
-      this.close();
-    }
+    this.show();
   }
 }
 
