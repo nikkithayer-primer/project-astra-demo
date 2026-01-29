@@ -194,59 +194,95 @@ export class TimelineVolumeComposite extends BaseComponent {
       .attr('x', 0)
       .attr('y', 0)
       .attr('width', innerWidth)
-      .attr('height', volumeHeight + timelineHeight);
+      .attr('height', contentHeight);
 
     // Create main content group
     this.mainGroup = svg.append('g')
       .attr('transform', `translate(${margin.left}, ${margin.top})`);
 
-    // Volume chart group
-    this.volumeGroup = this.mainGroup.append('g')
-      .attr('class', 'volume-group')
-      .attr('clip-path', `url(#composite-clip-${this.containerId})`);
+    // Render based on display mode
+    if (this.displayMode === 'duration') {
+      // Duration view - render narrative duration bars
+      this.durationGroup = this.mainGroup.append('g')
+        .attr('class', 'duration-group')
+        .attr('clip-path', `url(#composite-clip-${this.containerId})`);
 
-    // Divider line between charts
-    this.mainGroup.append('line')
-      .attr('class', 'chart-divider')
-      .attr('x1', 0)
-      .attr('x2', innerWidth)
-      .attr('y1', volumeHeight)
-      .attr('y2', volumeHeight)
-      .attr('stroke', 'var(--border-color)')
-      .attr('stroke-width', 1);
+      // Shared axis group
+      this.axisGroup = this.mainGroup.append('g')
+        .attr('class', 'shared-axis')
+        .attr('transform', `translate(0, ${contentHeight})`);
 
-    // Timeline group
-    this.timelineGroup = this.mainGroup.append('g')
-      .attr('class', 'timeline-group')
-      .attr('transform', `translate(0, ${volumeHeight})`)
-      .attr('clip-path', `url(#composite-clip-${this.containerId})`);
+      // Render duration view
+      this.renderDurationView(narrativeDurations);
+      this.renderSharedAxis();
+    } else {
+      // Volume view - render stacked area + timeline
+      // Volume chart group
+      this.volumeGroup = this.mainGroup.append('g')
+        .attr('class', 'volume-group')
+        .attr('clip-path', `url(#composite-clip-${this.containerId})`);
 
-    // Shared axis group
-    this.axisGroup = this.mainGroup.append('g')
-      .attr('class', 'shared-axis')
-      .attr('transform', `translate(0, ${volumeHeight + timelineHeight})`);
+      // Divider line between charts
+      this.mainGroup.append('line')
+        .attr('class', 'chart-divider')
+        .attr('x1', 0)
+        .attr('x2', innerWidth)
+        .attr('y1', volumeHeight)
+        .attr('y2', volumeHeight)
+        .attr('stroke', 'var(--border-color)')
+        .attr('stroke-width', 1);
 
-    // Create zoom behavior
+      // Timeline group
+      this.timelineGroup = this.mainGroup.append('g')
+        .attr('class', 'timeline-group')
+        .attr('transform', `translate(0, ${volumeHeight})`)
+        .attr('clip-path', `url(#composite-clip-${this.containerId})`);
+
+      // Shared axis group
+      this.axisGroup = this.mainGroup.append('g')
+        .attr('class', 'shared-axis')
+        .attr('transform', `translate(0, ${volumeHeight + timelineHeight})`);
+
+      // Legend group (below the axis)
+      this.legendGroup = this.mainGroup.append('g')
+        .attr('class', 'legend-group')
+        .attr('transform', `translate(0, ${volumeHeight + timelineHeight + axisHeight + 10})`);
+
+      // Render volume view components
+      this.renderVolumeArea(volumeData);
+      this.renderTimelineArea(events);
+      this.renderSharedAxis();
+      this.renderEventMarkers(events);
+      this.renderLegend();
+    }
+
+    // Create zoom behavior with filter to require activation for wheel zoom
     this.zoom = d3.zoom()
       .scaleExtent([minZoom, maxZoom])
       .translateExtent([[0, 0], [innerWidth, totalHeight]])
       .extent([[0, 0], [innerWidth, totalHeight]])
+      .filter((event) => {
+        // For wheel events, only allow zoom if activated (user clicked on chart)
+        if (event.type === 'wheel') {
+          return this.isZoomActive;
+        }
+        // Allow other events (programmatic zoom, drag/pan)
+        return true;
+      })
       .on('zoom', (event) => this.handleZoom(event));
 
     // Apply zoom to SVG
     svg.call(this.zoom);
 
-    // Legend group (below the axis)
-    this.legendGroup = this.mainGroup.append('g')
-      .attr('class', 'legend-group')
-      .attr('transform', `translate(0, ${volumeHeight + timelineHeight + axisHeight + 10})`);
+    // Click to activate scroll-to-zoom
+    svg.on('click.activate', () => {
+      this.activateZoom();
+    });
 
-    // Render components
-    this.renderVolumeArea(volumeData);
-    this.renderTimelineArea(events);
-    this.renderSharedAxis();
-    this.renderEventMarkers(events);
-    this.renderLegend();
+    // Deactivate when mouse leaves the container
+    this.container.addEventListener('mouseleave', this._handleMouseLeave = () => {
+      this.deactivateZoom();
+    });
 
     // Setup tooltip
     this.setupTooltip();
@@ -259,11 +295,22 @@ export class TimelineVolumeComposite extends BaseComponent {
       });
     });
 
-    // Attach view toggle handlers
-    controlsDiv.querySelectorAll('.view-toggle-btn').forEach(btn => {
+    // Attach display mode toggle handlers
+    controlsDiv.querySelectorAll('.display-mode-toggle .view-toggle-btn').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        const display = e.target.closest('.view-toggle-btn').dataset.display;
+        if (display && display !== this.displayMode) {
+          this.displayMode = display;
+          this.render();
+        }
+      });
+    });
+
+    // Attach view toggle handlers (faction/publisher)
+    controlsDiv.querySelectorAll('.faction-publisher-toggle .view-toggle-btn').forEach(btn => {
       btn.addEventListener('click', (e) => {
         const view = e.target.dataset.view;
-        if (view !== this.currentView) {
+        if (view && view !== this.currentView) {
           this.currentView = view;
           this.render();
         }
@@ -849,6 +896,195 @@ export class TimelineVolumeComposite extends BaseComponent {
     }
   }
 
+  /**
+   * Render the Duration View - horizontal bars showing narrative lifespans
+   * Sorted by start date (earliest first)
+   */
+  renderDurationView(narrativeDurations) {
+    if (!narrativeDurations || !narrativeDurations.length) {
+      this.durationGroup.append('text')
+        .attr('x', this.innerWidth / 2)
+        .attr('y', this.contentHeight / 2)
+        .attr('text-anchor', 'middle')
+        .attr('fill', 'var(--text-muted)')
+        .attr('font-size', '12px')
+        .attr('font-family', 'var(--font-sans)')
+        .text('No narrative duration data available');
+      return;
+    }
+
+    // Store for later use (updates, tooltips)
+    this.narrativeDurations = narrativeDurations;
+
+    const barHeight = 24;
+    const barPadding = 8;
+    const rowHeight = barHeight + barPadding;
+    const labelWidth = 180; // Width reserved for narrative labels
+
+    // Y scale for narratives
+    this.yScale = d3.scaleBand()
+      .domain(narrativeDurations.map(n => n.id))
+      .range([10, narrativeDurations.length * rowHeight + 10])
+      .padding(0.2);
+
+    // Calculate max volume for opacity scaling
+    const maxVolume = Math.max(...narrativeDurations.map(n => n.totalVolume || 1));
+
+    // Create rows for each narrative
+    const rows = this.durationGroup.selectAll('.duration-row')
+      .data(narrativeDurations)
+      .join('g')
+      .attr('class', 'duration-row')
+      .attr('transform', d => `translate(0, ${this.yScale(d.id)})`);
+
+    // Background row highlight on hover
+    rows.append('rect')
+      .attr('class', 'duration-row-bg')
+      .attr('x', 0)
+      .attr('y', -barPadding / 2)
+      .attr('width', this.innerWidth)
+      .attr('height', rowHeight)
+      .attr('fill', 'transparent')
+      .attr('rx', 4);
+
+    // Narrative label (truncated)
+    rows.append('text')
+      .attr('class', 'duration-label')
+      .attr('x', 0)
+      .attr('y', barHeight / 2 + 4)
+      .attr('fill', 'var(--text-secondary)')
+      .attr('font-size', '11px')
+      .attr('font-family', 'var(--font-sans)')
+      .text(d => d.text.length > 28 ? d.text.slice(0, 26) + '...' : d.text)
+      .append('title')
+      .text(d => d.text);
+
+    // Duration bar
+    const bars = rows.append('rect')
+      .attr('class', 'duration-bar')
+      .attr('x', d => Math.max(labelWidth, this.xScale(new Date(d.startDate))))
+      .attr('y', 0)
+      .attr('width', d => {
+        const startX = Math.max(labelWidth, this.xScale(new Date(d.startDate)));
+        const endX = this.xScale(new Date(d.endDate));
+        return Math.max(4, endX - startX); // Minimum width of 4px for very short durations
+      })
+      .attr('height', barHeight)
+      .attr('fill', d => d.color)
+      .attr('fill-opacity', d => 0.5 + (d.totalVolume / maxVolume) * 0.5) // 0.5 to 1.0 based on volume
+      .attr('rx', 3)
+      .style('cursor', 'pointer');
+
+    // Volume indicator (small text beside bar)
+    rows.append('text')
+      .attr('class', 'duration-volume')
+      .attr('x', d => {
+        const startX = Math.max(labelWidth, this.xScale(new Date(d.startDate)));
+        const endX = this.xScale(new Date(d.endDate));
+        const barWidth = Math.max(4, endX - startX);
+        return startX + barWidth + 6;
+      })
+      .attr('y', barHeight / 2 + 4)
+      .attr('fill', 'var(--text-muted)')
+      .attr('font-size', '10px')
+      .attr('font-family', 'var(--font-mono)')
+      .text(d => this.formatNumber(d.totalVolume));
+
+    // Hover effects and click handlers
+    const self = this;
+    rows
+      .on('mouseenter', function(event, d) {
+        d3.select(this).select('.duration-row-bg')
+          .attr('fill', 'var(--bg-hover)');
+        d3.select(this).select('.duration-bar')
+          .attr('fill-opacity', 1)
+          .attr('stroke', 'var(--accent-primary)')
+          .attr('stroke-width', 2);
+        self.showDurationTooltip(event, d);
+      })
+      .on('mouseleave', function(event, d) {
+        const maxVol = Math.max(...self.narrativeDurations.map(n => n.totalVolume || 1));
+        d3.select(this).select('.duration-row-bg')
+          .attr('fill', 'transparent');
+        d3.select(this).select('.duration-bar')
+          .attr('fill-opacity', 0.5 + (d.totalVolume / maxVol) * 0.5)
+          .attr('stroke', 'none')
+          .attr('stroke-width', 0);
+        self.hideTooltip();
+      })
+      .on('click', function(event, d) {
+        if (self.options.onNarrativeClick) {
+          self.options.onNarrativeClick(d);
+        } else {
+          // Default: navigate to narrative detail
+          window.location.hash = `#/narrative/${d.id}`;
+        }
+      });
+
+    // Store bars reference for zoom updates
+    this.durationBars = bars;
+    this.durationRows = rows;
+  }
+
+  /**
+   * Show tooltip for duration bar
+   */
+  showDurationTooltip(event, d) {
+    const startDate = new Date(d.startDate);
+    const endDate = new Date(d.endDate);
+    const durationDays = Math.ceil((endDate - startDate) / (1000 * 60 * 60 * 24));
+    
+    const content = `
+      <div class="tooltip-header">
+        <span class="tooltip-title">${d.text.length > 40 ? d.text.slice(0, 38) + '...' : d.text}</span>
+      </div>
+      <div class="tooltip-body">
+        <div class="tooltip-row">
+          <span class="tooltip-label">Duration:</span>
+          <span class="tooltip-value">${durationDays} day${durationDays !== 1 ? 's' : ''}</span>
+        </div>
+        <div class="tooltip-row">
+          <span class="tooltip-label">Start:</span>
+          <span class="tooltip-value">${formatDateLong(startDate)}</span>
+        </div>
+        <div class="tooltip-row">
+          <span class="tooltip-label">End:</span>
+          <span class="tooltip-value">${formatDateLong(endDate)}</span>
+        </div>
+        <div class="tooltip-row">
+          <span class="tooltip-label">Volume:</span>
+          <span class="tooltip-value">${this.formatNumber(d.totalVolume)} documents</span>
+        </div>
+      </div>
+    `;
+
+    const containerRect = this.container.getBoundingClientRect();
+    const tooltipX = event.clientX - containerRect.left;
+    const tooltipY = event.clientY - containerRect.top;
+
+    this.tooltip
+      .html(content)
+      .style('opacity', 1)
+      .style('left', `${tooltipX + 15}px`)
+      .style('top', `${tooltipY - 10}px`);
+  }
+
+  /**
+   * Activate scroll-to-zoom (called when user clicks on the chart)
+   */
+  activateZoom() {
+    this.isZoomActive = true;
+    this.container.classList.add('chart-zoom-active');
+  }
+
+  /**
+   * Deactivate scroll-to-zoom (called when mouse leaves the chart)
+   */
+  deactivateZoom() {
+    this.isZoomActive = false;
+    this.container.classList.remove('chart-zoom-active');
+  }
+
   setupTooltip() {
     this.tooltip = d3.select(this.container)
       .append('div')
@@ -1127,37 +1363,61 @@ export class TimelineVolumeComposite extends BaseComponent {
   }
 
   updateVisualization() {
-    // Update volume chart
-    if (this.volumeLayers && this.areaGenerator) {
-      this.areaGenerator.x(d => this.xScale(d.data.date));
-      this.volumeLayers.attr('d', this.areaGenerator);
-    }
+    // Update based on display mode
+    if (this.displayMode === 'duration') {
+      // Update duration bars
+      if (this.durationRows && this.narrativeDurations) {
+        const labelWidth = 180;
+        
+        this.durationRows.select('.duration-bar')
+          .attr('x', d => Math.max(labelWidth, this.xScale(new Date(d.startDate))))
+          .attr('width', d => {
+            const startX = Math.max(labelWidth, this.xScale(new Date(d.startDate)));
+            const endX = this.xScale(new Date(d.endDate));
+            return Math.max(4, endX - startX);
+          });
 
-    // Update event markers positions and visibility
-    if (this.eventMarkers) {
-      this.eventMarkers.select('line')
-        .attr('x1', d => this.xScale(new Date(d.date)))
-        .attr('x2', d => this.xScale(new Date(d.date)));
+        this.durationRows.select('.duration-volume')
+          .attr('x', d => {
+            const startX = Math.max(labelWidth, this.xScale(new Date(d.startDate)));
+            const endX = this.xScale(new Date(d.endDate));
+            const barWidth = Math.max(4, endX - startX);
+            return startX + barWidth + 6;
+          });
+      }
+    } else {
+      // Update volume chart
+      if (this.volumeLayers && this.areaGenerator) {
+        this.areaGenerator.x(d => this.xScale(d.data.date));
+        this.volumeLayers.attr('d', this.areaGenerator);
+      }
 
-      this.eventMarkers.select('path')
-        .attr('transform', d => `translate(${this.xScale(new Date(d.date))}, 8)`);
-      
-      // Update visibility based on zoom level
-      this.eventMarkers
-        .style('opacity', d => this.isEventVisible(d) ? 1 : 0)
-        .style('pointer-events', d => this.isEventVisible(d) ? 'auto' : 'none');
-    }
+      // Update event markers positions and visibility
+      if (this.eventMarkers) {
+        this.eventMarkers.select('line')
+          .attr('x1', d => this.xScale(new Date(d.date)))
+          .attr('x2', d => this.xScale(new Date(d.date)));
 
-    // Update timeline events positions and visibility
-    if (this.eventGroups) {
-      this.eventGroups.attr('transform', d => 
-        `translate(${this.xScale(new Date(d.date))}, ${this.timelineHeight / 2})`
-      );
-      
-      // Update visibility based on zoom level
-      this.eventGroups
-        .style('opacity', d => this.isEventVisible(d) ? 1 : 0)
-        .style('pointer-events', d => this.isEventVisible(d) ? 'auto' : 'none');
+        this.eventMarkers.select('path')
+          .attr('transform', d => `translate(${this.xScale(new Date(d.date))}, 8)`);
+        
+        // Update visibility based on zoom level
+        this.eventMarkers
+          .style('opacity', d => this.isEventVisible(d) ? 1 : 0)
+          .style('pointer-events', d => this.isEventVisible(d) ? 'auto' : 'none');
+      }
+
+      // Update timeline events positions and visibility
+      if (this.eventGroups) {
+        this.eventGroups.attr('transform', d => 
+          `translate(${this.xScale(new Date(d.date))}, ${this.timelineHeight / 2})`
+        );
+        
+        // Update visibility based on zoom level
+        this.eventGroups
+          .style('opacity', d => this.isEventVisible(d) ? 1 : 0)
+          .style('pointer-events', d => this.isEventVisible(d) ? 'auto' : 'none');
+      }
     }
 
     // Update shared axis
