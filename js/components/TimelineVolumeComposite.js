@@ -13,18 +13,24 @@ export class TimelineVolumeComposite extends BaseComponent {
       height: 450,
       volumeHeight: 180,
       timelineHeight: 180,
+      durationHeight: 300,
       axisHeight: 40,
       legendHeight: 50,
       margin: { top: 20, right: 30, bottom: 10, left: 50 },
       minZoom: 0.5,
       maxZoom: 50,
       showViewToggle: options.showViewToggle !== false,
+      showDisplayToggle: options.showDisplayToggle !== false,
       ...options
     });
     this.currentTransform = d3.zoomIdentity;
     // Default view will be set in render() based on available data
     this.currentView = options.defaultView || null;
+    // Display mode: 'volume' (stacked area + events) or 'duration' (narrative bars)
+    this.displayMode = options.defaultDisplayMode || 'volume';
     this.maxEventVolume = 0;
+    // Scroll-to-zoom is disabled by default; user must click to activate
+    this.isZoomActive = false;
   }
 
   /**
@@ -48,19 +54,20 @@ export class TimelineVolumeComposite extends BaseComponent {
   }
 
   render() {
-    const { volumeData, events, publisherData } = this.data || {};
+    const { volumeData, events, publisherData, narrativeDurations } = this.data || {};
     
     // Check what data is available
     const hasFactionData = volumeData && volumeData.dates && volumeData.dates.length > 0;
     const hasPublisherData = publisherData && publisherData.dates && publisherData.dates.length > 0;
+    const hasDurationData = narrativeDurations && narrativeDurations.length > 0;
     
     // Auto-detect currentView based on available data if not set
     if (!this.currentView) {
       this.currentView = hasFactionData ? 'factions' : (hasPublisherData ? 'publishers' : 'factions');
     }
     
-    // Need at least volume data, publisher data, or events to render
-    if (!hasFactionData && !hasPublisherData && (!events || !events.length)) {
+    // Need at least volume data, publisher data, events, or duration data to render
+    if (!hasFactionData && !hasPublisherData && (!events || !events.length) && !hasDurationData) {
       this.showEmptyState('No data to display');
       return;
     }
@@ -70,8 +77,13 @@ export class TimelineVolumeComposite extends BaseComponent {
       this.maxEventVolume = Math.max(...events.map(e => e._docVolume || 0));
     }
 
-    const { width, margin, volumeHeight, timelineHeight, axisHeight, legendHeight, minZoom, maxZoom } = this.options;
-    const totalHeight = margin.top + volumeHeight + timelineHeight + axisHeight + legendHeight + margin.bottom;
+    const { width, margin, volumeHeight, timelineHeight, durationHeight, axisHeight, legendHeight, minZoom, maxZoom } = this.options;
+    
+    // Calculate height based on display mode
+    const contentHeight = this.displayMode === 'duration' 
+      ? Math.max(durationHeight, (narrativeDurations?.length || 0) * 32 + 40)
+      : volumeHeight + timelineHeight;
+    const totalHeight = margin.top + contentHeight + axisHeight + (this.displayMode === 'volume' ? legendHeight : 0) + margin.bottom;
     this.options.height = totalHeight;
 
     const innerWidth = width - margin.left - margin.right;
@@ -80,19 +92,40 @@ export class TimelineVolumeComposite extends BaseComponent {
     this.innerWidth = innerWidth;
     this.volumeHeight = volumeHeight;
     this.timelineHeight = timelineHeight;
+    this.contentHeight = contentHeight;
 
-    // Calculate time extent from both data sources
+    // Calculate time extent from all data sources
     const timeExtent = this.calculateTimeExtent(volumeData, events);
-    if (!timeExtent) {
+    
+    // For duration mode, also include narrative duration dates
+    let finalExtent = timeExtent;
+    if (hasDurationData) {
+      const durationDates = [];
+      narrativeDurations.forEach(n => {
+        durationDates.push(new Date(n.startDate));
+        durationDates.push(new Date(n.endDate));
+      });
+      const durationExtent = d3.extent(durationDates);
+      if (!finalExtent) {
+        finalExtent = durationExtent;
+      } else {
+        finalExtent = [
+          new Date(Math.min(finalExtent[0], durationExtent[0])),
+          new Date(Math.max(finalExtent[1], durationExtent[1]))
+        ];
+      }
+    }
+    
+    if (!finalExtent) {
       this.showEmptyState('No valid time data');
       return;
     }
 
     // Add padding to time extent
-    const timePadding = (timeExtent[1] - timeExtent[0]) * 0.05;
+    const timePadding = (finalExtent[1] - finalExtent[0]) * 0.05;
     const paddedExtent = [
-      new Date(timeExtent[0].getTime() - timePadding),
-      new Date(timeExtent[1].getTime() + timePadding)
+      new Date(finalExtent[0].getTime() - timePadding),
+      new Date(finalExtent[1].getTime() + timePadding)
     ];
 
     // Create shared time scale
@@ -109,11 +142,29 @@ export class TimelineVolumeComposite extends BaseComponent {
     controlsDiv.className = 'composite-controls';
     
     // Determine if we should show view toggle (both faction and publisher data must exist)
-    const showToggle = this.options.showViewToggle && hasPublisherData && hasFactionData;
+    const showViewToggle = this.options.showViewToggle && hasPublisherData && hasFactionData;
+    // Determine if we should show display mode toggle (duration data must exist)
+    const showDisplayToggle = this.options.showDisplayToggle && hasDurationData && (hasFactionData || hasPublisherData || (events && events.length));
     
     controlsDiv.innerHTML = `
-      ${showToggle ? `
-        <div class="view-toggle">
+      ${showDisplayToggle ? `
+        <div class="view-toggle display-mode-toggle">
+          <button class="view-toggle-btn ${this.displayMode === 'volume' ? 'active' : ''}" data-display="volume" title="Volume View">
+            <svg viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.5">
+              <path d="M2 12V4M6 12V6M10 12V8M14 12V5"/>
+            </svg>
+          </button>
+          <button class="view-toggle-btn ${this.displayMode === 'duration' ? 'active' : ''}" data-display="duration" title="Duration View">
+            <svg viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.5">
+              <rect x="2" y="3" width="8" height="2" rx="0.5"/>
+              <rect x="4" y="7" width="10" height="2" rx="0.5"/>
+              <rect x="3" y="11" width="6" height="2" rx="0.5"/>
+            </svg>
+          </button>
+        </div>
+      ` : ''}
+      ${showViewToggle && this.displayMode === 'volume' ? `
+        <div class="view-toggle faction-publisher-toggle">
           <button class="view-toggle-btn ${this.currentView === 'factions' ? 'active' : ''}" data-view="factions">By Faction</button>
           <button class="view-toggle-btn ${this.currentView === 'publishers' ? 'active' : ''}" data-view="publishers">By Publisher</button>
         </div>

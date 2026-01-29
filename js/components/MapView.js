@@ -324,7 +324,7 @@ export class MapView extends BaseComponent {
   }
 
   /**
-   * Render event markers on the map
+   * Render event markers on the map - grouped by coordinates
    */
   renderEventMarkers(bounds) {
     if (!this.data.events || !this.eventMarkerLayer) return;
@@ -335,13 +335,13 @@ export class MapView extends BaseComponent {
       locationMap.set(loc.id, loc);
     });
 
+    // Group events by coordinates
+    const eventsByCoords = new Map();
+    
     this.data.events.forEach(event => {
-      // Get location for this event - try multiple sources
       let location = event.location;
       if (!location && event.locationId) {
-        // First try the passed locations
         location = locationMap.get(event.locationId);
-        // Fallback to DataService if not found
         if (!location) {
           location = DataService.getLocation(event.locationId);
         }
@@ -353,108 +353,120 @@ export class MapView extends BaseComponent {
         return;
       }
 
-      const coords = [location.coordinates.lat, location.coordinates.lng];
+      const coordKey = `${location.coordinates.lat},${location.coordinates.lng}`;
+      if (!eventsByCoords.has(coordKey)) {
+        eventsByCoords.set(coordKey, {
+          location,
+          coords: [location.coordinates.lat, location.coordinates.lng],
+          events: []
+        });
+      }
+      eventsByCoords.get(coordKey).events.push(event);
+    });
+
+    // Create one marker per coordinate group
+    eventsByCoords.forEach(({ location, coords, events }) => {
       bounds.push(coords);
 
-      // Event markers are red
       const markerColor = '#F44336';
+      const eventCount = events.length;
 
-      // Create custom marker with event styling
+      // Create marker - show count badge if multiple events
       const markerIcon = L.divIcon({
         className: 'custom-map-marker event-marker',
-        html: `
-          <div class="marker-wrapper">
-            <div class="marker-pin event-pin" style="background: ${markerColor}"></div>
-            <div class="marker-pulse" style="background: ${markerColor}"></div>
-          </div>
-        `,
-        iconSize: [30, 30],
-        iconAnchor: [15, 30],
-        popupAnchor: [0, -30]
+        html: eventCount > 1 
+          ? `<div class="marker-wrapper">
+              <div class="marker-pin event-pin" style="background: ${markerColor}"></div>
+              <div class="marker-count">${eventCount}</div>
+            </div>`
+          : `<div class="marker-wrapper">
+              <div class="marker-pin event-pin" style="background: ${markerColor}"></div>
+            </div>`,
+        iconSize: [40, 40],
+        iconAnchor: [20, 40],
+        popupAnchor: [0, -40]
       });
 
       const marker = L.marker(coords, { icon: markerIcon });
 
-      // Format event date
+      // Build popup content
+      const popupContent = this.buildEventPopupContent(location, events);
+      
+      marker.bindPopup(popupContent, {
+        closeButton: true,
+        autoClose: true,
+        closeOnClick: true,
+        maxHeight: 300
+      });
+
+      marker.on('click', () => {
+        marker.openPopup();
+      });
+
+      marker.addTo(this.eventMarkerLayer);
+      this.markers.push({ marker, location, events, type: 'event' });
+    });
+  }
+
+  /**
+   * Build popup content for events at a location
+   */
+  buildEventPopupContent(location, events) {
+    const eventCount = events.length;
+    const coords = location.coordinates;
+    
+    // Format coordinates
+    const latDir = coords.lat >= 0 ? 'N' : 'S';
+    const lngDir = coords.lng >= 0 ? 'E' : 'W';
+
+    if (eventCount === 1) {
+      // Single event - show detailed view
+      const event = events[0];
       const eventDate = event.date ? new Date(event.date).toLocaleDateString('en-US', {
         year: 'numeric',
         month: 'short',
         day: 'numeric'
       }) : '';
 
-      // Popup content for event
-      const popupContent = `
+      return `
         <div class="map-popup event-popup">
           <div class="popup-type-badge">Event</div>
           <h4>${event.text}</h4>
           ${eventDate ? `<p class="popup-date">${eventDate}</p>` : ''}
-          ${event.description ? `<p class="popup-description">${event.description.length > 150 ? event.description.substring(0, 150) + '...' : event.description}</p>` : ''}
+          ${event.description ? `<p class="popup-description">${event.description.length > 120 ? event.description.substring(0, 120) + '...' : event.description}</p>` : ''}
           <p class="popup-location-name">${location.name}</p>
-          <a href="#/event/${event.id}" class="map-popup-link">View Event →</a>
+          <p class="popup-coords">${Math.abs(coords.lat).toFixed(4)}°${latDir}, ${Math.abs(coords.lng).toFixed(4)}°${lngDir}</p>
+          <a href="#/event/${event.id}" class="btn btn-small">View Event →</a>
         </div>
       `;
-      marker.bindPopup(popupContent, {
-        closeButton: true,
-        autoClose: false,
-        closeOnClick: false
-      });
+    }
 
-      // Track hover state for this marker
-      let isHoveringMarker = false;
-      let isHoveringPopup = false;
-      let isClickLocked = false;
+    // Multiple events - show list view
+    const eventsList = events.slice(0, 8).map(event => {
+      const eventDate = event.date ? new Date(event.date).toLocaleDateString('en-US', {
+        month: 'short',
+        day: 'numeric'
+      }) : '';
+      return `<li>
+        <a href="#/event/${event.id}" class="popup-item-link">${event.text.length > 50 ? event.text.substring(0, 50) + '...' : event.text}</a>
+        ${eventDate ? `<span class="popup-item-date">${eventDate}</span>` : ''}
+      </li>`;
+    }).join('');
 
-      const closePopupIfNotHovered = () => {
-        setTimeout(() => {
-          if (!isHoveringMarker && !isHoveringPopup && !isClickLocked) {
-            marker.closePopup();
-          }
-        }, 150);
-      };
+    const moreCount = events.length > 8 ? events.length - 8 : 0;
 
-      // Hover handlers
-      marker.on('mouseover', () => {
-        isHoveringMarker = true;
-        marker.openPopup();
-      });
-
-      marker.on('mouseout', () => {
-        isHoveringMarker = false;
-        closePopupIfNotHovered();
-      });
-
-      marker.on('popupopen', () => {
-        const popupEl = marker.getPopup().getElement();
-        if (popupEl) {
-          popupEl.addEventListener('mouseenter', () => {
-            isHoveringPopup = true;
-          });
-          popupEl.addEventListener('mouseleave', () => {
-            isHoveringPopup = false;
-            closePopupIfNotHovered();
-          });
-        }
-      });
-
-      marker.on('popupclose', () => {
-        isHoveringPopup = false;
-        isClickLocked = false;
-      });
-
-      // Click handler
-      marker.on('click', () => {
-        isClickLocked = true;
-        this.map.flyTo(coords, 12, { animate: true, duration: 1 });
-        marker.openPopup();
-        
-        if (this.options.onEventClick) {
-          this.options.onEventClick(event, marker);
-        }
-      });
-
-      marker.addTo(this.eventMarkerLayer);
-      this.markers.push({ marker, event, type: 'event' });
-    });
+    return `
+      <div class="map-popup event-popup">
+        <div class="popup-type-badge">${eventCount} Events</div>
+        <h4>${location.name}</h4>
+        <p class="popup-coords">${Math.abs(coords.lat).toFixed(4)}°${latDir}, ${Math.abs(coords.lng).toFixed(4)}°${lngDir}</p>
+        <ul class="popup-list popup-events-list">
+          ${eventsList}
+          ${moreCount > 0 ? `<li class="popup-more">+${moreCount} more events</li>` : ''}
+        </ul>
+        <a href="#/location/${location.id}" class="btn btn-small">View Location →</a>
+      </div>
+    `;
   }
 
   /**
@@ -495,12 +507,11 @@ export class MapView extends BaseComponent {
       html: `
         <div class="marker-wrapper">
           <div class="marker-pin" style="background: ${markerColor}"></div>
-          <div class="marker-pulse" style="background: ${markerColor}"></div>
         </div>
       `,
-      iconSize: [30, 30],
-      iconAnchor: [15, 30],
-      popupAnchor: [0, -30]
+      iconSize: [40, 40],
+      iconAnchor: [20, 40],
+      popupAnchor: [0, -40]
     });
 
     const marker = L.marker(coords, { icon: markerIcon });

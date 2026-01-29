@@ -263,28 +263,36 @@ export class DashboardView extends BaseView {
     const publisherData = DataService.getAggregatePublisherVolumeOverTime(this.missionId, this.timeRange);
     // Pass all events with volume scores - component will filter based on zoom level
     const recentEvents = DataService.getRecentEvents(null, this.timeRange);
+    // Get narrative durations for duration view
+    const narrativeDurations = DataService.getNarrativeDurations(this.missionId, this.timeRange);
 
     const hasVolumeData = volumeData.dates.length > 0 && volumeData.factions.length > 0;
     const hasPublisherData = publisherData.dates.length > 0 && publisherData.publishers.length > 0;
     const hasEvents = recentEvents.length > 0;
+    const hasDurationData = narrativeDurations.length > 0;
 
-    if (hasVolumeData || hasPublisherData || hasEvents) {
+    if (hasVolumeData || hasPublisherData || hasEvents || hasDurationData) {
       this.components.volumeTimeline = new TimelineVolumeComposite('dashboard-volume-timeline', {
         height: 450,
         volumeHeight: 180,
         timelineHeight: 180,
         showViewToggle: hasVolumeData && hasPublisherData,
+        showDisplayToggle: hasDurationData,
         onEventClick: (e) => {
           window.location.hash = `#/event/${e.id}`;
         },
         onFactionClick: (f) => {
           window.location.hash = `#/faction/${f.id}`;
+        },
+        onNarrativeClick: (n) => {
+          window.location.hash = `#/narrative/${n.id}`;
         }
       });
       this.components.volumeTimeline.update({
         volumeData: hasVolumeData ? volumeData : null,
         publisherData: hasPublisherData ? publisherData : null,
-        events: recentEvents
+        events: recentEvents,
+        narrativeDurations: hasDurationData ? narrativeDurations : null
       });
       this.components.volumeTimeline.enableAutoResize();
     }
