@@ -688,18 +688,34 @@ class DataStore {
   // ============================================
 
   createMonitor(monitor) {
+    const scope = monitor.scope || {};
+    
+    // Check if this is an advanced mode scope
+    let scopeData;
+    if (scope.mode === 'advanced') {
+      scopeData = {
+        mode: 'advanced',
+        booleanExpression: scope.booleanExpression || '',
+        entityMap: scope.entityMap || {}
+      };
+    } else {
+      // Simple mode (default)
+      scopeData = {
+        mode: 'simple',
+        personIds: scope.personIds || [],
+        organizationIds: scope.organizationIds || [],
+        factionIds: scope.factionIds || [],
+        locationIds: scope.locationIds || [],
+        eventIds: scope.eventIds || [],
+        keywords: scope.keywords || [],
+        logic: scope.logic || 'OR'
+      };
+    }
+    
     return this.createEntity('monitors', 'monitor', {
       name: monitor.name,
       description: monitor.description || '',
-      scope: {
-        personIds: monitor.scope?.personIds || [],
-        organizationIds: monitor.scope?.organizationIds || [],
-        factionIds: monitor.scope?.factionIds || [],
-        locationIds: monitor.scope?.locationIds || [],
-        eventIds: monitor.scope?.eventIds || [],
-        keywords: monitor.scope?.keywords || [],
-        logic: monitor.scope?.logic || 'OR'
-      },
+      scope: scopeData,
       options: {
         includeSubEvents: monitor.options?.includeSubEvents ?? true,
         includeThemes: monitor.options?.includeThemes ?? true,
@@ -758,16 +774,34 @@ class DataStore {
   // ============================================
 
   createSearchFilter(filter) {
+    // Support both simple and advanced mode scopes
+    const scope = filter.scope || {};
+    
+    // Check if this is an advanced mode scope
+    if (scope.mode === 'advanced') {
+      return this.createEntity('searchFilters', 'filter', {
+        name: filter.name,
+        description: filter.description || '',
+        scope: {
+          mode: 'advanced',
+          booleanExpression: scope.booleanExpression || '',
+          entityMap: scope.entityMap || {}
+        }
+      });
+    }
+    
+    // Simple mode (default)
     return this.createEntity('searchFilters', 'filter', {
       name: filter.name,
       description: filter.description || '',
       scope: {
-        personIds: filter.scope?.personIds || [],
-        organizationIds: filter.scope?.organizationIds || [],
-        factionIds: filter.scope?.factionIds || [],
-        locationIds: filter.scope?.locationIds || [],
-        eventIds: filter.scope?.eventIds || [],
-        keywords: filter.scope?.keywords || []
+        mode: 'simple',
+        personIds: scope.personIds || [],
+        organizationIds: scope.organizationIds || [],
+        factionIds: scope.factionIds || [],
+        locationIds: scope.locationIds || [],
+        eventIds: scope.eventIds || [],
+        keywords: scope.keywords || []
       }
     });
   }

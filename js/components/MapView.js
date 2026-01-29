@@ -1,9 +1,10 @@
 /**
  * MapView.js
- * Leaflet map component for location visualization
+ * Leaflet map component for location and event visualization
  */
 
 import { BaseComponent } from './BaseComponent.js';
+import { DataService } from '../data/DataService.js';
 
 export class MapView extends BaseComponent {
   constructor(containerId, options = {}) {
@@ -12,15 +13,21 @@ export class MapView extends BaseComponent {
       margin: { top: 0, right: 0, bottom: 0, left: 0 },
       defaultCenter: [39.8283, -98.5795], // US center
       defaultZoom: 4,
+      showEvents: true, // Default to showing events
       ...options
     });
     this.map = null;
     this.markers = [];
     this.markerLayer = null;
+    this.eventMarkerLayer = null;
+    this.showEvents = this.options.showEvents;
   }
 
   render() {
-    if (!this.data || !this.data.locations || !this.data.locations.length) {
+    const hasLocations = this.data?.locations?.length > 0;
+    const hasEvents = this.data?.events?.length > 0;
+    
+    if (!hasLocations && !hasEvents) {
       this.showEmptyState('No locations to display');
       return;
     }
@@ -52,13 +59,19 @@ export class MapView extends BaseComponent {
     // Add custom zoom controls
     this.addCustomZoomControls();
 
-    // Marker layer group
-    this.markerLayer = L.layerGroup().addTo(this.map);
+    // Add view toggle if we have events
+    if (hasEvents) {
+      this.addViewToggle();
+    }
 
-    // Add markers
+    // Marker layer groups
+    this.markerLayer = L.layerGroup().addTo(this.map);
+    this.eventMarkerLayer = L.layerGroup().addTo(this.map);
+
+    // Add location markers
     const bounds = [];
 
-    this.data.locations.forEach(loc => {
+    (this.data.locations || []).forEach(loc => {
       if (!loc.coordinates || 
           typeof loc.coordinates.lat !== 'number' || 
           typeof loc.coordinates.lng !== 'number') {
@@ -190,8 +203,16 @@ export class MapView extends BaseComponent {
       });
 
       marker.addTo(this.markerLayer);
-      this.markers.push({ marker, location: loc });
+      this.markers.push({ marker, location: loc, type: 'location' });
     });
+
+    // Add event markers
+    if (hasEvents) {
+      this.renderEventMarkers(bounds);
+    }
+
+    // Update event layer visibility based on toggle state
+    this.updateEventLayerVisibility();
 
     // Store bounds for reset functionality
     this.initialBounds = bounds.length > 0 ? bounds : null;
@@ -254,6 +275,193 @@ export class MapView extends BaseComponent {
   }
 
   /**
+   * Add view toggle for Locations only vs Locations + Events
+   */
+  addViewToggle() {
+    const toggleDiv = document.createElement('div');
+    toggleDiv.className = 'map-view-toggle';
+    toggleDiv.innerHTML = `
+      <button class="map-toggle-btn ${!this.showEvents ? 'active' : ''}" data-mode="locations" title="Locations Only">
+        <span class="toggle-icon">&#x1F4CD;</span>
+        <span class="toggle-label">Locations</span>
+      </button>
+      <button class="map-toggle-btn ${this.showEvents ? 'active' : ''}" data-mode="all" title="Locations + Events">
+        <span class="toggle-icon">&#x1F4CD;</span><span class="toggle-icon event-icon">&#x26A1;</span>
+        <span class="toggle-label">+ Events</span>
+      </button>
+    `;
+    this.container.appendChild(toggleDiv);
+
+    // Add click handlers
+    toggleDiv.querySelectorAll('.map-toggle-btn').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const mode = btn.dataset.mode;
+        this.setViewMode(mode);
+        
+        // Update active state
+        toggleDiv.querySelectorAll('.map-toggle-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+      });
+    });
+  }
+
+  /**
+   * Set the view mode (locations only or all)
+   */
+  setViewMode(mode) {
+    this.showEvents = (mode === 'all');
+    this.updateEventLayerVisibility();
+  }
+
+  /**
+   * Update event layer visibility based on toggle state
+   */
+  updateEventLayerVisibility() {
+    if (!this.eventMarkerLayer) return;
+    
+    if (this.showEvents) {
+      this.map.addLayer(this.eventMarkerLayer);
+    } else {
+      this.map.removeLayer(this.eventMarkerLayer);
+    }
+  }
+
+  /**
+   * Render event markers on the map
+   */
+  renderEventMarkers(bounds) {
+    if (!this.data.events || !this.eventMarkerLayer) return;
+
+    // Build a location lookup map from passed locations
+    const locationMap = new Map();
+    (this.data.locations || []).forEach(loc => {
+      locationMap.set(loc.id, loc);
+    });
+
+    this.data.events.forEach(event => {
+      // Get location for this event - try multiple sources
+      let location = event.location;
+      if (!location && event.locationId) {
+        // First try the passed locations
+        location = locationMap.get(event.locationId);
+        // Fallback to DataService if not found
+        if (!location) {
+          location = DataService.getLocation(event.locationId);
+        }
+      }
+      
+      if (!location?.coordinates || 
+          typeof location.coordinates.lat !== 'number' || 
+          typeof location.coordinates.lng !== 'number') {
+        return;
+      }
+
+      const coords = [location.coordinates.lat, location.coordinates.lng];
+      bounds.push(coords);
+
+      // Event markers are red
+      const markerColor = '#F44336';
+
+      // Create custom marker with event styling
+      const markerIcon = L.divIcon({
+        className: 'custom-map-marker event-marker',
+        html: `
+          <div class="marker-wrapper">
+            <div class="marker-pin event-pin" style="background: ${markerColor}"></div>
+            <div class="marker-pulse" style="background: ${markerColor}"></div>
+          </div>
+        `,
+        iconSize: [30, 30],
+        iconAnchor: [15, 30],
+        popupAnchor: [0, -30]
+      });
+
+      const marker = L.marker(coords, { icon: markerIcon });
+
+      // Format event date
+      const eventDate = event.date ? new Date(event.date).toLocaleDateString('en-US', {
+        year: 'numeric',
+        month: 'short',
+        day: 'numeric'
+      }) : '';
+
+      // Popup content for event
+      const popupContent = `
+        <div class="map-popup event-popup">
+          <div class="popup-type-badge">Event</div>
+          <h4>${event.text}</h4>
+          ${eventDate ? `<p class="popup-date">${eventDate}</p>` : ''}
+          ${event.description ? `<p class="popup-description">${event.description.length > 150 ? event.description.substring(0, 150) + '...' : event.description}</p>` : ''}
+          <p class="popup-location-name">${location.name}</p>
+          <a href="#/event/${event.id}" class="map-popup-link">View Event →</a>
+        </div>
+      `;
+      marker.bindPopup(popupContent, {
+        closeButton: true,
+        autoClose: false,
+        closeOnClick: false
+      });
+
+      // Track hover state for this marker
+      let isHoveringMarker = false;
+      let isHoveringPopup = false;
+      let isClickLocked = false;
+
+      const closePopupIfNotHovered = () => {
+        setTimeout(() => {
+          if (!isHoveringMarker && !isHoveringPopup && !isClickLocked) {
+            marker.closePopup();
+          }
+        }, 150);
+      };
+
+      // Hover handlers
+      marker.on('mouseover', () => {
+        isHoveringMarker = true;
+        marker.openPopup();
+      });
+
+      marker.on('mouseout', () => {
+        isHoveringMarker = false;
+        closePopupIfNotHovered();
+      });
+
+      marker.on('popupopen', () => {
+        const popupEl = marker.getPopup().getElement();
+        if (popupEl) {
+          popupEl.addEventListener('mouseenter', () => {
+            isHoveringPopup = true;
+          });
+          popupEl.addEventListener('mouseleave', () => {
+            isHoveringPopup = false;
+            closePopupIfNotHovered();
+          });
+        }
+      });
+
+      marker.on('popupclose', () => {
+        isHoveringPopup = false;
+        isClickLocked = false;
+      });
+
+      // Click handler
+      marker.on('click', () => {
+        isClickLocked = true;
+        this.map.flyTo(coords, 12, { animate: true, duration: 1 });
+        marker.openPopup();
+        
+        if (this.options.onEventClick) {
+          this.options.onEventClick(event, marker);
+        }
+      });
+
+      marker.addTo(this.eventMarkerLayer);
+      this.markers.push({ marker, event, type: 'event' });
+    });
+  }
+
+  /**
    * Reset map to initial view showing all markers
    */
   resetView() {
@@ -313,6 +521,9 @@ export class MapView extends BaseComponent {
     if (this.markerLayer) {
       this.markerLayer.clearLayers();
     }
+    if (this.eventMarkerLayer) {
+      this.eventMarkerLayer.clearLayers();
+    }
     this.markers = [];
   }
 
@@ -335,6 +546,7 @@ export class MapView extends BaseComponent {
     }
     this.markers = [];
     this.markerLayer = null;
+    this.eventMarkerLayer = null;
     super.destroy();
   }
 }

@@ -262,11 +262,12 @@ export class ThemeView extends BaseView {
       }));
     }
 
-    // 5. Locations Map (half-width)
-    if (data.mapLocations.length > 0) {
+    // 5. Locations & Events Map (half-width)
+    if (data.locations.length > 0 || data.allEvents.length > 0) {
       this.cardManager.add(new MapCard(this, 'theme-map', {
-        title: 'Locations',
-        locations: data.mapLocations,
+        title: 'Locations & Events',
+        locations: data.locations,
+        events: data.allEvents,
         halfWidth: true,
         height: 350
       }));

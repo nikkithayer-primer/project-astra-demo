@@ -262,10 +262,11 @@ export class NarrativeView extends BaseView {
     }
 
     // Related Locations Map (half-width)
-    if (data.mapLocations.length > 0) {
+    if (data.locations.length > 0 || data.allEvents.length > 0) {
       this.cardManager.add(new MapCard(this, 'narrative-map', {
         title: 'Related Locations & Events',
-        locations: data.mapLocations,
+        locations: data.locations,
+        events: data.allEvents,
         halfWidth: true,
         height: 350
       }));

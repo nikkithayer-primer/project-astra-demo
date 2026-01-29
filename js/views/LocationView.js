@@ -220,11 +220,12 @@ export class LocationView extends BaseView {
       }));
     }
 
-    // Location Map (full width)
+    // Location Map (full width) - shows location and events at this location
     if (location.coordinates) {
       this.cardManager.add(new MapCard(this, 'location-map', {
-        title: 'Location',
+        title: 'Location & Events',
         locations: [location],
+        events: data.allEvents,
         fullWidth: true,
         height: 400,
         defaultZoom: 12,

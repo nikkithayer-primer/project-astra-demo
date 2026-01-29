@@ -532,33 +532,43 @@ export class MapCard extends BaseCardComponent {
     super(view, containerId);
     this.options = options;
     this.locations = options.locations || [];
+    this.events = options.events || [];
     this.title = options.title || 'Locations';
     this.height = options.height || 350;
     this.halfWidth = options.halfWidth || false;
+    this.fullWidth = options.fullWidth || false;
     this.defaultZoom = options.defaultZoom || null;
     this.centerOn = options.centerOn || null;
+    this.showEvents = options.showEvents !== false; // Default to true
   }
 
   hasData() {
-    return this.locations.length > 0;
+    return this.locations.length > 0 || this.events.length > 0;
   }
 
   getCardHtml() {
     if (!this.hasData()) return '';
     return CardBuilder.create(this.title, this.containerId, {
       noPadding: true,
-      halfWidth: this.halfWidth
+      halfWidth: this.halfWidth,
+      fullWidth: this.fullWidth
     });
   }
 
   initialize() {
     if (!this.hasData()) return null;
 
-    const mapOptions = { height: this.height };
+    const mapOptions = { 
+      height: this.height,
+      showEvents: this.showEvents
+    };
     if (this.defaultZoom) mapOptions.defaultZoom = this.defaultZoom;
 
     this.component = new MapView(this.containerId, mapOptions);
-    this.component.update({ locations: this.locations });
+    this.component.update({ 
+      locations: this.locations,
+      events: this.events
+    });
 
     if (this.centerOn) {
       setTimeout(() => {

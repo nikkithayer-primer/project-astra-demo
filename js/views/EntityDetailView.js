@@ -318,11 +318,12 @@ export class EntityDetailView extends BaseView {
       }));
     }
 
-    // 8. Locations Map (half-width)
-    if (data.mapLocations.length > 0) {
+    // 8. Locations & Events Map (half-width)
+    if (data.locations.length > 0 || data.allEvents.length > 0) {
       this.cardManager.add(new MapCard(this, `${prefix}-map`, {
-        title: 'Associated Locations',
-        locations: data.mapLocations,
+        title: 'Locations & Events',
+        locations: data.locations,
+        events: data.allEvents,
         halfWidth: true
       }));
     }

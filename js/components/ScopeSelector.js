@@ -2,11 +2,13 @@
  * ScopeSelector.js
  * Reusable component for selecting entities and keywords to define a scope.
  * Used by MonitorEditorModal and can be embedded in other contexts.
- * Includes saved search filter functionality.
+ * Includes saved search filter functionality and advanced boolean mode.
  */
 
 import { DataService } from '../data/DataService.js';
 import { dataStore } from '../data/DataStore.js';
+import { BooleanExpressionEditor } from './BooleanExpressionEditor.js';
+import { BooleanParser } from '../utils/BooleanParser.js';
 
 export class ScopeSelector {
   /**
@@ -16,16 +18,23 @@ export class ScopeSelector {
    * @param {Function} options.onChange - Callback when scope changes
    * @param {boolean} options.showSaveFilter - Whether to show the save filter button (default: true)
    * @param {boolean} options.showSearchFilters - Whether to show saved search filters accordion (default: true)
+   * @param {boolean} options.showModeToggle - Whether to show simple/advanced mode toggle (default: true)
+   * @param {string} options.defaultMode - Initial mode: 'simple' or 'advanced' (default: 'simple')
    */
   constructor(container, options = {}) {
     this.container = container;
     this.options = {
       onChange: options.onChange || (() => {}),
       showSaveFilter: options.showSaveFilter !== false,
-      showSearchFilters: options.showSearchFilters !== false
+      showSearchFilters: options.showSearchFilters !== false,
+      showModeToggle: options.showModeToggle !== false,
+      defaultMode: options.defaultMode || 'simple'
     };
     
-    // Scope state
+    // Mode state: 'simple' or 'advanced'
+    this.mode = this.options.defaultMode;
+    
+    // Simple mode scope state
     this.scope = {
       personIds: [],
       organizationIds: [],
@@ -35,6 +44,12 @@ export class ScopeSelector {
       keywords: []
     };
     
+    // Advanced mode state
+    this.booleanExpression = '';
+    this.entityMap = {};
+    this.booleanAst = null;
+    this.booleanError = null;
+    
     // UI state
     this.filterText = '';
     this.expandedSections = new Set();
@@ -42,14 +57,29 @@ export class ScopeSelector {
     // Dialog state
     this.saveDialogOpen = false;
     this.saveFilterName = '';
+    this.confirmDialogOpen = false;
+    
+    // BooleanExpressionEditor instance
+    this.booleanEditor = null;
   }
 
   /**
    * Get the current scope
-   * @returns {Object} The current scope object
+   * @returns {Object} The current scope object with mode information
    */
   getScope() {
-    return { ...this.scope };
+    if (this.mode === 'advanced') {
+      return {
+        mode: 'advanced',
+        booleanExpression: this.booleanExpression,
+        entityMap: { ...this.entityMap }
+      };
+    }
+    
+    return {
+      mode: 'simple',
+      ...this.scope
+    };
   }
 
   /**
@@ -57,16 +87,39 @@ export class ScopeSelector {
    * @param {Object} scope - The scope to set
    */
   setScope(scope) {
-    this.scope = {
-      personIds: [...(scope?.personIds || [])],
-      organizationIds: [...(scope?.organizationIds || [])],
-      factionIds: [...(scope?.factionIds || [])],
-      locationIds: [...(scope?.locationIds || [])],
-      eventIds: [...(scope?.eventIds || [])],
-      keywords: [...(scope?.keywords || [])]
-    };
+    // Check if this is an advanced mode scope
+    if (scope?.mode === 'advanced' && scope?.booleanExpression) {
+      this.mode = 'advanced';
+      this.booleanExpression = scope.booleanExpression;
+      this.entityMap = { ...(scope.entityMap || {}) };
+      
+      // Reset simple mode state
+      this.scope = {
+        personIds: [],
+        organizationIds: [],
+        factionIds: [],
+        locationIds: [],
+        eventIds: [],
+        keywords: []
+      };
+    } else {
+      // Simple mode
+      this.mode = 'simple';
+      this.scope = {
+        personIds: [...(scope?.personIds || [])],
+        organizationIds: [...(scope?.organizationIds || [])],
+        factionIds: [...(scope?.factionIds || [])],
+        locationIds: [...(scope?.locationIds || [])],
+        eventIds: [...(scope?.eventIds || [])],
+        keywords: [...(scope?.keywords || [])]
+      };
+      
+      // Reset advanced mode state
+      this.booleanExpression = '';
+      this.entityMap = {};
+    }
     
-    // Expand sections that have items
+    // Expand sections that have items (for simple mode)
     this.expandedSections = new Set();
     if (this.scope.personIds.length > 0) this.expandedSections.add('persons');
     if (this.scope.organizationIds.length > 0) this.expandedSections.add('organizations');
@@ -75,6 +128,108 @@ export class ScopeSelector {
     if (this.scope.eventIds.length > 0) this.expandedSections.add('events');
     
     this.render();
+  }
+
+  /**
+   * Get the current mode
+   * @returns {string} 'simple' or 'advanced'
+   */
+  getMode() {
+    return this.mode;
+  }
+
+  /**
+   * Set the mode with optional confirmation
+   * @param {string} newMode - 'simple' or 'advanced'
+   * @param {boolean} skipConfirm - Skip confirmation dialog
+   */
+  setMode(newMode, skipConfirm = false) {
+    if (newMode === this.mode) return;
+    
+    // Switching from advanced to simple requires confirmation if there's content
+    if (this.mode === 'advanced' && newMode === 'simple' && this.booleanExpression && !skipConfirm) {
+      this.showModeConfirmDialog();
+      return;
+    }
+    
+    // Switching from simple to advanced - convert the scope
+    if (this.mode === 'simple' && newMode === 'advanced') {
+      this.convertSimpleToAdvanced();
+    }
+    
+    this.mode = newMode;
+    this.render();
+    this.notifyChange();
+  }
+
+  /**
+   * Convert simple mode scope to advanced mode boolean expression
+   */
+  convertSimpleToAdvanced() {
+    const allEntities = this.getAllEntities();
+    const terms = [];
+    
+    // Build entity references and populate entityMap
+    ['personIds', 'organizationIds', 'factionIds', 'locationIds', 'eventIds'].forEach(scopeKey => {
+      const ids = this.scope[scopeKey] || [];
+      const typeConfig = Object.values(allEntities).find(t => t.scopeKey === scopeKey);
+      
+      ids.forEach(id => {
+        const entity = typeConfig?.entities.find(e => e.id === id);
+        if (entity) {
+          const name = this.getEntityText(entity);
+          // Determine entity type from scopeKey
+          const type = scopeKey.replace('Ids', '').replace(/s$/, '');
+          this.entityMap[id] = { name, type };
+          terms.push(`@${id}`);
+        }
+      });
+    });
+    
+    // Add keywords as quoted strings
+    (this.scope.keywords || []).forEach(keyword => {
+      terms.push(`"${keyword}"`);
+    });
+    
+    // Join with OR (default simple mode logic)
+    this.booleanExpression = terms.join(' OR ');
+  }
+
+  /**
+   * Show confirmation dialog when switching from advanced to simple
+   */
+  showModeConfirmDialog() {
+    this.confirmDialogOpen = true;
+    this.render();
+  }
+
+  /**
+   * Hide the mode confirmation dialog
+   */
+  hideModeConfirmDialog() {
+    this.confirmDialogOpen = false;
+    this.render();
+  }
+
+  /**
+   * Confirm switching from advanced to simple mode
+   */
+  confirmModeSwitch() {
+    this.mode = 'simple';
+    this.booleanExpression = '';
+    this.entityMap = {};
+    this.booleanAst = null;
+    this.booleanError = null;
+    this.confirmDialogOpen = false;
+    this.render();
+    this.notifyChange();
+  }
+
+  /**
+   * Notify listeners of scope change
+   */
+  notifyChange() {
+    this.options.onChange(this.getScope());
   }
 
   /**
@@ -141,6 +296,9 @@ export class ScopeSelector {
    * @returns {boolean}
    */
   hasScope() {
+    if (this.mode === 'advanced') {
+      return this.booleanExpression.trim().length > 0;
+    }
     return Object.keys(this.scope)
       .some(k => Array.isArray(this.scope[k]) && this.scope[k].length > 0);
   }
@@ -174,47 +332,228 @@ export class ScopeSelector {
       return;
     }
 
+    // Destroy existing boolean editor if switching modes
+    if (this.booleanEditor && this.mode !== 'advanced') {
+      this.booleanEditor.destroy();
+      this.booleanEditor = null;
+    }
+
     this.container.innerHTML = `
       <div class="scope-selector">
-        <!-- Search Input -->
-        <div class="scope-search-wrapper">
-          <input 
-            type="text" 
-            class="form-input scope-search-input" 
-            placeholder="Search entities or add keyword..."
-            value="${this.escapeHtml(this.filterText)}"
-          />
-        </div>
-        
-        <!-- Selected Items (chips) with save button -->
-        <div class="scope-chips-container">
-          <div class="scope-chips">
-            ${this.renderSelectedChips()}
-          </div>
-          ${this.options.showSaveFilter ? `
-            <button 
-              class="btn-icon scope-save-filter-btn" 
-              title="Save as search filter"
-              ${this.hasScope() ? '' : 'disabled'}
-            >
-              <svg viewBox="0 0 16 16" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.5">
-                <path d="M3 2a1 1 0 00-1 1v11.5l6-3 6 3V3a1 1 0 00-1-1H3z"/>
-                <path d="M8 5v4M6 7h4" stroke-linecap="round"/>
-              </svg>
+        ${this.options.showModeToggle ? `
+          <!-- Mode Toggle -->
+          <div class="scope-mode-toggle">
+            <button class="scope-mode-btn ${this.mode === 'simple' ? 'active' : ''}" data-mode="simple">
+              Simple
             </button>
-          ` : ''}
+            <button class="scope-mode-btn ${this.mode === 'advanced' ? 'active' : ''}" data-mode="advanced">
+              Advanced
+            </button>
+          </div>
+        ` : ''}
+        
+        <!-- Simple Mode Panel -->
+        <div class="scope-mode-panel ${this.mode === 'simple' ? 'active' : ''}" data-panel="simple">
+          <!-- Search Input -->
+          <div class="scope-search-wrapper">
+            <input 
+              type="text" 
+              class="form-input scope-search-input" 
+              placeholder="Search entities or add keyword..."
+              value="${this.escapeHtml(this.filterText)}"
+            />
+          </div>
+          
+          <!-- Selected Items (chips) with save button -->
+          <div class="scope-chips-container">
+            <div class="scope-chips">
+              ${this.renderSelectedChips()}
+            </div>
+            ${this.options.showSaveFilter ? `
+              <button 
+                class="btn-icon scope-save-filter-btn" 
+                title="Save as search filter"
+                ${this.hasScope() ? '' : 'disabled'}
+              >
+                <svg viewBox="0 0 16 16" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.5">
+                  <path d="M3 2a1 1 0 00-1 1v11.5l6-3 6 3V3a1 1 0 00-1-1H3z"/>
+                  <path d="M8 5v4M6 7h4" stroke-linecap="round"/>
+                </svg>
+              </button>
+            ` : ''}
+          </div>
+          
+          <!-- Entity List -->
+          <div class="scope-entity-list">
+            ${this.renderEntityGroups()}
+          </div>
         </div>
         
-        <!-- Entity List -->
-        <div class="scope-entity-list">
-          ${this.renderEntityGroups()}
+        <!-- Advanced Mode Panel -->
+        <div class="scope-mode-panel ${this.mode === 'advanced' ? 'active' : ''}" data-panel="advanced">
+          <div class="scope-boolean-editor-container"></div>
+          
+          <!-- Entity Browser for Advanced Mode -->
+          <div class="scope-entity-list scope-advanced-entity-list" style="margin-top: var(--space-md);">
+            <div class="scope-entity-list-header" style="font-size: var(--text-xs); color: var(--text-muted); margin-bottom: var(--space-xs);">
+              Click to insert entity into expression
+            </div>
+            ${this.renderEntityGroupsForAdvanced()}
+          </div>
         </div>
       </div>
       
       ${this.saveDialogOpen ? this.renderSaveDialog() : ''}
+      ${this.confirmDialogOpen ? this.renderModeConfirmDialog() : ''}
     `;
 
     this.attachEventListeners();
+    
+    // Initialize boolean editor for advanced mode
+    if (this.mode === 'advanced') {
+      this.initBooleanEditor();
+    }
+  }
+
+  /**
+   * Initialize the boolean expression editor
+   */
+  initBooleanEditor() {
+    const container = this.container.querySelector('.scope-boolean-editor-container');
+    if (!container) return;
+    
+    this.booleanEditor = new BooleanExpressionEditor(container, {
+      placeholder: 'Type @ to insert entity, "text" for keywords, use AND OR NOT...',
+      onChange: (expression, ast, error, entityMap) => {
+        this.booleanExpression = expression;
+        this.entityMap = entityMap;
+        this.booleanAst = ast;
+        this.booleanError = error;
+        this.notifyChange();
+      }
+    });
+    
+    // Set initial expression if any
+    if (this.booleanExpression) {
+      this.booleanEditor.setExpression(this.booleanExpression, this.entityMap);
+    }
+  }
+
+  /**
+   * Render entity groups for advanced mode (click to insert)
+   */
+  renderEntityGroupsForAdvanced() {
+    const allEntities = this.getAllEntities();
+    const filterLower = this.filterText.toLowerCase();
+    
+    // Render search filters accordion first (if enabled)
+    const searchFiltersHtml = this.options.showSearchFilters ? this.renderSearchFiltersAccordionAdvanced() : '';
+    
+    const groups = Object.entries(allEntities).map(([type, { label, scopeKey, entities }]) => {
+      // Filter entities by search text
+      const filteredEntities = entities.filter(entity => {
+        if (!filterLower) return true;
+        return this.getEntityText(entity).toLowerCase().includes(filterLower);
+      });
+      
+      // Sort alphabetically
+      filteredEntities.sort((a, b) => 
+        this.getEntityText(a).localeCompare(this.getEntityText(b))
+      );
+      
+      if (filteredEntities.length === 0 && filterLower) {
+        return '';
+      }
+      
+      const isExpanded = this.expandedSections.has(type);
+      const matchCount = filteredEntities.length;
+      
+      // Determine entity type for chips
+      const entityType = scopeKey.replace('Ids', '').replace(/s$/, '');
+      
+      return `
+        <div class="scope-entity-group ${isExpanded ? 'expanded' : ''}" data-type="${type}">
+          <button class="scope-entity-group-header" data-type="${type}">
+            <svg class="scope-group-chevron" viewBox="0 0 16 16" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M4 6l4 4 4-4"/>
+            </svg>
+            <span class="scope-group-label">${label}</span>
+            <span class="scope-group-count">${matchCount}</span>
+          </button>
+          <div class="scope-entity-group-items">
+            ${filteredEntities.length > 0 ? filteredEntities.map(entity => `
+              <button class="scope-entity-item scope-entity-item-advanced" 
+                      data-id="${entity.id}" 
+                      data-name="${this.escapeHtml(this.getEntityText(entity))}"
+                      data-type="${entityType}">
+                <span class="scope-entity-item-add">+</span>
+                <span class="scope-entity-item-name">${this.escapeHtml(this.getEntityText(entity))}</span>
+              </button>
+            `).join('') : `<div class="scope-entity-group-empty">No matching ${label.toLowerCase()}</div>`}
+          </div>
+        </div>
+      `;
+    }).join('');
+    
+    return searchFiltersHtml + groups;
+  }
+
+  /**
+   * Render search filters accordion for advanced mode
+   */
+  renderSearchFiltersAccordionAdvanced() {
+    const allFilters = dataStore.data.searchFilters || [];
+    const isExpanded = this.expandedSections.has('searchFilters');
+    
+    if (allFilters.length === 0) return '';
+    
+    const filtersContent = allFilters.map(filter => {
+      const itemCount = this.getFilterItemCount(filter);
+      return `
+        <button class="scope-entity-item scope-filter-item-advanced" data-filter-id="${filter.id}">
+          <span class="scope-filter-icon">
+            <svg viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.5">
+              <path d="M1 2h14l-5 6v5l-4 2V8L1 2z"/>
+            </svg>
+          </span>
+          <span class="scope-entity-item-name">${this.escapeHtml(filter.name)}</span>
+          <span class="scope-filter-count">${itemCount} item${itemCount !== 1 ? 's' : ''}</span>
+        </button>
+      `;
+    }).join('');
+    
+    return `
+      <div class="scope-entity-group scope-filter-group ${isExpanded ? 'expanded' : ''}" data-type="searchFilters">
+        <button class="scope-entity-group-header" data-type="searchFilters">
+          <svg class="scope-group-chevron" viewBox="0 0 16 16" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M4 6l4 4 4-4"/>
+          </svg>
+          <span class="scope-group-label">Search Filters</span>
+          <span class="scope-group-count">${allFilters.length} saved</span>
+        </button>
+        <div class="scope-entity-group-items">
+          ${filtersContent}
+        </div>
+      </div>
+    `;
+  }
+
+  /**
+   * Render the mode confirmation dialog
+   */
+  renderModeConfirmDialog() {
+    return `
+      <div class="scope-mode-confirm-overlay visible">
+        <div class="scope-mode-confirm-dialog">
+          <h4>Switch to Simple Mode?</h4>
+          <p>This will reset any work you've done in Advanced mode. Your boolean expression will be cleared.</p>
+          <div class="scope-mode-confirm-actions">
+            <button class="btn btn-secondary scope-confirm-cancel">Cancel</button>
+            <button class="btn btn-primary scope-confirm-switch">Switch to Simple</button>
+          </div>
+        </div>
+      </div>
+    `;
   }
 
   /**
@@ -558,6 +897,14 @@ export class ScopeSelector {
    * Get the total item count in current scope
    */
   getScopeItemCount() {
+    if (this.mode === 'advanced') {
+      // Count entities and terms in the boolean expression
+      if (this.booleanAst) {
+        const terms = BooleanParser.extractTerms(this.booleanAst);
+        return terms.entityIds.length + terms.keywords.length;
+      }
+      return this.booleanExpression ? 1 : 0;
+    }
     return this.scope.personIds.length +
            this.scope.organizationIds.length +
            this.scope.factionIds.length +
@@ -648,18 +995,30 @@ export class ScopeSelector {
       return;
     }
     
-    // Create the search filter (without logic - just entities and keywords)
-    dataStore.createSearchFilter({
-      name,
-      scope: {
-        personIds: [...this.scope.personIds],
-        organizationIds: [...this.scope.organizationIds],
-        factionIds: [...this.scope.factionIds],
-        locationIds: [...this.scope.locationIds],
-        eventIds: [...this.scope.eventIds],
-        keywords: [...this.scope.keywords]
-      }
-    });
+    // Create the search filter based on mode
+    if (this.mode === 'advanced') {
+      dataStore.createSearchFilter({
+        name,
+        scope: {
+          mode: 'advanced',
+          booleanExpression: this.booleanExpression,
+          entityMap: { ...this.entityMap }
+        }
+      });
+    } else {
+      dataStore.createSearchFilter({
+        name,
+        scope: {
+          mode: 'simple',
+          personIds: [...this.scope.personIds],
+          organizationIds: [...this.scope.organizationIds],
+          factionIds: [...this.scope.factionIds],
+          locationIds: [...this.scope.locationIds],
+          eventIds: [...this.scope.eventIds],
+          keywords: [...this.scope.keywords]
+        }
+      });
+    }
     
     this.closeSaveDialog();
   }
@@ -668,7 +1027,18 @@ export class ScopeSelector {
    * Attach event listeners
    */
   attachEventListeners() {
-    // Search input
+    // Mode toggle buttons
+    this.container.querySelectorAll('.scope-mode-btn').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        e.preventDefault();
+        const newMode = btn.dataset.mode;
+        if (newMode && newMode !== this.mode) {
+          this.setMode(newMode);
+        }
+      });
+    });
+    
+    // Search input (simple mode only)
     const searchInput = this.container.querySelector('.scope-search-input');
     if (searchInput) {
       searchInput.addEventListener('input', (e) => {
@@ -686,7 +1056,7 @@ export class ScopeSelector {
             searchInput.value = '';
             this.refreshChips();
             this.refreshEntityList();
-            this.options.onChange(this.scope);
+            this.notifyChange();
           }
         }
       });
@@ -698,7 +1068,7 @@ export class ScopeSelector {
       saveBtn.addEventListener('click', () => this.openSaveDialog());
     }
     
-    // Chip remove clicks
+    // Chip remove clicks (simple mode)
     this.container.querySelector('.scope-chips')?.addEventListener('click', (e) => {
       const chipRemove = e.target.closest('.chip-remove');
       if (chipRemove) {
@@ -713,13 +1083,13 @@ export class ScopeSelector {
           }
           this.refreshChips();
           this.refreshEntityList();
-          this.options.onChange(this.scope);
+          this.notifyChange();
         }
       }
     });
     
-    // Filter tooltip positioning
-    const entityList = this.container.querySelector('.scope-entity-list');
+    // Filter tooltip positioning (simple mode)
+    const entityList = this.container.querySelector('.scope-entity-list:not(.scope-advanced-entity-list)');
     if (entityList) {
       entityList.addEventListener('mouseenter', (e) => {
         const wrapper = e.target.closest('.scope-filter-item-wrapper');
@@ -749,8 +1119,8 @@ export class ScopeSelector {
       }, true);
     }
     
-    // Entity list clicks
-    this.container.querySelector('.scope-entity-list')?.addEventListener('click', (e) => {
+    // Entity list clicks (simple mode)
+    this.container.querySelector('.scope-entity-list:not(.scope-advanced-entity-list)')?.addEventListener('click', (e) => {
       // Handle "Add all" click (must be before header check)
       const addAllBtn = e.target.closest('.scope-add-all');
       if (addAllBtn) {
@@ -766,7 +1136,7 @@ export class ScopeSelector {
           }
           this.refreshChips();
           this.refreshEntityList();
-          this.options.onChange(this.scope);
+          this.notifyChange();
         }
         return;
       }
@@ -799,10 +1169,55 @@ export class ScopeSelector {
           this.scope[scopeKey].push(id);
           this.refreshChips();
           this.refreshEntityList();
-          this.options.onChange(this.scope);
+          this.notifyChange();
         }
       }
     });
+    
+    // Entity list clicks (advanced mode)
+    this.container.querySelector('.scope-advanced-entity-list')?.addEventListener('click', (e) => {
+      // Handle accordion header click
+      const header = e.target.closest('.scope-entity-group-header');
+      if (header) {
+        e.preventDefault();
+        this.toggleSection(header.dataset.type);
+        return;
+      }
+      
+      // Handle filter item click in advanced mode (insert as boolean terms)
+      const filterItem = e.target.closest('.scope-filter-item-advanced');
+      if (filterItem) {
+        e.preventDefault();
+        const filterId = filterItem.dataset.filterId;
+        if (filterId) {
+          this.insertFilterIntoBooleanEditor(filterId);
+        }
+        return;
+      }
+      
+      // Handle entity item click (insert into boolean editor)
+      const item = e.target.closest('.scope-entity-item-advanced');
+      if (item) {
+        e.preventDefault();
+        const { id, name, type } = item.dataset;
+        if (id && name && this.booleanEditor) {
+          this.booleanEditor.insertEntityAtCursor(id, name, type);
+        }
+      }
+    });
+    
+    // Mode confirmation dialog
+    if (this.confirmDialogOpen) {
+      const cancelBtn = this.container.querySelector('.scope-confirm-cancel');
+      const confirmBtn = this.container.querySelector('.scope-confirm-switch');
+      const overlay = this.container.querySelector('.scope-mode-confirm-overlay');
+      
+      cancelBtn?.addEventListener('click', () => this.hideModeConfirmDialog());
+      confirmBtn?.addEventListener('click', () => this.confirmModeSwitch());
+      overlay?.addEventListener('click', (e) => {
+        if (e.target === overlay) this.hideModeConfirmDialog();
+      });
+    }
     
     // Save dialog event listeners
     if (this.saveDialogOpen) {
@@ -837,6 +1252,57 @@ export class ScopeSelector {
   }
 
   /**
+   * Insert a saved filter's contents into the boolean editor
+   */
+  insertFilterIntoBooleanEditor(filterId) {
+    const filter = dataStore.findEntity('searchFilters', filterId);
+    if (!filter || !this.booleanEditor) return;
+    
+    const filterScope = filter.scope || {};
+    const allEntities = this.getAllEntities();
+    
+    // Build expression from filter contents
+    const terms = [];
+    
+    ['personIds', 'organizationIds', 'factionIds', 'locationIds', 'eventIds'].forEach(scopeKey => {
+      const ids = filterScope[scopeKey] || [];
+      const typeConfig = Object.values(allEntities).find(t => t.scopeKey === scopeKey);
+      const entityType = scopeKey.replace('Ids', '').replace(/s$/, '');
+      
+      ids.forEach(id => {
+        const entity = typeConfig?.entities.find(e => e.id === id);
+        if (entity) {
+          const name = this.getEntityText(entity);
+          this.entityMap[id] = { name, type: entityType };
+          terms.push(`@${id}`);
+        }
+      });
+    });
+    
+    // Add keywords
+    (filterScope.keywords || []).forEach(keyword => {
+      terms.push(`"${keyword}"`);
+    });
+    
+    if (terms.length === 0) return;
+    
+    // Insert as grouped expression
+    const expression = terms.length > 1 
+      ? `(${terms.join(' OR ')})` 
+      : terms[0];
+    
+    // Append to current expression
+    const current = this.booleanExpression.trim();
+    if (current) {
+      this.booleanExpression = `${current} AND ${expression}`;
+    } else {
+      this.booleanExpression = expression;
+    }
+    
+    this.booleanEditor.setExpression(this.booleanExpression, this.entityMap);
+  }
+
+  /**
    * Escape HTML for safe rendering
    */
   escapeHtml(text) {
@@ -850,6 +1316,10 @@ export class ScopeSelector {
    * Destroy the component and clean up
    */
   destroy() {
+    if (this.booleanEditor) {
+      this.booleanEditor.destroy();
+      this.booleanEditor = null;
+    }
     if (this.container) {
       this.container.innerHTML = '';
     }

@@ -1099,6 +1099,103 @@ export const DataService = {
     return doc.highlights.length;
   },
 
+  /**
+   * Get all activity (comments and highlights) across all documents
+   * @param {Object} options - Filter options
+   * @param {string} options.userId - Filter by specific user (optional)
+   * @returns {Array} Array of activity items sorted by createdAt (newest first)
+   */
+  getAllActivity: (options = {}) => {
+    const { userId = null } = options;
+    const documents = dataStore.data?.documents ?? [];
+    const activity = [];
+
+    documents.forEach(doc => {
+      // Collect highlights
+      (doc.highlights || []).forEach(highlight => {
+        if (!userId || highlight.userId === userId) {
+          activity.push({
+            type: 'highlight',
+            id: highlight.id,
+            highlightedText: highlight.highlightedText,
+            user: findById('users', highlight.userId),
+            userId: highlight.userId,
+            createdAt: highlight.createdAt,
+            documentId: doc.id,
+            documentTitle: doc.title,
+            blockIndex: highlight.blockIndex
+          });
+        }
+      });
+
+      // Collect comments
+      (doc.comments || []).forEach(comment => {
+        if (!userId || comment.userId === userId) {
+          activity.push({
+            type: 'comment',
+            id: comment.id,
+            anchorText: comment.anchorText,
+            content: comment.content,
+            user: findById('users', comment.userId),
+            userId: comment.userId,
+            createdAt: comment.createdAt,
+            documentId: doc.id,
+            documentTitle: doc.title,
+            blockIndex: comment.blockIndex,
+            replyCount: (comment.replies || []).length
+          });
+        }
+
+        // Collect replies as separate activity items
+        (comment.replies || []).forEach(reply => {
+          if (!userId || reply.userId === userId) {
+            activity.push({
+              type: 'reply',
+              id: reply.id,
+              content: reply.content,
+              user: findById('users', reply.userId),
+              userId: reply.userId,
+              createdAt: reply.createdAt,
+              documentId: doc.id,
+              documentTitle: doc.title,
+              parentCommentId: comment.id,
+              parentCommentContent: comment.content
+            });
+          }
+        });
+      });
+    });
+
+    // Sort by createdAt (newest first)
+    return activity.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+  },
+
+  /**
+   * Get unique users who have activity (comments or highlights)
+   * @returns {Array} Array of user objects who have activity
+   */
+  getActiveUsers: () => {
+    const documents = dataStore.data?.documents ?? [];
+    const userIds = new Set();
+
+    documents.forEach(doc => {
+      (doc.highlights || []).forEach(h => {
+        if (h.userId) userIds.add(h.userId);
+      });
+      (doc.comments || []).forEach(c => {
+        if (c.userId) userIds.add(c.userId);
+        (c.replies || []).forEach(r => {
+          if (r.userId) userIds.add(r.userId);
+        });
+      });
+    });
+
+    return Array.from(userIds)
+      .map(id => findById('users', id))
+      .filter(Boolean)
+      .sort((a, b) => (a.displayName || a.name || '').localeCompare(b.displayName || b.name || ''));
+  },
+
   // ============================================
   // Network Graph Builder
   // ============================================

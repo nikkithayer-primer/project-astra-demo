@@ -292,11 +292,12 @@ export class WorkspaceView extends BaseView {
       }));
     }
 
-    // Mentioned Locations Map (half-width)
-    if (data.locations.length > 0) {
+    // Mentioned Locations & Events Map (half-width)
+    if (data.locations.length > 0 || data.events.length > 0) {
       this.cardManager.add(new MapCard(this, 'workspace-map', {
-        title: 'Mentioned Locations',
+        title: 'Locations & Events',
         locations: data.locations,
+        events: data.events,
         halfWidth: true,
         height: 300
       }));

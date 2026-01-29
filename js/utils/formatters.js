@@ -200,3 +200,39 @@ export function truncateText(text, maxLength = 40) {
   if (!text || text.length <= maxLength) return text;
   return text.substring(0, maxLength).trim() + '...';
 }
+
+/**
+ * Format a date as relative time (e.g., "2 hours ago", "3 days ago")
+ * @param {string|Date} date - Date to format
+ * @returns {string} Relative time string
+ */
+export function formatRelativeTime(date) {
+  if (!date) return '';
+  
+  const now = new Date();
+  const then = new Date(date);
+  const diffMs = now - then;
+  const diffSec = Math.floor(diffMs / 1000);
+  const diffMin = Math.floor(diffSec / 60);
+  const diffHour = Math.floor(diffMin / 60);
+  const diffDay = Math.floor(diffHour / 24);
+  const diffWeek = Math.floor(diffDay / 7);
+  const diffMonth = Math.floor(diffDay / 30);
+  const diffYear = Math.floor(diffDay / 365);
+
+  if (diffSec < 60) {
+    return 'just now';
+  } else if (diffMin < 60) {
+    return `${diffMin} minute${diffMin !== 1 ? 's' : ''} ago`;
+  } else if (diffHour < 24) {
+    return `${diffHour} hour${diffHour !== 1 ? 's' : ''} ago`;
+  } else if (diffDay < 7) {
+    return `${diffDay} day${diffDay !== 1 ? 's' : ''} ago`;
+  } else if (diffWeek < 4) {
+    return `${diffWeek} week${diffWeek !== 1 ? 's' : ''} ago`;
+  } else if (diffMonth < 12) {
+    return `${diffMonth} month${diffMonth !== 1 ? 's' : ''} ago`;
+  } else {
+    return `${diffYear} year${diffYear !== 1 ? 's' : ''} ago`;
+  }
+}

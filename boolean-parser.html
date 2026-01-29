@@ -659,6 +659,165 @@
     .advanced-accordions {
       margin-top: var(--space-lg);
     }
+
+    /* Save Filter Dialog */
+    .save-dialog-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.5);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 9999;
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.15s ease, visibility 0.15s ease;
+    }
+
+    .save-dialog-overlay.visible {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .save-dialog {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-color);
+      border-radius: var(--border-radius-lg);
+      box-shadow: var(--shadow-xl);
+      width: 100%;
+      max-width: 440px;
+      transform: scale(0.95) translateY(-10px);
+      transition: transform 0.15s ease;
+    }
+
+    .save-dialog-overlay.visible .save-dialog {
+      transform: scale(1) translateY(0);
+    }
+
+    .save-dialog-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: var(--space-md) var(--space-lg);
+      border-bottom: 1px solid var(--border-subtle);
+    }
+
+    .save-dialog-header h3 {
+      font-size: var(--text-base);
+      font-weight: 600;
+      margin: 0;
+    }
+
+    .save-dialog-close {
+      background: none;
+      border: none;
+      font-size: 20px;
+      color: var(--text-muted);
+      cursor: pointer;
+      padding: 0;
+      line-height: 1;
+    }
+
+    .save-dialog-close:hover {
+      color: var(--text-primary);
+    }
+
+    .save-dialog-body {
+      padding: var(--space-lg);
+    }
+
+    .save-dialog-description {
+      font-size: var(--text-sm);
+      color: var(--text-secondary);
+      margin-bottom: var(--space-md);
+      line-height: 1.5;
+    }
+
+    .save-dialog-summary {
+      font-size: var(--text-sm);
+      padding: var(--space-sm) var(--space-md);
+      background: var(--bg-tertiary);
+      border-radius: var(--border-radius);
+      margin-bottom: var(--space-lg);
+    }
+
+    .save-dialog-summary strong {
+      color: var(--accent-primary);
+    }
+
+    .save-dialog-body .form-group {
+      margin-bottom: var(--space-md);
+    }
+
+    .save-dialog-body .form-group:last-child {
+      margin-bottom: 0;
+    }
+
+    .save-dialog-body .form-label {
+      display: block;
+      font-size: var(--text-sm);
+      font-weight: 500;
+      margin-bottom: var(--space-xs);
+    }
+
+    .save-dialog-body .form-label .required {
+      color: var(--accent-danger);
+    }
+
+    .save-dialog-body .form-label .optional {
+      color: var(--text-muted);
+      font-weight: 400;
+    }
+
+    .save-dialog-footer {
+      display: flex;
+      justify-content: flex-end;
+      gap: var(--space-sm);
+      padding: var(--space-md) var(--space-lg);
+      border-top: 1px solid var(--border-subtle);
+      background: var(--bg-tertiary);
+      border-radius: 0 0 var(--border-radius-lg) var(--border-radius-lg);
+    }
+
+    /* Preview of what will be saved */
+    .save-dialog-preview {
+      margin-top: var(--space-md);
+      padding: var(--space-md);
+      background: var(--bg-tertiary);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--border-radius);
+      max-height: 120px;
+      overflow-y: auto;
+    }
+
+    .save-dialog-preview-label {
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: var(--text-muted);
+      margin-bottom: var(--space-xs);
+    }
+
+    .save-dialog-preview-content {
+      font-family: var(--font-mono);
+      font-size: var(--text-xs);
+      color: var(--text-secondary);
+      white-space: pre-wrap;
+      word-break: break-word;
+    }
+
+    /* Form Input Error State */
+    .form-input.input-error {
+      border-color: var(--accent-danger);
+      box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.15);
+      animation: shake 0.3s ease-in-out;
+    }
+
+    @keyframes shake {
+      0%, 100% { transform: translateX(0); }
+      25% { transform: translateX(-4px); }
+      75% { transform: translateX(4px); }
+    }
   </style>
 </head>
 <body>
@@ -1979,6 +2138,189 @@
         e.target.value = '';
       }
     });
+
+    // ==========================================
+    // Save Filter Dialog
+    // ==========================================
+    const saveDialogOverlay = document.getElementById('save-dialog-overlay');
+    const saveDialogNameInput = document.getElementById('save-filter-name');
+    const saveDialogDescInput = document.getElementById('save-filter-description');
+    const saveDialogPreview = document.getElementById('save-dialog-preview-content');
+    const saveDialogSummary = document.getElementById('save-dialog-summary');
+
+    function getFilterSummary() {
+      if (state.mode === 'simple') {
+        const count = state.chips.length;
+        return {
+          count,
+          text: `${count} item${count !== 1 ? 's' : ''} with ${state.operator === 'OR' ? 'ANY' : 'ALL'} logic`
+        };
+      } else {
+        // Advanced mode - count from the editor
+        const editor = document.getElementById('rich-editor');
+        const chips = editor?.querySelectorAll('.entity-chip') || [];
+        const content = getEditorContent();
+        const hasContent = content.text.trim().length > 0;
+        return {
+          count: chips.length,
+          text: hasContent ? 'Boolean expression' : 'Empty expression',
+          expression: content.text
+        };
+      }
+    }
+
+    function openSaveDialog() {
+      const summary = getFilterSummary();
+      
+      // Update summary text
+      if (saveDialogSummary) {
+        saveDialogSummary.innerHTML = `<strong>${summary.count}</strong> ${summary.text}`;
+      }
+      
+      // Update preview
+      if (saveDialogPreview) {
+        if (state.mode === 'simple') {
+          const chipNames = state.chips.map(c => c.name).join(` ${state.operator} `);
+          saveDialogPreview.textContent = chipNames || '(empty)';
+        } else {
+          saveDialogPreview.textContent = summary.expression || '(empty)';
+        }
+      }
+      
+      // Reset form
+      if (saveDialogNameInput) saveDialogNameInput.value = '';
+      if (saveDialogDescInput) saveDialogDescInput.value = '';
+      
+      // Show dialog
+      saveDialogOverlay?.classList.add('visible');
+      
+      // Focus name input
+      setTimeout(() => saveDialogNameInput?.focus(), 100);
+    }
+
+    function closeSaveDialog() {
+      saveDialogOverlay?.classList.remove('visible');
+    }
+
+    function saveFilter() {
+      const name = saveDialogNameInput?.value.trim();
+      if (!name) {
+        saveDialogNameInput?.classList.add('input-error');
+        saveDialogNameInput?.focus();
+        setTimeout(() => saveDialogNameInput?.classList.remove('input-error'), 1000);
+        return;
+      }
+      
+      const description = saveDialogDescInput?.value.trim();
+      const summary = getFilterSummary();
+      
+      // Mock save - in real implementation this would call dataStore.createSearchFilter()
+      const filter = {
+        id: 'filter-' + Date.now(),
+        name,
+        description: description || undefined,
+        mode: state.mode,
+        // For simple mode
+        ...(state.mode === 'simple' && {
+          operator: state.operator,
+          scope: {
+            personIds: state.chips.filter(c => c.type === 'person').map(c => c.name),
+            organizationIds: state.chips.filter(c => c.type === 'org').map(c => c.name),
+            keywords: state.chips.filter(c => !c.type || c.type === 'keyword').map(c => c.name)
+          }
+        }),
+        // For advanced mode
+        ...(state.mode !== 'simple' && {
+          booleanExpression: summary.expression
+        }),
+        createdAt: new Date().toISOString()
+      };
+      
+      console.log('Saved filter:', filter);
+      
+      // Show success feedback
+      alert(`Filter "${name}" saved successfully!\n\nIn the real app, this would be stored in the dataStore and available throughout the application.`);
+      
+      closeSaveDialog();
+    }
+
+    // Save dialog event listeners
+    document.getElementById('save-dialog-close')?.addEventListener('click', closeSaveDialog);
+    document.getElementById('save-dialog-cancel')?.addEventListener('click', closeSaveDialog);
+    document.getElementById('save-dialog-save')?.addEventListener('click', saveFilter);
+
+    saveDialogOverlay?.addEventListener('click', (e) => {
+      if (e.target === saveDialogOverlay) closeSaveDialog();
+    });
+
+    saveDialogNameInput?.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        saveFilter();
+      } else if (e.key === 'Escape') {
+        closeSaveDialog();
+      }
+    });
+
+    // Wire up the Save Filter button in footer
+    document.querySelector('.filter-actions-right .btn-primary')?.addEventListener('click', (e) => {
+      e.preventDefault();
+      openSaveDialog();
+    });
   </script>
+
+  <!-- Save Filter Dialog -->
+  <div class="save-dialog-overlay" id="save-dialog-overlay">
+    <div class="save-dialog">
+      <div class="save-dialog-header">
+        <h3>Save Search Filter</h3>
+        <button class="save-dialog-close" id="save-dialog-close" aria-label="Close">&times;</button>
+      </div>
+      <div class="save-dialog-body">
+        <p class="save-dialog-description">
+          Save your current selection as a reusable filter. You can apply this filter to monitors 
+          and other searches throughout the app.
+        </p>
+        <p class="save-dialog-summary" id="save-dialog-summary">
+          <strong>0</strong> items will be saved in this filter.
+        </p>
+        
+        <div class="form-group">
+          <label class="form-label" for="save-filter-name">
+            Filter Name <span class="required">*</span>
+          </label>
+          <input 
+            type="text" 
+            id="save-filter-name" 
+            class="form-input" 
+            placeholder="e.g., Key Executives, China Tech Orgs..."
+          />
+        </div>
+        
+        <div class="form-group">
+          <label class="form-label" for="save-filter-description">
+            Description <span class="optional">(optional)</span>
+          </label>
+          <input 
+            type="text" 
+            id="save-filter-description" 
+            class="form-input" 
+            placeholder="Brief description of this filter..."
+          />
+        </div>
+        
+        <div class="save-dialog-preview">
+          <div class="save-dialog-preview-label">Preview</div>
+          <div class="save-dialog-preview-content" id="save-dialog-preview-content">
+            (empty)
+          </div>
+        </div>
+      </div>
+      <div class="save-dialog-footer">
+        <button class="btn" id="save-dialog-cancel">Cancel</button>
+        <button class="btn btn-primary" id="save-dialog-save">Save Filter</button>
+      </div>
+    </div>
+  </div>
 </body>
 </html>

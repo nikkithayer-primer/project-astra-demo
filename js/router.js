@@ -24,6 +24,7 @@ import { ProjectsView } from './views/ProjectsView.js';
 import { TopicView } from './views/TopicView.js';
 import { TagsView } from './views/TagsView.js';
 import { TagDetailView } from './views/TagDetailView.js';
+import { ActivityFeedView } from './views/ActivityFeedView.js';
 import { initStickyHeader, destroyStickyHeader } from './utils/stickyHeader.js';
 import { TimeRangeFilter } from './components/TimeRangeFilter.js';
 import { DataService } from './data/DataService.js';
@@ -559,6 +560,10 @@ export class Router {
 
       case 'tags':
         this.currentView = new TagsView(this.container, filterOptions);
+        break;
+
+      case 'activity':
+        this.currentView = new ActivityFeedView(this.container, filterOptions);
         break;
 
       case 'monitor':
