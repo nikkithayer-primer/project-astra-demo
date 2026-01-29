@@ -7,6 +7,7 @@ import { BaseView } from './BaseView.js';
 import { DataService } from '../data/DataService.js';
 import { dataStore } from '../data/DataStore.js';
 import { TimeRangeFilter } from '../components/TimeRangeFilter.js';
+import { ScopeSelector } from '../components/ScopeSelector.js';
 import { formatDate } from '../utils/formatters.js';
 
 export class SearchView extends BaseView {
@@ -20,6 +21,10 @@ export class SearchView extends BaseView {
     // Time range filter
     this.timeRange = null;
     this.timeRangeFilter = null;
+    // ScopeSelector instance
+    this.scopeSelector = null;
+    // Filter panel expanded state
+    this.filtersExpanded = false;
   }
 
   /**
@@ -44,6 +49,13 @@ export class SearchView extends BaseView {
       this.initializeRepositories();
     }
 
+    // Check if we have scope from ScopeSelector (preserve during re-renders)
+    const currentScope = this.scopeSelector?.getScope();
+    const hasScope = currentScope && this.hasAnyScope(currentScope);
+    const hasQuery = this.searchQuery.trim().length >= 2;
+    const canSearch = hasScope || hasQuery;
+    const scopeItemCount = hasScope ? this.getScopeItemCount(currentScope) : 0;
+
     this.container.innerHTML = `
       <div class="page-header">
         <h1>Search</h1>
@@ -52,6 +64,7 @@ export class SearchView extends BaseView {
       
       <div class="content-area">
         <div class="search-page-container">
+          <!-- Text Search Input -->
           <div class="search-bar-row">
             <div class="search-input-wrapper search-input-large">
               <svg viewBox="0 0 16 16" width="18" height="18" fill="none" stroke="var(--text-muted)" stroke-width="1.5" class="search-icon">
@@ -71,17 +84,60 @@ export class SearchView extends BaseView {
                 </svg>
               </button>
             </div>
-            <div class="search-match-count ${this.searchQuery.trim().length >= 2 ? '' : 'hidden'}" id="match-count">
-              ${this.renderMatchCount()}
+          </div>
+          
+          <!-- Filters and Repositories Row -->
+          <div class="search-controls-row">
+            <!-- Filters Toggle Button -->
+            <button class="btn btn-secondary filters-toggle-btn ${this.filtersExpanded ? 'expanded' : ''}" id="filters-toggle">
+              <svg viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.5">
+                <path d="M2 4h12M4 8h8M6 12h4"/>
+              </svg>
+              <span>Filters</span>
+              ${scopeItemCount > 0 ? `<span class="filters-badge">${scopeItemCount}</span>` : ''}
+              <svg class="toggle-chevron" viewBox="0 0 16 16" width="12" height="12" fill="none" stroke="currentColor" stroke-width="1.5">
+                <path d="M4 6l4 4 4-4"/>
+              </svg>
+            </button>
+            
+            <!-- Repositories Dropdown -->
+            <div class="repo-dropdown-wrapper">
+              <button class="btn btn-secondary repo-dropdown-btn" id="repo-dropdown-toggle">
+                <svg viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.5">
+                  <path d="M2 3h12v10H2zM2 6h12"/>
+                  <circle cx="4" cy="4.5" r="0.5" fill="currentColor"/>
+                </svg>
+                <span>${this.getRepositoryButtonLabel()}</span>
+                <svg class="dropdown-chevron" viewBox="0 0 16 16" width="12" height="12" fill="none" stroke="currentColor" stroke-width="1.5">
+                  <path d="M4 6l4 4 4-4"/>
+                </svg>
+              </button>
+              <div class="repo-dropdown-popover" id="repo-dropdown-popover">
+                <div class="repo-dropdown-header">
+                  <label class="repo-option repo-select-all">
+                    <input type="checkbox" id="repo-select-all" ${this.areAllRepositoriesSelected() ? 'checked' : ''} />
+                    <span>All Repositories</span>
+                  </label>
+                </div>
+                <div class="repo-dropdown-divider"></div>
+                <div class="repo-dropdown-list">
+                  ${this.renderRepositoryOptions()}
+                </div>
+              </div>
             </div>
           </div>
           
-          <div class="search-repositories">
-            <span class="repository-label text-secondary text-sm">Repositories:</span>
-            ${this.renderRepositoryCheckboxes()}
+          <!-- Collapsible Scope Selector for Filters -->
+          <div class="search-scope-section ${this.filtersExpanded ? 'expanded' : ''}" id="filters-panel">
+            <div id="search-scope-selector"></div>
           </div>
           
-          <div class="search-filters" style="margin-top: var(--space-md);">
+          <!-- Selected Filters Display (shown when panel is collapsed) -->
+          <div class="search-selected-filters ${!this.filtersExpanded && hasScope ? '' : 'hidden'}" id="selected-filters-display">
+            ${this.renderSelectedScopeChips(currentScope)}
+          </div>
+          
+          <div class="search-time-section">
             <div style="display: flex; align-items: center; gap: var(--space-sm); margin-bottom: var(--space-xs);">
               <span class="text-secondary text-sm">Date Range:</span>
               <span class="text-sm" id="time-range-label">${this.timeRange ? `${formatDate(this.timeRange.start)} - ${formatDate(this.timeRange.end)}` : 'All Time'}</span>
@@ -90,8 +146,18 @@ export class SearchView extends BaseView {
             <div id="search-time-filter"></div>
           </div>
           
-          <div class="search-hint">
-            <p class="text-secondary text-sm">Type a query and press <kbd>Enter</kbd> to create a workspace with matching documents.</p>
+          <!-- Search Action -->
+          <div class="search-action-row">
+            <div class="search-match-count ${canSearch ? '' : 'hidden'}" id="match-count">
+              ${this.renderMatchCount()}
+            </div>
+            <button class="btn btn-primary search-execute-btn ${canSearch ? '' : 'hidden'}" id="search-execute">
+              <svg viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.5">
+                <circle cx="7" cy="7" r="4.5"/>
+                <path d="M10.5 10.5L14 14"/>
+              </svg>
+              Create Workspace
+            </button>
           </div>
         </div>
       </div>
@@ -100,9 +166,102 @@ export class SearchView extends BaseView {
     this.setupEventHandlers();
     this.initTimeRangeFilter();
     
+    // Only init ScopeSelector if expanded
+    if (this.filtersExpanded) {
+      this.initScopeSelector(currentScope);
+    }
+    
     // Focus the search input
     const input = document.getElementById('search-input');
     if (input) input.focus();
+  }
+
+  /**
+   * Check if a scope has any selected items
+   */
+  hasAnyScope(scope) {
+    if (!scope) return false;
+    return (scope.personIds?.length > 0) ||
+           (scope.organizationIds?.length > 0) ||
+           (scope.factionIds?.length > 0) ||
+           (scope.locationIds?.length > 0) ||
+           (scope.eventIds?.length > 0) ||
+           (scope.keywords?.length > 0);
+  }
+
+  /**
+   * Initialize the ScopeSelector component
+   */
+  initScopeSelector(previousScope) {
+    const container = document.getElementById('search-scope-selector');
+    if (!container) return;
+    
+    // Create ScopeSelector with save filter and search filters enabled
+    this.scopeSelector = new ScopeSelector(container, {
+      showSaveFilter: true,
+      showSearchFilters: true,
+      onChange: (scope) => {
+        this.onScopeChange(scope);
+      }
+    });
+    
+    // Restore previous scope if any, or just render empty
+    if (previousScope && this.hasAnyScope(previousScope)) {
+      this.scopeSelector.setScope(previousScope);
+    } else {
+      // Must call render() to show the UI
+      this.scopeSelector.render();
+    }
+  }
+
+  /**
+   * Handle scope changes from ScopeSelector
+   */
+  onScopeChange(scope) {
+    this.updateSearchUI();
+    this.debounceSearch();
+  }
+
+  /**
+   * Update search UI elements based on current state
+   */
+  updateSearchUI() {
+    const scope = this.scopeSelector?.getScope();
+    const hasScope = this.hasAnyScope(scope);
+    const hasQuery = this.searchQuery.trim().length >= 2;
+    const canSearch = hasScope || hasQuery;
+    
+    // Update search button visibility
+    const searchBtn = document.getElementById('search-execute');
+    if (searchBtn) {
+      searchBtn.classList.toggle('hidden', !canSearch);
+    }
+    
+    // Update match count visibility
+    const matchCount = document.getElementById('match-count');
+    if (matchCount) {
+      matchCount.classList.toggle('hidden', !canSearch);
+    }
+    
+    // Update filters badge
+    const filtersToggle = document.getElementById('filters-toggle');
+    if (filtersToggle) {
+      const scopeItemCount = hasScope ? this.getScopeItemCount(scope) : 0;
+      let badge = filtersToggle.querySelector('.filters-badge');
+      
+      if (scopeItemCount > 0) {
+        if (!badge) {
+          // Insert badge before the chevron
+          const chevron = filtersToggle.querySelector('.toggle-chevron');
+          badge = document.createElement('span');
+          badge.className = 'filters-badge';
+          filtersToggle.insertBefore(badge, chevron);
+        }
+        badge.textContent = scopeItemCount;
+      } else if (badge) {
+        badge.remove();
+      }
+    }
   }
 
   /**
@@ -184,28 +343,71 @@ export class SearchView extends BaseView {
   }
 
   /**
-   * Render repository filter checkboxes
+   * Get the label for the repository dropdown button
    */
-  renderRepositoryCheckboxes() {
+  getRepositoryButtonLabel() {
+    const repositories = DataService.getRepositories();
+    const totalCount = repositories.length;
+    const selectedCount = this.selectedRepositories.size;
+    
+    if (selectedCount === 0) {
+      return 'No repositories';
+    } else if (selectedCount === totalCount) {
+      return 'All Repositories';
+    } else if (selectedCount === 1) {
+      const selectedId = Array.from(this.selectedRepositories)[0];
+      const repo = repositories.find(r => r.id === selectedId);
+      return repo ? repo.code : '1 repository';
+    } else {
+      return `${selectedCount} repositories`;
+    }
+  }
+
+  /**
+   * Check if all repositories are selected
+   */
+  areAllRepositoriesSelected() {
+    const repositories = DataService.getRepositories();
+    return this.selectedRepositories.size === repositories.length;
+  }
+
+  /**
+   * Render repository options for the dropdown
+   */
+  renderRepositoryOptions() {
     const repositories = DataService.getRepositories();
     if (!repositories || repositories.length === 0) {
-      return '<span class="text-muted text-sm">No repositories available</span>';
+      return '<div class="repo-dropdown-empty">No repositories available</div>';
     }
     
     return repositories.map(repo => {
       const isChecked = this.selectedRepositories.has(repo.id);
       return `
-        <label class="repository-checkbox">
+        <label class="repo-option">
           <input 
             type="checkbox" 
-            name="repository" 
+            name="repo-option" 
             value="${repo.id}" 
             ${isChecked ? 'checked' : ''}
           />
-          ${this.escapeHtml(repo.code)}
+          <span class="repo-option-name">${this.escapeHtml(repo.name)}</span>
+          <span class="repo-option-code">${this.escapeHtml(repo.code)}</span>
         </label>
       `;
     }).join('');
+  }
+
+  /**
+   * Update the repository dropdown button label
+   */
+  updateRepositoryButtonLabel() {
+    const btn = document.getElementById('repo-dropdown-toggle');
+    if (btn) {
+      const labelSpan = btn.querySelector('span:not(.dropdown-chevron)');
+      if (labelSpan) {
+        labelSpan.textContent = this.getRepositoryButtonLabel();
+      }
+    }
   }
 
   /**
@@ -219,16 +421,223 @@ export class SearchView extends BaseView {
   }
 
   /**
+   * Render selected scope items as chips (shown when filter panel is collapsed)
+   */
+  renderSelectedScopeChips(scope) {
+    if (!scope) return '';
+    
+    const chips = [];
+    
+    // People
+    if (scope.personIds?.length > 0) {
+      scope.personIds.forEach(id => {
+        const person = DataService.getPerson(id);
+        if (person) {
+          chips.push({
+            type: 'person',
+            id: id,
+            label: person.name,
+            icon: `<svg viewBox="0 0 16 16" width="12" height="12" fill="none" stroke="currentColor" stroke-width="1.5">
+              <circle cx="8" cy="5" r="3"/>
+              <path d="M2 14c0-3 2.5-5 6-5s6 2 6 5"/>
+            </svg>`
+          });
+        }
+      });
+    }
+    
+    // Organizations
+    if (scope.organizationIds?.length > 0) {
+      scope.organizationIds.forEach(id => {
+        const org = DataService.getOrganization(id);
+        if (org) {
+          chips.push({
+            type: 'organization',
+            id: id,
+            label: org.name,
+            icon: `<svg viewBox="0 0 16 16" width="12" height="12" fill="none" stroke="currentColor" stroke-width="1.5">
+              <rect x="2" y="4" width="12" height="10" rx="1"/>
+              <path d="M5 4V2h6v2M5 8h6M5 11h6"/>
+            </svg>`
+          });
+        }
+      });
+    }
+    
+    // Factions
+    if (scope.factionIds?.length > 0) {
+      scope.factionIds.forEach(id => {
+        const faction = DataService.getFaction(id);
+        if (faction) {
+          chips.push({
+            type: 'faction',
+            id: id,
+            label: faction.name,
+            icon: `<svg viewBox="0 0 16 16" width="12" height="12" fill="none" stroke="currentColor" stroke-width="1.5">
+              <path d="M3 13V5l5-3 5 3v8"/>
+              <path d="M6 13v-4h4v4"/>
+            </svg>`
+          });
+        }
+      });
+    }
+    
+    // Locations
+    if (scope.locationIds?.length > 0) {
+      scope.locationIds.forEach(id => {
+        const location = DataService.getLocation(id);
+        if (location) {
+          chips.push({
+            type: 'location',
+            id: id,
+            label: location.name,
+            icon: `<svg viewBox="0 0 16 16" width="12" height="12" fill="none" stroke="currentColor" stroke-width="1.5">
+              <path d="M8 1C5.2 1 3 3.2 3 6c0 4 5 9 5 9s5-5 5-9c0-2.8-2.2-5-5-5z"/>
+              <circle cx="8" cy="6" r="2"/>
+            </svg>`
+          });
+        }
+      });
+    }
+    
+    // Events
+    if (scope.eventIds?.length > 0) {
+      scope.eventIds.forEach(id => {
+        const event = DataService.getEvent(id);
+        if (event) {
+          chips.push({
+            type: 'event',
+            id: id,
+            label: event.text?.substring(0, 40) + (event.text?.length > 40 ? '...' : ''),
+            icon: `<svg viewBox="0 0 16 16" width="12" height="12" fill="none" stroke="currentColor" stroke-width="1.5">
+              <circle cx="8" cy="8" r="6"/>
+              <path d="M8 4v4l3 2"/>
+            </svg>`
+          });
+        }
+      });
+    }
+    
+    // Keywords
+    if (scope.keywords?.length > 0) {
+      scope.keywords.forEach(keyword => {
+        chips.push({
+          type: 'keyword',
+          id: keyword,
+          label: keyword,
+          icon: `<svg viewBox="0 0 16 16" width="12" height="12" fill="none" stroke="currentColor" stroke-width="1.5">
+            <path d="M2 5h12M2 8h8M2 11h10"/>
+          </svg>`
+        });
+      });
+    }
+    
+    if (chips.length === 0) return '';
+    
+    return `
+      <div class="selected-scope-chips">
+        ${chips.map(chip => `
+          <span class="scope-chip scope-chip-${chip.type}" data-type="${chip.type}" data-id="${this.escapeHtml(chip.id)}">
+            ${chip.icon}
+            <span class="chip-label">${this.escapeHtml(chip.label)}</span>
+            <button class="chip-remove" data-type="${chip.type}" data-id="${this.escapeHtml(chip.id)}" title="Remove">
+              <svg viewBox="0 0 16 16" width="10" height="10" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M4 4l8 8M12 4l-8 8"/>
+              </svg>
+            </button>
+          </span>
+        `).join('')}
+      </div>
+    `;
+  }
+
+  /**
+   * Update the selected filters display
+   */
+  updateSelectedFiltersDisplay() {
+    const displayContainer = document.getElementById('selected-filters-display');
+    if (!displayContainer) return;
+    
+    const scope = this.scopeSelector?.getScope();
+    const hasScope = this.hasAnyScope(scope);
+    
+    // Show/hide based on panel state and whether we have scope
+    displayContainer.classList.toggle('hidden', this.filtersExpanded || !hasScope);
+    
+    // Update content
+    displayContainer.innerHTML = this.renderSelectedScopeChips(scope);
+    
+    // Attach remove handlers
+    this.attachChipRemoveHandlers();
+  }
+
+  /**
+   * Attach event handlers for chip remove buttons
+   */
+  attachChipRemoveHandlers() {
+    const removeButtons = this.container.querySelectorAll('.selected-scope-chips .chip-remove');
+    removeButtons.forEach(btn => {
+      this.addListener(btn, 'click', (e) => {
+        e.stopPropagation();
+        const type = btn.dataset.type;
+        const id = btn.dataset.id;
+        this.removeFromScope(type, id);
+      });
+    });
+  }
+
+  /**
+   * Remove an item from the scope
+   */
+  removeFromScope(type, id) {
+    if (!this.scopeSelector) return;
+    
+    const scope = this.scopeSelector.getScope();
+    
+    switch (type) {
+      case 'person':
+        scope.personIds = scope.personIds.filter(i => i !== id);
+        break;
+      case 'organization':
+        scope.organizationIds = scope.organizationIds.filter(i => i !== id);
+        break;
+      case 'faction':
+        scope.factionIds = scope.factionIds.filter(i => i !== id);
+        break;
+      case 'location':
+        scope.locationIds = scope.locationIds.filter(i => i !== id);
+        break;
+      case 'event':
+        scope.eventIds = scope.eventIds.filter(i => i !== id);
+        break;
+      case 'keyword':
+        scope.keywords = scope.keywords.filter(k => k !== id);
+        break;
+    }
+    
+    // Update the ScopeSelector
+    this.scopeSelector.setScope(scope);
+    
+    // Update UI
+    this.updateSearchUI();
+    this.updateSelectedFiltersDisplay();
+    this.updateMatchCount();
+  }
+
+  /**
    * Set up event handlers
    */
   setupEventHandlers() {
     const input = document.getElementById('search-input');
     const clearBtn = document.getElementById('search-clear');
+    const searchBtn = document.getElementById('search-execute');
 
+    // Text input handlers
     if (input) {
       this.addListener(input, 'input', (e) => {
         this.searchQuery = e.target.value;
         this.updateClearButton();
+        this.updateSearchUI();
         this.debounceSearch();
       });
 
@@ -245,26 +654,101 @@ export class SearchView extends BaseView {
       });
     }
 
+    // Clear text button
     if (clearBtn) {
       this.addListener(clearBtn, 'click', () => {
         this.clearSearch();
       });
     }
-
-    // Repository checkbox handlers
-    const repoCheckboxes = this.container.querySelectorAll('input[name="repository"]');
-    repoCheckboxes.forEach(checkbox => {
-      this.addListener(checkbox, 'change', (e) => {
-        const repoId = e.target.value;
-        if (e.target.checked) {
-          this.selectedRepositories.add(repoId);
-        } else {
-          this.selectedRepositories.delete(repoId);
-        }
-        // Update match count with new repository selection
-        this.updateMatchCount();
+    
+    // Search/Create Workspace button
+    if (searchBtn) {
+      this.addListener(searchBtn, 'click', () => {
+        this.createWorkspaceFromSearch();
       });
-    });
+    }
+    
+    // Filters toggle button
+    const filtersToggle = document.getElementById('filters-toggle');
+    const filtersPanel = document.getElementById('filters-panel');
+    if (filtersToggle && filtersPanel) {
+      this.addListener(filtersToggle, 'click', () => {
+        this.filtersExpanded = !this.filtersExpanded;
+        filtersToggle.classList.toggle('expanded', this.filtersExpanded);
+        filtersPanel.classList.toggle('expanded', this.filtersExpanded);
+        
+        // Initialize ScopeSelector when first expanded
+        if (this.filtersExpanded && !this.scopeSelector) {
+          this.initScopeSelector();
+        }
+        
+        // Update the selected filters display when collapsing
+        this.updateSelectedFiltersDisplay();
+      });
+    }
+
+    // Repository dropdown handlers
+    const repoDropdownToggle = document.getElementById('repo-dropdown-toggle');
+    const repoDropdownPopover = document.getElementById('repo-dropdown-popover');
+    
+    if (repoDropdownToggle && repoDropdownPopover) {
+      // Toggle dropdown
+      this.addListener(repoDropdownToggle, 'click', (e) => {
+        e.stopPropagation();
+        repoDropdownPopover.classList.toggle('open');
+      });
+      
+      // Close dropdown when clicking outside
+      this.addListener(document, 'click', (e) => {
+        if (!e.target.closest('.repo-dropdown-wrapper')) {
+          repoDropdownPopover.classList.remove('open');
+        }
+      });
+      
+      // Select All checkbox
+      const selectAllCheckbox = document.getElementById('repo-select-all');
+      if (selectAllCheckbox) {
+        this.addListener(selectAllCheckbox, 'change', (e) => {
+          const repositories = DataService.getRepositories();
+          if (e.target.checked) {
+            // Select all
+            this.selectedRepositories = new Set(repositories.map(r => r.id));
+          } else {
+            // Deselect all
+            this.selectedRepositories = new Set();
+          }
+          // Update individual checkboxes
+          const repoCheckboxes = repoDropdownPopover.querySelectorAll('input[name="repo-option"]');
+          repoCheckboxes.forEach(cb => {
+            cb.checked = e.target.checked;
+          });
+          this.updateRepositoryButtonLabel();
+          this.updateMatchCount();
+        });
+      }
+      
+      // Individual repository checkboxes
+      const repoCheckboxes = repoDropdownPopover.querySelectorAll('input[name="repo-option"]');
+      repoCheckboxes.forEach(checkbox => {
+        this.addListener(checkbox, 'change', (e) => {
+          const repoId = e.target.value;
+          if (e.target.checked) {
+            this.selectedRepositories.add(repoId);
+          } else {
+            this.selectedRepositories.delete(repoId);
+          }
+          // Update "Select All" checkbox state
+          const repositories = DataService.getRepositories();
+          if (selectAllCheckbox) {
+            selectAllCheckbox.checked = this.selectedRepositories.size === repositories.length;
+            selectAllCheckbox.indeterminate = this.selectedRepositories.size > 0 && 
+                                               this.selectedRepositories.size < repositories.length;
+          }
+          this.updateRepositoryButtonLabel();
+          this.updateMatchCount();
+        });
+      });
+    }
     
     // Clear time range button
     const clearTimeBtn = document.getElementById('clear-time-range');
@@ -298,8 +782,11 @@ export class SearchView extends BaseView {
   updateMatchCount() {
     const query = this.searchQuery.trim();
     const countContainer = document.getElementById('match-count');
+    const hasQuery = query.length >= 2;
+    const scope = this.scopeSelector?.getScope();
+    const hasScope = this.hasAnyScope(scope);
     
-    if (query.length < 2) {
+    if (!hasQuery && !hasScope) {
       this.matchCount = 0;
       if (countContainer) {
         countContainer.classList.add('hidden');
@@ -307,9 +794,10 @@ export class SearchView extends BaseView {
       return;
     }
 
-    const results = DataService.search(query, {
+    const results = DataService.search(hasQuery ? query : '', {
       repositoryIds: this.getSelectedRepositoryIds(),
-      timeRange: this.timeRange
+      timeRange: this.timeRange,
+      scope: hasScope ? scope : null
     });
     this.matchCount = results.documents.length;
     
@@ -324,18 +812,43 @@ export class SearchView extends BaseView {
    */
   createWorkspaceFromSearch() {
     const query = this.searchQuery.trim();
-    if (query.length < 2) return;
+    const hasQuery = query.length >= 2;
+    const scope = this.scopeSelector?.getScope();
+    const hasScope = this.hasAnyScope(scope);
+    
+    // Need either a query or scope to create workspace
+    if (!hasQuery && !hasScope) return;
 
     const repositoryIds = this.getSelectedRepositoryIds();
-    const results = DataService.search(query, { repositoryIds, timeRange: this.timeRange });
+    const results = DataService.search(hasQuery ? query : '', { 
+      repositoryIds, 
+      timeRange: this.timeRange,
+      scope: hasScope ? scope : null
+    });
     const documentIds = results.documents.map(d => d.id);
 
-    // Build description including filter info
+    // Build workspace name and description
     const repositories = DataService.getRepositories();
     const selectedRepos = repositories.filter(r => repositoryIds.includes(r.id));
     const repoNames = selectedRepos.map(r => r.code).join(', ');
     
-    let description = `Search results for "${query}"`;
+    let workspaceName;
+    let description;
+    
+    // Count items in scope for description
+    const scopeItemCount = hasScope ? this.getScopeItemCount(scope) : 0;
+    
+    if (hasScope && hasQuery) {
+      workspaceName = query;
+      description = `Search "${query}" with ${scopeItemCount} filter item${scopeItemCount !== 1 ? 's' : ''}`;
+    } else if (hasScope) {
+      workspaceName = `Filtered Search (${scopeItemCount} items)`;
+      description = `Documents matching ${scopeItemCount} filter item${scopeItemCount !== 1 ? 's' : ''}`;
+    } else {
+      workspaceName = query;
+      description = `Search results for "${query}"`;
+    }
+    
     if (repositoryIds.length !== repositories.length) {
       description += ` in ${repoNames}`;
     }
@@ -345,16 +858,33 @@ export class SearchView extends BaseView {
 
     // Create the workspace (even if no documents match)
     const workspaceId = dataStore.createWorkspace({
-      name: query,
-      query: query,
+      name: workspaceName,
+      query: hasQuery ? query : null,
       description: description,
       documentIds: documentIds,
-      filters: { repositoryIds, timeRange: this.timeRange },
+      filters: { 
+        repositoryIds, 
+        timeRange: this.timeRange,
+        scope: hasScope ? scope : null
+      },
       status: 'active'
     });
 
     // Navigate to the new workspace
     window.location.hash = `#/workspace/${workspaceId}`;
+  }
+
+  /**
+   * Get the count of items in a scope
+   */
+  getScopeItemCount(scope) {
+    if (!scope) return 0;
+    return (scope.personIds?.length || 0) +
+           (scope.organizationIds?.length || 0) +
+           (scope.factionIds?.length || 0) +
+           (scope.locationIds?.length || 0) +
+           (scope.eventIds?.length || 0) +
+           (scope.keywords?.length || 0);
   }
 
   /**
@@ -371,11 +901,8 @@ export class SearchView extends BaseView {
     }
     
     this.updateClearButton();
-    
-    const countContainer = document.getElementById('match-count');
-    if (countContainer) {
-      countContainer.classList.add('hidden');
-    }
+    this.updateSearchUI();
+    this.updateMatchCount();
   }
 
   /**
@@ -392,6 +919,10 @@ export class SearchView extends BaseView {
    * Clean up resources when view is destroyed
    */
   destroy() {
+    if (this.scopeSelector) {
+      this.scopeSelector.destroy();
+      this.scopeSelector = null;
+    }
     if (this.timeRangeFilter) {
       this.timeRangeFilter.destroy();
       this.timeRangeFilter = null;

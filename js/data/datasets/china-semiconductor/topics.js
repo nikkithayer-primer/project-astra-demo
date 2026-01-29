@@ -14,6 +14,7 @@ export const topics = [
       'The achievement has raised questions among US policymakers about the effectiveness of export controls designed to limit China\'s advanced semiconductor capabilities.'
     ],
     documentIds: ['doc-001', 'doc-002', 'doc-003', 'doc-004', 'doc-023', 'doc-024', 'doc-025', 'doc-029', 'doc-031'],
+    tagIds: ['tag-002'],
     startDate: '2026-01-14',
     endDate: null,
     volumeOverTime: [
@@ -38,6 +39,7 @@ export const topics = [
       'Chinese Foreign Ministry officials condemned the expanded restrictions as "technological hegemony" and warned of countermeasures against Dutch economic interests.'
     ],
     documentIds: ['doc-005', 'doc-006', 'doc-007', 'doc-008', 'doc-026', 'doc-027', 'doc-028', 'doc-032'],
+    tagIds: ['tag-003'],
     startDate: '2026-01-12',
     endDate: null,
     volumeOverTime: [
@@ -82,6 +84,7 @@ export const topics = [
       'Huawei has issued a statement denying any violations of sanctions regimes and dismissing the reports as "speculation without factual basis."'
     ],
     documentIds: ['doc-012', 'doc-013', 'doc-014', 'doc-032'],
+    tagIds: ['tag-001'],
     startDate: '2026-01-15',
     endDate: null,
     volumeOverTime: [
@@ -145,6 +148,7 @@ export const topics = [
       'Chinese state media outlets have extensively covered the delays and labor disputes, amplifying narratives about the decline of American manufacturing capabilities.'
     ],
     documentIds: ['doc-020', 'doc-021', 'doc-022', 'doc-030', 'doc-035'],
+    tagIds: ['tag-002'],
     startDate: '2026-01-14',
     endDate: null,
     volumeOverTime: [
@@ -168,6 +172,7 @@ export const topics = [
       'AMD and other competitors are racing to challenge Nvidia\'s dominance in the AI chip market, introducing competing products targeting the same data center workloads.'
     ],
     documentIds: ['doc-036', 'doc-037', 'doc-043', 'doc-053', 'doc-057'],
+    tagIds: ['tag-003'],
     startDate: '2025-06-20',
     endDate: null,
     volumeOverTime: [

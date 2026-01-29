@@ -7,6 +7,7 @@ export const topics = [
     id: 'topic-001',
     headline: 'Self-Checkout Detentions Spark Viral Outrage and Class-Action Lawsuit',
     description: 'Walmart is facing significant backlash after viral videos showed customers being detained at self-checkout despite having valid receipts, prompting a class-action lawsuit representing hundreds of plaintiffs and forcing the company to announce plans for additional staffed checkout lanes.',
+    tagIds: ['tag-002'],
     bulletPoints: [
       'A viral TikTok video showing a customer being detained and searched at Walmart self-checkout has garnered over 8 million views and sparked widespread criticism of store policies.',
       'A class-action lawsuit has been filed in Texas federal court representing more than 500 plaintiffs who claim they were wrongfully detained or accused of theft at self-checkout stations.',
@@ -53,6 +54,7 @@ export const topics = [
     id: 'topic-003',
     headline: 'Walmart Workers Share Understaffing Struggles on Social Media',
     description: 'Walmart employees are increasingly using social media to share stories of severe understaffing, with viral TikTok videos and a coordinated union campaign bringing national attention to working conditions at the retail giant.',
+    tagIds: ['tag-002'],
     bulletPoints: [
       'A TikTok video from a Walmart employee describing being forced to work alone across three departments simultaneously has gone viral with 5.2 million views.',
       'The hashtag #WalmartWorkers has accumulated over 50 million views on TikTok as employees share their experiences with understaffing and difficult working conditions.',
@@ -76,6 +78,7 @@ export const topics = [
     id: 'topic-004',
     headline: 'FDA Expands Great Value Recall to 15 Products After Hospitalizations',
     description: 'The FDA has significantly expanded a recall of Walmart\'s Great Value brand products after Listeria contamination led to multiple hospitalizations, raising concerns about quality control in the company\'s private-label food supply chain.',
+    tagIds: ['tag-001'],
     bulletPoints: [
       'An initial Listeria contamination recall affecting five Great Value products has been expanded to cover 15 SKUs as testing revealed wider contamination.',
       'Three people have been hospitalized with Listeria infections that have been definitively linked to consumption of the contaminated Great Value products.',
@@ -161,6 +164,7 @@ export const topics = [
     id: 'topic-008',
     headline: 'FTC Investigates Walmart Supply Chain Practices',
     description: 'The Federal Trade Commission has opened a formal inquiry into Walmart\'s supply chain practices after investigative reporting revealed labor violations at factories producing Great Value products, prompting demands for greater supply chain transparency.',
+    tagIds: ['tag-002'],
     bulletPoints: [
       'Investigative reporting has revealed significant labor violations at supplier factories manufacturing Great Value private-label products for Walmart.',
       'Workers at supplier facilities describe unsafe working conditions and excessive pressure to meet production quotas that Walmart\'s purchasing practices allegedly create.',
@@ -182,6 +186,7 @@ export const topics = [
     id: 'topic-009',
     headline: 'Walmart Fulfillment Workers Push for Unionization',
     description: 'Workers at Walmart fulfillment centers have achieved a historic unionization victory after months of organizing, with a facility in Atlanta becoming the first Walmart location to successfully vote for union representation.',
+    tagIds: ['tag-003'],
     bulletPoints: [
       'Workers at a Dallas fulfillment facility filed for a union election in July 2025, citing concerns about working conditions, wages, and management treatment.',
       'While the Texas vote ultimately failed, organizing efforts at an Atlanta fulfillment center continued and gained momentum throughout the fall.',
@@ -204,6 +209,7 @@ export const topics = [
     id: 'topic-010',
     headline: 'Holiday Delivery Failures Damage Walmart Reputation',
     description: 'Walmart\'s delivery system was overwhelmed during the holiday shopping season, resulting in thousands of delayed or missing orders that damaged the company\'s reputation and prompted an FTC complaint and a major infrastructure investment commitment.',
+    tagIds: ['tag-002'],
     bulletPoints: [
       'Black Friday demand overwhelmed Walmart\'s delivery system, causing widespread failures that affected customers across the country.',
       'Thousands of customers reported delayed or completely missing orders, with many holiday gifts failing to arrive before Christmas despite guaranteed delivery dates.',

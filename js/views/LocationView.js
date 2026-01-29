@@ -7,6 +7,8 @@ import { BaseView } from './BaseView.js';
 import { DataService } from '../data/DataService.js';
 import { PageHeader } from '../utils/PageHeader.js';
 import { initAllCardToggles } from '../utils/cardWidthToggle.js';
+import { TagChips } from '../components/TagChips.js';
+import { getTagPicker } from '../components/TagPickerModal.js';
 import {
   CardManager,
   NetworkGraphCard,
@@ -72,6 +74,7 @@ export class LocationView extends BaseView {
       descriptionLink: location.description 
         ? `<a href="#" class="btn btn-small btn-secondary source-link" data-source-type="location" data-source-id="${location.id}">View source</a>` 
         : '',
+      tagsContainerId: 'location-tags-container',
       tabs: tabsConfig,
       activeTab: activeTab
     });
@@ -96,6 +99,30 @@ export class LocationView extends BaseView {
     // Initialize all card components
     const components = this.cardManager.initializeAll();
     Object.assign(this.components, components);
+
+    // Initialize tag chips
+    this.initTagChips(location);
+  }
+
+  /**
+   * Initialize tag chips component
+   */
+  initTagChips(location) {
+    const tagsContainer = this.container.querySelector('#location-tags-container');
+    if (tagsContainer) {
+      this.tagChips = new TagChips({
+        entityType: 'location',
+        entityId: location.id,
+        editable: true,
+        onAddClick: () => {
+          const picker = getTagPicker();
+          picker.open('location', location.id, () => {
+            this.tagChips.refresh();
+          });
+        }
+      });
+      this.tagChips.render(tagsContainer);
+    }
   }
 
   /**

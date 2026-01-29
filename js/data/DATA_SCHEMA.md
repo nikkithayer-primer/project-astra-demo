@@ -54,6 +54,7 @@ Each entity type uses a specific ID prefix. IDs are generated as `{prefix}-{time
 | Publisher | `pub-` | `pub-facebook`, `pub-nat-cnn` |
 | User | `user-` | `user-001` |
 | Alert | `alert-` | `alert-001` |
+| Tag | `tag-` | `tag-1706234567890-abc123def` |
 
 ---
 
@@ -84,8 +85,8 @@ Disinformation or propaganda narrative being tracked. Faction engagement data is
   missionId: string,       // Required. FK to Mission
   text: string,            // Required. Short title identifying the narrative
   description: string,     // Optional. Detailed description
-  status: enum,            // Optional. 'new' | 'in_progress' | 'under_investigation' | 'resolved'
   sentiment: number,       // Optional. -1.0 to 1.0 (editorial/manual assessment)
+  tagIds: string[],        // Optional. FKs to Tag
   themeIds: string[],      // Auto-managed. FKs to Theme
   personIds: string[],         // Optional. FKs to Person
   organizationIds: string[],   // Optional. FKs to Organization
@@ -532,6 +533,28 @@ Reusable entity/keyword selections that can be applied across monitors and other
 ```
 
 **Usage:** SearchFilters are created from the ScopeSelector component and can be applied to monitors or other scope-based features. When applied, the filter's entities and keywords are merged into the current selection.
+
+### Tag
+
+User-defined labels for organizing and filtering entities. Tags can be applied to any entity type.
+
+```javascript
+{
+  id: string,              // Required. Prefix: 'tag-'
+  name: string,            // Required. Tag display name
+  color: string,           // Optional. Hex color for UI (auto-generated if not provided)
+  description: string,     // Optional. Tag description
+  createdAt: datetime,
+  updatedAt: datetime
+}
+```
+
+**Taggable entities:** Narratives, Themes, Factions, Locations, Events, Persons, Organizations, Documents, Topics, Monitors. Each taggable entity has an optional `tagIds: string[]` field containing FKs to Tags.
+
+**Usage:**
+- Tags are managed via the Tags list view (`#/tags`)
+- Tags can be added/removed from entities via the tag picker modal
+- View all entities with a specific tag via `#/tag/{tagId}`
 
 ---
 

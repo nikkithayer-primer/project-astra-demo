@@ -9,6 +9,8 @@ import { DataService } from '../data/DataService.js';
 import { PageHeader } from '../utils/PageHeader.js';
 import { initAllCardToggles } from '../utils/cardWidthToggle.js';
 import { aggregatePublisherVolumeData, aggregateFactionVolumeData } from '../utils/volumeDataUtils.js';
+import { TagChips } from '../components/TagChips.js';
+import { getTagPicker } from '../components/TagPickerModal.js';
 import {
   CardManager,
   NetworkGraphCard,
@@ -90,6 +92,30 @@ export class EntityDetailView extends BaseView {
     // Initialize all card components
     const components = this.cardManager.initializeAll();
     Object.assign(this.components, components);
+
+    // Initialize tag chips
+    this.initTagChips(entity);
+  }
+
+  /**
+   * Initialize tag chips component
+   */
+  initTagChips(entity) {
+    const tagsContainer = this.container.querySelector('#entity-tags-container');
+    if (tagsContainer) {
+      this.tagChips = new TagChips({
+        entityType: this.entityType,
+        entityId: entity.id,
+        editable: true,
+        onAddClick: () => {
+          const picker = getTagPicker();
+          picker.open(this.entityType, entity.id, () => {
+            this.tagChips.refresh();
+          });
+        }
+      });
+      this.tagChips.render(tagsContainer);
+    }
   }
 
   /**
@@ -380,6 +406,7 @@ export class EntityDetailView extends BaseView {
       descriptionLink: entity.description 
         ? `<a href="#" class="btn btn-small btn-secondary source-link" data-source-type="${this.entityType}" data-source-id="${entity.id}">View source</a>` 
         : '',
+      tagsContainerId: 'entity-tags-container',
       tabs: tabsConfig,
       activeTab: activeTab
     });

@@ -65,7 +65,7 @@
   width: 4px;
   height: 20px;
   background: var(--accent-primary);
-  border-radius: 2px;
+  border-radius: var(--radius-xs);
 }
 
 /* ============================================
@@ -138,7 +138,7 @@
 
 .doc-page ::-webkit-scrollbar-thumb {
   background: var(--border-color);
-  border-radius: 4px;
+  border-radius: var(--radius-md);
 }
 
 .doc-page ::-webkit-scrollbar-thumb:hover {
@@ -165,7 +165,7 @@
   padding: var(--space-sm) var(--space-md);
   background: var(--bg-secondary);
   border: 1px solid var(--border-color);
-  border-radius: 20px;
+  border-radius: var(--radius-full);
   color: var(--text-secondary);
   text-decoration: none;
   font-size: var(--text-sm);
@@ -297,7 +297,7 @@
   font-size: 11px;
   padding: 2px 6px;
   background: var(--bg-tertiary);
-  border-radius: 3px;
+  border-radius: var(--radius-sm);
   color: var(--text-secondary);
   margin-bottom: 4px;
 }
@@ -324,7 +324,7 @@
   font-family: var(--font-mono);
   background: var(--bg-tertiary);
   padding: 1px 4px;
-  border-radius: 2px;
+  border-radius: var(--radius-xs);
   margin-right: 4px;
 }
 
@@ -371,7 +371,7 @@
   align-items: center;
   gap: var(--space-sm);
   padding: 4px 10px;
-  border-radius: 4px;
+  border-radius: var(--radius-md);
   font-size: var(--text-xs);
   font-weight: 500;
 }

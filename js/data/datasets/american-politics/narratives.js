@@ -8,9 +8,9 @@ export const narratives = [
     text: 'New studies link common food preservatives to 32% increased cancer risk',
     description: 'A wave of 2026 research has identified alarming associations between specific food preservatives and cancer. The NutriNet-Santé study found sodium nitrite—common in deli meats and processed foods—linked to a 32% increase in prostate cancer risk, while potassium nitrate is associated with 22% higher breast cancer risk. Harvard researchers reported high ultra-processed food consumption correlates with 45% higher risk of precancerous colorectal adenomas. A separate NIH-AARP study found participants with highest UPF intake had 41% higher lung cancer risk regardless of smoking status. Health experts are calling for stricter regulation of food additives and recommending consumers prioritize minimally processed, plant-based foods.',
     missionId: 'mission-002',
-    status: 'in_progress',
     sentiment: -0.58,
     themeIds: ['sub-006', 'sub-007'],
+    tagIds: ['tag-003'],
     factionMentions: {
       'faction-005': { volume: 450, sentiment: -0.68 },
       'faction-006': { volume: 180, sentiment: -0.42 }
@@ -52,9 +52,9 @@ export const narratives = [
     text: 'Trump\'s Greenland acquisition threats are straining US-European relations',
     description: 'A developing geopolitical narrative centered on President Trump\'s renewed threats to acquire Greenland, which has triggered sharp criticism from European leaders at the World Economic Forum in Davos. French President Macron warned of a world where "international law is trampled under foot," while European Commission President von der Leyen called for "a new form of European independence" in response to these "geopolitical shocks." The situation escalated when Trump shared private diplomatic messages on social media, including a message from Macron questioning the Greenland policy.',
     missionId: 'mission-003',
-    status: 'in_progress',
     sentiment: -0.52,
     themeIds: ['sub-009', 'sub-010', 'sub-011'],
+    tagIds: ['tag-002'],
     factionMentions: {
       'faction-001': { volume: 180, sentiment: 0.62 },
       'faction-002': { volume: 120, sentiment: -0.74 }
@@ -88,9 +88,9 @@ export const narratives = [
     text: 'DOJ escalates conflict with Minnesota over immigration enforcement',
     description: 'The Trump administration\'s Department of Justice is engaged in an intensifying confrontation with Minnesota state and local officials over immigration enforcement. DOJ plans to subpoena Minnesota Attorney General Keith Ellison, the governor, and Minneapolis mayor regarding alleged obstruction of federal officers during anti-ICE protests. The conflict deepened after DOJ appealed a judge\'s ruling restricting federal agents from arresting peaceful protesters or conducting warrantless car stops. Critics have denounced DOJ\'s handling of the fatal shooting of protester Renee Good by an ICE agent, noting that the FBI\'s civil rights investigation pivoted from the agent to investigating Good and her widow.',
     missionId: 'mission-003',
-    status: 'under_investigation',
     sentiment: -0.68,
     themeIds: ['sub-012', 'sub-013', 'sub-014', 'sub-015'],
+    tagIds: ['tag-001'],
     factionMentions: {
       'faction-001': { volume: 160, sentiment: 0.72 },
       'faction-002': { volume: 140, sentiment: -0.81 },
@@ -135,9 +135,9 @@ export const narratives = [
     text: 'Indiana judge and wife shot at home sparks concerns over judicial safety',
     description: 'Tippecanoe Superior Court Judge Steven Meyer and his wife Kimberly were shot at their Lafayette, Indiana home on Sunday afternoon. Both are in stable condition with arm and hip injuries respectively. The suspect remains at large as local, state, and federal agencies conduct an active investigation. The attack has prompted Indiana Supreme Court Chief Justice Loretta H. Rush to urge all state judges to "remain vigilant" about their security, highlighting broader concerns about violence targeting the judiciary.',
     missionId: 'mission-003',
-    status: 'under_investigation',
     sentiment: -0.72,
     themeIds: ['sub-016', 'sub-017'],
+    tagIds: ['tag-001'],
     factionMentions: {
       'faction-001': { volume: 45, sentiment: -0.35 },
       'faction-002': { volume: 38, sentiment: -0.68 },
@@ -174,9 +174,9 @@ export const narratives = [
     text: 'Church protest targeting ICE pastor becomes flashpoint in Minnesota immigration battle',
     description: 'Anti-ICE protesters disrupted Sunday service at Cities Church in St. Paul, targeting David Easterwood, an ICE official who serves as a pastor there. The DOJ announced a FACE Act investigation within hours, with AG Pam Bondi declaring "attacks against law enforcement and intimidation of Christians" will be met with "full force of federal law." Assistant AG Harmeet Dhillon threatened charges against journalist Don Lemon who was present covering the protest. Trump called protesters "agitators and insurrectionists" who are "highly trained." Protest organizer Nekima Levy Armstrong defended the action, questioning how anyone "who claims to be Christian could condone" Easterwood\'s dual role. The incident highlights tensions between protecting religious spaces and protesting immigration enforcement, coming amid Operation Metro Surge which brought thousands of federal agents to Minnesota.',
     missionId: 'mission-003',
-    status: 'in_progress',
     sentiment: -0.58,
     themeIds: ['sub-018', 'sub-019', 'sub-020', 'sub-021'],
+    tagIds: ['tag-002'],
     factionMentions: {
       'faction-001': { volume: 280, sentiment: 0.68 },
       'faction-002': { volume: 195, sentiment: -0.72 },
@@ -219,9 +219,9 @@ export const narratives = [
     text: 'Trump administration wins legal battles to expand immigration enforcement powers',
     description: 'The Trump administration secured multiple legal victories on Monday. A federal judge in Washington DC ruled that DHS can require lawmakers to provide a week\'s notice before inspecting immigration facilities, despite blocking an identical policy last month, because DHS claimed different funding sources. DOJ lawyers called Minnesota\'s lawsuit seeking to end the "federal invasion" an "absurdity" that would "render the supremacy of federal law an afterthought." The DOJ also appealed an injunction curbing aggressive ICE tactics against protesters. Meanwhile, DHS Secretary Kristi Noem backtracked on denials that federal agents used pepper spray, now claiming it was necessary to "establish law and order."',
     missionId: 'mission-003',
-    status: 'new',
     sentiment: -0.48,
     themeIds: ['sub-022', 'sub-023', 'sub-024'],
+    tagIds: ['tag-003'],
     factionMentions: {
       'faction-001': { volume: 145, sentiment: 0.72 },
       'faction-002': { volume: 165, sentiment: -0.78 },
@@ -261,9 +261,9 @@ export const narratives = [
     text: 'RFK Jr\'s meat-heavy dietary guidelines face backlash over environmental and health impacts',
     description: 'The Trump administration\'s new dietary guidelines, championed by Health Secretary Robert F. Kennedy Jr., urge Americans to nearly double protein consumption through meat and dairy, featuring an inverted food pyramid emphasizing steak, poultry, and whole milk. Kennedy declared "we are ending the war on saturated fats." Critics warn the guidelines would devastate the environment—the World Resources Institute estimates a 25% increase in meat consumption would require 100 million additional acres of farmland (an area the size of California) and add hundreds of millions of tons of emissions. The guidelines contradict Kennedy\'s own past statements calling the factory meat industry a bigger threat than Osama bin Laden. HHS dismissed criticism as "radical dogma of the Green New Scam."',
     missionId: 'mission-002',
-    status: 'new',
     sentiment: -0.55,
     themeIds: ['sub-025', 'sub-026', 'sub-027'],
+    tagIds: ['tag-002'],
     factionMentions: {
       'faction-001': { volume: 125, sentiment: 0.58 },
       'faction-005': { volume: 195, sentiment: -0.78 },
@@ -303,9 +303,9 @@ export const narratives = [
     text: '2024 Election certification challenges and Capitol security concerns',
     description: 'As the January 2025 electoral certification approaches, concerns mount about potential challenges and security threats. The Supreme Court has agreed to expedite election-related cases, while Capitol Police expand security perimeters. FBI leadership transitions add to political tensions, with both parties positioning themselves for the certification process. Security preparations have intensified following the events of January 6, 2021.',
     missionId: 'mission-003',
-    status: 'in_progress',
     sentiment: -0.35,
     themeIds: ['sub-028', 'sub-029', 'sub-030'],
+    tagIds: ['tag-003'],
     factionMentions: {
       'faction-001': { volume: 285, sentiment: 0.48 },
       'faction-002': { volume: 245, sentiment: -0.55 },
@@ -343,9 +343,9 @@ export const narratives = [
     text: 'Federal budget showdown threatens government shutdown',
     description: 'A contentious federal budget battle over border security funding leads to an 18-day government shutdown in October 2025. House Republicans, led by Speaker Mike Johnson, pass a border-focused spending bill that Senate Democrats block. The shutdown furloughs hundreds of thousands of federal workers before a compromise is reached. The episode highlights deepening partisan divisions over fiscal priorities.',
     missionId: 'mission-003',
-    status: 'resolved',
     sentiment: -0.48,
     themeIds: ['sub-031', 'sub-032'],
+    tagIds: ['tag-003'],
     factionMentions: {
       'faction-001': { volume: 225, sentiment: -0.42 },
       'faction-002': { volume: 195, sentiment: -0.55 }
@@ -381,9 +381,9 @@ export const narratives = [
     text: 'Opioid settlement funds distribution sparks controversy',
     description: 'The distribution of billions in opioid lawsuit settlement funds begins in mid-2025, but disputes quickly emerge over allocation formulas. States hardest hit by the opioid crisis argue they deserve larger shares, while the DEA and HHS work to establish treatment and prevention programs. Legal challenges to the distribution formula reach the Supreme Court, adding uncertainty to communities awaiting relief.',
     missionId: 'mission-002',
-    status: 'in_progress',
     sentiment: -0.32,
     themeIds: ['sub-033', 'sub-034'],
+    tagIds: ['tag-001'],
     factionMentions: {
       'faction-005': { volume: 165, sentiment: -0.45 },
       'faction-006': { volume: 95, sentiment: -0.35 }
@@ -416,9 +416,9 @@ export const narratives = [
     text: 'Border state governors form coalition on immigration policy',
     description: 'Republican governors from Texas, Florida, and other border states form a coalition to coordinate immigration enforcement independent of federal policy. Texas Governor Greg Abbott deploys thousands of National Guard troops to the border, while Florida Governor Ron DeSantis signs aggressive border security legislation. California Governor Gavin Newsom responds with a federal lawsuit. The DOJ opens investigations into state border actions, escalating federal-state tensions.',
     missionId: 'mission-003',
-    status: 'in_progress',
     sentiment: -0.45,
     themeIds: ['sub-035', 'sub-036', 'sub-037'],
+    tagIds: ['tag-002'],
     factionMentions: {
       'faction-001': { volume: 345, sentiment: 0.65 },
       'faction-002': { volume: 285, sentiment: -0.72 },

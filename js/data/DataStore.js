@@ -780,6 +780,69 @@ class DataStore {
     return this.deleteEntity('searchFilters', id);
   }
 
+  // ============================================
+  // Tag CRUD
+  // ============================================
+
+  createTag(tag) {
+    return this.createEntity('tags', 'tag', {
+      name: tag.name,
+      color: tag.color || this.generateColor(),
+      description: tag.description || ''
+    });
+  }
+
+  updateTag(id, updates) {
+    return this.updateEntity('tags', id, updates);
+  }
+
+  deleteTag(id) {
+    return this.deleteEntity('tags', id, () => {
+      // Remove tag from all entity types that can have tags
+      const collectionsWithTags = [
+        'narratives', 'themes', 'factions', 'locations', 'events',
+        'persons', 'organizations', 'documents', 'topics', 'monitors'
+      ];
+      collectionsWithTags.forEach(collection => {
+        this.removeIdFromArrayField(collection, 'tagIds', id);
+      });
+    });
+  }
+
+  /**
+   * Add a tag to an entity
+   * @param {string} collection - Collection name (e.g., 'narratives', 'persons')
+   * @param {string} entityId - The entity ID
+   * @param {string} tagId - The tag ID to add
+   * @returns {boolean} Whether the operation succeeded
+   */
+  addTagToEntity(collection, entityId, tagId) {
+    const entity = this.findEntity(collection, entityId);
+    if (!entity) return false;
+    
+    const tagIds = entity.tagIds || [];
+    if (!tagIds.includes(tagId)) {
+      tagIds.push(tagId);
+      return this.updateEntity(collection, entityId, { tagIds });
+    }
+    return true; // Already has tag
+  }
+
+  /**
+   * Remove a tag from an entity
+   * @param {string} collection - Collection name
+   * @param {string} entityId - The entity ID
+   * @param {string} tagId - The tag ID to remove
+   * @returns {boolean} Whether the operation succeeded
+   */
+  removeTagFromEntity(collection, entityId, tagId) {
+    const entity = this.findEntity(collection, entityId);
+    if (!entity) return false;
+    
+    const tagIds = (entity.tagIds || []).filter(id => id !== tagId);
+    return this.updateEntity(collection, entityId, { tagIds });
+  }
+
   generateInitialTopicVolume() {
     const days = 7;
     const data = [];
@@ -944,7 +1007,8 @@ class DataStore {
       alerts: [],
       users: [],
       workspaces: [],
-      searchFilters: []
+      searchFilters: [],
+      tags: []
     };
   }
 }

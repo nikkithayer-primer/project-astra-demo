@@ -8,6 +8,8 @@ import { DataService } from '../data/DataService.js';
 import { PageHeader } from '../utils/PageHeader.js';
 import { initAllCardToggles } from '../utils/cardWidthToggle.js';
 import { aggregatePublisherVolumeData } from '../utils/volumeDataUtils.js';
+import { TagChips } from '../components/TagChips.js';
+import { getTagPicker } from '../components/TagPickerModal.js';
 import {
   CardManager,
   NetworkGraphCard,
@@ -73,6 +75,7 @@ export class ThemeView extends BaseView {
       descriptionLink: theme.description 
         ? `<a href="#" class="btn btn-small btn-secondary source-link" data-source-type="theme" data-source-id="${theme.id}">View source</a>` 
         : '',
+      tagsContainerId: 'theme-tags-container',
       tabs: tabsConfig,
       activeTab: activeTab
     });
@@ -106,6 +109,30 @@ export class ThemeView extends BaseView {
     // Initialize all card components
     const components = this.cardManager.initializeAll();
     Object.assign(this.components, components);
+
+    // Initialize tag chips
+    this.initTagChips(theme);
+  }
+
+  /**
+   * Initialize tag chips component
+   */
+  initTagChips(theme) {
+    const tagsContainer = this.container.querySelector('#theme-tags-container');
+    if (tagsContainer) {
+      this.tagChips = new TagChips({
+        entityType: 'theme',
+        entityId: theme.id,
+        editable: true,
+        onAddClick: () => {
+          const picker = getTagPicker();
+          picker.open('theme', theme.id, () => {
+            this.tagChips.refresh();
+          });
+        }
+      });
+      this.tagChips.render(tagsContainer);
+    }
   }
 
   /**

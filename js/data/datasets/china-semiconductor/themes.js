@@ -14,7 +14,8 @@ export const themes = [
     organizationIds: ['org-001'],
     locationIds: ['loc-001'],
     eventIds: ['event-001'],
-    documentIds: ['doc-001', 'doc-002', 'doc-003', 'doc-023', 'doc-031']
+    documentIds: ['doc-001', 'doc-002', 'doc-003', 'doc-023', 'doc-031'],
+    tagIds: ['tag-004']
   },
   {
     id: 'sub-002',
@@ -26,7 +27,8 @@ export const themes = [
     organizationIds: ['org-001', 'org-010'],
     locationIds: ['loc-001'],
     eventIds: ['event-002'],
-    documentIds: ['doc-025', 'doc-029', 'doc-031', 'doc-054']
+    documentIds: ['doc-025', 'doc-029', 'doc-031', 'doc-054'],
+    tagIds: ['tag-003']
   },
   {
     id: 'sub-003',
@@ -38,7 +40,8 @@ export const themes = [
     organizationIds: ['org-005', 'org-006'],
     locationIds: ['loc-004'],
     eventIds: [],
-    documentIds: ['doc-003', 'doc-004', 'doc-023', 'doc-024', 'doc-026', 'doc-027', 'doc-031']
+    documentIds: ['doc-003', 'doc-004', 'doc-023', 'doc-024', 'doc-026', 'doc-027', 'doc-031'],
+    tagIds: ['tag-002']
   },
   {
     id: 'sub-004',
@@ -50,7 +53,8 @@ export const themes = [
     organizationIds: ['org-002', 'org-004'],
     locationIds: ['loc-003', 'loc-004'],
     eventIds: ['event-003'],
-    documentIds: ['doc-005', 'doc-007', 'doc-032']
+    documentIds: ['doc-005', 'doc-007', 'doc-032'],
+    tagIds: ['tag-005']
   },
   {
     id: 'sub-005',
@@ -62,7 +66,8 @@ export const themes = [
     organizationIds: ['org-002'],
     locationIds: ['loc-003'],
     eventIds: ['event-004'],
-    documentIds: ['doc-006', 'doc-028', 'doc-032']
+    documentIds: ['doc-006', 'doc-028', 'doc-032'],
+    tagIds: ['tag-001']
   },
   {
     id: 'sub-006',
@@ -74,7 +79,8 @@ export const themes = [
     organizationIds: ['org-022'],
     locationIds: ['loc-002'],
     eventIds: ['event-005'],
-    documentIds: ['doc-032', 'doc-050']
+    documentIds: ['doc-032', 'doc-050'],
+    tagIds: ['tag-004']
   },
   {
     id: 'sub-007',
@@ -86,7 +92,8 @@ export const themes = [
     organizationIds: ['org-007', 'org-008'],
     locationIds: ['loc-002'],
     eventIds: ['event-006'],
-    documentIds: ['doc-009', 'doc-010', 'doc-033']
+    documentIds: ['doc-009', 'doc-010', 'doc-033'],
+    tagIds: ['tag-006']
   },
   {
     id: 'sub-008',
@@ -98,7 +105,8 @@ export const themes = [
     organizationIds: ['org-009'],
     locationIds: ['loc-006'],
     eventIds: ['event-007'],
-    documentIds: ['doc-009', 'doc-010', 'doc-033']
+    documentIds: ['doc-009', 'doc-010', 'doc-033'],
+    tagIds: ['tag-003']
   },
   {
     id: 'sub-009',
@@ -122,7 +130,8 @@ export const themes = [
     organizationIds: ['org-010'],
     locationIds: ['loc-001'],
     eventIds: ['event-008'],
-    documentIds: ['doc-012', 'doc-013', 'doc-032']
+    documentIds: ['doc-012', 'doc-013', 'doc-032'],
+    tagIds: ['tag-004']
   },
   {
     id: 'sub-011',
@@ -134,7 +143,8 @@ export const themes = [
     organizationIds: ['org-005', 'org-010'],
     locationIds: ['loc-004'],
     eventIds: ['event-009'],
-    documentIds: ['doc-013', 'doc-014', 'doc-032']
+    documentIds: ['doc-013', 'doc-014', 'doc-032'],
+    tagIds: ['tag-002']
   },
   {
     id: 'sub-012',
@@ -146,7 +156,8 @@ export const themes = [
     organizationIds: ['org-013', 'org-014'],
     locationIds: ['loc-007'],
     eventIds: ['event-010'],
-    documentIds: ['doc-015', 'doc-016', 'doc-034']
+    documentIds: ['doc-015', 'doc-016', 'doc-034'],
+    tagIds: ['tag-005']
   },
   {
     id: 'sub-013',
@@ -158,7 +169,8 @@ export const themes = [
     organizationIds: ['org-013', 'org-015'],
     locationIds: ['loc-004'],
     eventIds: ['event-011'],
-    documentIds: ['doc-016', 'doc-017', 'doc-034']
+    documentIds: ['doc-016', 'doc-017', 'doc-034'],
+    tagIds: ['tag-001']
   },
   {
     id: 'sub-014',
@@ -170,7 +182,8 @@ export const themes = [
     organizationIds: ['org-016', 'org-017'],
     locationIds: ['loc-002', 'loc-008'],
     eventIds: ['event-012'],
-    documentIds: ['doc-018', 'doc-019']
+    documentIds: ['doc-018', 'doc-019'],
+    tagIds: ['tag-005']
   },
   {
     id: 'sub-015',
@@ -194,7 +207,8 @@ export const themes = [
     organizationIds: ['org-020'],
     locationIds: ['loc-009'],
     eventIds: ['event-013'],
-    documentIds: ['doc-020', 'doc-021', 'doc-030', 'doc-035', 'doc-059']
+    documentIds: ['doc-020', 'doc-021', 'doc-030', 'doc-035', 'doc-059'],
+    tagIds: ['tag-006']
   },
   {
     id: 'sub-017',
@@ -206,7 +220,8 @@ export const themes = [
     organizationIds: ['org-020', 'org-021'],
     locationIds: ['loc-009'],
     eventIds: ['event-014'],
-    documentIds: ['doc-021', 'doc-022', 'doc-030', 'doc-035']
+    documentIds: ['doc-021', 'doc-022', 'doc-030', 'doc-035'],
+    tagIds: ['tag-002']
   },
   {
     id: 'sub-018',
@@ -218,7 +233,8 @@ export const themes = [
     organizationIds: ['org-027'],
     locationIds: ['loc-012'],
     eventIds: ['event-015', 'event-020'],
-    documentIds: ['doc-036', 'doc-037', 'doc-043']
+    documentIds: ['doc-036', 'doc-037', 'doc-043'],
+    tagIds: ['tag-004']
   },
   {
     id: 'sub-019',
@@ -230,7 +246,8 @@ export const themes = [
     organizationIds: ['org-027', 'org-005'],
     locationIds: ['loc-004'],
     eventIds: ['event-026'],
-    documentIds: ['doc-037', 'doc-053', 'doc-057']
+    documentIds: ['doc-037', 'doc-053', 'doc-057'],
+    tagIds: ['tag-003']
   },
   {
     id: 'sub-020',
@@ -242,7 +259,8 @@ export const themes = [
     organizationIds: ['org-014', 'org-029', 'org-032'],
     locationIds: ['loc-011'],
     eventIds: ['event-016', 'event-022'],
-    documentIds: ['doc-038', 'doc-039', 'doc-060']
+    documentIds: ['doc-038', 'doc-039', 'doc-060'],
+    tagIds: ['tag-006']
   },
   {
     id: 'sub-021',
@@ -266,7 +284,8 @@ export const themes = [
     organizationIds: ['org-030', 'org-009'],
     locationIds: ['loc-006'],
     eventIds: ['event-018', 'event-023'],
-    documentIds: ['doc-040', 'doc-041', 'doc-047']
+    documentIds: ['doc-040', 'doc-041', 'doc-047'],
+    tagIds: ['tag-004']
   },
   {
     id: 'sub-023',
@@ -278,7 +297,8 @@ export const themes = [
     organizationIds: ['org-005', 'org-006'],
     locationIds: ['loc-004'],
     eventIds: ['event-019'],
-    documentIds: ['doc-041', 'doc-042', 'doc-048', 'doc-058']
+    documentIds: ['doc-041', 'doc-042', 'doc-048', 'doc-058'],
+    tagIds: ['tag-001']
   },
   {
     id: 'sub-024',
@@ -290,7 +310,8 @@ export const themes = [
     organizationIds: ['org-028', 'org-029', 'org-020'],
     locationIds: ['loc-012', 'loc-011', 'loc-010'],
     eventIds: ['event-021', 'event-022'],
-    documentIds: ['doc-044', 'doc-045', 'doc-046', 'doc-052', 'doc-056', 'doc-059']
+    documentIds: ['doc-044', 'doc-045', 'doc-046', 'doc-052', 'doc-056', 'doc-059'],
+    tagIds: ['tag-005']
   },
   {
     id: 'sub-025',
@@ -302,6 +323,7 @@ export const themes = [
     organizationIds: ['org-031', 'org-027'],
     locationIds: ['loc-012'],
     eventIds: ['event-025'],
-    documentIds: ['doc-045', 'doc-051', 'doc-052']
+    documentIds: ['doc-045', 'doc-051', 'doc-052'],
+    tagIds: ['tag-003']
   }
 ];

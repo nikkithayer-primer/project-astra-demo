@@ -13,6 +13,7 @@ export const events = [
     locationId: 'loc-005',
     personIds: ['person-004', 'person-003'],
     organizationIds: ['org-009'],
+    tagIds: ['tag-004', 'tag-002'],
     documentIds: ['doc-001', 'doc-027']
   },
   {
@@ -57,6 +58,7 @@ export const events = [
     locationId: 'loc-002',
     personIds: ['person-007'],
     organizationIds: ['org-010'],
+    tagIds: ['tag-004', 'tag-001'],
     documentIds: ['doc-005', 'doc-026', 'doc-028']
   },
   {
@@ -91,6 +93,7 @@ export const events = [
     locationId: 'loc-002',
     personIds: ['person-008'],
     organizationIds: ['org-011'],
+    tagIds: ['tag-004', 'tag-001'],
     documentIds: ['doc-007', 'doc-026', 'doc-031']
   },
   {
@@ -113,6 +116,7 @@ export const events = [
     locationId: 'loc-007',
     personIds: ['person-009', 'person-010'],
     organizationIds: ['org-013', 'org-015'],
+    tagIds: ['tag-004', 'tag-001'],
     documentIds: ['doc-013', 'doc-029']
   },
   {
@@ -135,6 +139,7 @@ export const events = [
     locationId: 'loc-008',
     personIds: ['person-014', 'person-015', 'person-016'],
     organizationIds: ['org-016', 'org-011'],
+    tagIds: ['tag-004', 'tag-002'],
     documentIds: ['doc-008', 'doc-012', 'doc-024']
   },
   {
@@ -157,6 +162,7 @@ export const events = [
     locationId: 'loc-001',
     personIds: ['person-012', 'person-016'],
     organizationIds: ['org-010'],
+    tagIds: ['tag-004', 'tag-002'],
     documentIds: ['doc-010']
   },
   {
@@ -245,6 +251,7 @@ export const events = [
     locationId: 'loc-011',
     personIds: ['person-027'],
     organizationIds: ['org-024', 'org-029'],
+    tagIds: ['tag-005', 'tag-002'],
     documentIds: ['doc-032', 'doc-033']
   },
   {
@@ -300,6 +307,7 @@ export const events = [
     locationId: 'loc-004',
     personIds: ['person-032'],
     organizationIds: ['org-020'],
+    tagIds: ['tag-005', 'tag-003'],
     documentIds: ['doc-041']
   },
   {
@@ -322,6 +330,7 @@ export const events = [
     locationId: 'loc-001',
     personIds: ['person-032', 'person-033'],
     organizationIds: ['org-020'],
+    tagIds: ['tag-004', 'tag-003'],
     documentIds: ['doc-044']
   },
   {
@@ -355,6 +364,7 @@ export const events = [
     locationId: 'loc-009',
     personIds: ['person-031'],
     organizationIds: ['org-027'],
+    tagIds: ['tag-005', 'tag-002'],
     documentIds: ['doc-047']
   },
   {
@@ -366,6 +376,7 @@ export const events = [
     locationId: 'loc-001',
     personIds: ['person-036'],
     organizationIds: ['org-012'],
+    tagIds: ['tag-004', 'tag-003'],
     documentIds: ['doc-050']
   }
 ];

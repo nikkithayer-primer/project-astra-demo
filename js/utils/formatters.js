@@ -5,25 +5,6 @@
  */
 
 /**
- * Status labels mapping
- */
-export const STATUS_LABELS = {
-  'new': 'New',
-  'in_progress': 'In Progress',
-  'under_investigation': 'Investigating',
-  'resolved': 'Resolved'
-};
-
-/**
- * Format status for display
- * @param {string} status - Status key
- * @returns {string} Human-readable status label
- */
-export function formatStatus(status) {
-  return STATUS_LABELS[status] || status;
-}
-
-/**
  * Normalize sentiment value to -1 to 1 range
  * @param {number} sentiment
  * @returns {number} Value between -1 and 1
@@ -186,6 +167,27 @@ export function formatDateFull(date) {
  */
 export function getTimeFormatter(format = '%b %d') {
   return d3.timeFormat(format);
+}
+
+/**
+ * Format a status value for display
+ * @param {string} status - Status value (active, paused, archived, draft, etc.)
+ * @returns {string} Formatted status string
+ */
+export function formatStatus(status) {
+  if (!status) return 'Unknown';
+  
+  const statusMap = {
+    'active': 'Active',
+    'paused': 'Paused',
+    'archived': 'Archived',
+    'draft': 'Draft',
+    'pending': 'Pending',
+    'completed': 'Completed',
+    'inactive': 'Inactive'
+  };
+  
+  return statusMap[status.toLowerCase()] || status.charAt(0).toUpperCase() + status.slice(1);
 }
 
 /**

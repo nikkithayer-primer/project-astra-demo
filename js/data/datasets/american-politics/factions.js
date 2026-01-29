@@ -12,6 +12,7 @@ export const factions = [
     memberCount: 15000000,
     affiliatedPersonIds: ['person-003'],
     affiliatedOrganizationIds: ['org-005'],
+    tagIds: ['tag-002'],
     documentIds: ['doc-001', 'doc-002', 'doc-003', 'doc-004', 'doc-005', 'doc-006', 'doc-007', 'doc-008', 'doc-009', 'doc-010', 'doc-011', 'doc-012', 'doc-013', 'doc-014', 'doc-015', 'doc-016', 'doc-017', 'doc-018', 'doc-019', 'doc-020', 'doc-024', 'doc-025', 'doc-026', 'doc-027', 'doc-028', 'doc-032', 'doc-033', 'doc-034', 'doc-037', 'doc-038', 'doc-040', 'doc-041', 'doc-042', 'doc-043', 'doc-044', 'doc-045', 'doc-046', 'doc-047', 'doc-049', 'doc-050', 'doc-052', 'doc-054', 'doc-055', 'doc-056']
   },
   {
@@ -23,6 +24,7 @@ export const factions = [
     memberCount: 500000,
     affiliatedPersonIds: [],
     affiliatedOrganizationIds: ['org-006'],
+    tagIds: ['tag-003'],
     documentIds: ['doc-001', 'doc-002', 'doc-003', 'doc-004', 'doc-005', 'doc-006', 'doc-007', 'doc-008', 'doc-009', 'doc-010', 'doc-011', 'doc-012', 'doc-013', 'doc-014', 'doc-015', 'doc-016', 'doc-017', 'doc-024', 'doc-025', 'doc-026', 'doc-027', 'doc-031', 'doc-032', 'doc-033', 'doc-034', 'doc-037', 'doc-038', 'doc-040', 'doc-041', 'doc-042', 'doc-043', 'doc-044', 'doc-045', 'doc-046', 'doc-047', 'doc-049', 'doc-050', 'doc-052', 'doc-054', 'doc-055', 'doc-056']
   },
   {
@@ -34,6 +36,7 @@ export const factions = [
     memberCount: 8000000,
     affiliatedPersonIds: [],
     affiliatedOrganizationIds: [],
+    tagIds: ['tag-001'],
     documentIds: ['doc-005', 'doc-006', 'doc-007', 'doc-008', 'doc-009', 'doc-010', 'doc-011', 'doc-012', 'doc-015', 'doc-016', 'doc-017', 'doc-024', 'doc-025', 'doc-026', 'doc-031', 'doc-033', 'doc-049']
   },
   {
@@ -45,6 +48,7 @@ export const factions = [
     memberCount: 12000000,
     affiliatedPersonIds: [],
     affiliatedOrganizationIds: ['org-002'],
+    tagIds: ['tag-002'],
     documentIds: ['doc-005', 'doc-006', 'doc-007', 'doc-008', 'doc-009', 'doc-010', 'doc-011', 'doc-012', 'doc-013', 'doc-014', 'doc-015', 'doc-016', 'doc-017', 'doc-024', 'doc-025', 'doc-026', 'doc-028', 'doc-029', 'doc-047', 'doc-048', 'doc-051', 'doc-055']
   },
   {
@@ -56,6 +60,7 @@ export const factions = [
     memberCount: 5000000,
     affiliatedPersonIds: [],
     affiliatedOrganizationIds: [],
+    tagIds: ['tag-003'],
     documentIds: ['doc-018', 'doc-019', 'doc-020', 'doc-021', 'doc-022', 'doc-023', 'doc-030', 'doc-035', 'doc-036', 'doc-039', 'doc-053']
   },
   {
@@ -100,6 +105,7 @@ export const factions = [
     memberCount: 25000000,
     affiliatedPersonIds: ['person-003', 'person-027', 'person-028', 'person-032'],
     affiliatedOrganizationIds: ['org-024', 'org-029'],
+    tagIds: ['tag-002'],
     documentIds: []
   },
   {
@@ -111,6 +117,7 @@ export const factions = [
     memberCount: 18000000,
     affiliatedPersonIds: ['person-031', 'person-033', 'person-036'],
     affiliatedOrganizationIds: ['org-027', 'org-030'],
+    tagIds: ['tag-001'],
     documentIds: []
   },
   {

@@ -151,6 +151,15 @@
   margin-bottom: 0;
 }
 
+/* Tags in page header */
+.page-header-tags {
+  margin-top: var(--space-sm);
+}
+
+.page-header.scrolled .page-header-tags {
+  display: none;
+}
+
 .page-header h1 {
   font-size: var(--text-lg);
   font-weight: 600;

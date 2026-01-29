@@ -5,7 +5,7 @@
 
 import { dataStore } from './data/DataStore.js';
 import { DataService } from './data/DataService.js';
-import { getSearchFilterEditor } from './components/SearchFilterEditorModal.js';
+import { getMonitorEditor } from './components/MonitorEditorModal.js';
 import { mockData as americanPoliticsData, datasetId as americanPoliticsId, datasetName as americanPoliticsName } from './data/datasets/american-politics/index.js';
 import { mockData as chinaSemiconductorData, datasetId as chinaSemiconductorId, datasetName as chinaSemiconductorName } from './data/datasets/china-semiconductor/index.js';
 import { mockData as walmartBrandData, datasetId as walmartBrandId, datasetName as walmartBrandName } from './data/datasets/walmart-brand/index.js';
@@ -627,61 +627,36 @@ class App {
 
     const filters = DataService.getSearchFilters();
     
-    // Add New button (always shown)
-    const addNewButton = `
-      <div class="filter-dropdown-add" id="add-new-filter">
-        <svg viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.5">
-          <path d="M8 3v10M3 8h10"/>
-        </svg>
-        <span>Add New Filter</span>
-      </div>
-    `;
-    
     if (filters.length === 0) {
       menu.innerHTML = `
-        ${addNewButton}
-        <div class="dropdown-divider"></div>
         <div class="dropdown-empty-state">
           <span class="text-muted">No saved filters</span>
+          <p class="text-muted text-small">Create filters from the Monitor editor</p>
         </div>
       `;
-    } else {
-      const filterLinks = filters.map(filter => {
-        const scope = filter.scope || {};
-        const itemCount = (scope.personIds?.length || 0) + 
-                          (scope.organizationIds?.length || 0) + 
-                          (scope.factionIds?.length || 0) + 
-                          (scope.locationIds?.length || 0) + 
-                          (scope.eventIds?.length || 0) + 
-                          (scope.keywords?.length || 0);
-        
-        return `
-          <div class="filter-dropdown-item" data-filter-id="${filter.id}">
-            <div class="filter-dropdown-info">
-              <span class="filter-dropdown-name">${this.escapeHtml(filter.name)}</span>
-              <span class="filter-dropdown-count">${itemCount} item${itemCount !== 1 ? 's' : ''}</span>
-            </div>
-          </div>
-        `;
-      }).join('');
-
-      menu.innerHTML = `
-        ${addNewButton}
-        <div class="dropdown-divider"></div>
-        ${filterLinks}
-      `;
+      return;
     }
 
-    // Add click handler for "Add New" button
-    const addBtn = menu.querySelector('#add-new-filter');
-    addBtn?.addEventListener('click', () => {
-      this.createNewSearchFilter();
-      // Close the dropdown
-      const dropdown = menu.closest('.nav-dropdown');
-      if (dropdown) {
-        dropdown.classList.remove('open');
-      }
-    });
+    const filterLinks = filters.map(filter => {
+      const scope = filter.scope || {};
+      const itemCount = (scope.personIds?.length || 0) + 
+                        (scope.organizationIds?.length || 0) + 
+                        (scope.factionIds?.length || 0) + 
+                        (scope.locationIds?.length || 0) + 
+                        (scope.eventIds?.length || 0) + 
+                        (scope.keywords?.length || 0);
+      
+      return `
+        <div class="filter-dropdown-item" data-filter-id="${filter.id}">
+          <div class="filter-dropdown-info">
+            <span class="filter-dropdown-name">${this.escapeHtml(filter.name)}</span>
+            <span class="filter-dropdown-count">${itemCount} item${itemCount !== 1 ? 's' : ''}</span>
+          </div>
+        </div>
+      `;
+    }).join('');
+
+    menu.innerHTML = filterLinks;
 
     // Add click handlers for filter items
     menu.querySelectorAll('.filter-dropdown-item').forEach(item => {
@@ -689,7 +664,7 @@ class App {
         const filterId = item.dataset.filterId;
         const filter = filters.find(f => f.id === filterId);
         if (filter) {
-          this.openSearchFilterEditor(filter);
+          this.openMonitorEditorWithFilter(filter);
         }
         // Close the dropdown
         const dropdown = item.closest('.nav-dropdown');
@@ -701,25 +676,16 @@ class App {
   }
 
   /**
-   * Open the search filter editor modal for editing
+   * Open the monitor editor with a pre-populated filter scope
    */
-  openSearchFilterEditor(filter) {
-    const editor = getSearchFilterEditor();
-    editor.openEdit(filter, () => {
-      // Refresh the filters dropdown after save/delete
-      this.populateFiltersDropdown();
-    });
-  }
-
-  /**
-   * Open the search filter editor modal for creating a new filter
-   */
-  createNewSearchFilter() {
-    const editor = getSearchFilterEditor();
+  openMonitorEditorWithFilter(filter) {
+    const editor = getMonitorEditor();
     editor.openCreate(() => {
-      // Refresh the filters dropdown after save
-      this.populateFiltersDropdown();
-    });
+      // Refresh the current view after saving
+      if (this.router) {
+        this.router.handleRoute();
+      }
+    }, filter.scope || {});
   }
 
   /**

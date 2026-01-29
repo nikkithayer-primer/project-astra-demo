@@ -22,6 +22,8 @@ import { WorkspaceView } from './views/WorkspaceView.js';
 import { SearchView } from './views/SearchView.js';
 import { ProjectsView } from './views/ProjectsView.js';
 import { TopicView } from './views/TopicView.js';
+import { TagsView } from './views/TagsView.js';
+import { TagDetailView } from './views/TagDetailView.js';
 import { initStickyHeader, destroyStickyHeader } from './utils/stickyHeader.js';
 import { TimeRangeFilter } from './components/TimeRangeFilter.js';
 import { DataService } from './data/DataService.js';
@@ -547,6 +549,18 @@ export class Router {
         window.location.hash = '#/dashboard';
         return;
 
+      case 'tag':
+        if (id) {
+          this.currentView = new TagDetailView(this.container, id, filterOptions);
+        } else {
+          this.currentView = new TagsView(this.container, filterOptions);
+        }
+        break;
+
+      case 'tags':
+        this.currentView = new TagsView(this.container, filterOptions);
+        break;
+
       case 'monitor':
         if (id) {
           this.currentView = new MonitorView(this.container, id, filterOptions);
@@ -642,6 +656,7 @@ export class Router {
           (linkRoute === 'documents' && route === 'document') ||
           (linkRoute === 'monitors' && route === 'monitor') ||
           (linkRoute === 'topics' && route === 'topic') ||
+          (linkRoute === 'tags' && route === 'tag') ||
           (linkRoute === 'workspaces' && route === 'workspace')) {
         link.classList.add('active');
       }

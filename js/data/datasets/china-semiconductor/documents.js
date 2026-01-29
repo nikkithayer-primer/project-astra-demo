@@ -37,6 +37,7 @@ export const documents = [
       'faction-002': { sentiment: -0.58 },
       'faction-003': { sentiment: 0.12 }
     },
+    tagIds: ['tag-002'],
     highlights: [
       {
         id: 'highlight-101',
@@ -101,6 +102,7 @@ export const documents = [
       'faction-002': { sentiment: -0.55 },
       'faction-003': { sentiment: 0.18 }
     },
+    tagIds: ['tag-003'],
     highlights: [],
     comments: []
   },
@@ -136,6 +138,7 @@ export const documents = [
       'faction-002': { sentiment: -0.62 },
       'faction-003': { sentiment: 0.15 }
     },
+    tagIds: ['tag-001'],
     highlights: [
       {
         id: 'highlight-102',
@@ -181,6 +184,7 @@ export const documents = [
       'faction-002': { sentiment: -0.59 },
       'faction-003': { sentiment: 0.16 }
     },
+    tagIds: ['tag-002'],
     highlights: [],
     comments: []
   },
@@ -218,6 +222,7 @@ export const documents = [
       'faction-004': { sentiment: -0.68 },
       'faction-006': { sentiment: -0.45 }
     },
+    tagIds: ['tag-003'],
     highlights: [
       {
         id: 'highlight-103',
@@ -277,6 +282,7 @@ export const documents = [
       'faction-004': { sentiment: -0.65 },
       'faction-006': { sentiment: -0.44 }
     },
+    tagIds: ['tag-001'],
     highlights: [],
     comments: []
   },
@@ -314,6 +320,7 @@ export const documents = [
       'faction-004': { sentiment: -0.71 },
       'faction-006': { sentiment: -0.47 }
     },
+    tagIds: ['tag-002'],
     highlights: [],
     comments: []
   },
@@ -351,6 +358,7 @@ export const documents = [
       'faction-004': { sentiment: -0.66 },
       'faction-006': { sentiment: -0.43 }
     },
+    tagIds: ['tag-003'],
     highlights: [],
     comments: []
   },
@@ -445,6 +453,7 @@ export const documents = [
       'faction-003': { sentiment: 0.24 },
       'faction-005': { sentiment: 0.70 }
     },
+    tagIds: ['tag-001'],
     highlights: [],
     comments: []
   },
@@ -481,6 +490,7 @@ export const documents = [
       'faction-003': { sentiment: 0.27 },
       'faction-005': { sentiment: 0.66 }
     },
+    tagIds: ['tag-002'],
     highlights: [],
     comments: []
   },
@@ -518,6 +528,7 @@ export const documents = [
       'faction-003': { sentiment: -0.18 },
       'faction-006': { sentiment: -0.55 }
     },
+    tagIds: ['tag-003'],
     highlights: [
       {
         id: 'highlight-105',
@@ -565,6 +576,7 @@ export const documents = [
       'faction-003': { sentiment: -0.21 },
       'faction-006': { sentiment: -0.53 }
     },
+    tagIds: ['tag-001'],
     highlights: [],
     comments: []
   },
@@ -602,6 +614,7 @@ export const documents = [
       'faction-003': { sentiment: -0.16 },
       'faction-006': { sentiment: -0.57 }
     },
+    tagIds: ['tag-002'],
     highlights: [],
     comments: []
   },
@@ -638,6 +651,7 @@ export const documents = [
       'faction-003': { sentiment: -0.22 },
       'faction-006': { sentiment: -0.48 }
     },
+    tagIds: ['tag-003'],
     highlights: [],
     comments: []
   },

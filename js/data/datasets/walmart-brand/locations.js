@@ -8,6 +8,7 @@ export const locations = [
     name: 'Bentonville, Arkansas',
     coordinates: { lat: 36.3729, lng: -94.2088 },
     type: 'headquarters',
+    tagIds: ['tag-005'],
     documentIds: ['doc-004', 'doc-011', 'doc-029', 'doc-038', 'doc-040', 'doc-044', 'doc-048']
   },
   {
@@ -15,6 +16,7 @@ export const locations = [
     name: 'Houston, Texas',
     coordinates: { lat: 29.7604, lng: -95.3698 },
     type: 'city',
+    tagIds: ['tag-004'],
     documentIds: ['doc-001', 'doc-003']
   },
   {
@@ -22,6 +24,7 @@ export const locations = [
     name: 'Atlanta, Georgia',
     coordinates: { lat: 33.7490, lng: -84.3880 },
     type: 'city',
+    tagIds: ['tag-005'],
     documentIds: ['doc-035', 'doc-046', 'doc-047']
   },
   {
@@ -43,6 +46,7 @@ export const locations = [
     name: 'Washington, D.C.',
     coordinates: { lat: 38.9072, lng: -77.0369 },
     type: 'city',
+    tagIds: ['tag-004'],
     documentIds: ['doc-010', 'doc-024', 'doc-025', 'doc-026', 'doc-042']
   },
   {
@@ -64,6 +68,7 @@ export const locations = [
     name: 'Rural Missouri',
     coordinates: { lat: 38.5767, lng: -92.1735 },
     type: 'region',
+    tagIds: ['tag-004'],
     documentIds: ['doc-021', 'doc-022', 'doc-023', 'doc-029', 'doc-030', 'doc-036', 'doc-037']
   },
   {
@@ -78,6 +83,7 @@ export const locations = [
     name: 'Dallas, Texas',
     coordinates: { lat: 32.7767, lng: -96.7970 },
     type: 'city',
+    tagIds: ['tag-005'],
     documentIds: ['doc-027', 'doc-032', 'doc-033']
   },
   {

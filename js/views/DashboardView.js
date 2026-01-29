@@ -12,25 +12,25 @@ import { TimelineVolumeComposite } from '../components/TimelineVolumeComposite.j
 import { Timeline } from '../components/Timeline.js';
 import { SentimentChart } from '../components/SentimentChart.js';
 import { initAllCardToggles } from '../utils/cardWidthToggle.js';
-import { formatDateWithYear, STATUS_LABELS } from '../utils/formatters.js';
+import { formatDateWithYear } from '../utils/formatters.js';
 import { CardBuilder } from '../utils/CardBuilder.js';
 import { renderVerticalTimeline } from '../utils/verticalTimeline.js';
 
 export class DashboardView extends BaseView {
   constructor(container, options = {}) {
     super(container, options);
-    // Status filter state: Set of selected statuses (empty = no filter)
-    this.statusFilters = new Set();
     // Events view mode: 'vertical' or 'horizontal' timeline
     this.eventsViewMode = 'vertical';
+    // Tag filter: Set of selected tag IDs
+    this.selectedTags = new Set();
+    // Tag dropdown open state
+    this.tagDropdownOpen = false;
   }
 
   async render() {
-    // Convert Set to array for DataService calls
-    const statusFilterArray = this.statusFilters.size > 0 ? [...this.statusFilters] : null;
-    const stats = DataService.getDashboardStats(this.missionId, this.timeRange, statusFilterArray);
-    const statusCounts = DataService.getNarrativeStatusCounts(this.timeRange);
-    const topics = DataService.getTopicsInRange(this.timeRange);
+    const tagFilter = this.getSelectedTagIds();
+    const stats = DataService.getDashboardStats(this.missionId, this.timeRange, tagFilter.length > 0 ? tagFilter : null);
+    const topics = DataService.getTopicsInRange(this.timeRange, tagFilter.length > 0 ? tagFilter : null);
     const mission = this.missionId !== 'all' 
       ? DataService.getMission(this.missionId)
       : null;
@@ -42,10 +42,6 @@ export class DashboardView extends BaseView {
     let subtitle = mission ? `Mission: ${mission.name}` : 'All missions overview';
     if (this.timeRange) {
       subtitle += ` | ${formatDateWithYear(this.timeRange.start)} - ${formatDateWithYear(this.timeRange.end)}`;
-    }
-    if (this.statusFilters.size > 0) {
-      const statusNames = [...this.statusFilters].map(s => STATUS_LABELS[s] || s).join(', ');
-      subtitle += ` | Filtered by: ${statusNames}`;
     }
 
     this.container.innerHTML = `
@@ -123,6 +119,10 @@ export class DashboardView extends BaseView {
               <option value="all">All Missions</option>
             </select>
           </div>
+          <div class="filter-group tag-filter-group">
+            <label>Tags</label>
+            ${this.renderTagFilterDropdown()}
+          </div>
           <div class="filter-group time-filter-group">
             <label>Time Range</label>
             <div class="time-filter-wrapper">
@@ -139,49 +139,6 @@ export class DashboardView extends BaseView {
       </div>
 
       <div class="content-area">
-        <!-- Status Overview -->
-        <div class="status-overview">
-          ${this.statusFilters.size > 0 ? `
-          <button class="status-filter-clear" title="Clear status filter">
-            <svg viewBox="0 0 16 16" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2">
-              <path d="M4 4l8 8M12 4l-8 8"/>
-            </svg>
-            Clear
-          </button>
-          ` : ''}
-          <div class="status-card status-new clickable ${this.statusFilters.has('new') ? 'active' : ''}" data-status="new">
-            <svg class="status-icon" viewBox="0 0 16 16" fill="currentColor" stroke="none">
-              <circle cx="8" cy="8" r="4"/>
-            </svg>
-            <div class="status-count">${statusCounts.new}</div>
-            <div class="status-name">New</div>
-          </div>
-          <div class="status-card status-in-progress clickable ${this.statusFilters.has('in_progress') ? 'active' : ''}" data-status="in_progress">
-            <svg class="status-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.25">
-              <circle cx="8" cy="8" r="5"/>
-              <path d="M8 5v3l2 2"/>
-            </svg>
-            <div class="status-count">${statusCounts.in_progress}</div>
-            <div class="status-name">In Progress</div>
-          </div>
-          <div class="status-card status-investigating clickable ${this.statusFilters.has('under_investigation') ? 'active' : ''}" data-status="under_investigation">
-            <svg class="status-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.25">
-              <circle cx="7" cy="7" r="4"/>
-              <path d="M10 10l4 4"/>
-            </svg>
-            <div class="status-count">${statusCounts.under_investigation}</div>
-            <div class="status-name">Investigating</div>
-          </div>
-          <div class="status-card status-resolved clickable ${this.statusFilters.has('resolved') ? 'active' : ''}" data-status="resolved">
-            <svg class="status-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.25">
-              <circle cx="8" cy="8" r="5"/>
-              <path d="M5 8l2 2 4-4"/>
-            </svg>
-            <div class="status-count">${statusCounts.resolved}</div>
-            <div class="status-name">Resolved</div>
-          </div>
-        </div>
-
         <div class="content-grid">
           ${CardBuilder.create('Volume Over Time & Events', 'dashboard-volume-timeline', { fullWidth: true })}
           ${CardBuilder.create('Top Narratives by Volume', 'dashboard-narrative-list', { 
@@ -255,31 +212,10 @@ export class DashboardView extends BaseView {
       });
     });
 
-    // Add click handlers for status cards (toggle filter - multi-select)
-    this.container.querySelectorAll('.status-card.clickable').forEach(card => {
-      this.addListener(card, 'click', () => {
-        const status = card.dataset.status;
-        // Toggle: add if not present, remove if already selected
-        if (this.statusFilters.has(status)) {
-          this.statusFilters.delete(status);
-        } else {
-          this.statusFilters.add(status);
-        }
-        this.render();
-      });
-    });
+    await this.initializeComponents(stats, topics);
 
-    // Add click handler for clear filter button
-    const clearBtn = this.container.querySelector('.status-filter-clear');
-    if (clearBtn) {
-      this.addListener(clearBtn, 'click', (e) => {
-        e.stopPropagation();
-        this.statusFilters.clear();
-        this.render();
-      });
-    }
-
-    await this.initializeComponents(stats, statusFilterArray, topics);
+    // Set up tag filter handlers
+    this.setupTagFilterHandlers();
 
     // Add click handler for description toggle
     const descToggle = this.container.querySelector('.description-toggle');
@@ -303,7 +239,7 @@ export class DashboardView extends BaseView {
     this.initDragDrop();
   }
 
-  async initializeComponents(stats, statusFilterArray, topics) {
+  async initializeComponents(stats, topics) {
     // Top Narratives List
     this.components.narrativeList = new NarrativeList('dashboard-narrative-list', {
       maxItems: 8,
@@ -332,11 +268,11 @@ export class DashboardView extends BaseView {
       this.components.topicList.update({ topics: sortedTopics });
     }
 
-    // Volume Over Time & Events Combined (with time range and status filtering)
-    const volumeData = DataService.getAggregateVolumeOverTime(this.missionId, this.timeRange, statusFilterArray);
-    const publisherData = DataService.getAggregatePublisherVolumeOverTime(this.missionId, this.timeRange, statusFilterArray);
+    // Volume Over Time & Events Combined (with time range filtering)
+    const volumeData = DataService.getAggregateVolumeOverTime(this.missionId, this.timeRange);
+    const publisherData = DataService.getAggregatePublisherVolumeOverTime(this.missionId, this.timeRange);
     // Pass all events with volume scores - component will filter based on zoom level
-    const recentEvents = DataService.getRecentEvents(null, this.timeRange, statusFilterArray);
+    const recentEvents = DataService.getRecentEvents(null, this.timeRange);
 
     const hasVolumeData = volumeData.dates.length > 0 && volumeData.factions.length > 0;
     const hasPublisherData = publisherData.dates.length > 0 && publisherData.publishers.length > 0;
@@ -364,7 +300,7 @@ export class DashboardView extends BaseView {
     }
 
     // Sentiment by Faction (aggregated across all narratives)
-    const factionSentiments = DataService.getAggregateFactionSentiments(this.missionId, this.timeRange, statusFilterArray);
+    const factionSentiments = DataService.getAggregateFactionSentiments(this.missionId, this.timeRange);
     if (factionSentiments.length > 0) {
       this.components.sentimentChart = new SentimentChart('dashboard-sentiment-chart', {
         height: Math.max(200, factionSentiments.length * 40),
@@ -379,8 +315,8 @@ export class DashboardView extends BaseView {
     // Recent Events (vertical timeline)
     this.renderEventsCard(recentEvents);
 
-    // Map with all locations (filtered by time range and status)
-    const locations = DataService.getAllLocationsWithCounts(this.timeRange, this.statusFilter);
+    // Map with all locations (filtered by time range)
+    const locations = DataService.getAllLocationsWithCounts(this.timeRange);
     if (locations.length > 0) {
       this.components.map = new MapView('dashboard-map', {
         height: 350
@@ -505,6 +441,126 @@ export class DashboardView extends BaseView {
   setTimeRange(timeRange) {
     this.timeRange = timeRange;
     this.render();
+  }
+
+  /**
+   * Render the tag filter dropdown
+   */
+  renderTagFilterDropdown() {
+    const tags = DataService.getTags();
+    const selectedCount = this.selectedTags.size;
+    const buttonLabel = selectedCount === 0 
+      ? 'All Tags' 
+      : selectedCount === 1 
+        ? `1 Tag` 
+        : `${selectedCount} Tags`;
+
+    return `
+      <div class="tag-filter-dropdown ${this.tagDropdownOpen ? 'open' : ''}" id="tag-filter-dropdown">
+        <button class="tag-filter-btn" id="tag-filter-btn" type="button">
+          <span class="tag-filter-label">${buttonLabel}</span>
+          <svg class="tag-filter-chevron" viewBox="0 0 16 16" width="12" height="12" fill="none" stroke="currentColor" stroke-width="1.5">
+            <path d="M4 6l4 4 4-4"/>
+          </svg>
+        </button>
+        <div class="tag-filter-menu" id="tag-filter-menu">
+          ${tags.length === 0 ? `
+            <div class="tag-filter-empty">No tags defined</div>
+          ` : `
+            <div class="tag-filter-options">
+              ${tags.map(tag => `
+                <label class="tag-filter-option" data-tag-id="${tag.id}">
+                  <input type="checkbox" ${this.selectedTags.has(tag.id) ? 'checked' : ''} />
+                  <span class="tag-filter-color" style="background-color: ${tag.color || '#6b7280'}"></span>
+                  <span class="tag-filter-name">${this.escapeHtml(tag.name)}</span>
+                </label>
+              `).join('')}
+            </div>
+            ${selectedCount > 0 ? `
+              <div class="tag-filter-footer">
+                <button class="tag-filter-clear" id="tag-filter-clear">Clear all</button>
+              </div>
+            ` : ''}
+          `}
+        </div>
+      </div>
+    `;
+  }
+
+  /**
+   * Set up tag filter event handlers
+   */
+  setupTagFilterHandlers() {
+    const dropdown = this.container.querySelector('#tag-filter-dropdown');
+    const btn = this.container.querySelector('#tag-filter-btn');
+    const menu = this.container.querySelector('#tag-filter-menu');
+
+    if (!dropdown || !btn) return;
+
+    // Toggle dropdown
+    this.addListener(btn, 'click', (e) => {
+      e.stopPropagation();
+      this.tagDropdownOpen = !this.tagDropdownOpen;
+      dropdown.classList.toggle('open', this.tagDropdownOpen);
+    });
+
+    // Close on outside click
+    this.addListener(document, 'click', (e) => {
+      if (this.tagDropdownOpen && !dropdown.contains(e.target)) {
+        this.tagDropdownOpen = false;
+        dropdown.classList.remove('open');
+      }
+    });
+
+    // Handle checkbox changes
+    const checkboxes = menu?.querySelectorAll('input[type="checkbox"]');
+    checkboxes?.forEach(checkbox => {
+      this.addListener(checkbox, 'change', (e) => {
+        const tagId = e.target.closest('.tag-filter-option').dataset.tagId;
+        if (e.target.checked) {
+          this.selectedTags.add(tagId);
+        } else {
+          this.selectedTags.delete(tagId);
+        }
+        this.applyTagFilter();
+      });
+    });
+
+    // Clear all button
+    const clearBtn = this.container.querySelector('#tag-filter-clear');
+    if (clearBtn) {
+      this.addListener(clearBtn, 'click', (e) => {
+        e.stopPropagation();
+        this.selectedTags.clear();
+        this.tagDropdownOpen = false;
+        this.applyTagFilter();
+      });
+    }
+  }
+
+  /**
+   * Apply tag filter and re-render dashboard
+   */
+  applyTagFilter() {
+    // Re-render to apply the filter
+    this.render();
+  }
+
+  /**
+   * Get the selected tag IDs as an array
+   */
+  getSelectedTagIds() {
+    return Array.from(this.selectedTags);
+  }
+
+  /**
+   * Escape HTML for safe rendering
+   */
+  escapeHtml(text) {
+    if (!text) return '';
+    const div = document.createElement('div');
+    div.textContent = text;
+    return div.innerHTML;
   }
 }
 

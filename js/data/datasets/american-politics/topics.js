@@ -14,6 +14,7 @@ export const topics = [
       'President Trump escalated diplomatic tensions by publicly sharing private diplomatic messages on social media, drawing criticism from European capitals.'
     ],
     documentIds: ['doc-001', 'doc-002', 'doc-003', 'doc-004'],
+    tagIds: ['tag-002'],
     startDate: '2026-01-20',
     endDate: null,
     volumeOverTime: [
@@ -36,6 +37,7 @@ export const topics = [
       'Eyewitness accounts from the protests describe a "terrifying" federal response, with reports of aggressive tactics that have fueled national debate over enforcement methods.'
     ],
     documentIds: ['doc-005', 'doc-006', 'doc-007', 'doc-025'],
+    tagIds: ['tag-001'],
     startDate: '2026-01-15',
     endDate: null,
     volumeOverTime: [
@@ -63,6 +65,7 @@ export const topics = [
       'President Trump characterized the protesters as "agitators and insurrectionists," language that civil liberties groups argue could justify expanded federal prosecution.'
     ],
     documentIds: ['doc-008', 'doc-009', 'doc-010', 'doc-011'],
+    tagIds: ['tag-002'],
     startDate: '2026-01-19',
     endDate: null,
     volumeOverTime: [
@@ -135,6 +138,7 @@ export const topics = [
       'Border crossings have reached a five-year low amid the enforcement surge, though experts debate whether policies or regional factors are the primary cause.'
     ],
     documentIds: ['doc-032', 'doc-033', 'doc-034', 'doc-037', 'doc-038', 'doc-040', 'doc-054'],
+    tagIds: ['tag-003'],
     startDate: '2025-06-15',
     endDate: null,
     volumeOverTime: [
@@ -158,6 +162,7 @@ export const topics = [
       'A modest compromise that included partial border funding and a short-term continuing resolution ultimately reopened the government, though neither party claimed victory.'
     ],
     documentIds: ['doc-041', 'doc-042', 'doc-043', 'doc-044', 'doc-045', 'doc-046'],
+    tagIds: ['tag-003'],
     startDate: '2025-09-15',
     endDate: '2025-10-19',
     volumeOverTime: [

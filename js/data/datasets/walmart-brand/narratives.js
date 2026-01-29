@@ -8,8 +8,8 @@ export const narratives = [
     text: 'Self-checkout frustrations spark viral complaints about theft accusations and customer treatment',
     description: 'A wave of customer complaints has gone viral on social media after multiple incidents where Walmart customers were stopped, searched, or accused of theft at self-checkout stations. Videos show confrontations between customers and loss prevention staff, with many customers claiming they were humiliated despite having receipts. The controversy intensified after a class-action lawsuit was filed in Texas alleging systematic false detention of customers. Walmart has defended its loss prevention practices while announcing plans to add more staffed checkout lanes in select stores.',
     missionId: 'mission-001',
-    status: 'in_progress',
     sentiment: -0.68,
+    tagIds: ['tag-002'],
     themeIds: ['sub-001', 'sub-002', 'sub-003'],
     factionMentions: {
       'faction-001': { volume: 685, sentiment: -0.82 },
@@ -51,8 +51,8 @@ export const narratives = [
     text: 'Widespread reports of empty shelves and out-of-stock items frustrate Walmart shoppers',
     description: 'Customers across multiple states are reporting persistent empty shelves and out-of-stock items at Walmart stores, particularly in grocery and household essentials. Social media posts show bare aisles, with some customers driving to multiple locations without finding needed products. Walmart has attributed the issues to supply chain disruptions and regional distribution challenges, but retail analysts note the company\'s inventory management system may need significant upgrades. The complaints come as competitors like Target report improved in-stock rates.',
     missionId: 'mission-002',
-    status: 'in_progress',
     sentiment: -0.55,
+    tagIds: ['tag-001'],
     themeIds: ['sub-004', 'sub-005'],
     factionMentions: {
       'faction-001': { volume: 425, sentiment: -0.72 },
@@ -92,8 +92,8 @@ export const narratives = [
     text: 'Walmart workers share stories of understaffing and poor working conditions on social media',
     description: 'Current and former Walmart employees are sharing videos and posts detailing challenging working conditions, including understaffing, mandatory overtime, and inconsistent scheduling. The hashtag #WalmartWorkers has gained traction on TikTok with over 50 million views. Workers describe being responsible for multiple departments simultaneously while customers complain about lack of assistance. Labor advocates are amplifying these stories, calling for improved wages and working conditions. Walmart has responded by highlighting its $14 minimum wage and associate benefits.',
     missionId: 'mission-001',
-    status: 'under_investigation',
     sentiment: -0.62,
+    tagIds: ['tag-002'],
     themeIds: ['sub-006', 'sub-007', 'sub-008'],
     factionMentions: {
       'faction-002': { volume: 485, sentiment: -0.78 },
@@ -136,8 +136,8 @@ export const narratives = [
     text: 'Great Value brand recall expands after contamination found in multiple products',
     description: 'The FDA has expanded a recall of Walmart\'s Great Value brand products after discovering potential Listeria contamination in frozen vegetables and salad mixes. The recall now covers 15 product SKUs sold across all 50 states. Three hospitalizations have been linked to the contamination, though no deaths have been reported. Consumer advocacy groups are calling for stricter quality controls on private-label products. Walmart has issued refunds and launched an internal investigation into its supplier network.',
     missionId: 'mission-003',
-    status: 'in_progress',
     sentiment: -0.72,
+    tagIds: ['tag-002'],
     themeIds: ['sub-009', 'sub-010'],
     factionMentions: {
       'faction-004': { volume: 385, sentiment: -0.85 },
@@ -177,8 +177,8 @@ export const narratives = [
     text: 'Customers complain Walmart prices no longer competitive as inflation pricing sticks',
     description: 'Social media discussions and consumer surveys indicate growing perception that Walmart\'s prices are no longer significantly lower than competitors. Analysis shows Walmart retained pandemic-era price increases on many items even as wholesale costs declined. The narrative has intensified after viral TikTok videos showed price comparisons between Walmart, Aldi, and Amazon showing Walmart losing on several staple items. Retail analysts note this threatens Walmart\'s core brand promise of "Everyday Low Prices."',
     missionId: 'mission-002',
-    status: 'new',
     sentiment: -0.58,
+    tagIds: ['tag-001'],
     themeIds: ['sub-011', 'sub-012'],
     factionMentions: {
       'faction-001': { volume: 365, sentiment: -0.72 },
@@ -217,8 +217,8 @@ export const narratives = [
     text: 'Target and Amazon gain ground with faster delivery, putting pressure on Walmart',
     description: 'Retail analysts report Target\'s same-day delivery service has achieved 98% on-time delivery rates, while Amazon continues expanding its sub-24-hour delivery coverage. Walmart\'s delivery service has faced criticism for delays, substitutions, and quality issues with grocery items. Consumer sentiment surveys show a 12-point swing toward competitors for online grocery orders. Walmart has announced a $1.5 billion investment in delivery infrastructure, but analysts question if it\'s enough to close the gap.',
     missionId: 'mission-004',
-    status: 'in_progress',
     sentiment: -0.42,
+    tagIds: ['tag-003'],
     themeIds: ['sub-013', 'sub-014'],
     factionMentions: {
       'faction-006': { volume: 425, sentiment: 0.65 },
@@ -258,8 +258,8 @@ export const narratives = [
     text: 'Rural community protests Walmart store closure, citing economic devastation',
     description: 'Residents of several small towns across the Midwest and South are protesting Walmart\'s decision to close underperforming stores, arguing the closures will devastate local economies. In many of these communities, Walmart had previously driven out local retailers, leaving residents with no nearby shopping options. Local politicians are calling for Walmart to maintain stores as community obligations. The narrative intersects with broader discussions about corporate responsibility to rural America.',
     missionId: 'mission-001',
-    status: 'new',
     sentiment: -0.65,
+    tagIds: ['tag-001'],
     themeIds: ['sub-015', 'sub-016'],
     factionMentions: {
       'faction-001': { volume: 285, sentiment: -0.75 },
@@ -296,8 +296,8 @@ export const narratives = [
     text: 'Walmart faces scrutiny over Great Value supplier practices',
     description: 'An investigation reveals labor and safety violations at suppliers producing Walmart\'s Great Value private-label products. The FTC opens an inquiry into Walmart\'s supply chain oversight, while consumer advocacy groups call for greater transparency. Walmart pledges to audit suppliers and improve monitoring, but critics argue the company\'s price pressures create conditions for worker exploitation.',
     missionId: 'mission-003',
-    status: 'in_progress',
     sentiment: -0.58,
+    tagIds: ['tag-002'],
     themeIds: ['sub-017', 'sub-018'],
     factionMentions: {
       'faction-003': { volume: 185, sentiment: -0.72 },
@@ -331,8 +331,8 @@ export const narratives = [
     text: 'E-commerce fulfillment center workers push for unionization',
     description: 'Workers at Walmart\'s e-commerce fulfillment centers launch organizing campaigns, seeking union representation. A Dallas facility votes on unionization in September 2025 but falls short, while an Atlanta center succeeds in January 2026 - marking the first successful Walmart warehouse union. Labor advocates celebrate the breakthrough while Walmart announces new worker benefits in response.',
     missionId: 'mission-001',
-    status: 'in_progress',
     sentiment: 0.35,
+    tagIds: ['tag-003'],
     themeIds: ['sub-019', 'sub-020'],
     factionMentions: {
       'faction-002': { volume: 285, sentiment: 0.78 },
@@ -368,8 +368,8 @@ export const narratives = [
     text: 'Walmart expands healthcare services amid rural hospital closures',
     description: 'As rural hospitals continue to close across America, Walmart Health expands its clinic network into underserved communities. The company opens 15 new clinics in October 2025, offering primary care, dental, and mental health services. Supporters praise the expansion as filling a critical gap, while critics worry about corporate healthcare replacing community institutions.',
     missionId: 'mission-001',
-    status: 'in_progress',
     sentiment: 0.35,
+    tagIds: ['tag-003'],
     themeIds: ['sub-021', 'sub-022'],
     factionMentions: {
       'faction-001': { volume: 185, sentiment: 0.55 },
@@ -406,8 +406,8 @@ export const narratives = [
     text: 'Holiday season delivery failures damage Walmart reputation',
     description: 'Walmart\'s delivery system fails during the critical Black Friday to Christmas period, leaving thousands of customers without their holiday orders. The company apologizes and announces a $500 million infrastructure investment, but damage to its reputation lingers. Consumer groups file FTC complaints, and competitors gain ground as customers switch to more reliable alternatives.',
     missionId: 'mission-004',
-    status: 'in_progress',
     sentiment: -0.65,
+    tagIds: ['tag-002'],
     themeIds: ['sub-023', 'sub-024'],
     factionMentions: {
       'faction-001': { volume: 385, sentiment: -0.78 },

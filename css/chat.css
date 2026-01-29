@@ -64,14 +64,9 @@
   background: var(--accent-primary);
 }
 
-/* Disable transitions during resize for smoother dragging */
+/* Disable transitions during resize for smoother dragging - see also rules at end of file */
 .chat-panel.resizing {
-  transition: none;
-}
-
-.chat-panel.resizing + .content-wrapper,
-body.chat-resizing .content-wrapper {
-  transition: none;
+  transition: none !important;
 }
 
 .chat-panel.open {
@@ -365,4 +360,14 @@ body.chat-open .content-wrapper {
 
 body:not(.chat-open) .content-wrapper {
   transition: margin-right 0.25s ease;
+}
+
+/* Disable ALL transitions during resize - must come after chat-open rules for specificity */
+body.chat-resizing,
+body.chat-resizing *,
+body.chat-resizing .content-wrapper,
+body.chat-resizing .page-header,
+body.chat-resizing .page-header-entity-image,
+body.chat-resizing .header-description {
+  transition: none !important;
 }

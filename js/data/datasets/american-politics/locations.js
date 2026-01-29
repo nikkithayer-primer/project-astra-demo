@@ -9,6 +9,7 @@ export const locations = [
     description: 'The official residence and workplace of the President of the United States. Under the current administration, the White House has been the source of major policy announcements on immigration, foreign affairs, and executive actions that have shaped national discourse.',
     coordinates: { lat: 38.8977, lng: -77.0365 },
     type: 'landmark',
+    tagIds: ['tag-004'],
     documentIds: ['doc-002', 'doc-009', 'doc-011', 'doc-017', 'doc-018', 'doc-027', 'doc-035', 'doc-036', 'doc-038', 'doc-044', 'doc-045', 'doc-046', 'doc-050', 'doc-053']
   },
   {
@@ -17,6 +18,7 @@ export const locations = [
     description: 'A downtown Minneapolis intersection that became the focal point of anti-ICE protests and federal enforcement activities. This location witnessed the fatal shooting of protester Renee Good and subsequent confrontations between federal agents and demonstrators.',
     coordinates: { lat: 44.9778, lng: -93.2750 },
     type: 'intersection',
+    tagIds: ['tag-004'],
     documentIds: ['doc-005', 'doc-006', 'doc-007', 'doc-016', 'doc-025', 'doc-026', 'doc-028', 'doc-031']
   },
   {
@@ -49,6 +51,7 @@ export const locations = [
     description: 'A city in Indiana where Judge Steven Meyer and his wife were shot at their home, highlighting growing concerns about violence against the judiciary and prompting statewide security reviews for judges.',
     coordinates: { lat: 40.4167, lng: -86.8753 },
     type: 'city',
+    tagIds: ['tag-004'],
     documentIds: ['doc-013', 'doc-014', 'doc-029']
   },
   {
@@ -57,6 +60,7 @@ export const locations = [
     description: 'Minnesota\'s capital city and location of Cities Church, where protesters disrupted a service targeting ICE official David Easterwood. The incident led to DOJ investigations and debates about religious freedom and protest rights.',
     coordinates: { lat: 44.9537, lng: -93.0900 },
     type: 'city',
+    tagIds: ['tag-005'],
     documentIds: ['doc-008', 'doc-010', 'doc-012', 'doc-024', 'doc-026']
   },
   {
@@ -73,6 +77,7 @@ export const locations = [
     description: 'The capital of Texas and site of Governor Abbott\'s border security initiatives. Austin has hosted summits of Republican governors coordinating on immigration enforcement and border security measures.',
     coordinates: { lat: 30.2672, lng: -97.7431 },
     type: 'city',
+    tagIds: ['tag-005'],
     documentIds: ['doc-032', 'doc-040']
   },
   {
@@ -81,6 +86,7 @@ export const locations = [
     description: 'A border city in Texas that has become a focal point for Texas National Guard deployments and federal-state coordination on border security. The area has seen significant enforcement activity under Operation Lone Star.',
     coordinates: { lat: 28.7091, lng: -100.4995 },
     type: 'city',
+    tagIds: ['tag-004'],
     documentIds: ['doc-032', 'doc-033', 'doc-054']
   }
 ];

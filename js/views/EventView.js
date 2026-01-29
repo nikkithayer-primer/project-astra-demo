@@ -8,6 +8,8 @@ import { DataService } from '../data/DataService.js';
 import { PageHeader } from '../utils/PageHeader.js';
 import { initAllCardToggles } from '../utils/cardWidthToggle.js';
 import { aggregatePublisherVolumeData, aggregateFactionSentiment } from '../utils/volumeDataUtils.js';
+import { TagChips } from '../components/TagChips.js';
+import { getTagPicker } from '../components/TagPickerModal.js';
 import {
   CardManager,
   NetworkGraphCard,
@@ -90,6 +92,7 @@ export class EventView extends BaseView {
       descriptionLink: event.description 
         ? `<a href="#" class="btn btn-small btn-secondary source-link" data-source-type="event" data-source-id="${event.id}">View source</a>` 
         : '',
+      tagsContainerId: 'event-tags-container',
       tabs: tabsConfig,
       activeTab: activeTab
     });
@@ -123,6 +126,30 @@ export class EventView extends BaseView {
     // Initialize all card components
     const components = this.cardManager.initializeAll();
     Object.assign(this.components, components);
+
+    // Initialize tag chips
+    this.initTagChips(event);
+  }
+
+  /**
+   * Initialize tag chips component
+   */
+  initTagChips(event) {
+    const tagsContainer = this.container.querySelector('#event-tags-container');
+    if (tagsContainer) {
+      this.tagChips = new TagChips({
+        entityType: 'event',
+        entityId: event.id,
+        editable: true,
+        onAddClick: () => {
+          const picker = getTagPicker();
+          picker.open('event', event.id, () => {
+            this.tagChips.refresh();
+          });
+        }
+      });
+      this.tagChips.render(tagsContainer);
+    }
   }
 
   /**

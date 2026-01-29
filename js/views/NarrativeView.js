@@ -7,6 +7,8 @@ import { BaseView } from './BaseView.js';
 import { DataService } from '../data/DataService.js';
 import { PageHeader } from '../utils/PageHeader.js';
 import { initAllCardToggles } from '../utils/cardWidthToggle.js';
+import { TagChips } from '../components/TagChips.js';
+import { getTagPicker } from '../components/TagPickerModal.js';
 // Source viewer handled by delegated event listener in app.js
 import {
   CardManager,
@@ -71,12 +73,12 @@ export class NarrativeView extends BaseView {
         'Detail'
       ],
       title: narrative.text,
-      badge: `<span class="badge badge-status-${narrative.status || 'new'}">${this.formatStatus(narrative.status || 'new')}</span>`,
       subtitle: subtitleParts,
       description: narrative.description,
       descriptionLink: narrative.description 
         ? `<a href="#" class="btn btn-small btn-secondary source-link" data-source-type="narrative" data-source-id="${narrative.id}">View source</a>` 
         : '',
+      tagsContainerId: 'narrative-tags-container',
       tabs: tabsConfig,
       activeTab: activeTab
     });
@@ -102,6 +104,29 @@ export class NarrativeView extends BaseView {
     const components = this.cardManager.initializeAll();
     Object.assign(this.components, components);
 
+    // Initialize tag chips
+    this.initTagChips(narrative);
+  }
+
+  /**
+   * Initialize tag chips component
+   */
+  initTagChips(narrative) {
+    const tagsContainer = this.container.querySelector('#narrative-tags-container');
+    if (tagsContainer) {
+      this.tagChips = new TagChips({
+        entityType: 'narrative',
+        entityId: narrative.id,
+        editable: true,
+        onAddClick: () => {
+          const picker = getTagPicker();
+          picker.open('narrative', narrative.id, () => {
+            this.tagChips.refresh();
+          });
+        }
+      });
+      this.tagChips.render(tagsContainer);
+    }
   }
 
   /**

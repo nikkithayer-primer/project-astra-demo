@@ -20,6 +20,7 @@ import { CardBuilder } from '../utils/CardBuilder.js';
 import { initAllCardToggles } from '../utils/cardWidthToggle.js';
 import { getMonitorEditor } from '../components/MonitorEditorModal.js';
 import { formatAlertDescriptionWithLinks } from './MonitorView.js';
+import { PageHeader } from '../utils/PageHeader.js';
 
 // Available visualization types for monitors
 const VISUALIZATION_TYPES = [
@@ -59,10 +60,54 @@ const DEFAULT_MONITOR_VISUALIZATIONS = {
 export class MonitorsView extends BaseView {
   constructor(container, options = {}) {
     super(container, options);
-    this.visualizationComponents = []; // Store all active visualization components
-    this.descriptionToggles = new Map(); // Map of containerId -> NarrativeList
+    // Note: MonitorsView uses a different component storage pattern than other views.
+    // Instead of this.components (inherited from BaseView), we use visualizationComponents
+    // because we need to track which monitor each component belongs to for proper cleanup
+    // when individual monitors are re-rendered or the view is destroyed.
+    this.visualizationComponents = []; // Array of { monitorId, component, type }
+    this.descriptionToggles = new Map(); // Map of monitorId -> NarrativeList/TopicList
     this.monitorEditor = null;
     this.monitorVisualizationTypes = new Map(); // Map of monitorId -> selected visualization type
+  }
+
+  // ============================================
+  // Tab Navigation (overrides BaseView defaults)
+  // ============================================
+
+  /**
+   * Get the current active tab from options
+   * Defaults to 'monitors' instead of 'dashboard'
+   * @returns {string} Current tab ID
+   */
+  getCurrentTab() {
+    return this.options.tab || 'monitors';
+  }
+
+  /**
+   * Generate tabs configuration for this view
+   * @returns {Array} Tabs configuration
+   */
+  getMonitorsTabsConfig() {
+    return [
+      { id: 'monitors', label: 'Monitors', href: '#/monitors?tab=monitors' },
+      { id: 'alerts', label: 'Alerts', href: '#/monitors?tab=alerts' }
+    ];
+  }
+
+  /**
+   * Check if we're on the monitors tab
+   * @returns {boolean}
+   */
+  isMonitorsTab() {
+    return this.getCurrentTab() === 'monitors';
+  }
+
+  /**
+   * Check if we're on the alerts tab
+   * @returns {boolean}
+   */
+  isAlertsTab() {
+    return this.getCurrentTab() === 'alerts';
   }
 
   /**
@@ -228,6 +273,29 @@ export class MonitorsView extends BaseView {
   }
 
   async render() {
+    const activeTab = this.getCurrentTab();
+    const allAlerts = DataService.getAlerts();
+    
+    // Render the page header with tabs
+    const headerHtml = PageHeader.render({
+      title: 'Monitors',
+      subtitle: 'Track entities and narratives with custom alert thresholds',
+      tabs: this.getMonitorsTabsConfig(),
+      activeTab: activeTab
+    });
+    
+    // Render content based on active tab
+    if (this.isAlertsTab()) {
+      this.renderAlertsTab(headerHtml, allAlerts);
+    } else {
+      this.renderMonitorsTab(headerHtml);
+    }
+  }
+
+  /**
+   * Render the Monitors tab (grid of monitor cards)
+   */
+  renderMonitorsTab(headerHtml) {
     // Load monitors from DataService
     const monitors = DataService.getMonitors();
     
@@ -360,156 +428,18 @@ export class MonitorsView extends BaseView {
       );
     }).join('');
     
-    // Calculate today's alerts count
-    const today = new Date();
-    today.setHours(0, 0, 0, 0);
-    const allAlerts = DataService.getAlerts();
-    const todayAlerts = allAlerts.filter(a => new Date(a.triggeredAt) >= today);
-    
     this.container.innerHTML = `
-      <div class="view-header">
-        <div>
-          <h1 class="view-title">Monitors</h1>
-          <p class="view-subtitle">Track entities and narratives with custom alert thresholds</p>
-        </div>
-        <div class="view-header-actions">
-          <div class="nav-dropdown monitor-dropdown">
-            <button class="nav-dropdown-trigger">
-              <span>Trigger Types</span>
-              <svg class="dropdown-arrow" viewBox="0 0 16 16" fill="none" stroke="var(--text-secondary)" stroke-width="1">
-                <path d="M4 6l4 4 4-4"/>
-              </svg>
-            </button>
-            <div class="nav-dropdown-menu monitor-dropdown-menu">
-              <div class="dropdown-item-row">
-                <span class="data-label">Volume Spike</span>
-                <span class="text-muted">Threshold-based</span>
-              </div>
-              <div class="dropdown-item-row">
-                <span class="data-label">Sentiment Shift</span>
-                <span class="text-muted">Trend analysis</span>
-              </div>
-              <div class="dropdown-item-row">
-                <span class="data-label">New Narrative</span>
-                <span class="text-muted">Pattern matching</span>
-              </div>
-              <div class="dropdown-item-row">
-                <span class="data-label">New Event</span>
-                <span class="text-muted">Entity tracking</span>
-              </div>
-              <div class="dropdown-item-row">
-                <span class="data-label">Faction Engagement</span>
-                <span class="text-muted">Activity monitoring</span>
-              </div>
-            </div>
-          </div>
-          
-          <div class="nav-dropdown monitor-dropdown">
-            <button class="nav-dropdown-trigger">
-              <span>Scope Types</span>
-              <svg class="dropdown-arrow" viewBox="0 0 16 16" fill="none" stroke="var(--text-secondary)" stroke-width="1">
-                <path d="M4 6l4 4 4-4"/>
-              </svg>
-            </button>
-            <div class="nav-dropdown-menu monitor-dropdown-menu">
-              <div class="dropdown-item-row">
-                <span class="scope-type-item">
-                  <svg class="scope-type-icon" viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.25">
-                    <path d="M2 2h12v12H2z" rx="1"/>
-                    <path d="M4 5h8M4 8h8M4 11h5"/>
-                  </svg>
-                  <span class="scope-type-label">Narrative</span>
-                </span>
-                <span class="text-xs text-muted">Watch existing narratives</span>
-              </div>
-              <div class="dropdown-item-row">
-                <span class="scope-type-item">
-                  <svg class="scope-type-icon" viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.25">
-                    <path d="M2 2h12v12H2z" rx="1"/>
-                    <path d="M4 5h8M4 8h6M4 11h4"/>
-                  </svg>
-                  <span class="scope-type-label">Theme</span>
-                </span>
-                <span class="text-xs text-muted">Watch specific themes</span>
-              </div>
-              <div class="dropdown-item-row">
-                <span class="scope-type-item">
-                  <svg class="scope-type-icon" viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.25">
-                    <path d="M6 1v14M10 1v14M1 6h14M1 10h14"/>
-                  </svg>
-                  <span class="scope-type-label">Topic</span>
-                </span>
-                <span class="text-xs text-muted">Watch topic keywords</span>
-              </div>
-              <div class="dropdown-item-row">
-                <span class="scope-type-item">
-                  <svg class="scope-type-icon" viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.25">
-                    <circle cx="8" cy="5" r="2.5"/>
-                    <circle cx="4" cy="11" r="2"/>
-                    <circle cx="12" cy="11" r="2"/>
-                    <path d="M6 6.5L4.5 9M10 6.5l1.5 2.5"/>
-                  </svg>
-                  <span class="scope-type-label">Faction</span>
-                </span>
-                <span class="text-xs text-muted">Watch faction activity</span>
-              </div>
-              <div class="dropdown-item-row">
-                <span class="scope-type-item">
-                  <svg class="scope-type-icon" viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.25">
-                    <circle cx="8" cy="4" r="2.5"/>
-                    <path d="M3 14c0-3 2.2-5 5-5s5 2 5 5"/>
-                  </svg>
-                  <span class="scope-type-label">Person</span>
-                </span>
-                <span class="text-xs text-muted">Watch individuals</span>
-              </div>
-              <div class="dropdown-item-row">
-                <span class="scope-type-item">
-                  <svg class="scope-type-icon" viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.25">
-                    <rect x="3" y="6" width="10" height="8" rx="1"/>
-                    <path d="M5 6V4a3 3 0 0 1 6 0v2"/>
-                    <rect x="5" y="9" width="2" height="2"/>
-                    <rect x="9" y="9" width="2" height="2"/>
-                  </svg>
-                  <span class="scope-type-label">Organization</span>
-                </span>
-                <span class="text-xs text-muted">Watch organizations</span>
-              </div>
-              <div class="dropdown-item-row">
-                <span class="scope-type-item">
-                  <svg class="scope-type-icon" viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.25">
-                    <path d="M8 1C5.2 1 3 3.2 3 6c0 4 5 9 5 9s5-5 5-9c0-2.8-2.2-5-5-5z"/>
-                    <circle cx="8" cy="6" r="2"/>
-                  </svg>
-                  <span class="scope-type-label">Location</span>
-                </span>
-                <span class="text-xs text-muted">Watch geographic areas</span>
-              </div>
-              <div class="dropdown-item-row">
-                <span class="scope-type-item">
-                  <svg class="scope-type-icon" viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.25">
-                    <rect x="2" y="3" width="12" height="11" rx="1"/>
-                    <path d="M2 6h12M5 1v3M11 1v3"/>
-                  </svg>
-                  <span class="scope-type-label">Event</span>
-                </span>
-                <span class="text-xs text-muted">Watch specific events</span>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
+      ${headerHtml}
       
       <div class="monitors-section">
         <div class="monitors-section-header">
           <h2 class="section-title">Active Monitors</h2>
-          <button class="btn btn-small btn-primary">+ New Monitor</button>
+          <button class="btn btn-small btn-primary" id="new-monitor-btn">+ New Monitor</button>
         </div>
         <div class="content-grid monitors-grid">
           ${monitorCardsHtml}
         </div>
       </div>
-      
     `;
     
     // Setup popover toggle handlers
@@ -536,6 +466,78 @@ export class MonitorsView extends BaseView {
     enrichedMonitors.forEach(monitor => {
       this.renderMonitorVisualization(monitor);
     });
+  }
+
+  /**
+   * Render the Alerts tab (list view of all alerts)
+   */
+  renderAlertsTab(headerHtml, allAlerts) {
+    // Get monitors for linking
+    const monitors = DataService.getMonitors();
+    const monitorsMap = new Map(monitors.map(m => [m.id, m]));
+    
+    // Sort alerts by triggered date (most recent first)
+    const sortedAlerts = [...allAlerts].sort((a, b) => 
+      new Date(b.triggeredAt) - new Date(a.triggeredAt)
+    );
+    
+    // Build alerts table rows
+    const alertRowsHtml = sortedAlerts.length > 0
+      ? sortedAlerts.map(alert => {
+          const monitor = monitorsMap.get(alert.monitorId);
+          const monitorName = monitor ? monitor.name : 'Unknown Monitor';
+          
+          return `
+            <tr data-alert-id="${alert.id}">
+              <td class="alert-col-type">
+                <span class="alert-type-badge ${this.getAlertTypeClass(alert.type)}">${this.getAlertTypeLabel(alert.type)}</span>
+              </td>
+              <td class="alert-col-monitor">
+                <a href="#/monitor/${alert.monitorId}" class="text-link">${this.escapeHtml(monitorName)}</a>
+              </td>
+              <td class="alert-col-description">
+                <div class="alert-content">
+                  <span class="alert-title-text">${this.escapeHtml(alert.title || '')}</span>
+                  <span class="alert-description-text">${formatAlertDescriptionWithLinks(alert, DataService)}</span>
+                </div>
+              </td>
+              <td class="alert-col-time">
+                ${this.formatRelativeTime(alert.triggeredAt)}
+              </td>
+            </tr>
+          `;
+        }).join('')
+      : `<tr><td colspan="4" class="text-center text-muted" style="padding: 48px;">No alerts found</td></tr>`;
+    
+    this.container.innerHTML = `
+      ${headerHtml}
+      
+      <div class="content-area">
+        <div class="card">
+          <div class="card-header">
+            <h2 class="card-title">All Alerts</h2>
+            <span class="badge badge-default">${sortedAlerts.length} total</span>
+          </div>
+          <div class="card-body card-body-no-padding">
+            <div class="table-container">
+              <table class="table alerts-list-table">
+                <thead>
+                  <tr>
+                    <th class="alert-col-type">Type</th>
+                    <th class="alert-col-monitor">Monitor</th>
+                    <th class="alert-col-description">Description</th>
+                    <th class="alert-col-time">Triggered</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  ${alertRowsHtml}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    `;
   }
 
   /**
@@ -1109,7 +1111,7 @@ export class MonitorsView extends BaseView {
     this.monitorEditor = getMonitorEditor();
     
     // Handle "New Monitor" button click
-    const newMonitorBtn = this.container.querySelector('.btn-primary');
+    const newMonitorBtn = document.getElementById('new-monitor-btn');
     if (newMonitorBtn) {
       this.addListener(newMonitorBtn, 'click', () => {
         this.monitorEditor.openCreate(() => {

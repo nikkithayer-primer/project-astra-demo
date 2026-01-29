@@ -3,6 +3,8 @@
  * Utility for generating consistent page headers with breadcrumbs
  */
 
+import { TagChips } from '../components/TagChips.js';
+
 export const PageHeader = {
   /**
    * Create a page header HTML string
@@ -17,6 +19,8 @@ export const PageHeader = {
    * @param {string} [config.badge] - Badge HTML
    * @param {string} [config.description] - Description text
    * @param {string} [config.descriptionLink] - Link HTML to append to description
+   * @param {Array} [config.tags] - Array of tag objects to display
+   * @param {string} [config.tagsContainerId] - ID for tags container (enables interactive editing)
    * @param {Array} [config.tabs] - Array of tab items [{id, label, href}]
    * @param {string} [config.activeTab] - ID of the active tab
    * @returns {string} Page header HTML string
@@ -33,6 +37,8 @@ export const PageHeader = {
       badge,
       description,
       descriptionLink,
+      tags,
+      tagsContainerId,
       actions,
       tabs,
       activeTab
@@ -43,6 +49,7 @@ export const PageHeader = {
     const titleRowHtml = this.renderTitleRow(title, iconHtml, badge, actions);
     const subtitleHtml = subtitle ? `<p class="subtitle">${subtitle}</p>` : '';
     const descriptionHtml = this.renderDescription(description, descriptionLink);
+    const tagsHtml = this.renderTags(tags, tagsContainerId);
     const tabsHtml = this.renderTabs(tabs, activeTab);
 
     return `
@@ -51,6 +58,7 @@ export const PageHeader = {
         ${titleRowHtml}
         ${subtitleHtml}
         ${descriptionHtml}
+        ${tagsHtml}
         ${tabsHtml}
       </div>
     `;
@@ -141,6 +149,28 @@ export const PageHeader = {
         ${description}
         ${descriptionLink || ''}
       </p>
+    `;
+  },
+
+  /**
+   * Render tags section
+   * @param {Array} tags - Array of tag objects
+   * @param {string} containerId - Optional container ID for interactive tags
+   * @returns {string} Tags HTML
+   */
+  renderTags(tags, containerId) {
+    // If containerId is provided, render an empty container for JS to populate
+    if (containerId) {
+      return `<div id="${containerId}" class="page-header-tags"></div>`;
+    }
+    
+    // Otherwise render static read-only tags
+    if (!tags || tags.length === 0) return '';
+    
+    return `
+      <div class="page-header-tags">
+        ${TagChips.renderReadOnly(tags)}
+      </div>
     `;
   },
 

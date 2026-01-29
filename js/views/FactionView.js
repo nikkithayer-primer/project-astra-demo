@@ -8,6 +8,8 @@ import { DataService } from '../data/DataService.js';
 import { PageHeader } from '../utils/PageHeader.js';
 import { initAllCardToggles } from '../utils/cardWidthToggle.js';
 import { aggregatePublisherVolumeData } from '../utils/volumeDataUtils.js';
+import { TagChips } from '../components/TagChips.js';
+import { getTagPicker } from '../components/TagPickerModal.js';
 import {
   CardManager,
   NetworkGraphCard,
@@ -69,6 +71,7 @@ export class FactionView extends BaseView {
       descriptionLink: faction.description 
         ? `<a href="#" class="btn btn-small btn-secondary source-link" data-source-type="faction" data-source-id="${faction.id}">View source</a>` 
         : '',
+      tagsContainerId: 'faction-tags-container',
       tabs: tabsConfig,
       activeTab: activeTab
     });
@@ -93,6 +96,30 @@ export class FactionView extends BaseView {
     // Initialize all card components
     const components = this.cardManager.initializeAll();
     Object.assign(this.components, components);
+
+    // Initialize tag chips
+    this.initTagChips(faction);
+  }
+
+  /**
+   * Initialize tag chips component
+   */
+  initTagChips(faction) {
+    const tagsContainer = this.container.querySelector('#faction-tags-container');
+    if (tagsContainer) {
+      this.tagChips = new TagChips({
+        entityType: 'faction',
+        entityId: faction.id,
+        editable: true,
+        onAddClick: () => {
+          const picker = getTagPicker();
+          picker.open('faction', faction.id, () => {
+            this.tagChips.refresh();
+          });
+        }
+      });
+      this.tagChips.render(tagsContainer);
+    }
   }
 
   /**

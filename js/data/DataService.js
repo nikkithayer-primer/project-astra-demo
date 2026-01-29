@@ -141,32 +141,33 @@ export const DataService = {
   // ============================================
 
   // Missions
-  getMissions: () => dataStore.data?.missions || [],
+  getMissions: () => dataStore.data?.missions ?? [],
   getMission: (id) => findById('missions', id),
 
   // Narratives - now supports time range filtering
   getNarratives: (missionId = null, timeRange = null) => {
-    let narratives = dataStore.data?.narratives;
-    if (!narratives || !Array.isArray(narratives)) return [];
+    const narratives = dataStore.data?.narratives;
+    if (!Array.isArray(narratives)) return [];
+    let filtered = narratives;
     
     // Filter by mission
     if (missionId && missionId !== 'all') {
-      narratives = narratives.filter(n => n && n.missionId === missionId);
+      filtered = filtered.filter(n => n && n.missionId === missionId);
     }
     
     // Filter by time range
     if (timeRange) {
-      narratives = narratives.filter(n => n && DataService.narrativeHasActivityInRange(n, timeRange));
+      filtered = filtered.filter(n => n && DataService.narrativeHasActivityInRange(n, timeRange));
     }
     
-    return narratives;
+    return filtered;
   },
   getNarrative: (id) => findById('narratives', id),
   getNarrativeById(id) { return this.getNarrative(id); },  // Alias for getNarrative
   
   // Get narratives by status (with optional time range)
   getNarrativesByStatus: (status, timeRange = null) => {
-    let narratives = dataStore.data.narratives.filter(n => (n.status || 'new') === status);
+    let narratives = (dataStore.data?.narratives ?? []).filter(n => (n.status || 'new') === status);
     if (timeRange) {
       narratives = narratives.filter(n => DataService.narrativeHasActivityInRange(n, timeRange));
     }
@@ -176,7 +177,7 @@ export const DataService = {
   // Get status counts (with optional time range)
   getNarrativeStatusCounts: (timeRange = null) => {
     const counts = { new: 0, in_progress: 0, under_investigation: 0, resolved: 0 };
-    let narratives = dataStore.data.narratives;
+    let narratives = dataStore.data?.narratives ?? [];
     
     if (timeRange) {
       narratives = narratives.filter(n => DataService.narrativeHasActivityInRange(n, timeRange));
@@ -190,38 +191,38 @@ export const DataService = {
   },
 
   // Themes
-  getThemes: () => dataStore.data?.themes || [],
+  getThemes: () => dataStore.data?.themes ?? [],
   getTheme: (id) => findById('themes', id),
   getThemeById(id) { return this.getTheme(id); },  // Alias for getTheme
 
   // Factions
-  getFactions: () => dataStore.data?.factions || [],
+  getFactions: () => dataStore.data?.factions ?? [],
   getFaction: (id) => findById('factions', id),
   getFactionById(id) { return this.getFaction(id); },  // Alias for getFaction
-  getFactionOverlaps: () => dataStore.data?.factionOverlaps || [],
+  getFactionOverlaps: () => dataStore.data?.factionOverlaps ?? [],
 
   // Locations
-  getLocations: () => dataStore.data?.locations || [],
+  getLocations: () => dataStore.data?.locations ?? [],
   getLocation: (id) => findById('locations', id),
   getLocationById(id) { return this.getLocation(id); },  // Alias for getLocation
 
   // Events
-  getEvents: () => dataStore.data?.events || [],
+  getEvents: () => dataStore.data?.events ?? [],
   getEvent: (id) => findById('events', id),
   getEventById(id) { return this.getEvent(id); },  // Alias for getEvent
 
   // Persons
-  getPersons: () => dataStore.data?.persons || [],
+  getPersons: () => dataStore.data?.persons ?? [],
   getPerson: (id) => findById('persons', id),
   getPersonById(id) { return this.getPerson(id); },  // Alias for getPerson
 
   // Organizations
-  getOrganizations: () => dataStore.data?.organizations || [],
+  getOrganizations: () => dataStore.data?.organizations ?? [],
   getOrganization: (id) => findById('organizations', id),
   getOrganizationById(id) { return this.getOrganization(id); },  // Alias for getOrganization
 
   // Documents
-  getDocuments: () => dataStore.data.documents || [],
+  getDocuments: () => dataStore.data?.documents ?? [],
   getDocument: (id) => findById('documents', id),
   getDocumentById(id) { return this.getDocument(id); },  // Alias for getDocument
   
@@ -231,7 +232,7 @@ export const DataService = {
    * @returns {Array} Filtered documents
    */
   getDocumentsByType: (type) => {
-    return (dataStore.data.documents || []).filter(d => d.documentType === type);
+    return (dataStore.data?.documents ?? []).filter(d => d.documentType === type);
   },
   
   /**
@@ -240,7 +241,7 @@ export const DataService = {
    * @returns {Array} Filtered documents
    */
   getDocumentsByClassification: (classification) => {
-    return (dataStore.data.documents || []).filter(d => (d.classification || 'U') === classification);
+    return (dataStore.data?.documents ?? []).filter(d => (d.classification || 'U') === classification);
   },
   
   /**
@@ -280,40 +281,48 @@ export const DataService = {
    * @returns {Array} Documents with classification above U
    */
   getClassifiedDocuments: () => {
-    return (dataStore.data.documents || []).filter(d => d.classification && d.classification !== 'U');
+    return (dataStore.data?.documents ?? []).filter(d => d.classification && d.classification !== 'U');
   },
 
   // Monitors
-  getMonitors: () => dataStore.data.monitors || [],
+  getMonitors: () => dataStore.data?.monitors ?? [],
   getMonitor: (id) => findById('monitors', id),
   getMonitorById: (id) => findById('monitors', id),
-  getActiveMonitors: () => (dataStore.data.monitors || []).filter(m => m.enabled),
+  getActiveMonitors: () => (dataStore.data?.monitors ?? []).filter(m => m.enabled),
   
   // Alerts
-  getAlerts: () => dataStore.data.alerts || [],
+  getAlerts: () => dataStore.data?.alerts ?? [],
   getAlert: (id) => findById('alerts', id),
   getAlertById: (id) => findById('alerts', id),
-  getAlertsForMonitor: (monitorId) => (dataStore.data.alerts || []).filter(a => a.monitorId === monitorId),
-  getUnacknowledgedAlerts: () => (dataStore.data.alerts || []).filter(a => !a.acknowledged),
+  getAlertsForMonitor: (monitorId) => (dataStore.data?.alerts ?? []).filter(a => a.monitorId === monitorId),
+  getUnacknowledgedAlerts: () => (dataStore.data?.alerts ?? []).filter(a => !a.acknowledged),
   getRecentAlerts: (limit = 10) => {
-    return [...(dataStore.data.alerts || [])]
+    return [...(dataStore.data?.alerts ?? [])]
       .sort((a, b) => new Date(b.triggeredAt) - new Date(a.triggeredAt))
       .slice(0, limit);
   },
 
   // Search Filters
-  getSearchFilters: () => dataStore.data.searchFilters || [],
+  getSearchFilters: () => dataStore.data?.searchFilters ?? [],
   getSearchFilter: (id) => findById('searchFilters', id),
   getSearchFilterById(id) { return this.getSearchFilter(id); },  // Alias for getSearchFilter
 
   // Topics
-  getTopics: () => dataStore.data.topics || [],
+  getTopics: () => dataStore.data?.topics ?? [],
   getTopic: (id) => findById('topics', id),
   getTopicById(id) { return this.getTopic(id); },  // Alias for getTopic
   
-  // Get topics filtered by time range
-  getTopicsInRange: (timeRange = null) => {
-    let topics = dataStore.data.topics || [];
+  // Get topics filtered by time range and optionally by tags
+  getTopicsInRange: (timeRange = null, tagFilter = null) => {
+    let topics = dataStore.data?.topics ?? [];
+    
+    // Apply tag filter if provided
+    if (tagFilter && tagFilter.length > 0) {
+      topics = topics.filter(topic => 
+        topic.tagIds && tagFilter.some(tagId => topic.tagIds.includes(tagId))
+      );
+    }
+    
     if (!timeRange) return topics;
     
     return topics.filter(topic => {
@@ -327,21 +336,21 @@ export const DataService = {
   // Get active topics (those without an end date or end date in future)
   getActiveTopics: () => {
     const now = new Date();
-    return (dataStore.data.topics || []).filter(topic => 
+    return (dataStore.data?.topics ?? []).filter(topic => 
       !topic.endDate || new Date(topic.endDate) >= now
     );
   },
   
   // Get topics by document
   getTopicsForDocument: (documentId) => {
-    return (dataStore.data.topics || []).filter(topic =>
-      (topic.documentIds || []).includes(documentId)
+    return (dataStore.data?.topics ?? []).filter(topic =>
+      (topic.documentIds ?? []).includes(documentId)
     );
   },
 
   // Publishers
   getPublishers: () => {
-    return dataStore.data.publishers || [];
+    return dataStore.data?.publishers ?? [];
   },
   
   getPublisher: (id) => {
@@ -349,7 +358,7 @@ export const DataService = {
   },
   
   getPublisherCategories: () => {
-    return dataStore.data.publisherCategories || [];
+    return dataStore.data?.publisherCategories ?? [];
   },
   
   getPublishersByType: (type) => {
@@ -381,7 +390,7 @@ export const DataService = {
 
   // Repositories
   getRepositories: () => {
-    return dataStore.data.repositories || [];
+    return dataStore.data?.repositories ?? [];
   },
   
   getRepository: (id) => {
@@ -389,7 +398,7 @@ export const DataService = {
   },
   
   getRepositoryByCode: (code) => {
-    const repos = dataStore.data.repositories || [];
+    const repos = dataStore.data?.repositories ?? [];
     return repos.find(r => r.code === code);
   },
   
@@ -399,7 +408,7 @@ export const DataService = {
    * @returns {Array} Filtered documents
    */
   getDocumentsByRepository: (repositoryId) => {
-    return (dataStore.data.documents || []).filter(d => d.repositoryId === repositoryId);
+    return (dataStore.data?.documents ?? []).filter(d => d.repositoryId === repositoryId);
   },
   
   /**
@@ -409,9 +418,9 @@ export const DataService = {
    */
   getDocumentsByRepositories: (repositoryIds) => {
     if (!repositoryIds || repositoryIds.length === 0) {
-      return dataStore.data.documents || [];
+      return dataStore.data?.documents ?? [];
     }
-    return (dataStore.data.documents || []).filter(d => repositoryIds.includes(d.repositoryId));
+    return (dataStore.data?.documents ?? []).filter(d => repositoryIds.includes(d.repositoryId));
   },
 
   // ============================================
@@ -419,7 +428,7 @@ export const DataService = {
   // ============================================
 
   getThemesForNarrative: (narrativeId) =>
-    dataStore.data.themes.filter(s => s.parentNarrativeId === narrativeId),
+    (dataStore.data?.themes ?? []).filter(s => s.parentNarrativeId === narrativeId),
 
   getFactionsForNarrative: (narrativeId) => {
     // Use document-based aggregation to get faction data
@@ -673,7 +682,7 @@ export const DataService = {
     const topic = findById('topics', topicId);
     if (!topic) return [];
     return (topic.documentIds || [])
-      .map(did => (dataStore.data.documents || []).find(d => d.id === did))
+      .map(did => (dataStore.data?.documents ?? []).find(d => d.id === did))
       .filter(Boolean)
       .sort((a, b) => new Date(b.publishedDate) - new Date(a.publishedDate));
   },
@@ -748,7 +757,7 @@ export const DataService = {
     const narrative = dataStore.data.narratives.find(n => n.id === narrativeId);
     if (!narrative) return [];
     return (narrative.documentIds || [])
-      .map(did => (dataStore.data.documents || []).find(d => d.id === did))
+      .map(did => (dataStore.data?.documents ?? []).find(d => d.id === did))
       .filter(Boolean)
       .sort((a, b) => new Date(b.publishedDate) - new Date(a.publishedDate));
   },
@@ -760,7 +769,7 @@ export const DataService = {
     const theme = dataStore.data.themes.find(s => s.id === themeId);
     if (!theme) return [];
     return (theme.documentIds || [])
-      .map(did => (dataStore.data.documents || []).find(d => d.id === did))
+      .map(did => (dataStore.data?.documents ?? []).find(d => d.id === did))
       .filter(Boolean)
       .sort((a, b) => new Date(b.publishedDate) - new Date(a.publishedDate));
   },
@@ -772,7 +781,7 @@ export const DataService = {
     const person = dataStore.data.persons.find(p => p.id === personId);
     if (!person) return [];
     return (person.documentIds || [])
-      .map(did => (dataStore.data.documents || []).find(d => d.id === did))
+      .map(did => (dataStore.data?.documents ?? []).find(d => d.id === did))
       .filter(Boolean)
       .sort((a, b) => new Date(b.publishedDate) - new Date(a.publishedDate));
   },
@@ -784,7 +793,7 @@ export const DataService = {
     const org = dataStore.data.organizations.find(o => o.id === orgId);
     if (!org) return [];
     return (org.documentIds || [])
-      .map(did => (dataStore.data.documents || []).find(d => d.id === did))
+      .map(did => (dataStore.data?.documents ?? []).find(d => d.id === did))
       .filter(Boolean)
       .sort((a, b) => new Date(b.publishedDate) - new Date(a.publishedDate));
   },
@@ -794,7 +803,7 @@ export const DataService = {
    * Prefers event.documentIds if available, falls back to reverse lookup
    */
   getDocumentsForEvent: (eventId) => {
-    const documents = dataStore.data.documents || [];
+    const documents = dataStore.data?.documents ?? [];
     const events = dataStore.data.events || [];
     const event = events.find(e => e.id === eventId);
     
@@ -817,7 +826,7 @@ export const DataService = {
    * Prefers location.documentIds if available, falls back to reverse lookup
    */
   getDocumentsForLocation: (locationId) => {
-    const documents = dataStore.data.documents || [];
+    const documents = dataStore.data?.documents ?? [];
     const locations = dataStore.data.locations || [];
     const location = locations.find(l => l.id === locationId);
     
@@ -840,7 +849,7 @@ export const DataService = {
    * Prefers faction.documentIds if available, falls back to reverse lookup
    */
   getDocumentsForFaction: (factionId) => {
-    const documents = dataStore.data.documents || [];
+    const documents = dataStore.data?.documents ?? [];
     const factions = dataStore.data.factions || [];
     const faction = factions.find(f => f.id === factionId);
     
@@ -864,7 +873,7 @@ export const DataService = {
    * Get narratives mentioned in a document
    */
   getNarrativesForDocument: (documentId) => {
-    const doc = (dataStore.data.documents || []).find(d => d.id === documentId);
+    const doc = (dataStore.data?.documents ?? []).find(d => d.id === documentId);
     if (!doc) return [];
     return (doc.narrativeIds || [])
       .map(nid => dataStore.data.narratives.find(n => n.id === nid))
@@ -875,7 +884,7 @@ export const DataService = {
    * Get themes mentioned in a document
    */
   getThemesForDocument: (documentId) => {
-    const doc = (dataStore.data.documents || []).find(d => d.id === documentId);
+    const doc = (dataStore.data?.documents ?? []).find(d => d.id === documentId);
     if (!doc) return [];
     return (doc.themeIds || [])
       .map(sid => dataStore.data.themes.find(s => s.id === sid))
@@ -886,7 +895,7 @@ export const DataService = {
    * Get persons mentioned in a document
    */
   getPersonsForDocument: (documentId) => {
-    const doc = (dataStore.data.documents || []).find(d => d.id === documentId);
+    const doc = (dataStore.data?.documents ?? []).find(d => d.id === documentId);
     if (!doc) return [];
     return (doc.personIds || [])
       .map(pid => dataStore.data.persons.find(p => p.id === pid))
@@ -897,7 +906,7 @@ export const DataService = {
    * Get organizations mentioned in a document
    */
   getOrganizationsForDocument: (documentId) => {
-    const doc = (dataStore.data.documents || []).find(d => d.id === documentId);
+    const doc = (dataStore.data?.documents ?? []).find(d => d.id === documentId);
     if (!doc) return [];
     return (doc.organizationIds || [])
       .map(oid => dataStore.data.organizations.find(o => o.id === oid))
@@ -908,7 +917,7 @@ export const DataService = {
    * Get locations mentioned in a document
    */
   getLocationsForDocument: (documentId) => {
-    const doc = (dataStore.data.documents || []).find(d => d.id === documentId);
+    const doc = (dataStore.data?.documents ?? []).find(d => d.id === documentId);
     if (!doc) return [];
     return (doc.locationIds || [])
       .map(lid => dataStore.data.locations.find(l => l.id === lid))
@@ -919,7 +928,7 @@ export const DataService = {
    * Get events mentioned in a document
    */
   getEventsForDocument: (documentId) => {
-    const doc = (dataStore.data.documents || []).find(d => d.id === documentId);
+    const doc = (dataStore.data?.documents ?? []).find(d => d.id === documentId);
     if (!doc) return [];
     return (doc.eventIds || [])
       .map(eid => dataStore.data.events.find(e => e.id === eid))
@@ -930,7 +939,7 @@ export const DataService = {
    * Get the publisher for a document
    */
   getPublisherForDocument: (documentId) => {
-    const doc = (dataStore.data.documents || []).find(d => d.id === documentId);
+    const doc = (dataStore.data?.documents ?? []).find(d => d.id === documentId);
     if (!doc || !doc.publisherId) return null;
     
     return DataService.getPublisher(doc.publisherId);
@@ -986,7 +995,7 @@ export const DataService = {
    * @returns {Array} Array of highlights with document references
    */
   getHighlightsByUser: (userId) => {
-    const documents = dataStore.data.documents || [];
+    const documents = dataStore.data?.documents ?? [];
     const highlights = [];
     
     documents.forEach(doc => {
@@ -1033,7 +1042,7 @@ export const DataService = {
    * @returns {Array} Array of comments with document references
    */
   getCommentsByUser: (userId) => {
-    const documents = dataStore.data.documents || [];
+    const documents = dataStore.data?.documents ?? [];
     const comments = [];
     
     documents.forEach(doc => {
@@ -1238,12 +1247,14 @@ export const DataService = {
   // Dashboard Aggregations (with time range support)
   // ============================================
 
-  getDashboardStats: (missionId = null, timeRange = null, statusFilter = null) => {
+  getDashboardStats: (missionId = null, timeRange = null, tagFilter = null) => {
     let narratives = DataService.getNarratives(missionId, timeRange);
     
-    // Apply status filter if provided (statusFilter is an array of statuses)
-    if (statusFilter && statusFilter.length > 0) {
-      narratives = narratives.filter(n => statusFilter.includes(n.status || 'new'));
+    // Apply tag filter if provided (tagFilter is an array of tag IDs)
+    if (tagFilter && tagFilter.length > 0) {
+      narratives = narratives.filter(n => 
+        n.tagIds && tagFilter.some(tagId => n.tagIds.includes(tagId))
+      );
     }
     
     const themes = dataStore.data.themes.filter(s =>
@@ -1263,18 +1274,16 @@ export const DataService = {
     // Sort by volume
     narrativesWithVolume.sort((a, b) => b.totalVolume - a.totalVolume);
 
-    // Filter events by time range and by narratives (if status filter is active)
+    // Filter events by time range and by tags (if tag filter is active)
     let events = dataStore.data.events;
     if (timeRange) {
       events = events.filter(e => DataService.isDateInRange(e.date, timeRange));
     }
-    if (statusFilter) {
-      // Only show events linked to filtered narratives
-      const narrativeIds = new Set(narratives.map(n => n.id));
-      events = events.filter(e => {
-        // Check if event is linked to any filtered narrative
-        return narratives.some(n => (n.eventIds || []).includes(e.id));
-      });
+    if (tagFilter && tagFilter.length > 0) {
+      // Filter events that have any of the selected tags
+      events = events.filter(e => 
+        e.tagIds && tagFilter.some(tagId => e.tagIds.includes(tagId))
+      );
     }
 
     return {
@@ -1762,7 +1771,7 @@ export const DataService = {
     }
     
     // Calculate document volume within ±1 day for each event
-    const documents = dataStore.data.documents || [];
+    const documents = dataStore.data?.documents ?? [];
     const dayMs = 24 * 60 * 60 * 1000;
     
     const eventsWithVolume = events.map(event => {
@@ -1803,7 +1812,7 @@ export const DataService = {
     const publisherVolumes = DataService.getAggregatePublisherVolumesForNarrative(narrativeId);
     if (!publisherVolumes || Object.keys(publisherVolumes).length === 0) return [];
     
-    const publishers = dataStore.data.publishers || [];
+    const publishers = dataStore.data?.publishers ?? [];
     return Object.entries(publisherVolumes).map(([publisherId, data]) => {
       const publisher = publishers.find(p => p.id === publisherId);
       return publisher ? { publisher, ...data } : null;
@@ -1816,7 +1825,7 @@ export const DataService = {
     if (!factionSources || Object.keys(factionSources).length === 0) return [];
     
     const factions = dataStore.data.factions;
-    const publishers = dataStore.data.publishers || [];
+    const publishers = dataStore.data?.publishers ?? [];
     
     return Object.entries(factionSources).map(([factionId, publisherCounts]) => {
       const faction = factions.find(f => f.id === factionId);
@@ -1836,7 +1845,7 @@ export const DataService = {
     const volumeOverTime = DataService.getVolumeOverTimeForNarrative(narrativeId);
     if (!volumeOverTime || volumeOverTime.length === 0) return { dates: [], series: [], publishers: [] };
     
-    const publishers = dataStore.data.publishers || [];
+    const publishers = dataStore.data?.publishers ?? [];
     const allPublisherIds = new Set();
     
     // Collect all publisher IDs present in the time series
@@ -1859,7 +1868,7 @@ export const DataService = {
   // Uses document-based aggregation
   getAggregatePublisherVolumes: (missionId = null, timeRange = null) => {
     const narratives = DataService.getNarratives(missionId, timeRange);
-    const publishers = dataStore.data.publishers || [];
+    const publishers = dataStore.data?.publishers ?? [];
     const publisherTotals = {};
     
     narratives.forEach(n => {
@@ -1891,7 +1900,7 @@ export const DataService = {
       narratives = narratives.filter(n => statusFilter.includes(n.status || 'new'));
     }
     
-    const publishers = dataStore.data.publishers || [];
+    const publishers = dataStore.data?.publishers ?? [];
     const dateMap = new Map();
 
     narratives.forEach(n => {
@@ -2348,7 +2357,7 @@ export const DataService = {
       (n.documentIds || []).forEach(dId => documentIds.add(dId));
     });
     
-    const documents = dataStore.data.documents || [];
+    const documents = dataStore.data?.documents ?? [];
     return [...documentIds]
       .map(dId => documents.find(d => d.id === dId))
       .filter(Boolean)
@@ -2399,7 +2408,7 @@ export const DataService = {
    */
   getTopicsForMonitor: (monitorId) => {
     const narratives = DataService.getNarrativesForMonitor(monitorId);
-    const topics = dataStore.data.topics || [];
+    const topics = dataStore.data?.topics ?? [];
     
     // Collect all document IDs from matched narratives
     const documentIds = new Set();
@@ -2417,20 +2426,20 @@ export const DataService = {
   // Workspace Methods
   // ============================================
 
-  getWorkspaces: () => dataStore.data.workspaces || [],
+  getWorkspaces: () => dataStore.data?.workspaces ?? [],
 
   getWorkspace: (id) => findById('workspaces', id),
 
   getActiveWorkspaces: () => 
-    (dataStore.data.workspaces || []).filter(w => w.status === 'active'),
+    (dataStore.data?.workspaces ?? []).filter(w => w.status === 'active'),
 
   getArchivedWorkspaces: () => 
-    (dataStore.data.workspaces || []).filter(w => w.status === 'archived'),
+    (dataStore.data?.workspaces ?? []).filter(w => w.status === 'archived'),
 
   getDocumentsForWorkspace: (workspaceId) => {
     const workspace = findById('workspaces', workspaceId);
     if (!workspace) return [];
-    return (workspace.documentIds || [])
+    return (workspace.documentIds ?? [])
       .map(id => findById('documents', id))
       .filter(Boolean)
       .sort((a, b) => new Date(b.publishedDate) - new Date(a.publishedDate));
@@ -2439,10 +2448,17 @@ export const DataService = {
   // Search across all entities
   /**
    * Search across all entities
-   * @param {string} query - Search query string
+   * @param {string} query - Search query string (optional if scope is provided)
    * @param {Object} options - Optional search options
    * @param {string[]} options.repositoryIds - Filter documents to these repositories (empty = all)
    * @param {Object} options.timeRange - Filter documents to this date range { start: Date, end: Date }
+   * @param {Object} options.scope - Filter by entity scope (from search filter)
+   * @param {string[]} options.scope.personIds - Filter to documents mentioning these persons
+   * @param {string[]} options.scope.organizationIds - Filter to documents mentioning these organizations
+   * @param {string[]} options.scope.factionIds - Filter to documents mentioning these factions
+   * @param {string[]} options.scope.locationIds - Filter to documents mentioning these locations
+   * @param {string[]} options.scope.eventIds - Filter to documents mentioning these events
+   * @param {string[]} options.scope.keywords - Additional keyword search terms
    * @returns {Object} Search results by entity type
    */
   search: (query, options = {}) => {
@@ -2458,15 +2474,25 @@ export const DataService = {
       organizations: []
     };
 
-    if (!query || typeof query !== 'string') {
+    const { repositoryIds = [], timeRange = null, scope = null } = options;
+    
+    // Need either a query or a scope to search
+    const hasQuery = query && typeof query === 'string' && query.trim().length > 0;
+    const hasScope = scope && (
+      (scope.personIds?.length > 0) ||
+      (scope.organizationIds?.length > 0) ||
+      (scope.factionIds?.length > 0) ||
+      (scope.locationIds?.length > 0) ||
+      (scope.eventIds?.length > 0) ||
+      (scope.keywords?.length > 0)
+    );
+    
+    if (!hasQuery && !hasScope) {
       return results;
     }
 
-    const { repositoryIds = [], timeRange = null } = options;
-
     try {
-      const lowerQuery = query.toLowerCase();
-      const queryTerms = lowerQuery.split(/\s+/).filter(t => t.length > 0);
+      const lowerQuery = hasQuery ? query.toLowerCase() : '';
       
       // Search documents by title, excerpt, and content blocks
       let documents = dataStore.data?.documents || [];
@@ -2485,47 +2511,400 @@ export const DataService = {
         });
       }
       
-      results.documents = documents.filter(doc => {
-        if (!doc) return false;
-        const titleMatch = doc.title && doc.title.toLowerCase().includes(lowerQuery);
-        const excerptMatch = doc.excerpt && doc.excerpt.toLowerCase().includes(lowerQuery);
-        const contentMatch = Array.isArray(doc.contentBlocks) && doc.contentBlocks.some(
-          block => block.content && block.content.toLowerCase().includes(lowerQuery)
-        );
-        const transcriptMatch = doc.transcription && doc.transcription.toLowerCase().includes(lowerQuery);
-        return titleMatch || excerptMatch || contentMatch || transcriptMatch;
-      }).sort((a, b) => new Date(b.publishedDate) - new Date(a.publishedDate));
+      // Apply scope filter if specified (OR logic - match any entity)
+      if (hasScope) {
+        documents = documents.filter(doc => {
+          if (!doc) return false;
+          
+          // Check person matches
+          if (scope.personIds?.length > 0) {
+            if (doc.personIds?.some(id => scope.personIds.includes(id))) {
+              return true;
+            }
+          }
+          
+          // Check organization matches
+          if (scope.organizationIds?.length > 0) {
+            if (doc.organizationIds?.some(id => scope.organizationIds.includes(id))) {
+              return true;
+            }
+          }
+          
+          // Check faction matches (via factionMentions)
+          if (scope.factionIds?.length > 0) {
+            const docFactionIds = Object.keys(doc.factionMentions || {});
+            if (scope.factionIds.some(id => docFactionIds.includes(id))) {
+              return true;
+            }
+          }
+          
+          // Check location matches
+          if (scope.locationIds?.length > 0) {
+            if (doc.locationIds?.some(id => scope.locationIds.includes(id))) {
+              return true;
+            }
+          }
+          
+          // Check event matches
+          if (scope.eventIds?.length > 0) {
+            if (doc.eventIds?.some(id => scope.eventIds.includes(id))) {
+              return true;
+            }
+          }
+          
+          // Check keyword matches (text search in title, excerpt, content)
+          if (scope.keywords?.length > 0) {
+            const docText = [
+              doc.title || '',
+              doc.excerpt || '',
+              ...(doc.contentBlocks || []).map(b => typeof b.content === 'string' ? b.content : ''),
+              doc.transcription || ''
+            ].join(' ').toLowerCase();
+            
+            if (scope.keywords.some(kw => docText.includes(kw.toLowerCase()))) {
+              return true;
+            }
+          }
+          
+          return false;
+        });
+      }
       
-      results.narratives = (dataStore.data?.narratives || []).filter(n =>
-        n && n.text && n.text.toLowerCase().includes(lowerQuery)
-      );
-      results.themes = (dataStore.data?.themes || []).filter(s =>
-        s && s.text && s.text.toLowerCase().includes(lowerQuery)
-      );
-      results.topics = (dataStore.data?.topics || []).filter(t =>
-        t && ((t.headline && t.headline.toLowerCase().includes(lowerQuery)) ||
-        (Array.isArray(t.bulletPoints) && t.bulletPoints.some(bp => bp && bp.toLowerCase().includes(lowerQuery))))
-      );
-      results.factions = (dataStore.data?.factions || []).filter(f =>
-        f && f.name && f.name.toLowerCase().includes(lowerQuery)
-      );
-      results.locations = (dataStore.data?.locations || []).filter(l =>
-        l && l.name && l.name.toLowerCase().includes(lowerQuery)
-      );
-      results.events = (dataStore.data?.events || []).filter(e =>
-        e && e.text && e.text.toLowerCase().includes(lowerQuery)
-      );
-      results.persons = (dataStore.data?.persons || []).filter(p =>
-        p && p.name && p.name.toLowerCase().includes(lowerQuery)
-      );
-      results.organizations = (dataStore.data?.organizations || []).filter(o =>
-        o && o.name && o.name.toLowerCase().includes(lowerQuery)
-      );
+      // Apply text query filter if specified
+      if (hasQuery) {
+        results.documents = documents.filter(doc => {
+          if (!doc) return false;
+          const titleMatch = doc.title && doc.title.toLowerCase().includes(lowerQuery);
+          const excerptMatch = doc.excerpt && doc.excerpt.toLowerCase().includes(lowerQuery);
+          const contentMatch = Array.isArray(doc.contentBlocks) && doc.contentBlocks.some(
+            block => block.content && typeof block.content === 'string' && block.content.toLowerCase().includes(lowerQuery)
+          );
+          const transcriptMatch = doc.transcription && doc.transcription.toLowerCase().includes(lowerQuery);
+          return titleMatch || excerptMatch || contentMatch || transcriptMatch;
+        }).sort((a, b) => new Date(b.publishedDate) - new Date(a.publishedDate));
+      } else {
+        // No text query, just return scope-filtered documents
+        results.documents = documents.sort((a, b) => new Date(b.publishedDate) - new Date(a.publishedDate));
+      }
+      
+      // Only search other entity types if there's a text query
+      if (hasQuery) {
+        results.narratives = (dataStore.data?.narratives || []).filter(n =>
+          n && n.text && n.text.toLowerCase().includes(lowerQuery)
+        );
+        results.themes = (dataStore.data?.themes || []).filter(s =>
+          s && s.text && s.text.toLowerCase().includes(lowerQuery)
+        );
+        results.topics = (dataStore.data?.topics || []).filter(t =>
+          t && ((t.headline && t.headline.toLowerCase().includes(lowerQuery)) ||
+          (Array.isArray(t.bulletPoints) && t.bulletPoints.some(bp => bp && bp.toLowerCase().includes(lowerQuery))))
+        );
+        results.factions = (dataStore.data?.factions || []).filter(f =>
+          f && f.name && f.name.toLowerCase().includes(lowerQuery)
+        );
+        results.locations = (dataStore.data?.locations || []).filter(l =>
+          l && l.name && l.name.toLowerCase().includes(lowerQuery)
+        );
+        results.events = (dataStore.data?.events || []).filter(e =>
+          e && e.text && e.text.toLowerCase().includes(lowerQuery)
+        );
+        results.persons = (dataStore.data?.persons || []).filter(p =>
+          p && p.name && p.name.toLowerCase().includes(lowerQuery)
+        );
+        results.organizations = (dataStore.data?.organizations || []).filter(o =>
+          o && o.name && o.name.toLowerCase().includes(lowerQuery)
+        );
+      }
     } catch (e) {
       console.error('DataService: Error during search:', e);
     }
 
     return results;
+  },
+
+  // ============================================
+  // Tag Methods
+  // ============================================
+
+  /**
+   * Get all tags
+   * @returns {Array} All tags
+   */
+  getTags: () => {
+    return dataStore.data?.tags || [];
+  },
+
+  /**
+   * Get a single tag by ID
+   * @param {string} tagId - Tag ID
+   * @returns {Object|undefined} Tag object
+   */
+  getTag: (tagId) => {
+    return (dataStore.data?.tags || []).find(t => t.id === tagId);
+  },
+
+  /**
+   * Get tags for a specific entity
+   * @param {string} entityType - Entity type ('narrative', 'person', etc.)
+   * @param {string} entityId - Entity ID
+   * @returns {Array} Tag objects for the entity
+   */
+  getTagsForEntity: (entityType, entityId) => {
+    const collectionMap = {
+      narrative: 'narratives',
+      theme: 'themes',
+      faction: 'factions',
+      location: 'locations',
+      event: 'events',
+      person: 'persons',
+      organization: 'organizations',
+      document: 'documents',
+      topic: 'topics',
+      monitor: 'monitors'
+    };
+    
+    const collection = collectionMap[entityType];
+    if (!collection) return [];
+    
+    const entity = dataStore.findEntity(collection, entityId);
+    if (!entity || !entity.tagIds) return [];
+    
+    const allTags = dataStore.data?.tags || [];
+    return entity.tagIds.map(tagId => allTags.find(t => t.id === tagId)).filter(Boolean);
+  },
+
+  /**
+   * Get all entities that have a specific tag
+   * @param {string} tagId - Tag ID
+   * @returns {Object} Object with arrays of entities by type
+   */
+  getEntitiesByTag: (tagId) => {
+    const result = {
+      narratives: [],
+      themes: [],
+      factions: [],
+      locations: [],
+      events: [],
+      persons: [],
+      organizations: [],
+      documents: [],
+      topics: [],
+      monitors: []
+    };
+    
+    Object.keys(result).forEach(collection => {
+      const items = dataStore.data?.[collection] || [];
+      result[collection] = items.filter(item => 
+        item && item.tagIds && item.tagIds.includes(tagId)
+      );
+    });
+    
+    return result;
+  },
+
+  /**
+   * Get entities matching multiple tags
+   * @param {Array} tagIds - Array of tag IDs
+   * @param {string} logic - 'AND' or 'OR' (default: 'OR')
+   * @returns {Object} Object with arrays of entities by type
+   */
+  getEntitiesByTags: (tagIds, logic = 'OR') => {
+    const result = {
+      narratives: [],
+      themes: [],
+      factions: [],
+      locations: [],
+      events: [],
+      persons: [],
+      organizations: [],
+      documents: [],
+      topics: [],
+      monitors: []
+    };
+    
+    if (!tagIds || tagIds.length === 0) return result;
+    
+    const matchFn = logic === 'AND'
+      ? (item) => item.tagIds && tagIds.every(tid => item.tagIds.includes(tid))
+      : (item) => item.tagIds && tagIds.some(tid => item.tagIds.includes(tid));
+    
+    Object.keys(result).forEach(collection => {
+      const items = dataStore.data?.[collection] || [];
+      result[collection] = items.filter(item => item && matchFn(item));
+    });
+    
+    return result;
+  },
+
+  /**
+   * Get count of entities per tag
+   * @returns {Object} Object mapping tag IDs to counts
+   */
+  getTagCounts: () => {
+    const counts = {};
+    const tags = dataStore.data?.tags || [];
+    
+    tags.forEach(tag => {
+      counts[tag.id] = 0;
+    });
+    
+    const collectionsWithTags = [
+      'narratives', 'themes', 'factions', 'locations', 'events',
+      'persons', 'organizations', 'documents', 'topics', 'monitors'
+    ];
+    
+    collectionsWithTags.forEach(collection => {
+      const items = dataStore.data?.[collection] || [];
+      items.forEach(item => {
+        if (item && item.tagIds) {
+          item.tagIds.forEach(tagId => {
+            if (counts[tagId] !== undefined) {
+              counts[tagId]++;
+            }
+          });
+        }
+      });
+    });
+    
+    return counts;
+  },
+
+  /**
+   * Get count breakdown by entity type for a specific tag
+   * @param {string} tagId - Tag ID
+   * @returns {Object} Object with counts per entity type
+   */
+  getTagCountsByEntityType: (tagId) => {
+    const counts = {
+      narratives: 0,
+      themes: 0,
+      factions: 0,
+      locations: 0,
+      events: 0,
+      persons: 0,
+      organizations: 0,
+      documents: 0,
+      topics: 0,
+      monitors: 0
+    };
+    
+    Object.keys(counts).forEach(collection => {
+      const items = dataStore.data?.[collection] || [];
+      counts[collection] = items.filter(item => 
+        item && item.tagIds && item.tagIds.includes(tagId)
+      ).length;
+    });
+    
+    return counts;
+  },
+
+  /**
+   * Create a new tag
+   * @param {Object} tag - Tag data { name, color?, description? }
+   * @returns {string|null} Created tag ID or null
+   */
+  createTag: (tag) => {
+    return dataStore.createTag(tag);
+  },
+
+  /**
+   * Update a tag
+   * @param {string} tagId - Tag ID
+   * @param {Object} updates - Fields to update
+   * @returns {boolean} Whether update succeeded
+   */
+  updateTag: (tagId, updates) => {
+    return dataStore.updateTag(tagId, updates);
+  },
+
+  /**
+   * Delete a tag (removes from all entities)
+   * @param {string} tagId - Tag ID
+   * @returns {boolean} Whether delete succeeded
+   */
+  deleteTag: (tagId) => {
+    return dataStore.deleteTag(tagId);
+  },
+
+  /**
+   * Add a tag to an entity
+   * @param {string} entityType - Entity type ('narrative', 'person', etc.)
+   * @param {string} entityId - Entity ID
+   * @param {string} tagId - Tag ID
+   * @returns {boolean} Whether operation succeeded
+   */
+  addTagToEntity: (entityType, entityId, tagId) => {
+    const collectionMap = {
+      narrative: 'narratives',
+      theme: 'themes',
+      faction: 'factions',
+      location: 'locations',
+      event: 'events',
+      person: 'persons',
+      organization: 'organizations',
+      document: 'documents',
+      topic: 'topics',
+      monitor: 'monitors'
+    };
+    
+    const collection = collectionMap[entityType];
+    if (!collection) return false;
+    
+    return dataStore.addTagToEntity(collection, entityId, tagId);
+  },
+
+  /**
+   * Remove a tag from an entity
+   * @param {string} entityType - Entity type
+   * @param {string} entityId - Entity ID
+   * @param {string} tagId - Tag ID
+   * @returns {boolean} Whether operation succeeded
+   */
+  removeTagFromEntity: (entityType, entityId, tagId) => {
+    const collectionMap = {
+      narrative: 'narratives',
+      theme: 'themes',
+      faction: 'factions',
+      location: 'locations',
+      event: 'events',
+      person: 'persons',
+      organization: 'organizations',
+      document: 'documents',
+      topic: 'topics',
+      monitor: 'monitors'
+    };
+    
+    const collection = collectionMap[entityType];
+    if (!collection) return false;
+    
+    return dataStore.removeTagFromEntity(collection, entityId, tagId);
+  },
+
+  /**
+   * Set all tags for an entity (replaces existing tags)
+   * @param {string} entityType - Entity type
+   * @param {string} entityId - Entity ID
+   * @param {Array} tagIds - Array of tag IDs
+   * @returns {boolean} Whether operation succeeded
+   */
+  setEntityTags: (entityType, entityId, tagIds) => {
+    const collectionMap = {
+      narrative: 'narratives',
+      theme: 'themes',
+      faction: 'factions',
+      location: 'locations',
+      event: 'events',
+      person: 'persons',
+      organization: 'organizations',
+      document: 'documents',
+      topic: 'topics',
+      monitor: 'monitors'
+    };
+    
+    const collection = collectionMap[entityType];
+    if (!collection) return false;
+    
+    return dataStore.updateEntity(collection, entityId, { tagIds: tagIds || [] });
   }
 };
 

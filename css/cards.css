@@ -26,19 +26,19 @@
 }
 
 .status-card.status-new {
-  border-left-color: #64b4ff;
+  border-left-color: var(--status-new-color);
 }
 
 .status-card.status-in-progress {
-  border-left-color: #ffb464;
+  border-left-color: var(--status-in-progress-color);
 }
 
 .status-card.status-investigating {
-  border-left-color: #b464ff;
+  border-left-color: var(--status-investigating-color);
 }
 
 .status-card.status-resolved {
-  border-left-color: #64c896;
+  border-left-color: var(--status-resolved-color);
 }
 
 .status-card.clickable {
@@ -58,19 +58,19 @@
 }
 
 .status-card.active.status-new {
-  box-shadow: 0 0 0 2px #64b4ff;
+  box-shadow: 0 0 0 2px var(--status-new-color);
 }
 
 .status-card.active.status-in-progress {
-  box-shadow: 0 0 0 2px #ffb464;
+  box-shadow: 0 0 0 2px var(--status-in-progress-color);
 }
 
 .status-card.active.status-investigating {
-  box-shadow: 0 0 0 2px #b464ff;
+  box-shadow: 0 0 0 2px var(--status-investigating-color);
 }
 
 .status-card.active.status-resolved {
-  box-shadow: 0 0 0 2px #64c896;
+  box-shadow: 0 0 0 2px var(--status-resolved-color);
 }
 
 /* Clear filter button */
@@ -105,19 +105,19 @@
 }
 
 .status-card.status-new .status-icon {
-  color: #64b4ff;
+  color: var(--status-new-color);
 }
 
 .status-card.status-in-progress .status-icon {
-  color: #ffb464;
+  color: var(--status-in-progress-color);
 }
 
 .status-card.status-investigating .status-icon {
-  color: #b464ff;
+  color: var(--status-investigating-color);
 }
 
 .status-card.status-resolved .status-icon {
-  color: #64c896;
+  color: var(--status-resolved-color);
 }
 
 .status-count {
