@@ -61,7 +61,39 @@ export class MapView extends BaseComponent {
 
     // Marker layer groups
     this.markerLayer = L.layerGroup(); // Locations without events - not added by default
-    this.eventMarkerLayer = L.layerGroup().addTo(this.map); // Events - always visible
+    
+    // Event markers with clustering (clusters multiple locations)
+    this.eventMarkerLayer = L.markerClusterGroup({
+      showCoverageOnHover: false,
+      zoomToBoundsOnClick: false,
+      spiderfyOnMaxZoom: true,
+      maxClusterRadius: 50,
+      iconCreateFunction: (cluster) => {
+        // Sum up total events across all child markers
+        const childMarkers = cluster.getAllChildMarkers();
+        const totalEvents = childMarkers.reduce((sum, marker) => {
+          return sum + (marker.options.eventCount || 1);
+        }, 0);
+        return L.divIcon({
+          html: `<div class="cluster-marker"><span>${totalEvents}</span></div>`,
+          className: 'event-cluster-icon',
+          iconSize: [36, 36]
+        });
+      }
+    });
+    
+    // Click handler for clusters - flyTo zoom level that expands
+    this.eventMarkerLayer.on('clusterclick', (e) => {
+      const cluster = e.layer;
+      const bounds = cluster.getBounds();
+      this.map.flyToBounds(bounds, { 
+        padding: [50, 50], 
+        animate: true, 
+        duration: 0.5 
+      });
+    });
+    
+    this.eventMarkerLayer.addTo(this.map);
 
     // Build set of location IDs that have events
     const locationIdsWithEvents = new Set();
@@ -94,8 +126,8 @@ export class MapView extends BaseComponent {
       const coords = [loc.coordinates.lat, loc.coordinates.lng];
       bounds.push(coords);
 
-      // Determine marker color
-      const markerColor = loc.isEvent ? '#F44336' : '#2196F3';
+      // Location markers are blue
+      const markerColor = '#2196F3';
 
       // Create custom marker
       const markerIcon = L.divIcon({
@@ -103,12 +135,11 @@ export class MapView extends BaseComponent {
         html: `
           <div class="marker-wrapper">
             <div class="marker-pin" style="background: ${markerColor}"></div>
-            <div class="marker-pulse" style="background: ${markerColor}"></div>
           </div>
         `,
-        iconSize: [30, 30],
-        iconAnchor: [15, 30],
-        popupAnchor: [0, -30]
+        iconSize: [40, 40],
+        iconAnchor: [20, 40],
+        popupAnchor: [0, -40]
       });
 
       const marker = L.marker(coords, { icon: markerIcon });
@@ -371,13 +402,14 @@ export class MapView extends BaseComponent {
       const markerColor = '#F44336';
       const eventCount = events.length;
 
-      // Create marker - show count badge if multiple events
+      // Create marker - pin with count inside if multiple events
       const markerIcon = L.divIcon({
         className: 'custom-map-marker event-marker',
         html: eventCount > 1 
           ? `<div class="marker-wrapper">
-              <div class="marker-pin event-pin" style="background: ${markerColor}"></div>
-              <div class="marker-count">${eventCount}</div>
+              <div class="marker-pin-with-count" style="background: ${markerColor}">
+                <span>${eventCount}</span>
+              </div>
             </div>`
           : `<div class="marker-wrapper">
               <div class="marker-pin event-pin" style="background: ${markerColor}"></div>
@@ -387,7 +419,8 @@ export class MapView extends BaseComponent {
         popupAnchor: [0, -40]
       });
 
-      const marker = L.marker(coords, { icon: markerIcon });
+      // Store eventCount in marker options for cluster summing
+      const marker = L.marker(coords, { icon: markerIcon, eventCount: eventCount });
 
       // Build popup content
       const popupContent = this.buildEventPopupContent(location, events);

@@ -79,9 +79,13 @@ export class TimelineVolumeComposite extends BaseComponent {
 
     const { width, margin, volumeHeight, timelineHeight, durationHeight, axisHeight, legendHeight, minZoom, maxZoom } = this.options;
     
-    // Calculate height based on display mode (row height = 16px bar + 6px padding = 22px)
+    // Calculate height based on display mode
+    // Duration mode: duration bars (dynamic height based on count) + timeline for events
+    const durationBarsHeight = this.displayMode === 'duration' 
+      ? Math.max(durationHeight, (narrativeDurations?.length || 0) * 20 + 8) // 16px bar + 4px padding = 20px per row
+      : 0;
     const contentHeight = this.displayMode === 'duration' 
-      ? Math.max(durationHeight, (narrativeDurations?.length || 0) * 22 + 30)
+      ? durationBarsHeight + timelineHeight  // Duration bars + events timeline
       : volumeHeight + timelineHeight;
     const totalHeight = margin.top + contentHeight + axisHeight + (this.displayMode === 'volume' ? legendHeight : 0) + margin.bottom;
     this.options.height = totalHeight;
@@ -92,6 +96,7 @@ export class TimelineVolumeComposite extends BaseComponent {
     this.innerWidth = innerWidth;
     this.volumeHeight = volumeHeight;
     this.timelineHeight = timelineHeight;
+    this.durationBarsHeight = durationBarsHeight;
     this.contentHeight = contentHeight;
 
     // Calculate time extent from all data sources
@@ -202,9 +207,27 @@ export class TimelineVolumeComposite extends BaseComponent {
 
     // Render based on display mode
     if (this.displayMode === 'duration') {
-      // Duration view - render narrative duration bars
+      // Duration view - render narrative duration bars ABOVE events timeline
+      
+      // Duration bars group (top panel)
       this.durationGroup = this.mainGroup.append('g')
         .attr('class', 'duration-group')
+        .attr('clip-path', `url(#composite-clip-${this.containerId})`);
+
+      // Divider line between duration bars and events timeline
+      this.mainGroup.append('line')
+        .attr('class', 'chart-divider')
+        .attr('x1', 0)
+        .attr('x2', innerWidth)
+        .attr('y1', durationBarsHeight)
+        .attr('y2', durationBarsHeight)
+        .attr('stroke', 'var(--border-color)')
+        .attr('stroke-width', 1);
+
+      // Timeline group (bottom panel - same as volume view)
+      this.timelineGroup = this.mainGroup.append('g')
+        .attr('class', 'timeline-group')
+        .attr('transform', `translate(0, ${durationBarsHeight})`)
         .attr('clip-path', `url(#composite-clip-${this.containerId})`);
 
       // Shared axis group
@@ -212,9 +235,12 @@ export class TimelineVolumeComposite extends BaseComponent {
         .attr('class', 'shared-axis')
         .attr('transform', `translate(0, ${contentHeight})`);
 
-      // Render duration view
+      // Render duration bars (top panel)
       this.renderDurationView(narrativeDurations);
+      // Render events timeline (bottom panel)
+      this.renderTimelineArea(events);
       this.renderSharedAxis();
+      this.renderEventMarkers(events);
     } else {
       // Volume view - render stacked area + timeline
       // Volume chart group
@@ -899,12 +925,13 @@ export class TimelineVolumeComposite extends BaseComponent {
   /**
    * Render the Duration View - horizontal bars showing narrative lifespans
    * Sorted by start date (earliest first)
+   * Bars are aligned with the events timeline x-scale (no left label offset)
    */
   renderDurationView(narrativeDurations) {
     if (!narrativeDurations || !narrativeDurations.length) {
       this.durationGroup.append('text')
         .attr('x', this.innerWidth / 2)
-        .attr('y', this.contentHeight / 2)
+        .attr('y', this.durationBarsHeight / 2)
         .attr('text-anchor', 'middle')
         .attr('fill', 'var(--text-muted)')
         .attr('font-size', '12px')
@@ -917,18 +944,14 @@ export class TimelineVolumeComposite extends BaseComponent {
     this.narrativeDurations = narrativeDurations;
 
     const barHeight = 16;
-    const barPadding = 6;
+    const barPadding = 4;
     const rowHeight = barHeight + barPadding;
-    const labelWidth = 200; // Width reserved for narrative labels
 
-    // Y scale for narratives
+    // Y scale for narratives - fixed row height
     this.yScale = d3.scaleBand()
       .domain(narrativeDurations.map(n => n.id))
-      .range([8, narrativeDurations.length * rowHeight + 8])
-      .padding(0.15);
-
-    // Calculate max volume for opacity scaling
-    const maxVolume = Math.max(...narrativeDurations.map(n => n.totalVolume || 1));
+      .range([4, narrativeDurations.length * rowHeight + 4])
+      .padding(0);
 
     // Create rows for each narrative
     const rows = this.durationGroup.selectAll('.duration-row')
@@ -937,58 +960,31 @@ export class TimelineVolumeComposite extends BaseComponent {
       .attr('class', 'duration-row')
       .attr('transform', d => `translate(0, ${this.yScale(d.id)})`);
 
-    // Background row highlight on hover
+    // Background row highlight on hover (full width)
     rows.append('rect')
       .attr('class', 'duration-row-bg')
       .attr('x', 0)
       .attr('y', -barPadding / 2)
       .attr('width', this.innerWidth)
-      .attr('height', rowHeight)
+      .attr('height', this.yScale.bandwidth() + barPadding)
       .attr('fill', 'transparent')
-      .attr('rx', 3);
+      .attr('rx', 2);
 
-    // Narrative label (truncated)
-    rows.append('text')
-      .attr('class', 'duration-label')
-      .attr('x', 0)
-      .attr('y', barHeight / 2 + 4)
-      .attr('fill', 'var(--text-secondary)')
-      .attr('font-size', '12px')
-      .attr('font-family', 'var(--font-sans)')
-      .text(d => d.text.length > 32 ? d.text.slice(0, 30) + '...' : d.text)
-      .append('title')
-      .text(d => d.text);
-
-    // Duration bar
-    const bars = rows.append('rect')
+    // Duration bar - aligned with x-scale (no label offset)
+    rows.append('rect')
       .attr('class', 'duration-bar')
-      .attr('x', d => Math.max(labelWidth, this.xScale(new Date(d.startDate))))
+      .attr('x', d => this.xScale(new Date(d.startDate)))
       .attr('y', 0)
       .attr('width', d => {
-        const startX = Math.max(labelWidth, this.xScale(new Date(d.startDate)));
+        const startX = this.xScale(new Date(d.startDate));
         const endX = this.xScale(new Date(d.endDate));
         return Math.max(4, endX - startX); // Minimum width of 4px for very short durations
       })
       .attr('height', barHeight)
       .attr('fill', d => d.color)
-      .attr('fill-opacity', d => 0.5 + (d.totalVolume / maxVolume) * 0.5) // 0.5 to 1.0 based on volume
+      .attr('fill-opacity', 0.8)
       .attr('rx', 2)
       .style('cursor', 'pointer');
-
-    // Volume indicator (small text beside bar)
-    rows.append('text')
-      .attr('class', 'duration-volume')
-      .attr('x', d => {
-        const startX = Math.max(labelWidth, this.xScale(new Date(d.startDate)));
-        const endX = this.xScale(new Date(d.endDate));
-        const barWidth = Math.max(4, endX - startX);
-        return startX + barWidth + 6;
-      })
-      .attr('y', barHeight / 2 + 4)
-      .attr('fill', 'var(--text-muted)')
-      .attr('font-size', '10px')
-      .attr('font-family', 'var(--font-mono)')
-      .text(d => this.formatNumber(d.totalVolume));
 
     // Hover effects and click handlers
     const self = this;
@@ -1003,11 +999,10 @@ export class TimelineVolumeComposite extends BaseComponent {
         self.showDurationTooltip(event, d);
       })
       .on('mouseleave', function(event, d) {
-        const maxVol = Math.max(...self.narrativeDurations.map(n => n.totalVolume || 1));
         d3.select(this).select('.duration-row-bg')
           .attr('fill', 'transparent');
         d3.select(this).select('.duration-bar')
-          .attr('fill-opacity', 0.5 + (d.totalVolume / maxVol) * 0.5)
+          .attr('fill-opacity', 0.8)
           .attr('stroke', 'none')
           .attr('stroke-width', 0);
         self.hideTooltip();
@@ -1021,8 +1016,7 @@ export class TimelineVolumeComposite extends BaseComponent {
         }
       });
 
-    // Store bars reference for zoom updates
-    this.durationBars = bars;
+    // Store rows reference for zoom updates
     this.durationRows = rows;
   }
 
@@ -1365,25 +1359,27 @@ export class TimelineVolumeComposite extends BaseComponent {
   updateVisualization() {
     // Update based on display mode
     if (this.displayMode === 'duration') {
-      // Update duration bars
+      // Update duration bars (no labelWidth offset - aligned with x-scale)
       if (this.durationRows && this.narrativeDurations) {
-        const labelWidth = 180;
-        
         this.durationRows.select('.duration-bar')
-          .attr('x', d => Math.max(labelWidth, this.xScale(new Date(d.startDate))))
+          .attr('x', d => this.xScale(new Date(d.startDate)))
           .attr('width', d => {
-            const startX = Math.max(labelWidth, this.xScale(new Date(d.startDate)));
+            const startX = this.xScale(new Date(d.startDate));
             const endX = this.xScale(new Date(d.endDate));
             return Math.max(4, endX - startX);
           });
+      }
 
-        this.durationRows.select('.duration-volume')
-          .attr('x', d => {
-            const startX = Math.max(labelWidth, this.xScale(new Date(d.startDate)));
-            const endX = this.xScale(new Date(d.endDate));
-            const barWidth = Math.max(4, endX - startX);
-            return startX + barWidth + 6;
-          });
+      // Duration mode also shows events timeline - update those too
+      if (this.eventGroups) {
+        this.eventGroups.attr('transform', d => 
+          `translate(${this.xScale(new Date(d.date))}, ${this.timelineHeight / 2})`
+        );
+        
+        // Update visibility based on zoom level
+        this.eventGroups
+          .style('opacity', d => this.isEventVisible(d) ? 1 : 0)
+          .style('pointer-events', d => this.isEventVisible(d) ? 'auto' : 'none');
       }
     } else {
       // Update volume chart
