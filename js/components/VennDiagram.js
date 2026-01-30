@@ -4,6 +4,7 @@
  */
 
 import { BaseComponent } from './BaseComponent.js';
+import { getEntityCardModal } from './EntityCardModal.js';
 
 export class VennDiagram extends BaseComponent {
   constructor(containerId, options = {}) {
@@ -121,23 +122,33 @@ export class VennDiagram extends BaseComponent {
         .style('font-size', '10px')
         .style('font-family', 'var(--font-mono)');
 
-      // Hover effects
+      // Hover effects and entity card popover
+      const self = this;
       vennDiv.selectAll('g')
+        .style('cursor', 'pointer')
         .on('mouseover', function(event, d) {
           const selection = d3.select(this);
           selection.select('path')
             .style('fill-opacity', 0.7);
+          
+          // Show entity card for single factions (not overlaps)
+          if (d.sets.length === 1) {
+            const factionId = d.sets[0];
+            getEntityCardModal().show(factionId, 'faction', this);
+          }
         })
         .on('mouseout', function(event, d) {
           const selection = d3.select(this);
           selection.select('path')
             .style('fill-opacity', 0.4);
+          
+          getEntityCardModal().scheduleHide();
         })
         .on('click', (event, d) => {
-          if (d.sets.length === 1 && this.options.onFactionClick) {
+          if (d.sets.length === 1 && self.options.onFactionClick) {
             const factionId = d.sets[0];
             const faction = sets.find(s => s.id === factionId);
-            this.options.onFactionClick(faction || { id: factionId });
+            self.options.onFactionClick(faction || { id: factionId });
           }
         });
 

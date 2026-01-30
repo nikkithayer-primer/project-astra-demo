@@ -7,6 +7,7 @@ import { BaseView } from './BaseView.js';
 import { DataService } from '../data/DataService.js';
 import { PageHeader } from '../utils/PageHeader.js';
 import { getEntityIcon } from '../utils/entityIcons.js';
+import { getEntityCardModal } from '../components/EntityCardModal.js';
 
 export class TagDetailView extends BaseView {
   constructor(container, tagId, options = {}) {
@@ -137,6 +138,9 @@ export class TagDetailView extends BaseView {
         ` : sections.join('')}
       </div>
     `;
+    
+    // Attach hover handlers for entity card popovers
+    this.attachEntityHoverHandlers();
   }
 
   /**
@@ -195,6 +199,29 @@ export class TagDetailView extends BaseView {
     } catch (e) {
       return dateStr;
     }
+  }
+
+  /**
+   * Attach hover handlers to entity list items for popover cards
+   */
+  attachEntityHoverHandlers() {
+    // Entity types that support hover cards
+    const hoverTypes = ['person', 'organization', 'faction', 'location'];
+    
+    this.container.querySelectorAll('.entity-list-item').forEach(item => {
+      const entityType = item.dataset.type;
+      const entityId = item.dataset.id;
+      
+      if (hoverTypes.includes(entityType)) {
+        item.addEventListener('mouseenter', () => {
+          getEntityCardModal().show(entityId, entityType, item);
+        });
+        
+        item.addEventListener('mouseleave', () => {
+          getEntityCardModal().scheduleHide();
+        });
+      }
+    });
   }
 }
 

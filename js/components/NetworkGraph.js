@@ -276,12 +276,26 @@ export class NetworkGraph extends BaseComponent {
     node.style('transition', 'transform 150ms ease-out')
       .style('cursor', 'pointer');
 
-    // Hover effects - scale up node slightly
+    // Store reference to this for callbacks
+    const self = this;
+    
+    // Track hovered node ID to preserve scale during simulation tick
+    let hoveredNodeId = null;
+
+    // Hover effects - scale up node slightly and show entity card
     node.on('mouseover', function(event, d) {
+      hoveredNodeId = d.id;
       d3.select(this).attr('transform', `translate(${d.x},${d.y}) scale(1.15)`);
+      if (self.options.onNodeHover) {
+        self.options.onNodeHover(d, this);
+      }
     })
     .on('mouseout', function(event, d) {
+      hoveredNodeId = null;
       d3.select(this).attr('transform', `translate(${d.x},${d.y}) scale(1)`);
+      if (self.options.onNodeHoverEnd) {
+        self.options.onNodeHoverEnd(d);
+      }
     })
     .on('click', (event, d) => {
       if (this.options.onNodeClick) {
@@ -301,7 +315,9 @@ export class NetworkGraph extends BaseComponent {
         // Keep within bounds
         d.x = Math.max(nodeRadius, Math.min(width - nodeRadius, d.x));
         d.y = Math.max(nodeRadius, Math.min(height - nodeRadius, d.y));
-        d3.select(this).attr('transform', `translate(${d.x},${d.y})`);
+        // Preserve scale for hovered node
+        const scale = d.id === hoveredNodeId ? 1.15 : 1;
+        d3.select(this).attr('transform', `translate(${d.x},${d.y}) scale(${scale})`);
       });
     });
   }

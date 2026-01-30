@@ -13,6 +13,7 @@ import { ThemeList } from '../components/ThemeList.js';
 import { MapView } from '../components/MapView.js';
 import { Timeline } from '../components/Timeline.js';
 import { NetworkGraph } from '../components/NetworkGraph.js';
+import { getEntityCardModal } from '../components/EntityCardModal.js';
 import { ClassificationBanner, renderClassificationBadge } from '../components/ClassificationBanner.js';
 import { DocumentContentRenderer } from '../components/DocumentContentRenderer.js';
 import { initAllCardToggles } from '../utils/cardWidthToggle.js';
@@ -440,8 +441,13 @@ export class DocumentView extends BaseView {
       this.components.network = new NetworkGraph('doc-network', {
         height: 350,
         onNodeClick: (node) => {
-          const route = node.type === 'person' ? 'person' : 'organization';
-          window.location.hash = `#/${route}/${node.id}`;
+          window.location.hash = `#/${node.type}/${node.id}`;
+        },
+        onNodeHover: (node, element) => {
+          getEntityCardModal().show(node.id, node.type, element);
+        },
+        onNodeHoverEnd: () => {
+          getEntityCardModal().scheduleHide();
         },
         onLinkClick: (link) => {
           this.showConnectingNarrativesModal(link);

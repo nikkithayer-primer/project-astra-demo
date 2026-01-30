@@ -17,7 +17,7 @@ export const documents = [
     author: 'Jean-Baptiste Vey',
     excerpt: 'French President Emmanuel Macron delivered a thinly veiled critique of President Trump\'s foreign policy at the World Economic Forum, warning of dangerous precedents being set.',
     headerImage: {
-      url: 'img/placeholders/image-placeholder.svg',
+      url: 'http://static.photos/cityscape/640x360/142',
       caption: 'French President Emmanuel Macron addresses the World Economic Forum in Davos, Switzerland. Photo: Reuters/Denis Balibouse'
     },
     contentBlocks: [
@@ -28,7 +28,7 @@ export const documents = [
       { type: 'paragraph', content: 'Macron\'s speech appeared to be part of a coordinated European response to the Greenland situation. European Commission President Ursula von der Leyen, who spoke at the same forum, echoed similar themes about defending "rules-based international order."', portionMark: { classification: 'U', handling: '' } },
       { type: 'quote', content: '"Europe must be prepared to defend its interests and its values, even when—perhaps especially when—they are challenged by our closest allies."', portionMark: { classification: 'U', handling: '' } },
       { type: 'paragraph', content: 'The French president also emphasized the need for European nations to develop greater strategic autonomy, particularly in defense and energy. "We have relied too long on others for our security," Macron said. "The events of recent weeks should be a wake-up call."', portionMark: { classification: 'U', handling: '' } },
-      { type: 'image', imageUrl: 'img/placeholders/image-placeholder.svg', caption: 'World leaders gathered at the Congress Centre in Davos for the annual World Economic Forum.' },
+      { type: 'image', imageUrl: 'http://static.photos/cityscape/640x360/142', caption: 'World leaders gathered at the Congress Centre in Davos for the annual World Economic Forum.' },
       { type: 'heading', content: 'Washington Dismisses Criticism', portionMark: { classification: 'U', handling: '' } },
       { type: 'paragraph', content: 'The White House did not immediately respond to Macron\'s remarks. However, sources close to the administration told Reuters that President Trump views European criticism as "predictable posturing" that will not affect his policy decisions.', portionMark: { classification: 'U', handling: '' } },
       { type: 'paragraph', content: 'Republican lawmakers largely rallied behind the president. Senator Tom Cotton of Arkansas called Macron\'s speech "the usual European hand-wringing" and said the U.S. has legitimate security interests in the Arctic region.', portionMark: { classification: 'U', handling: '' } },
@@ -128,7 +128,7 @@ export const documents = [
     author: 'Kevin Liptak and Betsy Klein',
     excerpt: 'President Trump shared what appeared to be a private diplomatic message from French President Macron questioning his Greenland acquisition strategy.',
     headerImage: {
-      url: 'img/placeholders/image-placeholder.svg',
+      url: 'http://static.photos/cityscape/640x360/142',
       caption: 'President Trump\'s Truth Social post displaying what appears to be a private message from President Macron.'
     },
     contentBlocks: [
@@ -173,7 +173,7 @@ export const documents = [
     author: 'Katya Adler',
     excerpt: 'European Commission President Ursula von der Leyen said the EU must develop greater autonomy in response to "geopolitical shocks" from across the Atlantic.',
     headerImage: {
-      url: 'img/placeholders/image-placeholder.svg',
+      url: 'http://static.photos/cityscape/640x360/142',
       caption: 'European Commission President Ursula von der Leyen delivers her address at the World Economic Forum.'
     },
     contentBlocks: [
@@ -184,7 +184,7 @@ export const documents = [
       { type: 'heading', content: 'Defense and Security', portionMark: { classification: 'U', handling: '' } },
       { type: 'paragraph', content: 'Von der Leyen announced plans to present a new European Defense Initiative at next month\'s EU summit. The proposal would include a 500 billion euro fund for joint military procurement and the creation of a rapid reaction force independent of NATO structures.', portionMark: { classification: 'U', handling: '' } },
       { type: 'paragraph', content: '"We are not abandoning NATO," she emphasized. "But we must be prepared for scenarios where we need to act on our own. The Greenland situation has made that abundantly clear."', portionMark: { classification: 'U', handling: '' } },
-      { type: 'image', imageUrl: 'img/placeholders/image-placeholder.svg', caption: 'EU and member state flags fly outside the European Commission headquarters in Brussels.' },
+      { type: 'image', imageUrl: 'http://static.photos/cityscape/640x360/142', caption: 'EU and member state flags fly outside the European Commission headquarters in Brussels.' },
       { type: 'heading', content: 'Mixed Reactions', portionMark: { classification: 'U', handling: '' } },
       { type: 'paragraph', content: 'The proposals received a mixed reception from EU member states. France and Germany expressed strong support, while Poland and the Baltic states warned against undermining the transatlantic alliance.', portionMark: { classification: 'U', handling: '' } },
       { type: 'paragraph', content: 'Polish Foreign Minister Radosław Sikorski cautioned that "Europe cannot defend itself without the United States, and we should not pretend otherwise. Our focus should be on repairing the relationship, not replacing it."', portionMark: { classification: 'U', handling: '' } }
@@ -219,7 +219,7 @@ export const documents = [
     author: 'Jon Henley',
     excerpt: 'Greenland\'s Prime Minister Múte Bourup Egede responded forcefully to Trump\'s acquisition threats, calling for respect of international norms.',
     headerImage: {
-      url: 'img/placeholders/image-placeholder.svg',
+      url: 'http://static.photos/cityscape/640x360/142',
       caption: 'Greenland\'s Prime Minister Múte Bourup Egede addresses reporters in Nuuk. Photo: Ritzau Scanpix'
     },
     contentBlocks: [
@@ -230,7 +230,7 @@ export const documents = [
       { type: 'heading', content: 'Independence Movement Gains Momentum', portionMark: { classification: 'U', handling: '' } },
       { type: 'paragraph', content: 'Ironically, Trump\'s pressure appears to be accelerating Greenland\'s long-term goal of independence from Denmark. Egede, who leads the pro-independence Inuit Ataqatigiit party, said recent events had "strengthened our resolve."', portionMark: { classification: 'U', handling: '' } },
       { type: 'paragraph', content: '"We will decide our own future," he said. "Not Washington, not Copenhagen. Greenlanders will determine the path of Greenland."', portionMark: { classification: 'U', handling: '' } },
-      { type: 'image', imageUrl: 'img/placeholders/image-placeholder.svg', caption: 'Protesters in Nuuk hold signs opposing American acquisition of Greenland.' },
+      { type: 'image', imageUrl: 'http://static.photos/cityscape/640x360/142', caption: 'Protesters in Nuuk hold signs opposing American acquisition of Greenland.' },
       { type: 'heading', content: 'Danish Support', portionMark: { classification: 'U', handling: '' } },
       { type: 'paragraph', content: 'Danish Prime Minister Mette Frederiksen reaffirmed Denmark\'s support for Greenland\'s self-determination. "Greenland belongs to the Greenlandic people," she said in a statement. "Denmark will always support their right to decide their own future."', portionMark: { classification: 'U', handling: '' } },
       { type: 'paragraph', content: 'The Danish government has recalled its ambassador to Washington for "consultations" and summoned the U.S. ambassador to Copenhagen to explain the administration\'s position.', portionMark: { classification: 'U', handling: '' } },
@@ -268,7 +268,7 @@ export const documents = [
     author: 'Charlie Savage and Miriam Jordan',
     excerpt: 'The Department of Justice announced plans to subpoena Minnesota\'s top officials in an escalating confrontation over immigration enforcement.',
     headerImage: {
-      url: 'img/placeholders/image-placeholder.svg',
+      url: 'http://static.photos/cityscape/640x360/142',
       caption: 'Minnesota Attorney General Keith Ellison speaks at a press conference about federal immigration enforcement. Photo: Star Tribune'
     },
     contentBlocks: [
@@ -279,7 +279,7 @@ export const documents = [
       { type: 'paragraph', content: 'Attorney General Ellison responded defiantly, calling the subpoenas "a politically motivated attack on the people of Minnesota" and vowing to challenge them in court.', portionMark: { classification: 'U', handling: '' } },
       { type: 'quote', content: '"We will not be intimidated by federal overreach. Minnesota will continue to protect the constitutional rights of all our residents, regardless of immigration status."', portionMark: { classification: 'U', handling: '' } },
       { type: 'paragraph', content: 'Governor Walz, speaking at an unrelated event in St. Paul, said the state would "vigorously defend" its policies. "We are a nation of laws, and that includes the Constitution, which protects due process for everyone," he said.', portionMark: { classification: 'U', handling: '' } },
-      { type: 'image', imageUrl: 'img/placeholders/image-placeholder.svg', caption: 'Protesters gather outside the federal building in Minneapolis to oppose ICE operations.' },
+      { type: 'image', imageUrl: 'http://static.photos/cityscape/640x360/142', caption: 'Protesters gather outside the federal building in Minneapolis to oppose ICE operations.' },
       { type: 'heading', content: 'Legal Experts Divided', portionMark: { classification: 'U', handling: '' } },
       { type: 'paragraph', content: 'Constitutional law experts are divided on the legality of the DOJ\'s actions. Some argue that state officials have a legitimate role in setting local law enforcement priorities, while others contend that immigration enforcement is an exclusively federal function.', portionMark: { classification: 'U', handling: '' } },
       { type: 'paragraph', content: '"This is uncharted territory," said Ilya Shapiro, a constitutional scholar at the Manhattan Institute. "The courts will ultimately have to decide where state sovereignty ends and federal supremacy begins."', portionMark: { classification: 'U', handling: '' } },
@@ -378,7 +378,7 @@ export const documents = [
     author: 'Devlin Barrett and Maria Sacchetti',
     excerpt: 'A federal judge issued an injunction protecting peaceful protesters from arrest by federal agents, but the DOJ immediately filed an appeal.',
     headerImage: {
-      url: 'img/placeholders/image-placeholder.svg',
+      url: 'http://static.photos/cityscape/640x360/142',
       caption: 'Protesters gather outside the Minneapolis Federal Building following the court ruling. Photo: Washington Post'
     },
     contentBlocks: [
@@ -426,7 +426,7 @@ export const documents = [
     author: 'Julia Ainsley',
     excerpt: 'Critics are outraged after learning the FBI\'s investigation into the fatal shooting has shifted focus from the agent to the victim and her widow.',
     headerImage: {
-      url: 'img/placeholders/image-placeholder.svg',
+      url: 'http://static.photos/cityscape/640x360/142',
       caption: 'A memorial for Renee Good at the site where she was killed during a protest in Minneapolis.'
     },
     contentBlocks: [
@@ -437,7 +437,7 @@ export const documents = [
       { type: 'paragraph', content: 'Sources familiar with the investigation say FBI agents have been interviewing Good\'s colleagues, friends, and family members—not to gather information about the shooting, but to build a profile of her political activities and associations.', portionMark: { classification: 'U', handling: '' } },
       { type: 'quote', content: '"They asked me about her social media posts, what protests she had attended, whether she had ever advocated violence. They\'re trying to make her the criminal when she was the victim." — Friend of Renee Good', portionMark: { classification: 'U', handling: '' } },
       { type: 'paragraph', content: 'Good\'s widow, Sarah Good, has also been contacted by FBI agents seeking information about her wife\'s "known associations" with activist groups. Through her attorney, Sarah Good declined to be interviewed.', portionMark: { classification: 'U', handling: '' } },
-      { type: 'image', imageUrl: 'img/placeholders/image-placeholder.svg', caption: 'Community members hold a vigil for Renee Good outside the Minneapolis Federal Building.' },
+      { type: 'image', imageUrl: 'http://static.photos/cityscape/640x360/142', caption: 'Community members hold a vigil for Renee Good outside the Minneapolis Federal Building.' },
       { type: 'heading', content: 'DOJ Defends Investigation', portionMark: { classification: 'U', handling: '' } },
       { type: 'paragraph', content: 'A Justice Department spokesperson defended the investigation\'s scope, saying it would be "inappropriate to comment on specific investigative steps" but that all relevant facts were being examined.', portionMark: { classification: 'U', handling: '' } },
       { type: 'paragraph', content: '"A thorough investigation requires examining all circumstances surrounding the incident," the spokesperson said. "We will follow the evidence wherever it leads."', portionMark: { classification: 'U', handling: '' } },
@@ -480,7 +480,7 @@ export const documents = [
     author: 'Omar Jimenez and Ashley Killough',
     excerpt: 'Anti-ICE demonstrators interrupted Sunday worship at Cities Church in St. Paul, targeting David Easterwood who serves dual roles as ICE official and pastor.',
     headerImage: {
-      url: 'img/placeholders/image-placeholder.svg',
+      url: 'http://static.photos/cityscape/640x360/142',
       caption: 'Protesters hold signs outside Cities Church in St. Paul during Sunday services. Photo: CNN'
     },
     contentBlocks: [
@@ -528,7 +528,7 @@ export const documents = [
     author: 'Bill Melugin',
     excerpt: 'Attorney General Pam Bondi declared that attacks against law enforcement and intimidation of Christians will be prosecuted to the fullest extent.',
     headerImage: {
-      url: 'img/placeholders/image-placeholder.svg',
+      url: 'http://static.photos/cityscape/640x360/142',
       caption: 'Attorney General Pam Bondi speaks at a press conference at the Department of Justice. Photo: Fox News'
     },
     contentBlocks: [
@@ -576,7 +576,7 @@ export const documents = [
     author: 'Ed Pilkington',
     excerpt: 'Assistant AG Harmeet Dhillon said Lemon is "on notice" and cannot use journalism as a shield, prompting press freedom concerns.',
     headerImage: {
-      url: 'img/placeholders/image-placeholder.svg',
+      url: 'http://static.photos/cityscape/640x360/142',
       caption: 'CNN anchor Don Lemon reports from outside Cities Church during the protest. Photo: Guardian/Getty'
     },
     contentBlocks: [
@@ -613,7 +613,7 @@ export const documents = [
   },
   {
     id: 'doc-011',
-    documentType: 'social_post',
+    documentType: 'social_media',
     repositoryId: 'repo-osint',
     classification: 'U',
     tagIds: ['tag-003'],
@@ -669,7 +669,7 @@ export const documents = [
     author: 'Sara Sidner',
     excerpt: 'Nekima Levy Armstrong questioned the moral standing of an ICE official serving as a pastor while overseeing immigration enforcement.',
     headerImage: {
-      url: 'img/placeholders/image-placeholder.svg',
+      url: 'http://static.photos/cityscape/640x360/142',
       caption: 'Nekima Levy Armstrong speaks at a press conference following the church protest. Photo: CNN'
     },
     contentBlocks: [
@@ -720,7 +720,7 @@ export const documents = [
     author: 'Eric Levenson and Ray Sanchez',
     excerpt: 'Tippecanoe Superior Court Judge Steven Meyer and his wife Kimberly were shot Sunday afternoon. Both are in stable condition as agencies search for the suspect.',
     headerImage: {
-      url: 'img/placeholders/image-placeholder.svg',
+      url: 'http://static.photos/cityscape/640x360/142',
       caption: 'Law enforcement vehicles line the street outside Judge Steven Meyer\'s residence in Lafayette, Indiana. Photo: CNN affiliate WLFI'
     },
     contentBlocks: [
@@ -766,7 +766,7 @@ export const documents = [
     author: 'Kaitlin Lange',
     excerpt: 'Chief Justice Loretta H. Rush sent an urgent letter to all state judges expressing concern about violence targeting the judiciary.',
     headerImage: {
-      url: 'img/placeholders/image-placeholder.svg',
+      url: 'http://static.photos/cityscape/640x360/142',
       caption: 'Indiana Supreme Court Chief Justice Loretta H. Rush. Photo: Indianapolis Star file'
     },
     contentBlocks: [
@@ -815,7 +815,7 @@ export const documents = [
     author: 'Josh Gerstein',
     excerpt: 'Federal judge Jia Cobb ruled DHS can continue blocking no-notice inspections despite blocking a similar policy last month.',
     headerImage: {
-      url: 'img/placeholders/image-placeholder.svg',
+      url: 'http://static.photos/cityscape/640x360/142',
       caption: 'The U.S. District Court for the District of Columbia. Photo: Politico'
     },
     contentBlocks: [
@@ -861,7 +861,7 @@ export const documents = [
     author: 'Jonathan Stempel',
     excerpt: 'Federal lawyers argued the state\'s attempt to end ICE activities would be unprecedented judicial overreach.',
     headerImage: {
-      url: 'img/placeholders/image-placeholder.svg',
+      url: 'http://static.photos/cityscape/640x360/142',
       caption: 'The Department of Justice building in Washington, D.C. Photo: Reuters/Andrew Kelly'
     },
     contentBlocks: [
@@ -907,7 +907,7 @@ export const documents = [
     author: 'Priscilla Alvarez',
     excerpt: 'After initially denying federal agents used chemical agents, Secretary Noem now says pepper spray was necessary to establish order.',
     headerImage: {
-      url: 'img/placeholders/image-placeholder.svg',
+      url: 'http://static.photos/cityscape/640x360/142',
       caption: 'DHS Secretary Kristi Noem speaks at a press briefing. Photo: CNN'
     },
     contentBlocks: [
@@ -956,7 +956,7 @@ export const documents = [
     author: 'Roni Caryn Rabin',
     excerpt: 'The new guidelines feature an inverted food pyramid emphasizing steak, poultry, and whole milk, urging Americans to nearly double protein consumption.',
     headerImage: {
-      url: 'img/placeholders/image-placeholder.svg',
+      url: 'http://static.photos/cityscape/640x360/142',
       caption: 'HHS Secretary Robert F. Kennedy Jr. unveils the new Dietary Guidelines for Americans. Photo: NYT/Doug Mills'
     },
     contentBlocks: [
@@ -1002,7 +1002,7 @@ export const documents = [
     author: 'Oliver Milman',
     excerpt: 'World Resources Institute estimates the guidelines would add hundreds of millions of tons of emissions and require an area the size of California.',
     headerImage: {
-      url: 'img/placeholders/image-placeholder.svg',
+      url: 'http://static.photos/cityscape/640x360/142',
       caption: 'Cattle grazing on farmland in Texas. The new dietary guidelines could significantly increase demand for beef. Photo: Guardian/Getty'
     },
     contentBlocks: [
@@ -1047,7 +1047,7 @@ export const documents = [
     author: 'Hayes Brown',
     excerpt: 'Critics highlight Kennedy\'s past environmental activism that sharply contradicts his new pro-meat dietary guidelines.',
     headerImage: {
-      url: 'img/placeholders/image-placeholder.svg',
+      url: 'http://static.photos/cityscape/640x360/142',
       caption: 'Robert F. Kennedy Jr. speaking at an environmental rally in 2004. Photo: MSNBC/File'
     },
     contentBlocks: [
@@ -1094,7 +1094,7 @@ export const documents = [
     author: 'James Gallagher',
     excerpt: 'A major French study found sodium nitrite—common in deli meats—is associated with significantly higher prostate cancer risk.',
     headerImage: {
-      url: 'img/placeholders/image-placeholder.svg',
+      url: 'http://static.photos/cityscape/640x360/142',
       caption: 'Processed meats containing sodium nitrite on display at a supermarket. Photo: BBC/Getty'
     },
     contentBlocks: [
@@ -1138,7 +1138,7 @@ export const documents = [
     author: 'Sandee LaMotte',
     excerpt: 'Researchers found high consumption of ultra-processed foods correlates with significantly increased risk of precancerous colorectal adenomas.',
     headerImage: {
-      url: 'img/placeholders/image-placeholder.svg',
+      url: 'http://static.photos/cityscape/640x360/142',
       caption: 'Ultra-processed foods including packaged snacks and ready meals. Photo: CNN/Getty'
     },
     contentBlocks: [
@@ -1173,7 +1173,7 @@ export const documents = [
   },
   {
     id: 'doc-023',
-    documentType: 'social_post',
+    documentType: 'social_media',
     repositoryId: 'repo-osint',
     classification: 'U',
     title: 'TikTok: Health news channel covers RFK Jr. confirmation hearings',
@@ -1221,7 +1221,7 @@ export const documents = [
   // Social media posts as documents
   {
     id: 'doc-024',
-    documentType: 'social_post',
+    documentType: 'social_media',
     repositoryId: 'repo-osint',
     classification: 'U',
     title: 'X post: Immigrant rights group documents ICE raid',
@@ -1265,7 +1265,7 @@ export const documents = [
   },
   {
     id: 'doc-025',
-    documentType: 'social_post',
+    documentType: 'social_media',
     repositoryId: 'repo-osint',
     classification: 'U',
     title: 'Reddit post: Minneapolis resident describes ICE presence in neighborhood',
@@ -2478,6 +2478,463 @@ export const documents = [
     },
       'faction-002': { sentiment: 0.32 }
     },
+    highlights: [],
+    comments: []
+  },
+  // New social media documents (doc-057 to doc-070)
+  {
+    id: 'doc-057',
+    documentType: 'social_media',
+    repositoryId: 'repo-osint',
+    classification: 'U',
+    url: 'https://reddit.com/r/politics/comments/greenland_megathread',
+    publishedDate: '2025-07-15T14:00:00Z',
+    publisherId: 'pub-reddit',
+    title: 'Reddit megathread: European leaders respond to Greenland comments',
+    author: {
+      username: 'u/politics_watcher_2025',
+      displayName: 'politics_watcher_2025',
+      avatarUrl: 'img/placeholders/avatar-default.svg'
+    },
+    contentBlocks: [
+      { type: 'paragraph', content: '**Megathread: European leaders respond to Trump\'s Greenland acquisition comments**\n\nThis thread is for discussing the ongoing diplomatic fallout from recent Greenland statements. Please keep discussion civil.\n\nKey developments:\n- Macron calls emergency EU meeting\n- Danish PM rejects any discussion of sale\n- Greenland Premier says "not for sale at any price"' }
+    ],
+    excerpt: 'Reddit megathread discussing European response to Greenland acquisition comments.',
+    narrativeIds: ['narr-005'],
+    themeIds: ['sub-009', 'sub-010'],
+    personIds: ['person-003', 'person-004'],
+    organizationIds: ['org-009'],
+    locationIds: ['loc-005'],
+    eventIds: [],
+    factionMentions: {
+      'faction-001': { sentiment: 0.45 },
+      'faction-002': { sentiment: -0.65 }
+    },
+    metrics: { likes: 15420, comments: 3850, platform: 'reddit' },
+    highlights: [],
+    comments: []
+  },
+  {
+    id: 'doc-058',
+    documentType: 'social_media',
+    repositoryId: 'repo-osint',
+    classification: 'U',
+    url: 'https://x.com/political_analyst/status/immigration_thread',
+    publishedDate: '2025-08-10T16:30:00Z',
+    publisherId: 'pub-x',
+    title: 'X thread: Analysis of DOJ immigration enforcement strategy',
+    author: {
+      username: '@political_analyst',
+      displayName: 'Political Analysis Daily',
+      avatarUrl: 'img/placeholders/avatar-default.svg'
+    },
+    contentBlocks: [
+      { type: 'paragraph', content: 'THREAD: Let\'s break down DOJ\'s new immigration enforcement strategy 🧵\n\n1/ The subpoena threats against state officials are unprecedented\n2/ Legal experts say this could set dangerous precedents for federalism\n3/ Minnesota is unlikely to comply without court orders\n4/ This is heading to SCOTUS eventually' }
+    ],
+    excerpt: 'X thread analyzing DOJ immigration enforcement strategy and legal implications.',
+    narrativeIds: ['narr-006', 'narr-009'],
+    themeIds: ['sub-012', 'sub-013'],
+    personIds: ['person-007'],
+    organizationIds: ['org-010', 'org-011'],
+    locationIds: ['loc-002'],
+    eventIds: [],
+    factionMentions: {
+      'faction-001': { sentiment: 0.35 },
+      'faction-002': { sentiment: -0.55 },
+      'faction-004': { sentiment: -0.42 }
+    },
+    metrics: { likes: 8750, comments: 1420, shares: 2850, platform: 'x' },
+    highlights: [],
+    comments: []
+  },
+  {
+    id: 'doc-059',
+    documentType: 'social_media',
+    repositoryId: 'repo-osint',
+    classification: 'U',
+    url: 'https://tiktok.com/@nutrition_facts/video/preservatives',
+    publishedDate: '2025-09-05T12:00:00Z',
+    publisherId: 'pub-tiktok',
+    title: 'TikTok: Nutritionist explains food preservative risks',
+    author: {
+      username: '@nutrition_facts',
+      displayName: 'Dr. Sarah Nutrition',
+      avatarUrl: 'img/placeholders/avatar-default.svg'
+    },
+    contentBlocks: [
+      { type: 'paragraph', content: 'POV: You just learned what sodium nitrite does to your body 😱 The new study linking it to 32% higher cancer risk is WILD. Here\'s what I\'m removing from my diet immediately... #health #nutrition #cancerprevention #foodsafety' }
+    ],
+    video: {
+      thumbnailUrl: 'img/placeholders/video-thumbnail.svg',
+      duration: 95
+    },
+    excerpt: 'TikTok explaining food preservative cancer risk study findings.',
+    narrativeIds: ['narr-003'],
+    themeIds: ['sub-007', 'sub-008'],
+    personIds: [],
+    organizationIds: [],
+    locationIds: [],
+    eventIds: [],
+    factionMentions: {
+      'faction-006': { sentiment: 0.72 }
+    },
+    metrics: { views: 3500000, likes: 285000, shares: 125000, comments: 42000, platform: 'tiktok' },
+    highlights: [],
+    comments: []
+  },
+  {
+    id: 'doc-060',
+    documentType: 'social_media',
+    repositoryId: 'repo-osint',
+    classification: 'U',
+    url: 'https://facebook.com/groups/minnesota_community/posts/ice_discussion',
+    publishedDate: '2025-10-12T09:00:00Z',
+    publisherId: 'pub-facebook',
+    title: 'Facebook: Minnesota community group discusses ICE presence',
+    author: {
+      username: 'minnesota.neighbor',
+      displayName: 'Minnesota Community Watch',
+      avatarUrl: 'img/placeholders/avatar-default.svg'
+    },
+    contentBlocks: [
+      { type: 'paragraph', content: 'Has anyone else noticed increased federal vehicle presence in the Uptown area? Our neighborhood watch wants to make sure everyone knows their rights. Sharing resources in comments. Please be safe and look out for each other. 🙏' }
+    ],
+    excerpt: 'Facebook community group discussing ICE presence in Minneapolis neighborhoods.',
+    narrativeIds: ['narr-006'],
+    themeIds: ['sub-013'],
+    personIds: [],
+    organizationIds: ['org-011'],
+    locationIds: ['loc-002'],
+    eventIds: [],
+    factionMentions: {
+      'faction-002': { sentiment: 0.55 },
+      'faction-003': { sentiment: 0.62 }
+    },
+    metrics: { likes: 2840, comments: 892, shares: 1250, platform: 'facebook' },
+    highlights: [],
+    comments: []
+  },
+  {
+    id: 'doc-061',
+    documentType: 'social_media',
+    repositoryId: 'repo-osint',
+    classification: 'U',
+    url: 'https://linkedin.com/posts/policy-expert_dietary-guidelines',
+    publishedDate: '2025-11-08T11:00:00Z',
+    publisherId: 'pub-linkedin',
+    title: 'LinkedIn: Policy expert critiques new dietary guidelines',
+    author: {
+      username: 'jennifer.policy.expert',
+      displayName: 'Jennifer Morrison, PhD - Health Policy',
+      avatarUrl: 'img/placeholders/avatar-default.svg'
+    },
+    contentBlocks: [
+      { type: 'paragraph', content: 'The new USDA dietary guidelines represent a significant departure from scientific consensus. As someone who has worked in nutrition policy for 20 years, I\'m deeply concerned about the environmental and public health implications of recommending near-doubled meat consumption. My full analysis: [link]\n\n#HealthPolicy #Nutrition #PublicHealth' }
+    ],
+    excerpt: 'LinkedIn post from health policy expert critiquing new dietary guidelines.',
+    narrativeIds: ['narr-010'],
+    themeIds: ['sub-027'],
+    personIds: [],
+    organizationIds: [],
+    locationIds: ['loc-001'],
+    eventIds: [],
+    factionMentions: {
+      'faction-006': { sentiment: 0.48 }
+    },
+    metrics: { likes: 4250, comments: 328, shares: 892, platform: 'linkedin' },
+    highlights: [],
+    comments: []
+  },
+  {
+    id: 'doc-062',
+    documentType: 'social_media',
+    repositoryId: 'repo-osint',
+    classification: 'U',
+    url: 'https://reddit.com/r/news/comments/judge_shooting',
+    publishedDate: '2025-11-18T20:00:00Z',
+    publisherId: 'pub-reddit',
+    title: 'Reddit: Discussion on Indiana judge shooting and judicial safety',
+    author: {
+      username: 'u/indiana_local_news',
+      displayName: 'indiana_local_news',
+      avatarUrl: 'img/placeholders/avatar-default.svg'
+    },
+    contentBlocks: [
+      { type: 'paragraph', content: '**Indiana judge and wife shot at home - suspect at large**\n\nJudge Steven Meyer and his wife Kimberly were shot at their Lafayette home. Both in stable condition. This is terrifying for our community.\n\nAnyone else concerned about the rise in threats against judges? The Indiana Supreme Court Chief Justice just urged all judges to "remain vigilant."' }
+    ],
+    excerpt: 'Reddit discussion on Indiana judge shooting and concerns about judicial safety.',
+    narrativeIds: ['narr-007'],
+    themeIds: ['sub-014', 'sub-015'],
+    personIds: [],
+    organizationIds: [],
+    locationIds: [],
+    eventIds: [],
+    factionMentions: {
+      'faction-004': { sentiment: -0.75 }
+    },
+    metrics: { likes: 8920, comments: 2150, platform: 'reddit' },
+    highlights: [],
+    comments: []
+  },
+  {
+    id: 'doc-063',
+    documentType: 'social_media',
+    repositoryId: 'repo-osint',
+    classification: 'U',
+    url: 'https://x.com/border_reporter/status/texas_guard',
+    publishedDate: '2025-12-05T15:00:00Z',
+    publisherId: 'pub-x',
+    title: 'X post: Reporter documents Texas National Guard border deployment',
+    author: {
+      username: '@border_reporter',
+      displayName: 'Border Coverage Network',
+      avatarUrl: 'img/placeholders/avatar-default.svg'
+    },
+    contentBlocks: [
+      { type: 'paragraph', content: 'Just witnessed another convoy of Texas National Guard vehicles heading to Eagle Pass. Governor Abbott\'s deployment now exceeds 5,000 troops. This is the largest state border operation in modern history. Federal officials are not happy. 📸 [photos attached]' }
+    ],
+    excerpt: 'X post documenting Texas National Guard border deployment.',
+    narrativeIds: ['narr-014'],
+    themeIds: ['sub-035', 'sub-036'],
+    personIds: ['person-027', 'person-028'],
+    organizationIds: ['org-024', 'org-025'],
+    locationIds: ['loc-010', 'loc-011'],
+    eventIds: ['event-027'],
+    factionMentions: {
+      'faction-001': { sentiment: 0.68 },
+      'faction-002': { sentiment: -0.52 }
+    },
+    metrics: { likes: 12500, comments: 3420, shares: 5800, platform: 'x' },
+    highlights: [],
+    comments: []
+  },
+  {
+    id: 'doc-064',
+    documentType: 'social_media',
+    repositoryId: 'repo-osint',
+    classification: 'U',
+    url: 'https://tiktok.com/@govt_worker/video/shutdown_diary',
+    publishedDate: '2025-10-08T18:00:00Z',
+    publisherId: 'pub-tiktok',
+    title: 'TikTok: Federal worker documents shutdown impact',
+    author: {
+      username: '@govt_worker',
+      displayName: 'Fed Life Stories',
+      avatarUrl: 'img/placeholders/avatar-default.svg'
+    },
+    contentBlocks: [
+      { type: 'paragraph', content: 'Day 5 of the shutdown. Still no idea when we\'ll get paid. My rent is due next week. This is the reality for 800,000 federal workers right now. We\'re not political pawns, we\'re people. #shutdown #federalworkers #governmentshutdown' }
+    ],
+    video: {
+      thumbnailUrl: 'img/placeholders/video-thumbnail.svg',
+      duration: 78
+    },
+    excerpt: 'TikTok documenting federal worker experience during government shutdown.',
+    narrativeIds: ['narr-012'],
+    themeIds: ['sub-031', 'sub-032'],
+    personIds: [],
+    organizationIds: ['org-020'],
+    locationIds: ['loc-001'],
+    eventIds: [],
+    factionMentions: {
+      'faction-002': { sentiment: 0.45 }
+    },
+    metrics: { views: 2800000, likes: 195000, shares: 85000, comments: 28000, platform: 'tiktok' },
+    highlights: [],
+    comments: []
+  },
+  {
+    id: 'doc-065',
+    documentType: 'social_media',
+    repositoryId: 'repo-osint',
+    classification: 'U',
+    url: 'https://facebook.com/groups/church_community/posts/protest_response',
+    publishedDate: '2026-01-19T22:00:00Z',
+    publisherId: 'pub-facebook',
+    title: 'Facebook: Church members respond to protest disruption',
+    author: {
+      username: 'cities.church.member',
+      displayName: 'Cities Church Community',
+      avatarUrl: 'img/placeholders/avatar-default.svg'
+    },
+    contentBlocks: [
+      { type: 'paragraph', content: 'Our church family was deeply shaken by Sunday\'s events. Whatever your views on politics, disrupting worship is not the answer. We are praying for peace and understanding in our community. Pastor David has asked us to respond with grace. Please join us in prayer. 🙏✝️' }
+    ],
+    excerpt: 'Facebook post from church community responding to protest disruption.',
+    narrativeIds: ['narr-008'],
+    themeIds: ['sub-016', 'sub-017'],
+    personIds: [],
+    organizationIds: [],
+    locationIds: ['loc-002'],
+    eventIds: ['event-021'],
+    factionMentions: {
+      'faction-001': { sentiment: 0.55 },
+      'faction-005': { sentiment: 0.72 }
+    },
+    metrics: { likes: 1850, comments: 425, shares: 320, platform: 'facebook' },
+    highlights: [],
+    comments: []
+  },
+  {
+    id: 'doc-066',
+    documentType: 'social_media',
+    repositoryId: 'repo-osint',
+    classification: 'U',
+    url: 'https://linkedin.com/posts/legal-analyst_face-act',
+    publishedDate: '2026-01-20T10:00:00Z',
+    publisherId: 'pub-linkedin',
+    title: 'LinkedIn: Legal analyst explains FACE Act implications',
+    author: {
+      username: 'michael.legal.analysis',
+      displayName: 'Michael Chen, JD - Constitutional Law',
+      avatarUrl: 'img/placeholders/avatar-default.svg'
+    },
+    contentBlocks: [
+      { type: 'paragraph', content: 'The DOJ\'s invocation of the FACE Act for the Minnesota church protest raises significant legal questions. Originally designed to protect abortion clinics, its 2021 expansion to houses of worship creates novel enforcement scenarios. Key considerations for legal professionals:\n\n1. Intent requirements under the statute\n2. First Amendment assembly protections\n3. Selective prosecution concerns\n\nFull analysis on my blog. #Law #ConstitutionalLaw #FirstAmendment' }
+    ],
+    excerpt: 'LinkedIn legal analysis of FACE Act application to church protest.',
+    narrativeIds: ['narr-008', 'narr-009'],
+    themeIds: ['sub-016', 'sub-018'],
+    personIds: [],
+    organizationIds: ['org-010'],
+    locationIds: ['loc-001'],
+    eventIds: [],
+    factionMentions: {
+      'faction-004': { sentiment: -0.35 }
+    },
+    metrics: { likes: 3280, comments: 245, shares: 620, platform: 'linkedin' },
+    highlights: [],
+    comments: []
+  },
+  {
+    id: 'doc-067',
+    documentType: 'social_media',
+    repositoryId: 'repo-osint',
+    classification: 'U',
+    url: 'https://reddit.com/r/opioidcrisis/comments/settlement_funds',
+    publishedDate: '2025-09-22T14:00:00Z',
+    publisherId: 'pub-reddit',
+    title: 'Reddit: Community discusses opioid settlement distribution',
+    author: {
+      username: 'u/recovery_advocate',
+      displayName: 'recovery_advocate',
+      avatarUrl: 'img/placeholders/avatar-default.svg'
+    },
+    contentBlocks: [
+      { type: 'paragraph', content: '**Where is the opioid settlement money going?**\n\nMy county was devastated by the opioid crisis. We lost so many people. Now that the settlement funds are being distributed, I\'m trying to track where the money is actually going.\n\nHas anyone seen actual treatment programs funded in their area? Or is it all going to general budgets?\n\nThis matters. People are still dying.' }
+    ],
+    excerpt: 'Reddit discussion on opioid settlement fund distribution and accountability.',
+    narrativeIds: ['narr-013'],
+    themeIds: ['sub-033', 'sub-034'],
+    personIds: [],
+    organizationIds: [],
+    locationIds: [],
+    eventIds: [],
+    factionMentions: {
+      'faction-002': { sentiment: 0.35 },
+      'faction-003': { sentiment: 0.42 }
+    },
+    metrics: { likes: 4520, comments: 1280, platform: 'reddit' },
+    highlights: [],
+    comments: []
+  },
+  {
+    id: 'doc-068',
+    documentType: 'social_media',
+    repositoryId: 'repo-osint',
+    classification: 'U',
+    url: 'https://x.com/capitol_watch/status/certification_prep',
+    publishedDate: '2025-12-20T11:00:00Z',
+    publisherId: 'pub-x',
+    title: 'X post: Security preparations for election certification',
+    author: {
+      username: '@capitol_watch',
+      displayName: 'Capitol Security Monitor',
+      avatarUrl: 'img/placeholders/avatar-default.svg'
+    },
+    contentBlocks: [
+      { type: 'paragraph', content: 'NEW: Capitol Police expanding security perimeter ahead of January certification. Sources say they\'re preparing for potential challenges. National Guard on standby. Very different posture than 2020. The lessons of J6 are being applied. 🏛️' }
+    ],
+    excerpt: 'X post reporting on Capitol security preparations for election certification.',
+    narrativeIds: ['narr-011'],
+    themeIds: ['sub-028', 'sub-029'],
+    personIds: ['person-031'],
+    organizationIds: ['org-020', 'org-030'],
+    locationIds: ['loc-004'],
+    eventIds: ['event-037'],
+    factionMentions: {
+      'faction-001': { sentiment: 0.25 },
+      'faction-002': { sentiment: 0.32 },
+      'faction-004': { sentiment: -0.45 }
+    },
+    metrics: { likes: 9850, comments: 2840, shares: 4200, platform: 'x' },
+    highlights: [],
+    comments: []
+  },
+  {
+    id: 'doc-069',
+    documentType: 'social_media',
+    repositoryId: 'repo-osint',
+    classification: 'U',
+    url: 'https://tiktok.com/@plantbased_living/video/rfk_guidelines',
+    publishedDate: '2025-12-28T16:00:00Z',
+    publisherId: 'pub-tiktok',
+    title: 'TikTok: Vegan influencer responds to new dietary guidelines',
+    author: {
+      username: '@plantbased_living',
+      displayName: 'Plant Based Sarah',
+      avatarUrl: 'img/placeholders/avatar-default.svg'
+    },
+    contentBlocks: [
+      { type: 'paragraph', content: 'The government wants you to eat MORE meat?? In 2025?? With everything we know about climate change and cancer risk?? Make it make sense 😭 Here\'s why I\'m ignoring these guidelines and you should too #vegan #plantbased #dietaryguidelines #healthyeating' }
+    ],
+    video: {
+      thumbnailUrl: 'img/placeholders/video-thumbnail.svg',
+      duration: 112
+    },
+    excerpt: 'TikTok response to new dietary guidelines from vegan influencer perspective.',
+    narrativeIds: ['narr-010', 'narr-003'],
+    themeIds: ['sub-007', 'sub-027'],
+    personIds: [],
+    organizationIds: [],
+    locationIds: [],
+    eventIds: [],
+    factionMentions: {
+      'faction-006': { sentiment: 0.85 }
+    },
+    metrics: { views: 4200000, likes: 320000, shares: 145000, comments: 52000, platform: 'tiktok' },
+    highlights: [],
+    comments: []
+  },
+  {
+    id: 'doc-070',
+    documentType: 'social_media',
+    repositoryId: 'repo-osint',
+    classification: 'U',
+    url: 'https://facebook.com/groups/california_politics/posts/newsom_lawsuit',
+    publishedDate: '2026-01-05T13:00:00Z',
+    publisherId: 'pub-facebook',
+    title: 'Facebook: Discussion of California lawsuit against border coalition',
+    author: {
+      username: 'ca.politics.discussion',
+      displayName: 'California Political Discussion',
+      avatarUrl: 'img/placeholders/avatar-default.svg'
+    },
+    contentBlocks: [
+      { type: 'paragraph', content: 'Governor Newsom just filed the federal lawsuit against Texas and Florida\'s border operations. This is going to be a landmark federalism case. What do you all think - does California have standing here? Is this about principles or politics?\n\nPlease keep discussion respectful. 🗳️' }
+    ],
+    excerpt: 'Facebook group discussing California federal lawsuit against border state coalition.',
+    narrativeIds: ['narr-014'],
+    themeIds: ['sub-035', 'sub-037'],
+    personIds: ['person-029', 'person-030'],
+    organizationIds: ['org-026'],
+    locationIds: ['loc-009'],
+    eventIds: ['event-030'],
+    factionMentions: {
+      'faction-001': { sentiment: -0.48 },
+      'faction-002': { sentiment: 0.62 }
+    },
+    metrics: { likes: 3420, comments: 1850, shares: 920, platform: 'facebook' },
     highlights: [],
     comments: []
   }

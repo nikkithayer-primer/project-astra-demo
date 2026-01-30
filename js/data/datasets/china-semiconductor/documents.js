@@ -17,7 +17,7 @@ export const documents = [
     author: 'Mark Liu',
     excerpt: 'SMIC has confirmed it is mass producing 5nm chips using advanced multi-patterning techniques with DUV lithography, marking a significant milestone for Chinese semiconductor manufacturing.',
     headerImage: {
-      url: 'img/placeholders/image-placeholder.svg',
+      url: 'http://static.photos/cityscape/640x360/142',
       caption: 'SMIC semiconductor fabrication facility'
     },
     contentBlocks: [
@@ -83,7 +83,7 @@ export const documents = [
     author: 'Che Pan',
     excerpt: 'In a major breakthrough, SMIC has demonstrated the ability to produce 5nm chips without access to ASML\'s extreme ultraviolet lithography systems, though at lower yields.',
     headerImage: {
-      url: 'img/placeholders/image-placeholder.svg',
+      url: 'http://static.photos/cityscape/640x360/142',
       caption: 'SMIC chip production line'
     },
     contentBlocks: [
@@ -119,7 +119,7 @@ export const documents = [
     author: 'Dylan Patel',
     excerpt: 'SemiAnalysis deep-dive into SMIC\'s technical approach reveals innovative multi-patterning but significant cost and yield penalties compared to EUV-based production.',
     headerImage: {
-      url: 'img/placeholders/image-placeholder.svg',
+      url: 'http://static.photos/cityscape/640x360/142',
       caption: 'Semiconductor wafer analysis'
     },
     contentBlocks: [
@@ -165,7 +165,7 @@ export const documents = [
     author: 'Ian King',
     excerpt: 'SMIC\'s unexpected advancement has sparked debate in Washington about the efficacy of semiconductor export controls and whether they are achieving their intended goals.',
     headerImage: {
-      url: 'img/placeholders/image-placeholder.svg',
+      url: 'http://static.photos/cityscape/640x360/142',
       caption: 'US Capitol building'
     },
     contentBlocks: [
@@ -201,7 +201,7 @@ export const documents = [
     author: 'Toby Sterling',
     excerpt: 'The Dutch government has announced expanded export controls blocking ASML from shipping advanced deep ultraviolet lithography systems to China.',
     headerImage: {
-      url: 'img/placeholders/image-placeholder.svg',
+      url: 'http://static.photos/cityscape/640x360/142',
       caption: 'ASML headquarters in Veldhoven, Netherlands'
     },
     contentBlocks: [
@@ -261,7 +261,7 @@ export const documents = [
     author: 'Peggy Hollinger',
     excerpt: 'ASML CEO Peter Wennink told investors that expanded China export restrictions will reduce the company\'s annual revenue by approximately $2.5 billion.',
     headerImage: {
-      url: 'img/placeholders/image-placeholder.svg',
+      url: 'http://static.photos/cityscape/640x360/142',
       caption: 'ASML CEO Peter Wennink at investor meeting'
     },
     contentBlocks: [
@@ -299,7 +299,7 @@ export const documents = [
     author: 'Yuka Hayashi',
     excerpt: 'Commerce Secretary Gina Raimondo defended the administration\'s expanded semiconductor export controls, calling them essential to maintaining US technological leadership.',
     headerImage: {
-      url: 'img/placeholders/image-placeholder.svg',
+      url: 'http://static.photos/cityscape/640x360/142',
       caption: 'Commerce Secretary Gina Raimondo at press briefing'
     },
     contentBlocks: [
@@ -337,7 +337,7 @@ export const documents = [
     author: 'Reuters Staff',
     excerpt: 'The Bureau of Industry and Security has added 15 new Chinese companies to the Entity List, expanding restrictions on semiconductor technology transfers.',
     headerImage: {
-      url: 'img/placeholders/image-placeholder.svg',
+      url: 'http://static.photos/cityscape/640x360/142',
       caption: 'US Department of Commerce building'
     },
     contentBlocks: [
@@ -375,7 +375,7 @@ export const documents = [
     author: 'Debby Wu',
     excerpt: 'China has unveiled the third phase of its National IC Fund with 340 billion yuan ($47 billion), the largest semiconductor investment tranche in its history.',
     headerImage: {
-      url: 'img/placeholders/image-placeholder.svg',
+      url: 'http://static.photos/cityscape/640x360/142',
       caption: 'China semiconductor investment announcement'
     },
     contentBlocks: [
@@ -433,7 +433,7 @@ export const documents = [
     author: 'Caixin Tech',
     excerpt: 'China\'s State Council has approved investment guidelines for the Big Fund III, prioritizing advanced packaging, semiconductor equipment, and EDA software development.',
     headerImage: {
-      url: 'img/placeholders/image-placeholder.svg',
+      url: 'http://static.photos/cityscape/640x360/142',
       caption: 'China State Council meeting hall'
     },
     contentBlocks: [
@@ -470,7 +470,7 @@ export const documents = [
     author: 'Kathrin Hille',
     excerpt: 'Analysts debate whether China\'s massive new semiconductor investment fund can achieve technological breakthroughs without access to cutting-edge foreign equipment.',
     headerImage: {
-      url: 'img/placeholders/image-placeholder.svg',
+      url: 'http://static.photos/cityscape/640x360/142',
       caption: 'China semiconductor manufacturing facility'
     },
     contentBlocks: [
@@ -507,7 +507,7 @@ export const documents = [
     author: 'Debby Wu',
     excerpt: 'Huawei has accumulated billions of dollars worth of semiconductor manufacturing equipment in warehouses across China, anticipating expanded US export restrictions.',
     headerImage: {
-      url: 'img/placeholders/image-placeholder.svg',
+      url: 'http://static.photos/cityscape/640x360/142',
       caption: 'Huawei corporate headquarters'
     },
     contentBlocks: [
@@ -555,7 +555,7 @@ export const documents = [
     author: 'Kate O\'Keeffe',
     excerpt: 'US Commerce Department has opened an investigation into whether Huawei circumvented export controls by acquiring equipment through third-party intermediaries.',
     headerImage: {
-      url: 'img/placeholders/image-placeholder.svg',
+      url: 'http://static.photos/cityscape/640x360/142',
       caption: 'Commerce Department investigation files'
     },
     contentBlocks: [
@@ -593,7 +593,7 @@ export const documents = [
     author: 'Iris Deng',
     excerpt: 'Huawei has issued a statement denying any violations of US export controls, dismissing reports of stockpiling as "speculation and conjecture."',
     headerImage: {
-      url: 'img/placeholders/image-placeholder.svg',
+      url: 'http://static.photos/cityscape/640x360/142',
       caption: 'Huawei press release statement'
     },
     contentBlocks: [
@@ -631,7 +631,7 @@ export const documents = [
     author: 'Ryan Smith',
     excerpt: 'Independent testing reveals YMTC\'s 232-layer 3D NAND flash memory delivers performance comparable to Samsung\'s latest offerings in key metrics.',
     headerImage: {
-      url: 'img/placeholders/image-placeholder.svg',
+      url: 'http://static.photos/cityscape/640x360/142',
       caption: 'YMTC 3D NAND chip close-up'
     },
     contentBlocks: [
@@ -668,7 +668,7 @@ export const documents = [
     author: 'Dan Hutcheson',
     excerpt: 'Research firm TechInsights has identified YMTC memory chips in consumer electronics from multiple brands, raising questions about Entity List enforcement.',
     headerImage: {
-      url: 'img/placeholders/image-placeholder.svg',
+      url: 'http://static.photos/cityscape/640x360/142',
       caption: 'TechInsights chip analysis lab'
     },
     contentBlocks: [
@@ -726,7 +726,7 @@ export const documents = [
     author: 'Vlad Savov',
     excerpt: 'Analysis reveals YMTC memory chips are entering global supply chains through complex networks that make end-to-end tracking difficult for regulators.',
     headerImage: {
-      url: 'img/placeholders/image-placeholder.svg',
+      url: 'http://static.photos/cityscape/640x360/142',
       caption: 'Global semiconductor supply chain map'
     },
     contentBlocks: [
@@ -762,7 +762,7 @@ export const documents = [
     author: 'Xinhua Staff',
     excerpt: 'Empyrean Technology has announced its EDA software suite now fully supports 14nm chip design, marking significant progress in Chinese design tool development.',
     headerImage: {
-      url: 'img/placeholders/image-placeholder.svg',
+      url: 'http://static.photos/cityscape/640x360/142',
       caption: 'Empyrean Technology EDA software interface'
     },
     contentBlocks: [
@@ -798,7 +798,7 @@ export const documents = [
     author: 'Caixin Tech',
     excerpt: 'Huada Jiutian has outlined an aggressive roadmap to develop EDA tools capable of supporting 7nm chip design within the next two years.',
     headerImage: {
-      url: 'img/placeholders/image-placeholder.svg',
+      url: 'http://static.photos/cityscape/640x360/142',
       caption: 'Huada Jiutian corporate campus'
     },
     contentBlocks: [
@@ -834,7 +834,7 @@ export const documents = [
     author: 'Yimou Lee',
     excerpt: 'TSMC has confirmed its Arizona fabrication facility will not begin production until late 2025, a significant delay from the original 2024 target.',
     headerImage: {
-      url: 'img/placeholders/image-placeholder.svg',
+      url: 'http://static.photos/cityscape/640x360/142',
       caption: 'TSMC Arizona fab construction site'
     },
     contentBlocks: [
@@ -880,7 +880,7 @@ export const documents = [
     author: 'Cheng Ting-Fang',
     excerpt: 'TSMC CEO C.C. Wei acknowledged challenges at the Arizona fab, citing differences in work culture and the need to adapt management approaches.',
     headerImage: {
-      url: 'img/placeholders/image-placeholder.svg',
+      url: 'http://static.photos/cityscape/640x360/142',
       caption: 'TSMC CEO C.C. Wei at investor conference'
     },
     contentBlocks: [
@@ -916,7 +916,7 @@ export const documents = [
     author: 'Ian King',
     excerpt: 'The Arizona Building and Construction Trades Council has filed formal grievances against TSMC, citing concerns about management practices and worker treatment.',
     headerImage: {
-      url: 'img/placeholders/image-placeholder.svg',
+      url: 'http://static.photos/cityscape/640x360/142',
       caption: 'Arizona construction workers at TSMC site'
     },
     contentBlocks: [
@@ -942,7 +942,7 @@ export const documents = [
   // X/Twitter - Tech analyst thread on SMIC
   {
     id: 'doc-023',
-    documentType: 'social_post',
+    documentType: 'social_media',
     repositoryId: 'repo-osint',
     classification: 'U',
     title: 'X thread: Tech analyst breaks down SMIC 5nm achievement',
@@ -983,7 +983,7 @@ export const documents = [
   // LinkedIn - Industry executive post
   {
     id: 'doc-024',
-    documentType: 'social_post',
+    documentType: 'social_media',
     repositoryId: 'repo-osint',
     classification: 'U',
     title: 'LinkedIn post: Industry executive reflects on SMIC achievement',
@@ -1024,7 +1024,7 @@ export const documents = [
   // Weibo - Chinese tech celebration post
   {
     id: 'doc-025',
-    documentType: 'social_post',
+    documentType: 'social_media',
     repositoryId: 'repo-osint',
     classification: 'U',
     title: 'Weibo post: Chinese tech blogger celebrates SMIC 5nm success',
@@ -1065,7 +1065,7 @@ export const documents = [
   // Reddit - Export controls discussion
   {
     id: 'doc-026',
-    documentType: 'social_post',
+    documentType: 'social_media',
     repositoryId: 'repo-osint',
     classification: 'U',
     title: 'Reddit discussion: Are US chip export controls backfiring?',
@@ -1111,7 +1111,7 @@ export const documents = [
   // X/Twitter - Policy hawk perspective
   {
     id: 'doc-027',
-    documentType: 'social_post',
+    documentType: 'social_media',
     repositoryId: 'repo-osint',
     classification: 'U',
     title: 'X post: National security analyst defends export controls',
@@ -1156,7 +1156,7 @@ export const documents = [
   // LinkedIn - ASML impact discussion
   {
     id: 'doc-028',
-    documentType: 'social_post',
+    documentType: 'social_media',
     repositoryId: 'repo-osint',
     classification: 'U',
     title: 'LinkedIn post: ASML\'s $2.5B China revenue hit analyzed',
@@ -1199,7 +1199,7 @@ export const documents = [
   // X/Twitter - Huawei Mate 70 teardown
   {
     id: 'doc-029',
-    documentType: 'social_post',
+    documentType: 'social_media',
     repositoryId: 'repo-osint',
     classification: 'U',
     title: 'X post: Huawei Mate 70 teardown confirms SMIC 5nm chip',
@@ -1240,7 +1240,7 @@ export const documents = [
   // Reddit - TSMC Arizona worker perspective
   {
     id: 'doc-030',
-    documentType: 'social_post',
+    documentType: 'social_media',
     repositoryId: 'repo-osint',
     classification: 'U',
     title: 'Reddit AMA: TSMC Arizona worker shares insider perspective',
@@ -2623,6 +2623,335 @@ export const documents = [
       'faction-016': { sentiment: 0.32 }
     }
     },
+    highlights: [],
+    comments: []
+  },
+  // New social media documents (doc-061 to doc-070)
+  {
+    id: 'doc-061',
+    documentType: 'social_media',
+    repositoryId: 'repo-osint',
+    classification: 'U',
+    url: 'https://reddit.com/r/hardware/comments/smic_analysis',
+    publishedDate: '2025-07-08T15:00:00Z',
+    publisherId: 'pub-reddit',
+    title: 'Reddit: Technical analysis of SMIC 5nm yield rates',
+    author: {
+      username: 'u/semiconductor_eng',
+      displayName: 'semiconductor_eng',
+      avatarUrl: 'img/placeholders/avatar-default.svg'
+    },
+    contentBlocks: [
+      { type: 'paragraph', content: '**Deep dive: SMIC 5nm yield analysis based on publicly available data**\n\nI\'ve been crunching numbers on SMIC\'s likely yield rates. Based on their quarterly reports and industry estimates:\n\n- DUV multi-patterning at 5nm likely yields 20-30%\n- Compare to TSMC EUV at 80%+\n- Cost per wafer is 3x higher\n\nThis is impressive engineering but not economically viable for high-volume production. Thoughts?' }
+    ],
+    excerpt: 'Reddit technical analysis of SMIC 5nm chip yield rates and economics.',
+    narrativeIds: ['narr-001'],
+    themeIds: ['sub-001', 'sub-002'],
+    personIds: ['person-001'],
+    organizationIds: ['org-001'],
+    locationIds: ['loc-001'],
+    eventIds: [],
+    factionMentions: {
+      'faction-003': { sentiment: 0.45 },
+      'faction-006': { sentiment: 0.35 }
+    },
+    metrics: { likes: 4850, comments: 892, platform: 'reddit' },
+    highlights: [],
+    comments: []
+  },
+  {
+    id: 'doc-062',
+    documentType: 'social_media',
+    repositoryId: 'repo-osint',
+    classification: 'U',
+    url: 'https://x.com/chip_industry/status/asml_restrictions',
+    publishedDate: '2025-08-15T10:30:00Z',
+    publisherId: 'pub-x',
+    title: 'X thread: Impact of expanded ASML restrictions',
+    author: {
+      username: '@chip_industry',
+      displayName: 'Semiconductor Industry Watch',
+      avatarUrl: 'img/placeholders/avatar-default.svg'
+    },
+    contentBlocks: [
+      { type: 'paragraph', content: 'BREAKING: Netherlands confirms expanded ASML export controls 🧵\n\n1/ Not just EUV anymore - advanced DUV systems also restricted\n2/ ASML estimates $2.5B annual revenue impact\n3/ China\'s domestic lithography efforts will accelerate\n4/ This could backfire spectacularly\n\nThe semiconductor cold war just escalated.' }
+    ],
+    excerpt: 'X thread analyzing expanded ASML lithography export restrictions to China.',
+    narrativeIds: ['narr-002'],
+    themeIds: ['sub-004', 'sub-005'],
+    personIds: [],
+    organizationIds: ['org-003', 'org-004'],
+    locationIds: ['loc-003'],
+    eventIds: [],
+    factionMentions: {
+      'faction-002': { sentiment: 0.55 },
+      'faction-001': { sentiment: -0.62 }
+    },
+    metrics: { likes: 8920, comments: 1450, shares: 3200, platform: 'x' },
+    highlights: [],
+    comments: []
+  },
+  {
+    id: 'doc-063',
+    documentType: 'social_media',
+    repositoryId: 'repo-osint',
+    classification: 'U',
+    url: 'https://weibo.com/techwatch/bigfund_announcement',
+    publishedDate: '2025-09-10T08:00:00Z',
+    publisherId: 'pub-weibo',
+    title: 'Weibo: Reaction to Big Fund III announcement',
+    author: {
+      username: '@科技观察者',
+      displayName: 'Tech Observer China',
+      avatarUrl: 'img/placeholders/avatar-default.svg'
+    },
+    contentBlocks: [
+      { type: 'paragraph', content: '大基金三期340亿美元！这是国家对半导体产业最强有力的支持。西方封锁只会让我们更强大。自主创新是唯一出路。🇨🇳\n\n[Translation: Big Fund III $34B! This is the strongest national support for semiconductor industry. Western blockade will only make us stronger. Independent innovation is the only way forward.]' }
+    ],
+    excerpt: 'Weibo post celebrating Big Fund III semiconductor investment announcement.',
+    narrativeIds: ['narr-003'],
+    themeIds: ['sub-006', 'sub-007'],
+    personIds: [],
+    organizationIds: ['org-001', 'org-010'],
+    locationIds: ['loc-001'],
+    eventIds: [],
+    factionMentions: {
+      'faction-001': { sentiment: 0.85 },
+      'faction-004': { sentiment: 0.78 }
+    },
+    metrics: { likes: 125000, comments: 8500, shares: 32000, platform: 'weibo' },
+    highlights: [],
+    comments: []
+  },
+  {
+    id: 'doc-064',
+    documentType: 'social_media',
+    repositoryId: 'repo-osint',
+    classification: 'U',
+    url: 'https://tiktok.com/@tech_explained/video/chips_act',
+    publishedDate: '2025-10-05T14:00:00Z',
+    publisherId: 'pub-tiktok',
+    title: 'TikTok: Explainer on CHIPS Act progress',
+    author: {
+      username: '@tech_explained',
+      displayName: 'Tech Explained Simply',
+      avatarUrl: 'img/placeholders/avatar-default.svg'
+    },
+    contentBlocks: [
+      { type: 'paragraph', content: 'So the US gave $52 billion to build chip factories here... but where are they? 🤔 Let\'s look at what\'s actually happening with the CHIPS Act money and why it\'s taking so long. Spoiler: building fabs is HARD. #chips #technology #manufacturing #usa' }
+    ],
+    video: {
+      thumbnailUrl: 'img/placeholders/video-thumbnail.svg',
+      duration: 89
+    },
+    excerpt: 'TikTok explainer on CHIPS Act implementation progress and challenges.',
+    narrativeIds: ['narr-007'],
+    themeIds: ['sub-013', 'sub-014'],
+    personIds: [],
+    organizationIds: ['org-005', 'org-006'],
+    locationIds: ['loc-012'],
+    eventIds: [],
+    factionMentions: {
+      'faction-006': { sentiment: 0.45 },
+      'faction-003': { sentiment: 0.32 }
+    },
+    metrics: { views: 2800000, likes: 185000, shares: 72000, comments: 24000, platform: 'tiktok' },
+    highlights: [],
+    comments: []
+  },
+  {
+    id: 'doc-065',
+    documentType: 'social_media',
+    repositoryId: 'repo-osint',
+    classification: 'U',
+    url: 'https://reddit.com/r/stocks/comments/intel_struggles',
+    publishedDate: '2025-10-20T18:00:00Z',
+    publisherId: 'pub-reddit',
+    title: 'Reddit: Discussion on Intel restructuring and layoffs',
+    author: {
+      username: 'u/chip_investor',
+      displayName: 'chip_investor',
+      avatarUrl: 'img/placeholders/avatar-default.svg'
+    },
+    contentBlocks: [
+      { type: 'paragraph', content: '**Intel announces 15,000 layoffs - what does this mean for US chip manufacturing?**\n\nIntel stock is down 25% this week after the restructuring announcement. As someone who\'s been long INTC for years, this is painful.\n\nBut the bigger question: can the US actually compete in advanced manufacturing without Intel? TSMC Arizona is struggling. Samsung Taylor is delayed.\n\nAre we putting all our eggs in a basket that might not work?' }
+    ],
+    excerpt: 'Reddit discussion on Intel layoffs and US semiconductor manufacturing viability.',
+    narrativeIds: ['narr-008'],
+    themeIds: ['sub-015', 'sub-016'],
+    personIds: ['person-009'],
+    organizationIds: ['org-006'],
+    locationIds: ['loc-012'],
+    eventIds: [],
+    factionMentions: {
+      'faction-006': { sentiment: -0.55 },
+      'faction-003': { sentiment: 0.25 }
+    },
+    metrics: { likes: 6720, comments: 1850, platform: 'reddit' },
+    highlights: [],
+    comments: []
+  },
+  {
+    id: 'doc-066',
+    documentType: 'social_media',
+    repositoryId: 'repo-osint',
+    classification: 'U',
+    url: 'https://x.com/supply_chain_analyst/status/huawei_stockpile',
+    publishedDate: '2025-11-12T09:00:00Z',
+    publisherId: 'pub-x',
+    title: 'X thread: Investigation into Huawei equipment stockpiling',
+    author: {
+      username: '@supply_chain_analyst',
+      displayName: 'Supply Chain Intelligence',
+      avatarUrl: 'img/placeholders/avatar-default.svg'
+    },
+    contentBlocks: [
+      { type: 'paragraph', content: 'THREAD: Sources say Huawei has stockpiled billions in semiconductor equipment in Shenzhen warehouses 🧵\n\n1/ Equipment from ASML, Applied Materials, Lam Research\n2/ Purchased before restrictions took effect\n3/ US investigating potential sanctions circumvention\n4/ Huawei denies wrongdoing\n\nThis is the shadow supply chain everyone suspected.' }
+    ],
+    excerpt: 'X thread investigating reports of Huawei semiconductor equipment stockpiling.',
+    narrativeIds: ['narr-004'],
+    themeIds: ['sub-008', 'sub-009'],
+    personIds: ['person-004'],
+    organizationIds: ['org-002'],
+    locationIds: ['loc-002'],
+    eventIds: [],
+    factionMentions: {
+      'faction-002': { sentiment: 0.65 },
+      'faction-001': { sentiment: -0.72 }
+    },
+    metrics: { likes: 12400, comments: 2850, shares: 5600, platform: 'x' },
+    highlights: [],
+    comments: []
+  },
+  {
+    id: 'doc-067',
+    documentType: 'social_media',
+    repositoryId: 'repo-osint',
+    classification: 'U',
+    url: 'https://weibo.com/huawei_fan/mate70_launch',
+    publishedDate: '2025-12-08T12:00:00Z',
+    publisherId: 'pub-weibo',
+    title: 'Weibo: Consumer excitement over Huawei Mate 70 with domestic chip',
+    author: {
+      username: '@华为粉丝圈',
+      displayName: 'Huawei Fan Community',
+      avatarUrl: 'img/placeholders/avatar-default.svg'
+    },
+    contentBlocks: [
+      { type: 'paragraph', content: '华为Mate 70发布！麒麟9100芯片，完全国产5nm工艺！西方说我们做不到，我们做到了！预购量已突破500万！这就是中国科技的力量！💪🇨🇳\n\n[Translation: Huawei Mate 70 released! Kirin 9100 chip, fully domestic 5nm process! The West said we couldn\'t do it, we did it! Pre-orders exceed 5 million! This is the power of Chinese technology!]' }
+    ],
+    excerpt: 'Weibo post celebrating Huawei Mate 70 launch with domestic 5nm chip.',
+    narrativeIds: ['narr-001', 'narr-004'],
+    themeIds: ['sub-001', 'sub-008'],
+    personIds: [],
+    organizationIds: ['org-002', 'org-001'],
+    locationIds: ['loc-002'],
+    eventIds: [],
+    factionMentions: {
+      'faction-001': { sentiment: 0.92 },
+      'faction-004': { sentiment: 0.85 }
+    },
+    metrics: { likes: 285000, comments: 42000, shares: 95000, platform: 'weibo' },
+    highlights: [],
+    comments: []
+  },
+  {
+    id: 'doc-068',
+    documentType: 'social_media',
+    repositoryId: 'repo-osint',
+    classification: 'U',
+    url: 'https://tiktok.com/@nvidia_stan/video/gpu_shortage',
+    publishedDate: '2025-12-22T16:00:00Z',
+    publisherId: 'pub-tiktok',
+    title: 'TikTok: AI developer frustration with Nvidia GPU shortage',
+    author: {
+      username: '@nvidia_stan',
+      displayName: 'AI Dev Life',
+      avatarUrl: 'img/placeholders/avatar-default.svg'
+    },
+    contentBlocks: [
+      { type: 'paragraph', content: 'Me waiting 6 months for my H100 GPUs to arrive 🤡 Meanwhile my competitors got theirs last year. Nvidia please I\'m begging. The shortage is killing startups. #ai #nvidia #gpu #startuplife #h100' }
+    ],
+    video: {
+      thumbnailUrl: 'img/placeholders/video-thumbnail.svg',
+      duration: 45
+    },
+    excerpt: 'TikTok expressing AI developer frustration with Nvidia GPU shortages.',
+    narrativeIds: ['narr-011'],
+    themeIds: ['sub-022', 'sub-023'],
+    personIds: [],
+    organizationIds: ['org-020'],
+    locationIds: ['loc-012'],
+    eventIds: [],
+    factionMentions: {
+      'faction-006': { sentiment: -0.45 },
+      'faction-003': { sentiment: 0.35 }
+    },
+    metrics: { views: 3200000, likes: 245000, shares: 85000, comments: 32000, platform: 'tiktok' },
+    highlights: [],
+    comments: []
+  },
+  {
+    id: 'doc-069',
+    documentType: 'social_media',
+    repositoryId: 'repo-osint',
+    classification: 'U',
+    url: 'https://reddit.com/r/semiconductors/comments/ymtc_found',
+    publishedDate: '2026-01-02T20:00:00Z',
+    publisherId: 'pub-reddit',
+    title: 'Reddit: Discussion of YMTC chips found in consumer devices',
+    author: {
+      username: 'u/teardown_specialist',
+      displayName: 'teardown_specialist',
+      avatarUrl: 'img/placeholders/avatar-default.svg'
+    },
+    contentBlocks: [
+      { type: 'paragraph', content: '**Found YMTC NAND in my new SSD despite Entity List status**\n\nDid a teardown of a new consumer SSD from a major brand. Found YMTC 232-layer NAND inside.\n\nHow is this possible when YMTC is on the Entity List? Supply chain laundering? Third-party intermediaries?\n\nPhotos in comments. This is a significant sanctions compliance issue.' }
+    ],
+    excerpt: 'Reddit post documenting YMTC chips found in consumer devices despite sanctions.',
+    narrativeIds: ['narr-005'],
+    themeIds: ['sub-010', 'sub-011'],
+    personIds: [],
+    organizationIds: ['org-011'],
+    locationIds: [],
+    eventIds: [],
+    factionMentions: {
+      'faction-002': { sentiment: 0.72 },
+      'faction-003': { sentiment: 0.45 }
+    },
+    metrics: { likes: 8450, comments: 2120, platform: 'reddit' },
+    highlights: [],
+    comments: []
+  },
+  {
+    id: 'doc-070',
+    documentType: 'social_media',
+    repositoryId: 'repo-osint',
+    classification: 'U',
+    url: 'https://x.com/korea_chip_news/status/subsidy_dispute',
+    publishedDate: '2026-01-08T11:00:00Z',
+    publisherId: 'pub-x',
+    title: 'X post: Breaking news on US-Korea semiconductor subsidy dispute',
+    author: {
+      username: '@korea_chip_news',
+      displayName: 'Korea Semiconductor News',
+      avatarUrl: 'img/placeholders/avatar-default.svg'
+    },
+    contentBlocks: [
+      { type: 'paragraph', content: 'BREAKING: US files WTO complaint against Korea\'s $17B semiconductor subsidies 🇺🇸🇰🇷\n\nThis is awkward timing given:\n- US just gave billions in CHIPS Act subsidies\n- Korea is a key ally against China\n- Samsung/SK Hynix supply critical chips to US\n\nThe semiconductor alliance is showing cracks.' }
+    ],
+    excerpt: 'X post reporting US WTO complaint against Korean semiconductor subsidies.',
+    narrativeIds: ['narr-009'],
+    themeIds: ['sub-019', 'sub-020'],
+    personIds: [],
+    organizationIds: ['org-014', 'org-029'],
+    locationIds: ['loc-011'],
+    eventIds: [],
+    factionMentions: {
+      'faction-006': { sentiment: -0.55 },
+      'faction-002': { sentiment: 0.35 }
+    },
+    metrics: { likes: 7850, comments: 1650, shares: 3200, platform: 'x' },
     highlights: [],
     comments: []
   }

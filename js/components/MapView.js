@@ -126,15 +126,12 @@ export class MapView extends BaseComponent {
       const coords = [loc.coordinates.lat, loc.coordinates.lng];
       bounds.push(coords);
 
-      // Location markers are blue
-      const markerColor = '#2196F3';
-
-      // Create custom marker
+      // Create custom marker (location markers are blue)
       const markerIcon = L.divIcon({
         className: 'custom-map-marker',
         html: `
           <div class="marker-wrapper">
-            <div class="marker-pin" style="background: ${markerColor}"></div>
+            <div class="marker-pin location-pin"></div>
           </div>
         `,
         iconSize: [40, 40],
@@ -399,7 +396,6 @@ export class MapView extends BaseComponent {
     eventsByCoords.forEach(({ location, coords, events }) => {
       bounds.push(coords);
 
-      const markerColor = '#F44336';
       const eventCount = events.length;
 
       // Create marker - pin with count inside if multiple events
@@ -407,12 +403,12 @@ export class MapView extends BaseComponent {
         className: 'custom-map-marker event-marker',
         html: eventCount > 1 
           ? `<div class="marker-wrapper">
-              <div class="marker-pin-with-count" style="background: ${markerColor}">
+              <div class="marker-pin-with-count">
                 <span>${eventCount}</span>
               </div>
             </div>`
           : `<div class="marker-wrapper">
-              <div class="marker-pin event-pin" style="background: ${markerColor}"></div>
+              <div class="marker-pin event-pin"></div>
             </div>`,
         iconSize: [40, 40],
         iconAnchor: [20, 40],
@@ -533,13 +529,13 @@ export class MapView extends BaseComponent {
     if (!this.map || !location.coordinates) return;
 
     const coords = [location.coordinates.lat, location.coordinates.lng];
-    const markerColor = location.isEvent ? '#F44336' : '#2196F3';
+    const pinClass = location.isEvent ? 'marker-pin event-pin' : 'marker-pin location-pin';
 
     const markerIcon = L.divIcon({
       className: 'custom-map-marker',
       html: `
         <div class="marker-wrapper">
-          <div class="marker-pin" style="background: ${markerColor}"></div>
+          <div class="${pinClass}"></div>
         </div>
       `,
       iconSize: [40, 40],

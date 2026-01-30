@@ -152,9 +152,9 @@ export class DashboardView extends BaseView {
                 </button>
                 <button class="view-toggle-btn ${this.volumeViewMode === 'duration' ? 'active' : ''}" data-view="duration" title="Duration View">
                   <svg viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.5">
-                    <rect x="2" y="3" width="8" height="2" rx="0.5"/>
-                    <rect x="4" y="7" width="10" height="2" rx="0.5"/>
-                    <rect x="3" y="11" width="6" height="2" rx="0.5"/>
+                    <rect x="2" y="3" width="8" height="1" rx="0.5"/>
+                    <rect x="4" y="7" width="10" height="1" rx="0.5"/>
+                    <rect x="3" y="11" width="6" height="1" rx="0.5"/>
                   </svg>
                 </button>
               </div>
@@ -172,10 +172,7 @@ export class DashboardView extends BaseView {
             actions: `
               <button class="btn-icon card-action-btn topic-bullets-toggle" title="Toggle bullet points" data-target="dashboard-topic-list">
                 <svg viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.5">
-                  <path d="M5 4h9M5 8h9M5 12h9"/>
-                  <circle cx="2" cy="4" r="1" fill="currentColor"/>
-                  <circle cx="2" cy="8" r="1" fill="currentColor"/>
-                  <circle cx="2" cy="12" r="1" fill="currentColor"/>
+                  <path d="M3 4h10M3 8h10M3 12h6"/>
                 </svg>
               </button>
             `

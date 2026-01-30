@@ -6,11 +6,13 @@
 import { dataStore } from './data/DataStore.js';
 import { DataService } from './data/DataService.js';
 import { getMonitorEditor } from './components/MonitorEditorModal.js';
+import { getSearchFilterEditor } from './components/SearchFilterEditorModal.js';
 import { mockData as americanPoliticsData, datasetId as americanPoliticsId, datasetName as americanPoliticsName } from './data/datasets/american-politics/index.js';
 import { mockData as chinaSemiconductorData, datasetId as chinaSemiconductorId, datasetName as chinaSemiconductorName } from './data/datasets/china-semiconductor/index.js';
 import { mockData as walmartBrandData, datasetId as walmartBrandId, datasetName as walmartBrandName } from './data/datasets/walmart-brand/index.js';
 import { Router } from './router.js';
 import { getSourceViewer } from './components/SourceViewerModal.js';
+import { getEntityCardModal } from './components/EntityCardModal.js';
 import { escapeHtml } from './utils/htmlUtils.js';
 
 // Dataset registry
@@ -628,66 +630,122 @@ class App {
 
     const filters = DataService.getSearchFilters();
     
+    // Always show the "New Filter" button at the top
+    const newFilterBtn = `
+      <button class="dropdown-action-btn filter-dropdown-new">
+        <svg viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.5">
+          <path d="M8 3v10M3 8h10"/>
+        </svg>
+        New Filter
+      </button>
+    `;
+    
     if (filters.length === 0) {
       menu.innerHTML = `
+        ${newFilterBtn}
+        <div class="dropdown-divider"></div>
         <div class="dropdown-empty-state">
           <span class="text-muted">No saved filters</span>
-          <p class="text-muted text-small">Create filters from the Monitor editor</p>
         </div>
       `;
+      this.attachFilterDropdownListeners(menu, []);
       return;
     }
 
     const filterLinks = filters.map(filter => {
       const scope = filter.scope || {};
-      const itemCount = (scope.personIds?.length || 0) + 
-                        (scope.organizationIds?.length || 0) + 
-                        (scope.factionIds?.length || 0) + 
-                        (scope.locationIds?.length || 0) + 
-                        (scope.eventIds?.length || 0) + 
-                        (scope.keywords?.length || 0);
+      const isAdvanced = scope.mode === 'advanced';
+      
+      let itemCount;
+      if (isAdvanced) {
+        // For advanced filters, just show "Boolean" badge
+        itemCount = null;
+      } else {
+        itemCount = (scope.personIds?.length || 0) + 
+                    (scope.organizationIds?.length || 0) + 
+                    (scope.factionIds?.length || 0) + 
+                    (scope.locationIds?.length || 0) + 
+                    (scope.eventIds?.length || 0) + 
+                    (scope.keywords?.length || 0);
+      }
       
       return `
-        <div class="filter-dropdown-item" data-filter-id="${filter.id}">
+        <div class="filter-dropdown-item ${isAdvanced ? 'filter-advanced' : ''}" data-filter-id="${filter.id}">
           <div class="filter-dropdown-info">
             <span class="filter-dropdown-name">${this.escapeHtml(filter.name)}</span>
-            <span class="filter-dropdown-count">${itemCount} item${itemCount !== 1 ? 's' : ''}</span>
+            ${isAdvanced 
+              ? '<span class="filter-dropdown-badge">Boolean</span>' 
+              : `<span class="filter-dropdown-count">${itemCount} item${itemCount !== 1 ? 's' : ''}</span>`}
           </div>
         </div>
       `;
     }).join('');
 
-    menu.innerHTML = filterLinks;
+    menu.innerHTML = `
+      ${newFilterBtn}
+      <div class="dropdown-divider"></div>
+      ${filterLinks}
+    `;
 
-    // Add click handlers for filter items
+    this.attachFilterDropdownListeners(menu, filters);
+  }
+
+  /**
+   * Attach event listeners for the filters dropdown
+   */
+  attachFilterDropdownListeners(menu, filters) {
+    // New filter button
+    const newBtn = menu.querySelector('.filter-dropdown-new');
+    if (newBtn) {
+      newBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        this.openFilterEditor(null);
+        this.closeDropdown(menu);
+      });
+    }
+    
+    // Filter item clicks - open filter editor
     menu.querySelectorAll('.filter-dropdown-item').forEach(item => {
       item.addEventListener('click', (e) => {
         const filterId = item.dataset.filterId;
         const filter = filters.find(f => f.id === filterId);
         if (filter) {
-          this.openMonitorEditorWithFilter(filter);
+          this.openFilterEditor(filter);
         }
-        // Close the dropdown
-        const dropdown = item.closest('.nav-dropdown');
-        if (dropdown) {
-          dropdown.classList.remove('open');
-        }
+        this.closeDropdown(menu);
       });
     });
   }
 
   /**
-   * Open the monitor editor with a pre-populated filter scope
+   * Close a dropdown
    */
-  openMonitorEditorWithFilter(filter) {
-    const editor = getMonitorEditor();
-    editor.openCreate(() => {
-      // Refresh the current view after saving
+  closeDropdown(menu) {
+    const dropdown = menu.closest('.nav-dropdown');
+    if (dropdown) {
+      dropdown.classList.remove('open');
+    }
+  }
+
+  /**
+   * Open the filter editor modal
+   */
+  openFilterEditor(filter) {
+    const editor = getSearchFilterEditor();
+    const callback = () => {
+      this.populateFiltersDropdown();
       if (this.router) {
         this.router.handleRoute();
       }
-    }, filter.scope || {});
+    };
+    
+    if (filter) {
+      editor.openEdit(filter, callback);
+    } else {
+      editor.openCreate(callback);
+    }
   }
+
 
   /**
    * Escape HTML to prevent XSS
@@ -1325,4 +1383,5 @@ document.addEventListener('DOMContentLoaded', () => {
   app.init();
 });
 
+export { getEntityCardModal };
 export default app;

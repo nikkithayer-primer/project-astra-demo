@@ -10,6 +10,7 @@ import { dataStore } from '../data/DataStore.js';
 import { BooleanExpressionEditor } from './BooleanExpressionEditor.js';
 import { BooleanParser } from '../utils/BooleanParser.js';
 import { escapeHtml } from '../utils/htmlUtils.js';
+import { getEntityIcon } from '../utils/entityIcons.js';
 
 export class ScopeSelector {
   /**
@@ -344,14 +345,12 @@ export class ScopeSelector {
             </div>
             
             ${this.mode === 'advanced' ? `
-              <div class="scope-view-toggle">
-                <button class="scope-view-btn ${this.advancedView === 'editor' ? 'active' : ''}" data-view="editor">
-                  Edit
-                </button>
-                <button class="scope-view-btn ${this.advancedView === 'formatted' ? 'active' : ''}" data-view="formatted">
-                  Formatted
-                </button>
-              </div>
+              <button class="scope-tree-toggle ${this.advancedView === 'formatted' ? 'active' : ''}" title="Toggle tree view">
+                <svg viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.5">
+                  <path d="M4 2v12M4 8h8M4 13h8"/>
+                </svg>
+                <span>Format</span>
+              </button>
             ` : ''}
           </div>
         ` : ''}
@@ -405,6 +404,22 @@ export class ScopeSelector {
             </div>
           </div>
           
+          ${this.options.showSaveFilter ? `
+            <!-- Save Button for Advanced Mode -->
+            <div class="scope-advanced-actions">
+              <button 
+                class="btn btn-secondary btn-sm scope-save-filter-btn-advanced" 
+                ${this.booleanExpression?.trim() ? '' : 'disabled'}
+              >
+                <svg viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.5">
+                  <path d="M3 2a1 1 0 00-1 1v11.5l6-3 6 3V3a1 1 0 00-1-1H3z"/>
+                  <path d="M8 5v4M6 7h4" stroke-linecap="round"/>
+                </svg>
+                Save as Filter
+              </button>
+            </div>
+          ` : ''}
+          
           <!-- Entity Browser for Advanced Mode (only in editor view) -->
           <div class="scope-entity-list scope-advanced-entity-list ${this.advancedView === 'editor' ? '' : 'hidden'}" style="margin-top: var(--space-md);">
             <div class="scope-entity-list-header" style="font-size: var(--text-xs); color: var(--text-muted); margin-bottom: var(--space-xs);">
@@ -442,6 +457,12 @@ export class ScopeSelector {
         this.booleanAst = ast;
         this.booleanError = error;
         this.notifyChange();
+        
+        // Update save button state
+        const saveBtn = this.container.querySelector('.scope-save-filter-btn-advanced');
+        if (saveBtn) {
+          saveBtn.disabled = !expression?.trim();
+        }
         
         // Update formatted view if visible
         if (this.advancedView === 'formatted') {
@@ -580,7 +601,7 @@ export class ScopeSelector {
                       data-id="${entity.id}" 
                       data-name="${this.escapeHtml(this.getEntityText(entity))}"
                       data-type="${entityType}">
-                <span class="scope-entity-item-add">+</span>
+                <span class="scope-entity-item-icon">${getEntityIcon(entityType, 14)}</span>
                 <span class="scope-entity-item-name">${this.escapeHtml(this.getEntityText(entity))}</span>
               </button>
             `).join('') : `<div class="scope-entity-group-empty">No matching ${label.toLowerCase()}</div>`}
@@ -664,8 +685,9 @@ export class ScopeSelector {
         const entity = entities.find(e => e.id === id);
         if (entity) {
           chips.push(`
-            <span class="scope-chip" data-id="${id}" data-scope-key="${scopeKey}">
-              ${this.escapeHtml(this.getEntityText(entity))}
+            <span class="scope-chip" data-id="${id}" data-scope-key="${scopeKey}" data-type="${type}">
+              <span class="scope-chip-icon">${getEntityIcon(type, 12)}</span>
+              <span class="scope-chip-label">${this.escapeHtml(this.getEntityText(entity))}</span>
               <button class="chip-remove" aria-label="Remove">&times;</button>
             </span>
           `);
@@ -677,7 +699,7 @@ export class ScopeSelector {
     for (const keyword of this.scope.keywords || []) {
       chips.push(`
         <span class="scope-chip scope-chip-keyword" data-keyword="${this.escapeHtml(keyword)}">
-          "${this.escapeHtml(keyword)}"
+          <span class="scope-chip-label">"${this.escapeHtml(keyword)}"</span>
           <button class="chip-remove" aria-label="Remove">&times;</button>
         </span>
       `);
@@ -744,8 +766,9 @@ export class ScopeSelector {
             ${filteredEntities.length > 0 ? filteredEntities.map(entity => `
               <button class="scope-entity-item" 
                       data-id="${entity.id}" 
-                      data-scope-key="${scopeKey}">
-                <span class="scope-entity-item-add">+</span>
+                      data-scope-key="${scopeKey}"
+                      data-type="${type}">
+                <span class="scope-entity-item-icon">${getEntityIcon(type, 14)}</span>
                 <span class="scope-entity-item-name">${this.escapeHtml(this.getEntityText(entity))}</span>
               </button>
             `).join('') : `<div class="scope-entity-group-empty">No matching ${label.toLowerCase()}</div>`}
@@ -1132,38 +1155,35 @@ export class ScopeSelector {
       });
     });
     
-    // View toggle buttons (advanced mode: editor/formatted)
-    this.container.querySelectorAll('.scope-view-btn').forEach(btn => {
-      btn.addEventListener('click', (e) => {
+    // Tree view toggle button (advanced mode)
+    const treeToggle = this.container.querySelector('.scope-tree-toggle');
+    if (treeToggle) {
+      treeToggle.addEventListener('click', (e) => {
         e.preventDefault();
-        const newView = btn.dataset.view;
-        if (newView && newView !== this.advancedView) {
-          this.advancedView = newView;
-          
-          // Toggle visibility of editor and tree
-          const editorContainer = this.container.querySelector('.scope-boolean-editor-container');
-          const treePanel = this.container.querySelector('.boolean-tree-panel');
-          const entityBrowser = this.container.querySelector('.scope-advanced-entity-list');
-          
-          if (editorContainer) editorContainer.classList.toggle('hidden', newView === 'formatted');
-          if (treePanel) {
-            treePanel.classList.toggle('visible', newView === 'formatted');
-            if (newView === 'formatted') {
-              const treeEl = treePanel.querySelector('.boolean-tree');
-              if (treeEl) {
-                treeEl.innerHTML = this.renderBooleanTree();
-              }
+        const newView = this.advancedView === 'editor' ? 'formatted' : 'editor';
+        this.advancedView = newView;
+        
+        // Toggle visibility of editor and tree
+        const editorContainer = this.container.querySelector('.scope-boolean-editor-container');
+        const treePanel = this.container.querySelector('.boolean-tree-panel');
+        const entityBrowser = this.container.querySelector('.scope-advanced-entity-list');
+        
+        if (editorContainer) editorContainer.classList.toggle('hidden', newView === 'formatted');
+        if (treePanel) {
+          treePanel.classList.toggle('visible', newView === 'formatted');
+          if (newView === 'formatted') {
+            const treeEl = treePanel.querySelector('.boolean-tree');
+            if (treeEl) {
+              treeEl.innerHTML = this.renderBooleanTree();
             }
           }
-          if (entityBrowser) entityBrowser.classList.toggle('hidden', newView === 'formatted');
-          
-          // Update button states
-          this.container.querySelectorAll('.scope-view-btn').forEach(b => {
-            b.classList.toggle('active', b.dataset.view === newView);
-          });
         }
+        if (entityBrowser) entityBrowser.classList.toggle('hidden', newView === 'formatted');
+        
+        // Update button state
+        treeToggle.classList.toggle('active', newView === 'formatted');
       });
-    });
+    }
     
     // Search input (simple mode only)
     const searchInput = this.container.querySelector('.scope-search-input');
@@ -1189,10 +1209,16 @@ export class ScopeSelector {
       });
     }
     
-    // Save filter button
+    // Save filter button (simple mode)
     const saveBtn = this.container.querySelector('.scope-save-filter-btn');
     if (saveBtn) {
       saveBtn.addEventListener('click', () => this.openSaveDialog());
+    }
+    
+    // Save filter button (advanced mode)
+    const saveBtnAdvanced = this.container.querySelector('.scope-save-filter-btn-advanced');
+    if (saveBtnAdvanced) {
+      saveBtnAdvanced.addEventListener('click', () => this.openSaveDialog());
     }
     
     // Chip remove clicks (simple mode)

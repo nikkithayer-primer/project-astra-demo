@@ -10,6 +10,7 @@ import { NarrativeList } from '../components/NarrativeList.js';
 import { MapView } from '../components/MapView.js';
 import { renderVerticalTimeline } from '../utils/verticalTimeline.js';
 import { getEntityIcon } from '../utils/entityIcons.js';
+import { getEntityCardModal } from '../components/EntityCardModal.js';
 
 // Entity types with labels (used for people/orgs filter - mirrors DocumentsView pattern)
 const ENTITY_TYPES = {
@@ -506,18 +507,34 @@ export class ListView extends BaseView {
    * Attach click listeners to entity list items
    */
   attachItemClickListeners(config) {
+    // Entity types that support hover cards
+    const hoverTypes = ['person', 'organization', 'faction', 'location'];
+    
     const items = document.querySelectorAll('.entity-list-item');
     items.forEach(item => {
+      const id = item.dataset.id;
+      const type = item.dataset.type;
+      
+      // Add click handler for navigation
       this.addListener(item, 'click', () => {
-        const id = item.dataset.id;
-        const type = item.dataset.type;
-        
         if (this.entityType === 'entities') {
           window.location.hash = `#/${type}/${id}`;
         } else {
           window.location.hash = `#/${config.route}/${id}`;
         }
       });
+      
+      // Add hover handlers for entity card popover
+      const entityType = this.entityType === 'entities' ? type : config.route;
+      if (hoverTypes.includes(entityType)) {
+        this.addListener(item, 'mouseenter', () => {
+          getEntityCardModal().show(id, entityType, item);
+        });
+        
+        this.addListener(item, 'mouseleave', () => {
+          getEntityCardModal().scheduleHide();
+        });
+      }
     });
   }
 

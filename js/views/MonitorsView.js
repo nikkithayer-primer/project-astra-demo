@@ -14,6 +14,7 @@ import { TimelineVolumeComposite } from '../components/TimelineVolumeComposite.j
 import { VennDiagram } from '../components/VennDiagram.js';
 import { SentimentChart } from '../components/SentimentChart.js';
 import { NetworkGraph } from '../components/NetworkGraph.js';
+import { getEntityCardModal } from '../components/EntityCardModal.js';
 import { DocumentTable } from '../components/DocumentTable.js';
 import { MapView } from '../components/MapView.js';
 import { CardBuilder } from '../utils/CardBuilder.js';
@@ -133,11 +134,8 @@ export class MonitorsView extends BaseView {
         <circle cx="8" cy="4" r="2.5"/>
         <path d="M3 14c0-3 2.2-5 5-5s5 2 5 5"/>
       </svg>`,
-      organization: `<svg class="scope-entity-icon" viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.25">
-        <rect x="3" y="6" width="10" height="8" rx="1"/>
-        <path d="M5 6V4a3 3 0 0 1 6 0v2"/>
-        <rect x="5" y="9" width="2" height="2"/>
-        <rect x="9" y="9" width="2" height="2"/>
+      organization: `<svg class="scope-entity-icon" viewBox="0 0 16 16" width="14" height="14" fill="currentColor">
+        <path fill-rule="evenodd" clip-rule="evenodd" d="M0.5 16H9.5C9.59107 16 9.67646 15.9757 9.75 15.9331C9.82354 15.9757 9.90893 16 10 16H15.5C15.7761 16 16 15.7761 16 15.5V4.5C16 4.22386 15.7761 4 15.5 4H10V0.5C10 0.223858 9.77614 0 9.5 0H0.5C0.223858 0 0 0.223858 0 0.5V15.5C0 15.7761 0.223858 16 0.5 16ZM1 15V1H9V15H7V13C7 12.7239 6.77614 12.5 6.5 12.5H3.5C3.22386 12.5 3 12.7239 3 13V15H1ZM6 13.5V15H4V13.5H6ZM10 5V15H15V5H10Z"/>
       </svg>`,
       location: `<svg class="scope-entity-icon" viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.25">
         <path d="M8 1C5.2 1 3 3.2 3 6c0 4 5 9 5 9s5-5 5-9c0-2.8-2.2-5-5-5z"/>
@@ -888,11 +886,13 @@ export class MonitorsView extends BaseView {
         const graph = new NetworkGraph(container, {
           height: 350,
           onNodeClick: (node) => {
-            if (node.type === 'person') {
-              window.location.hash = `#/person/${node.id}`;
-            } else {
-              window.location.hash = `#/organization/${node.id}`;
-            }
+            window.location.hash = `#/${node.type}/${node.id}`;
+          },
+          onNodeHover: (node, element) => {
+            getEntityCardModal().show(node.id, node.type, element);
+          },
+          onNodeHoverEnd: () => {
+            getEntityCardModal().scheduleHide();
           }
         });
         graph.update(graphData);

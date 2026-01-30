@@ -7,7 +7,7 @@ export const documents = [
   // Self-checkout narrative documents
   {
     id: 'doc-001',
-    documentType: 'social_post',
+    documentType: 'social_media',
     repositoryId: 'repo-osint',
     classification: 'U',
     tagIds: ['tag-002'],
@@ -77,7 +77,7 @@ export const documents = [
   },
   {
     id: 'doc-002',
-    documentType: 'social_post',
+    documentType: 'social_media',
     repositoryId: 'repo-osint',
     classification: 'U',
     title: 'Reddit thread: Walmart self-checkout experiences',
@@ -91,7 +91,7 @@ export const documents = [
       avatarUrl: 'img/placeholders/avatar-default.svg'
     },
     headerImage: {
-      url: 'img/placeholders/image-placeholder.svg',
+      url: 'http://static.photos/cityscape/640x360/142',
       caption: 'Reddit discussion thread screenshot'
     },
     contentBlocks: [
@@ -128,7 +128,7 @@ export const documents = [
     publishedDate: '2026-01-18T10:00:00Z',
     author: 'Karen Sloan',
     headerImage: {
-      url: 'img/placeholders/image-placeholder.svg',
+      url: 'http://static.photos/cityscape/640x360/142',
       caption: 'Walmart self-checkout area'
     },
     contentBlocks: [
@@ -187,7 +187,7 @@ export const documents = [
     publishedDate: '2026-01-19T14:00:00Z',
     author: 'Ben Unglesbee',
     headerImage: {
-      url: 'img/placeholders/image-placeholder.svg',
+      url: 'http://static.photos/cityscape/640x360/142',
       caption: 'Walmart checkout lanes'
     },
     contentBlocks: [
@@ -216,7 +216,7 @@ export const documents = [
   // Empty shelves narrative documents
   {
     id: 'doc-005',
-    documentType: 'social_post',
+    documentType: 'social_media',
     repositoryId: 'repo-osint',
     classification: 'U',
     title: 'X post: Photos of empty Walmart grocery aisles',
@@ -230,7 +230,7 @@ export const documents = [
       avatarUrl: 'img/placeholders/avatar-default.svg'
     },
     headerImage: {
-      url: 'img/placeholders/image-placeholder.svg',
+      url: 'http://static.photos/cityscape/640x360/142',
       caption: 'Empty grocery shelves at Walmart'
     },
     contentBlocks: [
@@ -255,7 +255,7 @@ export const documents = [
   },
   {
     id: 'doc-006',
-    documentType: 'social_post',
+    documentType: 'social_media',
     repositoryId: 'repo-osint',
     classification: 'U',
     title: 'Facebook group discussion: Walmart inventory problems',
@@ -269,7 +269,7 @@ export const documents = [
       avatarUrl: 'img/placeholders/avatar-default.svg'
     },
     headerImage: {
-      url: 'img/placeholders/image-placeholder.svg',
+      url: 'http://static.photos/cityscape/640x360/142',
       caption: 'Facebook community discussion'
     },
     contentBlocks: [
@@ -303,7 +303,7 @@ export const documents = [
     publishedDate: '2026-01-17T09:00:00Z',
     author: 'Daphne Howland',
     headerImage: {
-      url: 'img/placeholders/image-placeholder.svg',
+      url: 'http://static.photos/cityscape/640x360/142',
       caption: 'Walmart distribution center'
     },
     contentBlocks: [
@@ -342,7 +342,7 @@ export const documents = [
   // Worker conditions narrative documents
   {
     id: 'doc-008',
-    documentType: 'social_post',
+    documentType: 'social_media',
     repositoryId: 'repo-osint',
     classification: 'U',
     tagIds: ['tag-001'],
@@ -384,7 +384,7 @@ export const documents = [
   },
   {
     id: 'doc-009',
-    documentType: 'social_post',
+    documentType: 'social_media',
     repositoryId: 'repo-osint',
     classification: 'U',
     title: 'Reddit: Current Walmart employees share staffing concerns',
@@ -398,7 +398,7 @@ export const documents = [
       avatarUrl: 'img/placeholders/avatar-default.svg'
     },
     headerImage: {
-      url: 'img/placeholders/image-placeholder.svg',
+      url: 'http://static.photos/cityscape/640x360/142',
       caption: 'Reddit employee discussion'
     },
     contentBlocks: [
@@ -436,7 +436,7 @@ export const documents = [
     publishedDate: '2026-01-15T11:00:00Z',
     author: 'Matthew Boyle',
     headerImage: {
-      url: 'img/placeholders/image-placeholder.svg',
+      url: 'http://static.photos/cityscape/640x360/142',
       caption: 'UFCW campaign launch event'
     },
     contentBlocks: [
@@ -496,7 +496,7 @@ export const documents = [
     publishedDate: '2026-01-17T06:00:00Z',
     author: 'Sarah Nassauer',
     headerImage: {
-      url: 'img/placeholders/image-placeholder.svg',
+      url: 'http://static.photos/cityscape/640x360/142',
       caption: 'Walmart corporate headquarters'
     },
     contentBlocks: [
@@ -537,7 +537,7 @@ export const documents = [
     publishedDate: '2026-01-16T10:00:00Z',
     author: 'Kelly Tyko',
     headerImage: {
-      url: 'img/placeholders/image-placeholder.svg',
+      url: 'http://static.photos/cityscape/640x360/142',
       caption: 'FDA recall notice'
     },
     contentBlocks: [
@@ -603,7 +603,7 @@ export const documents = [
     publishedDate: '2026-01-18T14:00:00Z',
     author: 'Siddharth Cavale',
     headerImage: {
-      url: 'img/placeholders/image-placeholder.svg',
+      url: 'http://static.photos/cityscape/640x360/142',
       caption: 'Great Value product recall notice'
     },
     contentBlocks: [
@@ -650,7 +650,7 @@ export const documents = [
     publishedDate: '2026-01-19T09:00:00Z',
     author: 'Consumer Reports Staff',
     headerImage: {
-      url: 'img/placeholders/image-placeholder.svg',
+      url: 'http://static.photos/cityscape/640x360/142',
       caption: 'Consumer Reports analysis'
     },
     contentBlocks: [
@@ -678,7 +678,7 @@ export const documents = [
   // Pricing narrative documents
   {
     id: 'doc-015',
-    documentType: 'social_post',
+    documentType: 'social_media',
     repositoryId: 'repo-osint',
     classification: 'U',
     title: 'TikTok: Walmart vs Aldi price comparison',
@@ -719,7 +719,7 @@ export const documents = [
   },
   {
     id: 'doc-016',
-    documentType: 'social_post',
+    documentType: 'social_media',
     repositoryId: 'repo-osint',
     classification: 'U',
     title: 'X thread: Is Walmart still the low-price leader?',
@@ -733,7 +733,7 @@ export const documents = [
       avatarUrl: 'img/placeholders/avatar-default.svg'
     },
     headerImage: {
-      url: 'img/placeholders/image-placeholder.svg',
+      url: 'http://static.photos/cityscape/640x360/142',
       caption: 'Price analysis thread'
     },
     contentBlocks: [
@@ -771,7 +771,7 @@ export const documents = [
     publishedDate: '2026-01-17T06:00:00Z',
     author: 'Jaewon Kang',
     headerImage: {
-      url: 'img/placeholders/image-placeholder.svg',
+      url: 'http://static.photos/cityscape/640x360/142',
       caption: 'Walmart pricing analysis chart'
     },
     contentBlocks: [
@@ -833,7 +833,7 @@ export const documents = [
     publishedDate: '2026-01-14T08:00:00Z',
     author: 'Cale Guthrie Weissman',
     headerImage: {
-      url: 'img/placeholders/image-placeholder.svg',
+      url: 'http://static.photos/cityscape/640x360/142',
       caption: 'Target delivery vehicle'
     },
     contentBlocks: [
@@ -869,7 +869,7 @@ export const documents = [
     publishedDate: '2026-01-16T10:00:00Z',
     author: 'Spencer Soper',
     headerImage: {
-      url: 'img/placeholders/image-placeholder.svg',
+      url: 'http://static.photos/cityscape/640x360/142',
       caption: 'Amazon fulfillment center'
     },
     contentBlocks: [
@@ -896,7 +896,7 @@ export const documents = [
   },
   {
     id: 'doc-020',
-    documentType: 'social_post',
+    documentType: 'social_media',
     repositoryId: 'repo-osint',
     classification: 'U',
     title: 'Reddit discussion: Comparing delivery services',
@@ -910,7 +910,7 @@ export const documents = [
       avatarUrl: 'img/placeholders/avatar-default.svg'
     },
     headerImage: {
-      url: 'img/placeholders/image-placeholder.svg',
+      url: 'http://static.photos/cityscape/640x360/142',
       caption: 'Reddit delivery discussion'
     },
     contentBlocks: [
@@ -949,7 +949,7 @@ export const documents = [
     publishedDate: '2026-01-18T12:00:00Z',
     author: 'Nathan Bomey',
     headerImage: {
-      url: 'img/placeholders/image-placeholder.svg',
+      url: 'http://static.photos/cityscape/640x360/142',
       caption: 'Rural Walmart store exterior'
     },
     contentBlocks: [
@@ -1007,7 +1007,7 @@ export const documents = [
   },
   {
     id: 'doc-022',
-    documentType: 'social_post',
+    documentType: 'social_media',
     repositoryId: 'repo-osint',
     classification: 'U',
     title: 'Facebook: Rural community organizes protest',
@@ -1021,7 +1021,7 @@ export const documents = [
       avatarUrl: 'img/placeholders/avatar-default.svg'
     },
     headerImage: {
-      url: 'img/placeholders/image-placeholder.svg',
+      url: 'http://static.photos/cityscape/640x360/142',
       caption: 'Community protest event page'
     },
     contentBlocks: [
@@ -1059,7 +1059,7 @@ export const documents = [
     publishedDate: '2026-01-19T14:00:00Z',
     author: 'Michael Balsamo',
     headerImage: {
-      url: 'img/placeholders/image-placeholder.svg',
+      url: 'http://static.photos/cityscape/640x360/142',
       caption: 'State legislators press conference'
     },
     contentBlocks: [
@@ -1879,6 +1879,727 @@ export const documents = [
     },
       'faction-003': { sentiment: 0.52 }
     },
+    highlights: [],
+    comments: []
+  },
+  // New social media documents (doc-049 to doc-070)
+  {
+    id: 'doc-049',
+    documentType: 'social_media',
+    repositoryId: 'repo-osint',
+    classification: 'U',
+    url: 'https://reddit.com/r/walmart/comments/checkout_horror',
+    publishedDate: '2025-06-20T16:00:00Z',
+    publisherId: 'pub-reddit',
+    title: 'Reddit: Customer shares humiliating self-checkout experience',
+    author: {
+      username: 'u/just_shopping_2025',
+      displayName: 'just_shopping_2025',
+      avatarUrl: 'img/placeholders/avatar-default.svg'
+    },
+    contentBlocks: [
+      { type: 'paragraph', content: '**Just got accused of theft at Walmart self-checkout - I had my receipt!**\n\nI\'ve shopped at this Walmart for 5 years. Today, loss prevention stopped me, demanded to check my bags, and kept me waiting for 20 minutes while they verified every item. I had my receipt. I paid for everything.\n\nThe worst part? Other customers were staring at me like I was a criminal. I\'ve never been so embarrassed. Is this happening to anyone else?' }
+    ],
+    excerpt: 'Reddit post about humiliating self-checkout detention experience.',
+    narrativeIds: ['narr-001'],
+    themeIds: ['sub-001', 'sub-002'],
+    personIds: [],
+    organizationIds: ['org-001'],
+    locationIds: [],
+    eventIds: [],
+    factionMentions: {
+      'faction-001': { sentiment: -0.85 },
+      'faction-004': { sentiment: -0.72 }
+    },
+    metrics: { likes: 12450, comments: 2850, platform: 'reddit' },
+    highlights: [],
+    comments: []
+  },
+  {
+    id: 'doc-050',
+    documentType: 'social_media',
+    repositoryId: 'repo-osint',
+    classification: 'U',
+    url: 'https://tiktok.com/@momof3_shopping/video/empty_shelves',
+    publishedDate: '2025-07-05T14:00:00Z',
+    publisherId: 'pub-tiktok',
+    title: 'TikTok: Mom documents consistently empty Walmart shelves',
+    author: {
+      username: '@momof3_shopping',
+      displayName: 'Shopping Mom Life',
+      avatarUrl: 'img/placeholders/avatar-default.svg'
+    },
+    contentBlocks: [
+      { type: 'paragraph', content: 'Week 4 of no bread at my local Walmart 🤦‍♀️ I\'m not even asking for anything fancy, just bread! Had to drive to three stores today to finish my grocery list. This used to be so easy. What is happening?? #walmart #groceryshopping #outofstock #momlife' }
+    ],
+    video: {
+      thumbnailUrl: 'img/placeholders/video-thumbnail.svg',
+      duration: 58
+    },
+    excerpt: 'TikTok documenting persistent out-of-stock issues at Walmart.',
+    narrativeIds: ['narr-002'],
+    themeIds: ['sub-004', 'sub-005'],
+    personIds: [],
+    organizationIds: ['org-001'],
+    locationIds: [],
+    eventIds: ['event-004'],
+    factionMentions: {
+      'faction-001': { sentiment: -0.78 }
+    },
+    metrics: { views: 1850000, likes: 145000, shares: 52000, comments: 18500, platform: 'tiktok' },
+    highlights: [],
+    comments: []
+  },
+  {
+    id: 'doc-051',
+    documentType: 'social_media',
+    repositoryId: 'repo-osint',
+    classification: 'U',
+    url: 'https://x.com/retail_analyst/status/walmart_inventory',
+    publishedDate: '2025-07-18T10:30:00Z',
+    publisherId: 'pub-x',
+    title: 'X thread: Retail analyst on Walmart inventory issues',
+    author: {
+      username: '@retail_analyst',
+      displayName: 'Retail Industry Analysis',
+      avatarUrl: 'img/placeholders/avatar-default.svg'
+    },
+    contentBlocks: [
+      { type: 'paragraph', content: 'THREAD: Walmart\'s inventory management system is showing serious cracks 🧵\n\n1/ Out-of-stock complaints up 340% on social media vs last year\n2/ Their vaunted real-time inventory system has gaps competitors have fixed\n3/ Amazon and Target gaining ground\n4/ This threatens their core "always in stock" promise\n\nIs this the beginning of a bigger problem?' }
+    ],
+    excerpt: 'X thread analyzing Walmart inventory management challenges.',
+    narrativeIds: ['narr-002'],
+    themeIds: ['sub-004', 'sub-005'],
+    personIds: ['person-010'],
+    organizationIds: ['org-001', 'org-004'],
+    locationIds: [],
+    eventIds: [],
+    factionMentions: {
+      'faction-001': { sentiment: -0.65 },
+      'faction-005': { sentiment: 0.35 }
+    },
+    metrics: { likes: 5420, comments: 892, shares: 1850, platform: 'x' },
+    highlights: [],
+    comments: []
+  },
+  {
+    id: 'doc-052',
+    documentType: 'social_media',
+    repositoryId: 'repo-osint',
+    classification: 'U',
+    url: 'https://facebook.com/groups/walmart_workers_united/posts/staffing_crisis',
+    publishedDate: '2025-08-02T18:00:00Z',
+    publisherId: 'pub-facebook',
+    title: 'Facebook: Worker group discusses staffing crisis',
+    author: {
+      username: 'walmart.worker.voices',
+      displayName: 'Walmart Worker Voices',
+      avatarUrl: 'img/placeholders/avatar-default.svg'
+    },
+    contentBlocks: [
+      { type: 'paragraph', content: 'Current and former Walmart workers - share your stories about understaffing!\n\nI\'ll go first: I\'m scheduled to cover electronics, toys, AND sporting goods by myself tonight. We should have 4 people. Management says we\'re "fully staffed." 🙄\n\nShare your experiences. Our voices matter. #WalmartWorkers #RespectWalmartWorkers' }
+    ],
+    excerpt: 'Facebook post from worker group collecting understaffing stories.',
+    narrativeIds: ['narr-003'],
+    themeIds: ['sub-006', 'sub-007'],
+    personIds: [],
+    organizationIds: ['org-001'],
+    locationIds: [],
+    eventIds: [],
+    factionMentions: {
+      'faction-002': { sentiment: -0.82 },
+      'faction-003': { sentiment: -0.75 }
+    },
+    metrics: { likes: 4850, comments: 1250, shares: 2100, platform: 'facebook' },
+    highlights: [],
+    comments: []
+  },
+  {
+    id: 'doc-053',
+    documentType: 'social_media',
+    repositoryId: 'repo-osint',
+    classification: 'U',
+    url: 'https://reddit.com/r/foodsafety/comments/great_value_recall',
+    publishedDate: '2025-08-15T12:00:00Z',
+    publisherId: 'pub-reddit',
+    title: 'Reddit: Parents concerned about Great Value recall',
+    author: {
+      username: 'u/concerned_parent_2025',
+      displayName: 'concerned_parent_2025',
+      avatarUrl: 'img/placeholders/avatar-default.svg'
+    },
+    contentBlocks: [
+      { type: 'paragraph', content: '**Great Value recall expanded AGAIN - is anyone else worried about quality control?**\n\nThis is the third expansion of the frozen vegetable recall. Now 15 SKUs affected.\n\nI\'ve been buying Great Value products for years because of the price. But Listeria? With hospitalizations? I have young kids.\n\nIs it worth saving a few dollars if the quality control is this bad?' }
+    ],
+    excerpt: 'Reddit discussion about Great Value product recall and quality concerns.',
+    narrativeIds: ['narr-004'],
+    themeIds: ['sub-009', 'sub-010'],
+    personIds: [],
+    organizationIds: ['org-001'],
+    locationIds: [],
+    eventIds: ['event-009'],
+    factionMentions: {
+      'faction-001': { sentiment: -0.88 }
+    },
+    metrics: { likes: 8920, comments: 2450, platform: 'reddit' },
+    highlights: [],
+    comments: []
+  },
+  {
+    id: 'doc-054',
+    documentType: 'social_media',
+    repositoryId: 'repo-osint',
+    classification: 'U',
+    url: 'https://tiktok.com/@budget_shopper/video/price_compare',
+    publishedDate: '2025-08-28T15:00:00Z',
+    publisherId: 'pub-tiktok',
+    title: 'TikTok: Price comparison Walmart vs competitors',
+    author: {
+      username: '@budget_shopper',
+      displayName: 'Budget Shopping Tips',
+      avatarUrl: 'img/placeholders/avatar-default.svg'
+    },
+    contentBlocks: [
+      { type: 'paragraph', content: 'Did the math so you don\'t have to! 🧮 Compared 20 staple items at Walmart, Aldi, and Costco. Spoiler: Walmart is NOT the cheapest anymore on 14 out of 20 items! The everyday low prices aren\'t so low anymore 👀 #walmart #aldi #costco #groceryshopping #savemoney' }
+    ],
+    video: {
+      thumbnailUrl: 'img/placeholders/video-thumbnail.svg',
+      duration: 124
+    },
+    excerpt: 'TikTok price comparison showing Walmart is no longer cheapest.',
+    narrativeIds: ['narr-005'],
+    themeIds: ['sub-011', 'sub-012'],
+    personIds: [],
+    organizationIds: ['org-001', 'org-010'],
+    locationIds: [],
+    eventIds: [],
+    factionMentions: {
+      'faction-001': { sentiment: -0.72 },
+      'faction-006': { sentiment: 0.55 }
+    },
+    metrics: { views: 5200000, likes: 385000, shares: 195000, comments: 62000, platform: 'tiktok' },
+    highlights: [],
+    comments: []
+  },
+  {
+    id: 'doc-055',
+    documentType: 'social_media',
+    repositoryId: 'repo-osint',
+    classification: 'U',
+    url: 'https://x.com/delivery_watch/status/walmart_delays',
+    publishedDate: '2025-09-10T11:00:00Z',
+    publisherId: 'pub-x',
+    title: 'X post: Tracking Walmart delivery failures',
+    author: {
+      username: '@delivery_watch',
+      displayName: 'Delivery Service Tracker',
+      avatarUrl: 'img/placeholders/avatar-default.svg'
+    },
+    contentBlocks: [
+      { type: 'paragraph', content: 'Tracking Walmart delivery complaints this week:\n\n📦 Late deliveries: +45% vs last month\n🔄 Substitutions without notice: Common complaint\n🥬 Produce quality issues: Many reports\n📱 App showing "delivered" but no package: Still happening\n\nTarget hitting 98% on-time. Amazon next-day still reliable. Walmart+ subscribers asking: is it worth it?' }
+    ],
+    excerpt: 'X post tracking Walmart delivery service complaints.',
+    narrativeIds: ['narr-006'],
+    themeIds: ['sub-013', 'sub-014'],
+    personIds: [],
+    organizationIds: ['org-001', 'org-004'],
+    locationIds: [],
+    eventIds: [],
+    factionMentions: {
+      'faction-001': { sentiment: -0.68 },
+      'faction-006': { sentiment: 0.48 }
+    },
+    metrics: { likes: 3850, comments: 920, shares: 1450, platform: 'x' },
+    highlights: [],
+    comments: []
+  },
+  {
+    id: 'doc-056',
+    documentType: 'social_media',
+    repositoryId: 'repo-osint',
+    classification: 'U',
+    url: 'https://facebook.com/groups/small_town_missouri/posts/walmart_closing',
+    publishedDate: '2025-09-25T09:00:00Z',
+    publisherId: 'pub-facebook',
+    title: 'Facebook: Rural town reacts to Walmart closure announcement',
+    author: {
+      username: 'missouri.community',
+      displayName: 'Missouri Community Forum',
+      avatarUrl: 'img/placeholders/avatar-default.svg'
+    },
+    contentBlocks: [
+      { type: 'paragraph', content: 'Just heard the news - our Walmart is closing in 60 days. 😢\n\nThis is the only grocery store within 30 miles. When Walmart came in 15 years ago, they put all our local shops out of business. Now they\'re leaving us with NOTHING.\n\nWhat are we supposed to do? The elderly folks here can\'t drive an hour for groceries.\n\nIs anyone organizing the community meeting?' }
+    ],
+    excerpt: 'Facebook post about rural Missouri community losing its only Walmart.',
+    narrativeIds: ['narr-007'],
+    themeIds: ['sub-015', 'sub-016'],
+    personIds: ['person-017'],
+    organizationIds: ['org-001'],
+    locationIds: ['loc-009'],
+    eventIds: ['event-013'],
+    factionMentions: {
+      'faction-001': { sentiment: -0.92 }
+    },
+    metrics: { likes: 2850, comments: 1420, shares: 950, platform: 'facebook' },
+    highlights: [],
+    comments: []
+  },
+  {
+    id: 'doc-057',
+    documentType: 'social_media',
+    repositoryId: 'repo-osint',
+    classification: 'U',
+    url: 'https://reddit.com/r/antiwork/comments/walmart_conditions',
+    publishedDate: '2025-10-08T20:00:00Z',
+    publisherId: 'pub-reddit',
+    title: 'Reddit: Former Walmart worker shares working conditions',
+    author: {
+      username: 'u/ex_walmart_associate',
+      displayName: 'ex_walmart_associate',
+      avatarUrl: 'img/placeholders/avatar-default.svg'
+    },
+    contentBlocks: [
+      { type: 'paragraph', content: '**Quit Walmart after 3 years - here\'s what it\'s really like**\n\nScheduling: "Open availability" required but shifts change weekly\nStaffing: Doing 2-3 people\'s jobs for $14/hr\nManagement: Constant pressure to meet metrics that keep changing\nBreaks: Often interrupted or skipped during rushes\nBenefits: Health insurance costs almost my entire paycheck\n\nI finally got out. AMA about what it\'s really like behind the scenes.' }
+    ],
+    excerpt: 'Reddit AMA from former Walmart worker about working conditions.',
+    narrativeIds: ['narr-003'],
+    themeIds: ['sub-006', 'sub-007'],
+    personIds: [],
+    organizationIds: ['org-001'],
+    locationIds: [],
+    eventIds: [],
+    factionMentions: {
+      'faction-002': { sentiment: -0.85 },
+      'faction-003': { sentiment: -0.78 }
+    },
+    metrics: { likes: 15420, comments: 3850, platform: 'reddit' },
+    highlights: [],
+    comments: []
+  },
+  {
+    id: 'doc-058',
+    documentType: 'social_media',
+    repositoryId: 'repo-osint',
+    classification: 'U',
+    url: 'https://tiktok.com/@warehouse_life/video/fulfillment_center',
+    publishedDate: '2025-10-22T17:00:00Z',
+    publisherId: 'pub-tiktok',
+    title: 'TikTok: Walmart fulfillment center worker shares day in the life',
+    author: {
+      username: '@warehouse_life',
+      displayName: 'Warehouse Worker Diaries',
+      avatarUrl: 'img/placeholders/avatar-default.svg'
+    },
+    contentBlocks: [
+      { type: 'paragraph', content: 'POV: You work at a Walmart fulfillment center during peak season 📦 Walking 15+ miles a day, handling 300+ packages, 10 minute breaks, constant pressure to meet rates... and they wonder why we want to unionize 🤷 #warehouse #walmartlife #unionize #workersrights' }
+    ],
+    video: {
+      thumbnailUrl: 'img/placeholders/video-thumbnail.svg',
+      duration: 92
+    },
+    excerpt: 'TikTok showing Walmart fulfillment center working conditions.',
+    narrativeIds: ['narr-009', 'narr-003'],
+    themeIds: ['sub-008', 'sub-019'],
+    personIds: [],
+    organizationIds: ['org-001'],
+    locationIds: ['loc-011'],
+    eventIds: [],
+    factionMentions: {
+      'faction-002': { sentiment: -0.75 },
+      'faction-003': { sentiment: -0.68 }
+    },
+    metrics: { views: 3800000, likes: 285000, shares: 125000, comments: 42000, platform: 'tiktok' },
+    highlights: [],
+    comments: []
+  },
+  {
+    id: 'doc-059',
+    documentType: 'social_media',
+    repositoryId: 'repo-osint',
+    classification: 'U',
+    url: 'https://x.com/consumer_rights/status/great_value_investigation',
+    publishedDate: '2025-11-05T14:00:00Z',
+    publisherId: 'pub-x',
+    title: 'X thread: Investigation into Great Value supplier practices',
+    author: {
+      username: '@consumer_rights',
+      displayName: 'Consumer Rights Watch',
+      avatarUrl: 'img/placeholders/avatar-default.svg'
+    },
+    contentBlocks: [
+      { type: 'paragraph', content: 'THREAD: Our investigation into Great Value private label suppliers 🧵\n\n1/ Multiple suppliers have labor violations on record\n2/ FDA inspection failures at 3 facilities we identified\n3/ Walmart\'s price pressure creates conditions for cutting corners\n4/ The FTC is now involved\n\nFull report link in bio. This goes deeper than one recall.' }
+    ],
+    excerpt: 'X thread on investigation into Great Value supplier practices.',
+    narrativeIds: ['narr-008', 'narr-004'],
+    themeIds: ['sub-017', 'sub-018'],
+    personIds: [],
+    organizationIds: ['org-001', 'org-008'],
+    locationIds: [],
+    eventIds: [],
+    factionMentions: {
+      'faction-001': { sentiment: -0.82 }
+    },
+    metrics: { likes: 8450, comments: 1850, shares: 4200, platform: 'x' },
+    highlights: [],
+    comments: []
+  },
+  {
+    id: 'doc-060',
+    documentType: 'social_media',
+    repositoryId: 'repo-osint',
+    classification: 'U',
+    url: 'https://facebook.com/groups/rural_america_voices/posts/food_desert',
+    publishedDate: '2025-11-18T10:00:00Z',
+    publisherId: 'pub-facebook',
+    title: 'Facebook: Discussion of Walmart-created food deserts',
+    author: {
+      username: 'rural.voices.america',
+      displayName: 'Rural America Voices',
+      avatarUrl: 'img/placeholders/avatar-default.svg'
+    },
+    contentBlocks: [
+      { type: 'paragraph', content: 'Let\'s talk about what happens when Walmart leaves small towns.\n\n1. Walmart comes in, undercuts local stores\n2. Local stores close\n3. Walmart becomes only option\n4. Walmart leaves when profits decline\n5. Town becomes food desert\n\nThis has happened to dozens of communities. When does corporate responsibility kick in?\n\nShare your town\'s story below. 👇' }
+    ],
+    excerpt: 'Facebook discussion about Walmart-created food deserts in rural America.',
+    narrativeIds: ['narr-007'],
+    themeIds: ['sub-015', 'sub-016'],
+    personIds: [],
+    organizationIds: ['org-001'],
+    locationIds: ['loc-009'],
+    eventIds: [],
+    factionMentions: {
+      'faction-001': { sentiment: -0.88 }
+    },
+    metrics: { likes: 6850, comments: 2450, shares: 3200, platform: 'facebook' },
+    highlights: [],
+    comments: []
+  },
+  {
+    id: 'doc-061',
+    documentType: 'social_media',
+    repositoryId: 'repo-osint',
+    classification: 'U',
+    url: 'https://reddit.com/r/personalfinance/comments/walmart_prices',
+    publishedDate: '2025-11-28T15:00:00Z',
+    publisherId: 'pub-reddit',
+    title: 'Reddit: Analysis shows Walmart kept pandemic price increases',
+    author: {
+      username: 'u/price_tracker_2025',
+      displayName: 'price_tracker_2025',
+      avatarUrl: 'img/placeholders/avatar-default.svg'
+    },
+    contentBlocks: [
+      { type: 'paragraph', content: '**I\'ve been tracking Walmart prices for 3 years - here\'s what I found**\n\nStarted a spreadsheet in 2022 tracking 100 common items. Key findings:\n\n- 78% of pandemic-era price increases were kept even as wholesale costs dropped\n- "Rollback" prices often higher than pre-pandemic regular prices\n- Great Value items saw biggest % increases\n\nSpreadsheet in comments. "Everyday Low Prices" is marketing, not reality anymore.' }
+    ],
+    excerpt: 'Reddit analysis showing Walmart retained pandemic price increases.',
+    narrativeIds: ['narr-005'],
+    themeIds: ['sub-011', 'sub-012'],
+    personIds: [],
+    organizationIds: ['org-001'],
+    locationIds: [],
+    eventIds: [],
+    factionMentions: {
+      'faction-001': { sentiment: -0.75 },
+      'faction-006': { sentiment: 0.62 }
+    },
+    metrics: { likes: 18500, comments: 4250, platform: 'reddit' },
+    highlights: [],
+    comments: []
+  },
+  {
+    id: 'doc-062',
+    documentType: 'social_media',
+    repositoryId: 'repo-osint',
+    classification: 'U',
+    url: 'https://tiktok.com/@healthcare_access/video/walmart_health',
+    publishedDate: '2025-10-18T13:00:00Z',
+    publisherId: 'pub-tiktok',
+    title: 'TikTok: Rural resident praises Walmart Health clinic',
+    author: {
+      username: '@healthcare_access',
+      displayName: 'Healthcare Access Stories',
+      avatarUrl: 'img/placeholders/avatar-default.svg'
+    },
+    contentBlocks: [
+      { type: 'paragraph', content: 'Our hospital closed 2 years ago. The nearest doctor was 45 minutes away. Then Walmart Health opened a clinic and honestly? It\'s been amazing. $40 checkups, dental, even mental health. Say what you want about corporations but they\'re filling a gap no one else would. #ruralhealth #walmartHealth #healthcare' }
+    ],
+    video: {
+      thumbnailUrl: 'img/placeholders/video-thumbnail.svg',
+      duration: 78
+    },
+    excerpt: 'TikTok praising Walmart Health clinic in rural area.',
+    narrativeIds: ['narr-010'],
+    themeIds: ['sub-020', 'sub-021'],
+    personIds: [],
+    organizationIds: ['org-001', 'org-019'],
+    locationIds: ['loc-009'],
+    eventIds: ['event-018'],
+    factionMentions: {
+      'faction-005': { sentiment: 0.72 }
+    },
+    metrics: { views: 2200000, likes: 165000, shares: 72000, comments: 28000, platform: 'tiktok' },
+    highlights: [],
+    comments: []
+  },
+  {
+    id: 'doc-063',
+    documentType: 'social_media',
+    repositoryId: 'repo-osint',
+    classification: 'U',
+    url: 'https://x.com/labor_news/status/union_vote_dallas',
+    publishedDate: '2025-09-22T19:00:00Z',
+    publisherId: 'pub-x',
+    title: 'X post: Dallas fulfillment center union vote results',
+    author: {
+      username: '@labor_news',
+      displayName: 'Labor Movement News',
+      avatarUrl: 'img/placeholders/avatar-default.svg'
+    },
+    contentBlocks: [
+      { type: 'paragraph', content: 'BREAKING: Dallas Walmart fulfillment center votes NO on union 52-48%\n\nIncredibly close. Workers cited fear of retaliation and promised benefit improvements.\n\nWalmart spent heavily on anti-union messaging in final weeks.\n\nThis fight isn\'t over. Atlanta vote coming in January. 📊' }
+    ],
+    excerpt: 'X post reporting narrow union vote defeat at Dallas fulfillment center.',
+    narrativeIds: ['narr-009'],
+    themeIds: ['sub-019'],
+    personIds: ['person-020'],
+    organizationIds: ['org-001', 'org-016'],
+    locationIds: ['loc-011'],
+    eventIds: ['event-019'],
+    factionMentions: {
+      'faction-002': { sentiment: -0.55 },
+      'faction-003': { sentiment: -0.48 }
+    },
+    metrics: { likes: 5850, comments: 1420, shares: 2800, platform: 'x' },
+    highlights: [],
+    comments: []
+  },
+  {
+    id: 'doc-064',
+    documentType: 'social_media',
+    repositoryId: 'repo-osint',
+    classification: 'U',
+    url: 'https://facebook.com/groups/frugal_living/posts/walmart_alternatives',
+    publishedDate: '2025-12-02T11:00:00Z',
+    publisherId: 'pub-facebook',
+    title: 'Facebook: Frugal living group discusses Walmart alternatives',
+    author: {
+      username: 'frugal.life.tips',
+      displayName: 'Frugal Living Community',
+      avatarUrl: 'img/placeholders/avatar-default.svg'
+    },
+    contentBlocks: [
+      { type: 'paragraph', content: 'I used to shop exclusively at Walmart for 10 years. Did a test month shopping at Aldi + Costco instead.\n\nResults: Saved $127 on groceries. Food quality was better. Shopping experience was less stressful.\n\nAnyone else made the switch? What alternatives work best in your area? 🛒💰' }
+    ],
+    excerpt: 'Facebook post about switching from Walmart to alternatives.',
+    narrativeIds: ['narr-005'],
+    themeIds: ['sub-011'],
+    personIds: [],
+    organizationIds: ['org-001', 'org-010'],
+    locationIds: [],
+    eventIds: [],
+    factionMentions: {
+      'faction-001': { sentiment: -0.58 },
+      'faction-006': { sentiment: 0.65 }
+    },
+    metrics: { likes: 8450, comments: 2850, shares: 1850, platform: 'facebook' },
+    highlights: [],
+    comments: []
+  },
+  {
+    id: 'doc-065',
+    documentType: 'social_media',
+    repositoryId: 'repo-osint',
+    classification: 'U',
+    url: 'https://reddit.com/r/legaladvice/comments/walmart_detention',
+    publishedDate: '2025-12-10T14:00:00Z',
+    publisherId: 'pub-reddit',
+    title: 'Reddit: Legal advice on Walmart detention incident',
+    author: {
+      username: 'u/need_legal_help_2025',
+      displayName: 'need_legal_help_2025',
+      avatarUrl: 'img/placeholders/avatar-default.svg'
+    },
+    contentBlocks: [
+      { type: 'paragraph', content: '**Was detained at Walmart for 45 minutes, missed my flight - do I have a case?**\n\nLong story short: self-checkout flagged an item as not scanned (it was). LP detained me, verified my receipt, found nothing wrong, and let me go. But it took 45 minutes and I missed my flight.\n\n$800 flight gone. Lost business meeting. Can I sue? This seems like false imprisonment.\n\nTexas, if that matters.' }
+    ],
+    excerpt: 'Reddit legal advice request about extended Walmart detention.',
+    narrativeIds: ['narr-001'],
+    themeIds: ['sub-001', 'sub-002'],
+    personIds: [],
+    organizationIds: ['org-001'],
+    locationIds: [],
+    eventIds: [],
+    factionMentions: {
+      'faction-001': { sentiment: -0.82 },
+      'faction-004': { sentiment: -0.75 }
+    },
+    metrics: { likes: 9850, comments: 2150, platform: 'reddit' },
+    highlights: [],
+    comments: []
+  },
+  {
+    id: 'doc-066',
+    documentType: 'social_media',
+    repositoryId: 'repo-osint',
+    classification: 'U',
+    url: 'https://tiktok.com/@holiday_disasters/video/delivery_fail',
+    publishedDate: '2025-12-12T16:00:00Z',
+    publisherId: 'pub-tiktok',
+    title: 'TikTok: Customer shows wrong items in holiday delivery',
+    author: {
+      username: '@holiday_disasters',
+      displayName: 'Holiday Shopping Fails',
+      avatarUrl: 'img/placeholders/avatar-default.svg'
+    },
+    contentBlocks: [
+      { type: 'paragraph', content: 'Ordered toys for my kids for Christmas from Walmart. Here\'s what arrived: cleaning supplies, cat food (I don\'t have a cat), and someone else\'s prescription??? My order is completely gone and customer service has a 3 HOUR wait time. HELP 😭 #walmartfail #christmasruined #deliveryfail' }
+    ],
+    video: {
+      thumbnailUrl: 'img/placeholders/video-thumbnail.svg',
+      duration: 65
+    },
+    excerpt: 'TikTok showing wrong items received in Walmart holiday delivery.',
+    narrativeIds: ['narr-011', 'narr-006'],
+    themeIds: ['sub-023', 'sub-024'],
+    personIds: [],
+    organizationIds: ['org-001'],
+    locationIds: [],
+    eventIds: ['event-022'],
+    factionMentions: {
+      'faction-001': { sentiment: -0.92 }
+    },
+    metrics: { views: 4500000, likes: 320000, shares: 185000, comments: 52000, platform: 'tiktok' },
+    highlights: [],
+    comments: []
+  },
+  {
+    id: 'doc-067',
+    documentType: 'social_media',
+    repositoryId: 'repo-osint',
+    classification: 'U',
+    url: 'https://x.com/retail_workers_united/status/atlanta_win',
+    publishedDate: '2026-01-10T21:00:00Z',
+    publisherId: 'pub-x',
+    title: 'X post: Celebrating Atlanta warehouse union victory',
+    author: {
+      username: '@retail_workers_united',
+      displayName: 'Retail Workers United',
+      avatarUrl: 'img/placeholders/avatar-default.svg'
+    },
+    contentBlocks: [
+      { type: 'paragraph', content: '🎉 HISTORIC VICTORY 🎉\n\nAtlanta Walmart fulfillment center votes YES to unionize!\n\nThis is the FIRST successful Walmart warehouse union. Ever.\n\n58% voted yes. Workers cited:\n- Better scheduling\n- Safety concerns\n- Respect on the job\n\nThe tide is turning. Who\'s next? ✊' }
+    ],
+    excerpt: 'X post celebrating historic Atlanta Walmart warehouse union victory.',
+    narrativeIds: ['narr-009'],
+    themeIds: ['sub-019'],
+    personIds: ['person-020', 'person-025'],
+    organizationIds: ['org-001', 'org-016'],
+    locationIds: ['loc-012'],
+    eventIds: ['event-026'],
+    factionMentions: {
+      'faction-002': { sentiment: 0.85 },
+      'faction-003': { sentiment: 0.78 }
+    },
+    metrics: { likes: 28500, comments: 4850, shares: 12500, platform: 'x' },
+    highlights: [],
+    comments: []
+  },
+  {
+    id: 'doc-068',
+    documentType: 'social_media',
+    repositoryId: 'repo-osint',
+    classification: 'U',
+    url: 'https://facebook.com/groups/holiday_shoppers/posts/delivery_complaints',
+    publishedDate: '2025-12-18T09:00:00Z',
+    publisherId: 'pub-facebook',
+    title: 'Facebook: Holiday shoppers share delivery horror stories',
+    author: {
+      username: 'holiday.shopping.support',
+      displayName: 'Holiday Shopping Support Group',
+      avatarUrl: 'img/placeholders/avatar-default.svg'
+    },
+    contentBlocks: [
+      { type: 'paragraph', content: 'Share your Walmart delivery horror stories from this holiday season! I\'ll start:\n\nOrdered Dec 1. "Guaranteed by Dec 15." Still not here on Dec 18. App says "in transit" for 10 days. Support says "please wait." Kids might not have presents under the tree. 💔\n\nLet\'s collect these stories - maybe if enough of us share, they\'ll actually fix the system.' }
+    ],
+    excerpt: 'Facebook post collecting holiday delivery complaint stories.',
+    narrativeIds: ['narr-011'],
+    themeIds: ['sub-023', 'sub-024'],
+    personIds: [],
+    organizationIds: ['org-001'],
+    locationIds: [],
+    eventIds: ['event-022'],
+    factionMentions: {
+      'faction-001': { sentiment: -0.88 }
+    },
+    metrics: { likes: 12500, comments: 4850, shares: 3200, platform: 'facebook' },
+    highlights: [],
+    comments: []
+  },
+  {
+    id: 'doc-069',
+    documentType: 'social_media',
+    repositoryId: 'repo-osint',
+    classification: 'U',
+    url: 'https://tiktok.com/@union_strong/video/organizing_tips',
+    publishedDate: '2026-01-12T18:00:00Z',
+    publisherId: 'pub-tiktok',
+    title: 'TikTok: Warehouse worker shares organizing tips after Atlanta win',
+    author: {
+      username: '@union_strong',
+      displayName: 'Union Organizing Tips',
+      avatarUrl: 'img/placeholders/avatar-default.svg'
+    },
+    contentBlocks: [
+      { type: 'paragraph', content: 'How we won the first Walmart warehouse union 🧵 Tips for other workers thinking about organizing: 1) Build relationships with coworkers FIRST 2) Keep conversations private until you have majority support 3) Document everything 4) Don\'t let management scare you - they WILL try 5) Contact established unions for help. We did it. You can too. ✊ #union #workersrights #organizing #walmartworkers' }
+    ],
+    video: {
+      thumbnailUrl: 'img/placeholders/video-thumbnail.svg',
+      duration: 118
+    },
+    excerpt: 'TikTok sharing organizing tips from Atlanta union victory.',
+    narrativeIds: ['narr-009', 'narr-003'],
+    themeIds: ['sub-019', 'sub-008'],
+    personIds: [],
+    organizationIds: ['org-016'],
+    locationIds: ['loc-012'],
+    eventIds: ['event-026'],
+    factionMentions: {
+      'faction-002': { sentiment: 0.82 },
+      'faction-003': { sentiment: 0.75 }
+    },
+    metrics: { views: 5800000, likes: 425000, shares: 245000, comments: 68000, platform: 'tiktok' },
+    highlights: [],
+    comments: []
+  },
+  {
+    id: 'doc-070',
+    documentType: 'social_media',
+    repositoryId: 'repo-osint',
+    classification: 'U',
+    url: 'https://reddit.com/r/walmart/comments/new_benefits_reaction',
+    publishedDate: '2026-01-16T12:00:00Z',
+    publisherId: 'pub-reddit',
+    title: 'Reddit: Workers react to new benefits announcement',
+    author: {
+      username: 'u/walmart_associate_real',
+      displayName: 'walmart_associate_real',
+      avatarUrl: 'img/placeholders/avatar-default.svg'
+    },
+    contentBlocks: [
+      { type: 'paragraph', content: '**New Walmart benefits announced - here\'s what workers think**\n\nSo Walmart just announced higher minimum wage and better scheduling after the Atlanta union win. Thoughts:\n\n✅ Good: $2/hr raise in some markets\n✅ Good: More schedule flexibility\n❌ Bad: Clearly trying to stop more unions\n❌ Bad: Why did it take a union threat to get this?\n\nMixed feelings. What do other associates think? Is this enough or too little too late?' }
+    ],
+    excerpt: 'Reddit discussion of worker reactions to new Walmart benefits.',
+    narrativeIds: ['narr-009', 'narr-003'],
+    themeIds: ['sub-008', 'sub-019'],
+    personIds: ['person-001'],
+    organizationIds: ['org-001', 'org-016'],
+    locationIds: [],
+    eventIds: [],
+    factionMentions: {
+      'faction-002': { sentiment: 0.35 },
+      'faction-003': { sentiment: 0.28 }
+    },
+    metrics: { likes: 8920, comments: 2450, platform: 'reddit' },
     highlights: [],
     comments: []
   }

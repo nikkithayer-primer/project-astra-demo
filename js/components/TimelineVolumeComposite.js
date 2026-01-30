@@ -6,6 +6,7 @@
 
 import { BaseComponent } from './BaseComponent.js';
 import { formatDate, formatDateLong, formatDateTimeLong, getTimeFormatter } from '../utils/formatters.js';
+import { getEntityCardModal } from './EntityCardModal.js';
 
 export class TimelineVolumeComposite extends BaseComponent {
   constructor(containerId, options = {}) {
@@ -885,7 +886,7 @@ export class TimelineVolumeComposite extends BaseComponent {
         });
       }
 
-      // Add hover effect to highlight corresponding area
+      // Add hover effect to highlight corresponding area and show entity card
       const self = this;
       legendItem
         .on('mouseover', function() {
@@ -897,6 +898,10 @@ export class TimelineVolumeComposite extends BaseComponent {
               .attr('stroke', d => d.key === item.id ? item.color : 'none')
               .attr('stroke-width', d => d.key === item.id ? 2 : 0);
           }
+          // Show entity card for factions
+          if (isFactionView) {
+            getEntityCardModal().show(item.id, 'faction', this);
+          }
         })
         .on('mouseout', function() {
           d3.select(this).select('text').attr('fill', 'var(--text-secondary)');
@@ -906,6 +911,10 @@ export class TimelineVolumeComposite extends BaseComponent {
               .attr('fill-opacity', 0.8)
               .attr('stroke', 'none')
               .attr('stroke-width', 0);
+          }
+          // Hide entity card
+          if (isFactionView) {
+            getEntityCardModal().scheduleHide();
           }
         });
     });
@@ -983,7 +992,7 @@ export class TimelineVolumeComposite extends BaseComponent {
       .attr('height', barHeight)
       .attr('fill', d => d.color)
       .attr('fill-opacity', 0.8)
-      .attr('rx', 2)
+      .attr('rx', 6)
       .style('cursor', 'pointer');
 
     // Hover effects and click handlers
@@ -1214,14 +1223,16 @@ export class TimelineVolumeComposite extends BaseComponent {
     // Calculate total volume
     const total = items.reduce((sum, item) => sum + (d[item.id] || 0), 0);
 
-    // Build tooltip content
+    // Build tooltip content - filter out factions with zero documents
+    const itemsWithData = items.filter(item => (d[item.id] || 0) > 0);
+    
     let tooltipContent = `
       <div class="tooltip-header">
         <span class="tooltip-date">${formatDateLong(d.date)}</span>
         <span class="tooltip-total">${this.formatNumber(total)} total</span>
       </div>
       <div class="tooltip-body">
-        ${items.map(item => {
+        ${itemsWithData.map(item => {
           const value = d[item.id] || 0;
           const percent = total > 0 ? Math.round((value / total) * 100) : 0;
           return `

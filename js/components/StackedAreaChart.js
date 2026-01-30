@@ -5,6 +5,7 @@
 
 import { BaseComponent } from './BaseComponent.js';
 import { formatDateLong, getTimeFormatter } from '../utils/formatters.js';
+import { getEntityCardModal } from './EntityCardModal.js';
 
 export class StackedAreaChart extends BaseComponent {
   constructor(containerId, options = {}) {
@@ -303,9 +304,10 @@ export class StackedAreaChart extends BaseComponent {
         });
       }
 
-      // Add hover effect to highlight corresponding area
+      // Add hover effect to highlight corresponding area and show entity card
       const self = this;
       legendItem
+        .style('cursor', 'pointer')
         .on('mouseover', function() {
           d3.select(this).select('text').attr('fill', 'var(--accent-primary)');
           // Highlight the corresponding area, dim others
@@ -313,6 +315,8 @@ export class StackedAreaChart extends BaseComponent {
             .attr('fill-opacity', d => d.key === faction.id ? 1 : 0.4)
             .attr('stroke', d => d.key === faction.id ? faction.color : 'none')
             .attr('stroke-width', d => d.key === faction.id ? 2 : 0);
+          // Show entity card
+          getEntityCardModal().show(faction.id, 'faction', this);
         })
         .on('mouseout', function() {
           d3.select(this).select('text').attr('fill', 'var(--text-secondary)');
@@ -321,6 +325,8 @@ export class StackedAreaChart extends BaseComponent {
             .attr('fill-opacity', 0.8)
             .attr('stroke', 'none')
             .attr('stroke-width', 0);
+          // Hide entity card
+          getEntityCardModal().scheduleHide();
         });
     });
   }

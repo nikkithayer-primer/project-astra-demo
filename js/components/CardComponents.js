@@ -9,6 +9,7 @@ import { DragDropManager } from '../utils/DragDropManager.js';
 import { DataService } from '../data/DataService.js';
 import { dataStore } from '../data/DataStore.js';
 import { escapeHtml } from '../utils/htmlUtils.js';
+import { getEntityCardModal } from './EntityCardModal.js';
 import { NetworkGraph } from './NetworkGraph.js';
 import { NarrativeList } from './NarrativeList.js';
 import { ThemeList } from './ThemeList.js';
@@ -174,8 +175,15 @@ export class NetworkGraphCard extends BaseCardComponent {
       height: this.height,
       onNodeClick: (node) => {
         if (this.excludeId && node.id === this.excludeId) return;
-        const route = node.type === 'person' ? 'person' : 'organization';
-        window.location.hash = `#/${route}/${node.id}`;
+        // Navigate to entity detail page on click
+        window.location.hash = `#/${node.type}/${node.id}`;
+      },
+      onNodeHover: (node, element) => {
+        if (this.excludeId && node.id === this.excludeId) return;
+        getEntityCardModal().show(node.id, node.type, element);
+      },
+      onNodeHoverEnd: () => {
+        getEntityCardModal().scheduleHide();
       },
       onLinkClick: (link) => {
         if (this.view.showConnectingNarrativesModal) {
@@ -205,12 +213,25 @@ export class NetworkGraphCard extends BaseCardComponent {
 
     container.innerHTML = listHtml;
 
-    // Add click listeners
+    // Add hover listeners for entity card popover
     container.querySelectorAll('.entity-list-item').forEach(item => {
+      item.addEventListener('mouseenter', () => {
+        const id = item.dataset.id;
+        const type = item.dataset.type;
+        if (this.excludeId && id === this.excludeId) return;
+        getEntityCardModal().show(id, type, item);
+      });
+      
+      item.addEventListener('mouseleave', () => {
+        getEntityCardModal().scheduleHide();
+      });
+      
+      // Click navigates to entity detail page
       item.addEventListener('click', () => {
         const id = item.dataset.id;
         const type = item.dataset.type;
         if (this.excludeId && id === this.excludeId) return;
+        getEntityCardModal().hide();
         window.location.hash = `#/${type}/${id}`;
       });
     });
@@ -844,9 +865,9 @@ export class TimelineVolumeCompositeCard extends BaseCardComponent {
         </button>
         <button class="view-toggle-btn ${this.displayMode === 'duration' ? 'active' : ''}" data-view="duration" title="Duration View">
           <svg viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.5">
-            <rect x="2" y="3" width="8" height="2" rx="0.5"/>
-            <rect x="4" y="7" width="10" height="2" rx="0.5"/>
-            <rect x="3" y="11" width="6" height="2" rx="0.5"/>
+            <rect x="2" y="3" width="8" height="1" rx="0.5"/>
+            <rect x="4" y="7" width="10" height="1" rx="0.5"/>
+            <rect x="3" y="11" width="6" height="1" rx="0.5"/>
           </svg>
         </button>
       </div>

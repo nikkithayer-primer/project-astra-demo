@@ -4,6 +4,7 @@
  */
 
 import { BaseComponent } from './BaseComponent.js';
+import { getEntityCardModal } from './EntityCardModal.js';
 
 export class SentimentChart extends BaseComponent {
   constructor(containerId, options = {}) {
@@ -98,20 +99,22 @@ export class SentimentChart extends BaseComponent {
         .attr('font-family', 'var(--font-sans)')
         .text(faction.name.length > 22 ? faction.name.slice(0, 20) + '...' : faction.name);
       
-      // Make faction label clickable if callback is provided
-      if (this.options.onFactionClick) {
-        factionLabel
-          .style('cursor', 'pointer')
-          .on('mouseenter', function() {
-            d3.select(this).attr('fill', 'var(--accent-primary)');
-          })
-          .on('mouseleave', function() {
-            d3.select(this).attr('fill', 'var(--text-secondary)');
-          })
-          .on('click', () => {
+      // Make faction label interactive
+      factionLabel
+        .style('cursor', 'pointer')
+        .on('mouseenter', function() {
+          d3.select(this).attr('fill', 'var(--accent-primary)');
+          getEntityCardModal().show(faction.id, 'faction', this);
+        })
+        .on('mouseleave', function() {
+          d3.select(this).attr('fill', 'var(--text-secondary)');
+          getEntityCardModal().scheduleHide();
+        })
+        .on('click', () => {
+          if (this.options.onFactionClick) {
             this.options.onFactionClick(faction);
-          });
-      }
+          }
+        });
 
       // Background bar
       group.append('rect')
@@ -172,8 +175,14 @@ export class SentimentChart extends BaseComponent {
         .attr('stroke', 'var(--bg-primary)')
         .attr('stroke-width', 2);
 
-      // Click handler
+      // Click and hover handlers for the bar group
       group.style('cursor', 'pointer')
+        .on('mouseenter', function() {
+          getEntityCardModal().show(faction.id, 'faction', this);
+        })
+        .on('mouseleave', function() {
+          getEntityCardModal().scheduleHide();
+        })
         .on('click', () => {
           if (this.options.onFactionClick) {
             this.options.onFactionClick(faction);
