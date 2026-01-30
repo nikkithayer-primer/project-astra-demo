@@ -20,6 +20,8 @@ export class DashboardView extends BaseView {
     super(container, options);
     // Events view mode: 'map' or 'list'
     this.eventsViewMode = 'map';
+    // Volume view mode: 'volume' or 'duration'
+    this.volumeViewMode = 'volume';
     // Tag filter: Set of selected tag IDs
     this.selectedTags = new Set();
     // Tag dropdown open state
@@ -139,7 +141,25 @@ export class DashboardView extends BaseView {
 
       <div class="content-area">
         <div class="content-grid">
-          ${CardBuilder.create('Volume Over Time & Events', 'dashboard-volume-timeline', { fullWidth: true })}
+          ${CardBuilder.create('Volume Over Time & Events', 'dashboard-volume-timeline', { 
+            fullWidth: true,
+            actions: `
+              <div class="view-toggle dashboard-volume-toggle">
+                <button class="view-toggle-btn ${this.volumeViewMode === 'volume' ? 'active' : ''}" data-view="volume" title="Volume View">
+                  <svg viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.5">
+                    <path d="M2 12V4M6 12V6M10 12V8M14 12V5"/>
+                  </svg>
+                </button>
+                <button class="view-toggle-btn ${this.volumeViewMode === 'duration' ? 'active' : ''}" data-view="duration" title="Duration View">
+                  <svg viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.5">
+                    <rect x="2" y="3" width="8" height="2" rx="0.5"/>
+                    <rect x="4" y="7" width="10" height="2" rx="0.5"/>
+                    <rect x="3" y="11" width="6" height="2" rx="0.5"/>
+                  </svg>
+                </button>
+              </div>
+            `
+          })}
           ${CardBuilder.create('Top Narratives by Volume', 'dashboard-narrative-list', { 
             noPadding: true, 
             bodyClass: 'card-body-scrollable',
@@ -271,13 +291,24 @@ export class DashboardView extends BaseView {
     const hasEvents = recentEvents.length > 0;
     const hasDurationData = narrativeDurations.length > 0;
 
+    // Store duration data availability and attach toggle handler
+    this._hasDurationData = hasDurationData;
+    this._volumeData = { volumeData, publisherData, recentEvents, narrativeDurations, hasVolumeData, hasPublisherData, hasEvents, hasDurationData };
+    
+    // Hide the toggle if no duration data
+    const volumeToggle = this.container.querySelector('.dashboard-volume-toggle');
+    if (volumeToggle && !hasDurationData) {
+      volumeToggle.style.display = 'none';
+    }
+
     if (hasVolumeData || hasPublisherData || hasEvents || hasDurationData) {
       this.components.volumeTimeline = new TimelineVolumeComposite('dashboard-volume-timeline', {
         height: 450,
         volumeHeight: 180,
         timelineHeight: 180,
         showViewToggle: hasVolumeData && hasPublisherData,
-        showDisplayToggle: hasDurationData,
+        showDisplayToggle: false, // Toggle is now in card header
+        defaultDisplayMode: this.volumeViewMode,
         onEventClick: (e) => {
           window.location.hash = `#/event/${e.id}`;
         },
@@ -295,6 +326,9 @@ export class DashboardView extends BaseView {
         narrativeDurations: hasDurationData ? narrativeDurations : null
       });
       this.components.volumeTimeline.enableAutoResize();
+      
+      // Attach volume view toggle handler
+      this.attachVolumeViewToggle();
     }
 
     // Sentiment by Faction (aggregated across all narratives)
@@ -431,6 +465,34 @@ export class DashboardView extends BaseView {
           
           // Re-render the view
           this.renderEventsView();
+        }
+      });
+    });
+  }
+
+  /**
+   * Attach view toggle listeners for volume/duration view
+   */
+  attachVolumeViewToggle() {
+    const toggleContainer = this.container.querySelector('.dashboard-volume-toggle');
+    if (!toggleContainer) return;
+
+    toggleContainer.querySelectorAll('.view-toggle-btn').forEach(btn => {
+      this.addListener(btn, 'click', () => {
+        const newMode = btn.dataset.view;
+        if (newMode !== this.volumeViewMode) {
+          this.volumeViewMode = newMode;
+          
+          // Update button states
+          toggleContainer.querySelectorAll('.view-toggle-btn').forEach(b => {
+            b.classList.toggle('active', b.dataset.view === newMode);
+          });
+          
+          // Update the component's display mode and re-render
+          if (this.components.volumeTimeline) {
+            this.components.volumeTimeline.displayMode = newMode;
+            this.components.volumeTimeline.render();
+          }
         }
       });
     });

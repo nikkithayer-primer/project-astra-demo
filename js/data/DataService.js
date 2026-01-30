@@ -1433,6 +1433,84 @@ export const DataService = {
     return { dates, series, factions };
   },
 
+  /**
+   * Get narrative duration data for the Duration View.
+   * Returns narratives with their start/end dates and total volume, sorted by start date.
+   * @param {string} missionId - Optional mission ID filter
+   * @param {Object} timeRange - Optional { start, end } date range
+   * @param {Array} statusFilter - Optional array of narrative statuses
+   * @returns {Array} [{ id, text, startDate, endDate, totalVolume, sentiment, color }, ...]
+   */
+  getNarrativeDurations: (missionId = null, timeRange = null, statusFilter = null) => {
+    let narratives = DataService.getNarratives(missionId, timeRange);
+    
+    // Apply status filter if provided
+    if (statusFilter && statusFilter.length > 0) {
+      narratives = narratives.filter(n => statusFilter.includes(n.status || 'new'));
+    }
+    
+    const durations = narratives.map(n => {
+      // Get volume over time for this narrative
+      const volumeData = DataService.getVolumeOverTimeForNarrative(n.id, timeRange);
+      
+      if (volumeData.length === 0) {
+        return null; // No activity data
+      }
+      
+      // Sort by date to find start and end
+      const sortedDates = volumeData
+        .map(v => v.date)
+        .sort((a, b) => new Date(a) - new Date(b));
+      
+      const startDate = sortedDates[0];
+      const endDate = sortedDates[sortedDates.length - 1];
+      
+      // Calculate total volume across all factions
+      let totalVolume = 0;
+      volumeData.forEach(v => {
+        Object.values(v.factionVolumes || {}).forEach(vol => {
+          totalVolume += vol;
+        });
+      });
+      
+      // Get primary faction color (faction with highest volume)
+      const factionVolumes = {};
+      volumeData.forEach(v => {
+        Object.entries(v.factionVolumes || {}).forEach(([fId, vol]) => {
+          factionVolumes[fId] = (factionVolumes[fId] || 0) + vol;
+        });
+      });
+      
+      let primaryFactionId = null;
+      let maxFactionVolume = 0;
+      Object.entries(factionVolumes).forEach(([fId, vol]) => {
+        if (vol > maxFactionVolume) {
+          maxFactionVolume = vol;
+          primaryFactionId = fId;
+        }
+      });
+      
+      const primaryFaction = primaryFactionId 
+        ? dataStore.data.factions.find(f => f.id === primaryFactionId)
+        : null;
+      
+      return {
+        id: n.id,
+        text: n.text,
+        startDate,
+        endDate,
+        totalVolume,
+        sentiment: n.sentiment || 0,
+        color: primaryFaction?.color || 'var(--accent-primary)'
+      };
+    }).filter(Boolean);
+    
+    // Sort by start date (earliest first)
+    durations.sort((a, b) => new Date(a.startDate) - new Date(b.startDate));
+    
+    return durations;
+  },
+
   // ============================================
   // Document-Based Aggregation Methods
   // ============================================

@@ -79,9 +79,9 @@ export class TimelineVolumeComposite extends BaseComponent {
 
     const { width, margin, volumeHeight, timelineHeight, durationHeight, axisHeight, legendHeight, minZoom, maxZoom } = this.options;
     
-    // Calculate height based on display mode
+    // Calculate height based on display mode (row height = 16px bar + 6px padding = 22px)
     const contentHeight = this.displayMode === 'duration' 
-      ? Math.max(durationHeight, (narrativeDurations?.length || 0) * 32 + 40)
+      ? Math.max(durationHeight, (narrativeDurations?.length || 0) * 22 + 30)
       : volumeHeight + timelineHeight;
     const totalHeight = margin.top + contentHeight + axisHeight + (this.displayMode === 'volume' ? legendHeight : 0) + margin.bottom;
     this.options.height = totalHeight;
@@ -916,16 +916,16 @@ export class TimelineVolumeComposite extends BaseComponent {
     // Store for later use (updates, tooltips)
     this.narrativeDurations = narrativeDurations;
 
-    const barHeight = 24;
-    const barPadding = 8;
+    const barHeight = 16;
+    const barPadding = 6;
     const rowHeight = barHeight + barPadding;
-    const labelWidth = 180; // Width reserved for narrative labels
+    const labelWidth = 200; // Width reserved for narrative labels
 
     // Y scale for narratives
     this.yScale = d3.scaleBand()
       .domain(narrativeDurations.map(n => n.id))
-      .range([10, narrativeDurations.length * rowHeight + 10])
-      .padding(0.2);
+      .range([8, narrativeDurations.length * rowHeight + 8])
+      .padding(0.15);
 
     // Calculate max volume for opacity scaling
     const maxVolume = Math.max(...narrativeDurations.map(n => n.totalVolume || 1));
@@ -945,7 +945,7 @@ export class TimelineVolumeComposite extends BaseComponent {
       .attr('width', this.innerWidth)
       .attr('height', rowHeight)
       .attr('fill', 'transparent')
-      .attr('rx', 4);
+      .attr('rx', 3);
 
     // Narrative label (truncated)
     rows.append('text')
@@ -953,9 +953,9 @@ export class TimelineVolumeComposite extends BaseComponent {
       .attr('x', 0)
       .attr('y', barHeight / 2 + 4)
       .attr('fill', 'var(--text-secondary)')
-      .attr('font-size', '11px')
+      .attr('font-size', '12px')
       .attr('font-family', 'var(--font-sans)')
-      .text(d => d.text.length > 28 ? d.text.slice(0, 26) + '...' : d.text)
+      .text(d => d.text.length > 32 ? d.text.slice(0, 30) + '...' : d.text)
       .append('title')
       .text(d => d.text);
 
@@ -972,7 +972,7 @@ export class TimelineVolumeComposite extends BaseComponent {
       .attr('height', barHeight)
       .attr('fill', d => d.color)
       .attr('fill-opacity', d => 0.5 + (d.totalVolume / maxVolume) * 0.5) // 0.5 to 1.0 based on volume
-      .attr('rx', 3)
+      .attr('rx', 2)
       .style('cursor', 'pointer');
 
     // Volume indicator (small text beside bar)

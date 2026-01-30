@@ -4190,6 +4190,73 @@
 }
 
 /* ============================================
+   Duration View - Narrative Duration Bars
+   ============================================ */
+
+.duration-group {
+  font-family: var(--font-sans);
+}
+
+.duration-row {
+  cursor: pointer;
+}
+
+.duration-row-bg {
+  transition: fill 0.15s ease;
+}
+
+.duration-label {
+  pointer-events: none;
+}
+
+.duration-bar {
+  transition: fill-opacity 0.15s ease, stroke 0.15s ease;
+}
+
+.duration-volume {
+  pointer-events: none;
+}
+
+/* Display mode toggle styling */
+.display-mode-toggle {
+  display: flex;
+  gap: 2px;
+  background: var(--bg-tertiary);
+  padding: 2px;
+  border-radius: var(--radius-sm);
+  margin-right: var(--space-sm);
+}
+
+.display-mode-toggle .view-toggle-btn {
+  padding: var(--space-xs) var(--space-sm);
+  background: transparent;
+  border: none;
+  border-radius: var(--radius-xs);
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: all 0.15s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.display-mode-toggle .view-toggle-btn:hover {
+  color: var(--text-primary);
+  background: var(--bg-hover);
+}
+
+.display-mode-toggle .view-toggle-btn.active {
+  background: var(--bg-primary);
+  color: var(--accent-primary);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+}
+
+.display-mode-toggle .view-toggle-btn svg {
+  width: 14px;
+  height: 14px;
+}
+
+/* ============================================
    Content Grid - Responsive Card Layout
    ============================================ */
 

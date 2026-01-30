@@ -811,24 +811,51 @@ export class TimelineVolumeCompositeCard extends BaseCardComponent {
     this.volumeData = options.volumeData || null;
     this.publisherData = options.publisherData || null;
     this.events = options.events || [];
+    this.narrativeDurations = options.narrativeDurations || null;
     this.title = options.title || 'Volume & Events';
     this.height = options.height || 320;
     this.volumeHeight = options.volumeHeight || 140;
     this.timelineHeight = options.timelineHeight || 140;
     this.showViewToggle = options.showViewToggle || false;
+    this.displayMode = 'volume'; // 'volume' or 'duration'
   }
 
   hasData() {
     const hasVolumeData = this.volumeData && this.volumeData.dates && this.volumeData.dates.length > 0;
     const hasPublisherData = this.publisherData && this.publisherData.dates && this.publisherData.dates.length > 0;
-    return hasVolumeData || hasPublisherData || this.events.length > 0;
+    const hasDurationData = this.narrativeDurations && this.narrativeDurations.length > 0;
+    return hasVolumeData || hasPublisherData || this.events.length > 0 || hasDurationData;
+  }
+
+  hasDurationData() {
+    return this.narrativeDurations && this.narrativeDurations.length > 0;
   }
 
   getCardHtml() {
     if (!this.hasData()) return '';
+    
+    // Build toggle HTML if duration data exists
+    const toggleHtml = this.hasDurationData() ? `
+      <div class="view-toggle volume-duration-toggle" data-container="${this.containerId}">
+        <button class="view-toggle-btn ${this.displayMode === 'volume' ? 'active' : ''}" data-view="volume" title="Volume View">
+          <svg viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.5">
+            <path d="M2 12V4M6 12V6M10 12V8M14 12V5"/>
+          </svg>
+        </button>
+        <button class="view-toggle-btn ${this.displayMode === 'duration' ? 'active' : ''}" data-view="duration" title="Duration View">
+          <svg viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.5">
+            <rect x="2" y="3" width="8" height="2" rx="0.5"/>
+            <rect x="4" y="7" width="10" height="2" rx="0.5"/>
+            <rect x="3" y="11" width="6" height="2" rx="0.5"/>
+          </svg>
+        </button>
+      </div>
+    ` : '';
+    
     return CardBuilder.create(this.title, this.containerId, {
       fullWidth: this.options.fullWidth || false,
-      halfWidth: this.options.halfWidth || false
+      halfWidth: this.options.halfWidth || false,
+      actions: toggleHtml
     });
   }
 
@@ -840,24 +867,60 @@ export class TimelineVolumeCompositeCard extends BaseCardComponent {
       volumeHeight: this.volumeHeight,
       timelineHeight: this.timelineHeight,
       showViewToggle: this.showViewToggle,
+      showDisplayToggle: false, // Toggle is in card header
+      defaultDisplayMode: this.displayMode,
       onEventClick: (e) => {
         window.location.hash = `#/event/${e.id}`;
       },
       onFactionClick: (f) => {
         window.location.hash = `#/faction/${f.id}`;
+      },
+      onNarrativeClick: (n) => {
+        window.location.hash = `#/narrative/${n.id}`;
       }
     });
     this.component.update({
       volumeData: this.volumeData,
       publisherData: this.publisherData,
-      events: this.events
+      events: this.events,
+      narrativeDurations: this.narrativeDurations
     });
     
     if (this.options.enableAutoResize !== false) {
       this.component.enableAutoResize();
     }
 
+    // Set up toggle handler if duration data exists
+    if (this.hasDurationData()) {
+      this.setupDisplayToggle();
+    }
+
     return this.component;
+  }
+
+  setupDisplayToggle() {
+    const toggleContainer = document.querySelector(`.volume-duration-toggle[data-container="${this.containerId}"]`);
+    if (!toggleContainer) return;
+
+    toggleContainer.querySelectorAll('.view-toggle-btn').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        const newMode = btn.dataset.view;
+        if (newMode !== this.displayMode) {
+          this.displayMode = newMode;
+          
+          // Update button states
+          toggleContainer.querySelectorAll('.view-toggle-btn').forEach(b => {
+            b.classList.toggle('active', b.dataset.view === newMode);
+          });
+          
+          // Update the component
+          if (this.component) {
+            this.component.displayMode = newMode;
+            this.component.render();
+          }
+        }
+      });
+    });
   }
 }
 

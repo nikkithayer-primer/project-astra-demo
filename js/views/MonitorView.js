@@ -263,7 +263,12 @@ export class MonitorView extends BaseView {
     // Get aggregated volume data
     const volumeData = DataService.getAggregateVolumeForMonitor(this.monitorId);
     const hasVolumeData = volumeData.dates.length > 0 && volumeData.factions.length > 0;
-    const hasVolumeTimeline = hasVolumeData || allEvents.length > 0;
+    
+    // Get narrative durations for duration view
+    const narrativeDurations = this.getNarrativeDurationsForMonitor(narratives);
+    const hasDurationData = narrativeDurations.length > 0;
+    
+    const hasVolumeTimeline = hasVolumeData || allEvents.length > 0 || hasDurationData;
     
     // Build map locations (deduplicated)
     const locationMap = new Map();
@@ -289,8 +294,70 @@ export class MonitorView extends BaseView {
       narratives, events, allEvents, alerts,
       persons, organizations, locations, factions, documents, topics,
       volumeData, hasVolumeData, hasVolumeTimeline,
+      narrativeDurations, hasDurationData,
       mapLocations, personIds, orgIds, hasNetwork
     };
+  }
+
+  /**
+   * Get narrative durations for the Duration View from monitor's matched narratives
+   */
+  getNarrativeDurationsForMonitor(narratives) {
+    const durations = narratives.map(n => {
+      // Get volume over time for this narrative
+      const volumeData = DataService.getVolumeOverTimeForNarrative(n.id);
+      
+      if (!volumeData || volumeData.length === 0) {
+        return null;
+      }
+      
+      // Sort by date to find start and end
+      const sortedDates = volumeData
+        .map(v => v.date)
+        .sort((a, b) => new Date(a) - new Date(b));
+      
+      const startDate = sortedDates[0];
+      const endDate = sortedDates[sortedDates.length - 1];
+      
+      // Calculate total volume
+      let totalVolume = 0;
+      const factionVolumes = {};
+      volumeData.forEach(v => {
+        Object.entries(v.factionVolumes || {}).forEach(([fId, vol]) => {
+          totalVolume += vol;
+          factionVolumes[fId] = (factionVolumes[fId] || 0) + vol;
+        });
+      });
+      
+      // Get primary faction color
+      let primaryFactionId = null;
+      let maxFactionVolume = 0;
+      Object.entries(factionVolumes).forEach(([fId, vol]) => {
+        if (vol > maxFactionVolume) {
+          maxFactionVolume = vol;
+          primaryFactionId = fId;
+        }
+      });
+      
+      const primaryFaction = primaryFactionId 
+        ? DataService.getFaction(primaryFactionId)
+        : null;
+      
+      return {
+        id: n.id,
+        text: n.text,
+        startDate,
+        endDate,
+        totalVolume,
+        sentiment: n.sentiment || 0,
+        color: primaryFaction?.color || 'var(--accent-primary)'
+      };
+    }).filter(Boolean);
+    
+    // Sort by start date
+    durations.sort((a, b) => new Date(a.startDate) - new Date(b.startDate));
+    
+    return durations;
   }
 
   /**
@@ -319,6 +386,7 @@ export class MonitorView extends BaseView {
         volumeData: data.hasVolumeData ? data.volumeData : null,
         publisherData: null,
         events: data.allEvents,
+        narrativeDurations: data.hasDurationData ? data.narrativeDurations : null,
         halfWidth: true,
         height: 320,
         volumeHeight: 140,
