@@ -222,6 +222,9 @@ export class EntityDetailView extends BaseView {
       type: loc.type || 'location'
     })).filter(loc => loc.coordinates);
 
+    // Narrative durations for volume/duration toggle
+    data.narrativeDurations = DataService.getNarrativeDurations();
+
     return data;
   }
 
@@ -257,12 +260,14 @@ export class EntityDetailView extends BaseView {
     }
 
     // 3. Volume & Events Chart (w/ factions and source) - full-width
-    if (data.hasVolumeTimeline) {
+    const hasDurationData = data.narrativeDurations?.length > 0;
+    if (data.hasVolumeTimeline || hasDurationData) {
       this.cardManager.add(new TimelineVolumeCompositeCard(this, `${prefix}-volume-events`, {
         title: 'Volume & Events',
         volumeData: data.volumeData,
         publisherData: data.publisherData,
         events: data.allEvents,
+        narrativeDurations: hasDurationData ? data.narrativeDurations : null,
         fullWidth: true,
         height: 450,
         volumeHeight: 180,
@@ -277,7 +282,8 @@ export class EntityDetailView extends BaseView {
         title: 'Related Narratives',
         narratives: data.narratives,
         showCount: true,
-        halfWidth: true
+        halfWidth: true,
+        showDescriptionToggle: true
       }));
     }
 
@@ -287,7 +293,8 @@ export class EntityDetailView extends BaseView {
         title: 'Related Topics',
         topics: data.topics,
         showCount: true,
-        halfWidth: true
+        halfWidth: true,
+        showBulletsToggle: true
       }));
     }
 
@@ -324,7 +331,8 @@ export class EntityDetailView extends BaseView {
         title: 'Locations & Events',
         locations: data.locations,
         events: data.allEvents,
-        halfWidth: true
+        halfWidth: true,
+        showViewToggle: true
       }));
     }
   }

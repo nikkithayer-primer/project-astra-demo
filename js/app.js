@@ -5,6 +5,7 @@
 
 import { dataStore } from './data/DataStore.js';
 import { DataService } from './data/DataService.js';
+import { validateDataset } from './data/SchemaValidator.js';
 import { getMonitorEditor } from './components/MonitorEditorModal.js';
 import { getSearchFilterEditor } from './components/SearchFilterEditorModal.js';
 import { mockData as americanPoliticsData, datasetId as americanPoliticsId, datasetName as americanPoliticsName } from './data/datasets/american-politics/index.js';
@@ -112,6 +113,22 @@ class App {
     this.dataStore.data = { ...dataset.data };
     this.dataStore.setCurrentDatasetName(dataset.name);
     this.dataStore.save();
+    
+    // Validate dataset in development mode
+    if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+      this.validateCurrentDataset(dataset.name);
+    }
+  }
+  
+  /**
+   * Validate the current dataset and log results
+   * @param {string} datasetName - Name of the dataset for logging
+   */
+  validateCurrentDataset(datasetName) {
+    const results = validateDataset(this.dataStore.data);
+    if (results.summary.errors > 0) {
+      console.warn(`Dataset '${datasetName}' has ${results.summary.errors} validation errors`);
+    }
   }
 
   /**
@@ -127,6 +144,11 @@ class App {
 
     // Switch the dataset in the store (including the name)
     this.dataStore.switchDataset(datasetId, dataset.data, dataset.name);
+    
+    // Validate dataset in development mode
+    if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+      this.validateCurrentDataset(dataset.name);
+    }
     
     // Update UI indicators
     this.updateDatasetIndicators(datasetId);
@@ -1377,6 +1399,12 @@ const app = new App();
 
 // Make app globally accessible
 window.app = app;
+
+// Expose validation utility for console debugging
+window.validateCurrentDataset = () => {
+  const results = validateDataset(app.dataStore.data, { logToConsole: true });
+  return results;
+};
 
 // Initialize when DOM is ready
 document.addEventListener('DOMContentLoaded', () => {

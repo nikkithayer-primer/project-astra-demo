@@ -13,10 +13,12 @@ import {
   CardManager,
   NetworkGraphCard,
   NarrativeListCard,
-  ThemeListCard,
+  TopicListCard,
   SentimentChartCard,
+  VennDiagramCard,
   MapCard,
-  DocumentTableCard
+  DocumentTableCard,
+  TimelineVolumeCompositeCard
 } from '../components/CardComponents.js';
 
 export class WorkspaceView extends BaseView {
@@ -148,6 +150,7 @@ export class WorkspaceView extends BaseView {
     const locationIds = new Set();
     const eventIds = new Set();
     const factionIds = new Set();
+    const topicIds = new Set();
 
     documents.forEach(doc => {
       (doc.personIds || []).forEach(id => personIds.add(id));
@@ -156,6 +159,7 @@ export class WorkspaceView extends BaseView {
       (doc.themeIds || []).forEach(id => themeIds.add(id));
       (doc.locationIds || []).forEach(id => locationIds.add(id));
       (doc.eventIds || []).forEach(id => eventIds.add(id));
+      (doc.topicIds || []).forEach(id => topicIds.add(id));
     });
 
     // Resolve entities from IDs
@@ -165,6 +169,7 @@ export class WorkspaceView extends BaseView {
     const themes = [...themeIds].map(id => DataService.getTheme(id)).filter(Boolean);
     const locations = [...locationIds].map(id => DataService.getLocation(id)).filter(Boolean);
     const events = [...eventIds].map(id => DataService.getEvent(id)).filter(Boolean);
+    const topics = [...topicIds].map(id => DataService.getTopic(id)).filter(Boolean);
 
     // Get factions from narratives using document-based aggregation
     narratives.forEach(n => {
@@ -173,17 +178,31 @@ export class WorkspaceView extends BaseView {
     });
     const factions = this.calculateFactionSentiment(narratives, [...factionIds]);
 
+    // Get faction overlaps for Venn diagram
+    const factionOverlaps = DataService.getFactionOverlaps();
+
     // Build network graph data
     const hasNetwork = persons.length > 0 || organizations.length > 0;
+
+    // Get volume data for timeline
+    const volumeData = DataService.getAggregateVolumeOverTime();
+    const publisherData = DataService.getAggregatePublisherVolumeOverTime();
+    
+    // Get narrative durations for duration view toggle
+    const narrativeDurations = DataService.getNarrativeDurations();
 
     return {
       documents,
       persons, organizations,
-      narratives, themes,
+      narratives, themes, topics,
       locations, events, factions,
+      factionOverlaps,
       personIds: [...personIds],
       orgIds: [...organizationIds],
-      hasNetwork
+      hasNetwork,
+      volumeData,
+      publisherData,
+      narrativeDurations
     };
   }
 
@@ -239,66 +258,96 @@ export class WorkspaceView extends BaseView {
     this.cardManager = new CardManager(this);
 
     // Show empty state if no related data
-    if (data.narratives.length === 0 && data.themes.length === 0 && 
+    if (data.narratives.length === 0 && data.topics.length === 0 && 
         !data.hasNetwork && data.factions.length === 0 && 
         data.locations.length === 0 && data.events.length === 0) {
       return; // CardManager will have no cards, view will show empty
     }
 
-    // Narratives (full width if many, half if few)
-    if (data.narratives.length > 0) {
-      this.cardManager.add(new NarrativeListCard(this, 'workspace-narratives', {
-        title: 'Related Narratives',
-        narratives: data.narratives,
-        showCount: true,
-        maxItems: 10,
-        fullWidth: data.narratives.length > 3,
-        halfWidth: data.narratives.length <= 3,
-        showDescriptionToggle: true
+    // 1. Volume Over Time x Events (full width)
+    const hasVolumeData = data.volumeData?.dates?.length > 0;
+    const hasPublisherData = data.publisherData?.dates?.length > 0;
+    const hasDurationData = data.narrativeDurations?.length > 0;
+    if (hasVolumeData || hasPublisherData || data.events.length > 0 || hasDurationData) {
+      this.cardManager.add(new TimelineVolumeCompositeCard(this, 'workspace-volume-timeline', {
+        title: 'Volume Over Time & Events',
+        volumeData: hasVolumeData ? data.volumeData : null,
+        publisherData: hasPublisherData ? data.publisherData : null,
+        events: data.events,
+        narrativeDurations: hasDurationData ? data.narrativeDurations : null,
+        fullWidth: true,
+        height: 400,
+        volumeHeight: 160,
+        timelineHeight: 160,
+        showViewToggle: hasVolumeData && hasPublisherData
       }));
     }
 
-    // Themes (half-width)
-    if (data.themes.length > 0) {
-      this.cardManager.add(new ThemeListCard(this, 'workspace-themes', {
-        title: 'Related Themes',
-        themes: data.themes,
-        showCount: true,
-        maxItems: 10,
-        halfWidth: true,
-        showDescriptionToggle: true
-      }));
-    }
-
-    // People & Organizations Network (half-width)
+    // 2. People & Organizations Network (half-width)
     if (data.hasNetwork) {
       this.cardManager.add(new NetworkGraphCard(this, 'workspace-network', {
         title: 'People & Organizations',
         personIds: data.personIds,
         orgIds: data.orgIds,
         halfWidth: true,
-        height: 400
+        height: 350
       }));
     }
 
-    // Faction Engagement (half-width)
+    // 3. Narratives (half-width)
+    if (data.narratives.length > 0) {
+      this.cardManager.add(new NarrativeListCard(this, 'workspace-narratives', {
+        title: 'Narratives',
+        narratives: data.narratives,
+        showCount: true,
+        maxItems: 8,
+        halfWidth: true,
+        showDescriptionToggle: true
+      }));
+    }
+
+    // 4. Topics (half-width)
+    if (data.topics.length > 0) {
+      this.cardManager.add(new TopicListCard(this, 'workspace-topics', {
+        title: 'Topics',
+        topics: data.topics,
+        showCount: true,
+        maxItems: 6,
+        halfWidth: true,
+        showBulletsToggle: true
+      }));
+    }
+
+    // 5. Map with Events & Locations (half-width)
+    if (data.locations.length > 0 || data.events.length > 0) {
+      this.cardManager.add(new MapCard(this, 'workspace-map', {
+        title: 'Events & Locations',
+        locations: data.locations,
+        events: data.events,
+        halfWidth: true,
+        height: 300,
+        showViewToggle: true
+      }));
+    }
+
+    // 6. Faction Sentiment (half-width)
     if (data.factions.length > 0) {
       this.cardManager.add(new SentimentChartCard(this, 'workspace-factions', {
-        title: 'Faction Engagement',
+        title: 'Faction Sentiment',
         factions: data.factions,
         halfWidth: true,
         clickRoute: 'faction'
       }));
     }
 
-    // Mentioned Locations & Events Map (half-width)
-    if (data.locations.length > 0 || data.events.length > 0) {
-      this.cardManager.add(new MapCard(this, 'workspace-map', {
-        title: 'Locations & Events',
-        locations: data.locations,
-        events: data.events,
+    // 7. Faction Overlaps (half-width)
+    if (data.factions.length > 1 && data.factionOverlaps) {
+      this.cardManager.add(new VennDiagramCard(this, 'workspace-faction-overlaps', {
+        title: 'Faction Overlaps',
+        factions: data.factions,
+        overlaps: data.factionOverlaps,
         halfWidth: true,
-        height: 300
+        height: 280
       }));
     }
   }

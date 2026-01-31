@@ -198,11 +198,15 @@ export class EventView extends BaseView {
     // Build map locations
     const mapLocations = location ? [{ ...location, isEvent: true, eventText: event.text }] : [];
 
+    // Narrative durations for volume/duration toggle
+    const narrativeDurations = DataService.getNarrativeDurations();
+
     return { 
       parentEvent, subEvents, location, persons, organizations, 
       narratives, documents, hasNetwork, personIds, orgIds, allEvents,
       publisherData, hasPublisherData, hasVolumeTimeline, topics,
-      factions, sentimentFactions, factionOverlaps, mapLocations
+      factions, sentimentFactions, factionOverlaps, mapLocations,
+      narrativeDurations
     };
   }
 
@@ -214,11 +218,13 @@ export class EventView extends BaseView {
     this.cardManager = new CardManager(this);
 
     // 1. Volume & Events Chart (full-width)
-    if (data.hasVolumeTimeline) {
+    const hasDurationData = data.narrativeDurations?.length > 0;
+    if (data.hasVolumeTimeline || hasDurationData) {
       this.cardManager.add(new TimelineVolumeCompositeCard(this, 'event-volume-events', {
         title: 'Volume & Events',
         publisherData: data.publisherData,
         events: data.allEvents,
+        narrativeDurations: hasDurationData ? data.narrativeDurations : null,
         fullWidth: true,
         height: 450,
         volumeHeight: 180,
@@ -234,7 +240,8 @@ export class EventView extends BaseView {
         narratives: data.narratives,
         halfWidth: true,
         showCount: true,
-        maxItems: 8
+        maxItems: 8,
+        showDescriptionToggle: true
       }));
     }
 
@@ -244,7 +251,8 @@ export class EventView extends BaseView {
         title: 'Topics',
         topics: data.topics,
         halfWidth: true,
-        showCount: true
+        showCount: true,
+        showBulletsToggle: true
       }));
     }
 
@@ -287,7 +295,8 @@ export class EventView extends BaseView {
         locations: data.mapLocations,
         halfWidth: true,
         height: 350,
-        defaultZoom: 12
+        defaultZoom: 12,
+        showViewToggle: true
       }));
     }
   }

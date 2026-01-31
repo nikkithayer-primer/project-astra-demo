@@ -17,7 +17,7 @@ export const locations = [
     name: '9th and Hennepin, Minneapolis',
     description: 'A downtown Minneapolis intersection that became the focal point of anti-ICE protests and federal enforcement activities. This location witnessed the fatal shooting of protester Renee Good and subsequent confrontations between federal agents and demonstrators.',
     coordinates: { lat: 44.9778, lng: -93.2750 },
-    type: 'intersection',
+    type: 'general',
     tagIds: ['tag-004'],
     documentIds: ['doc-005', 'doc-006', 'doc-007', 'doc-016', 'doc-025', 'doc-026', 'doc-028', 'doc-031']
   },
@@ -42,7 +42,7 @@ export const locations = [
     name: 'Greenland',
     description: 'An autonomous territory within the Kingdom of Denmark that has become the subject of territorial acquisition ambitions by the Trump administration. Greenland\'s strategic location and natural resources have made it a flashpoint in US-European relations.',
     coordinates: { lat: 71.7069, lng: -42.6043 },
-    type: 'territory',
+    type: 'region',
     documentIds: ['doc-004', 'doc-027']
   },
   {

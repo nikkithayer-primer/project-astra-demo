@@ -21,6 +21,7 @@ import { TimelineVolumeComposite } from './TimelineVolumeComposite.js';
 import { StackedAreaChart } from './StackedAreaChart.js';
 import { SentimentChart } from './SentimentChart.js';
 import { VennDiagram } from './VennDiagram.js';
+import { renderVerticalTimeline } from '../utils/verticalTimeline.js';
 
 // Standard column configuration for document tables
 const DOCUMENT_AVAILABLE_COLUMNS = {
@@ -314,6 +315,7 @@ export class NetworkGraphCard extends BaseCardComponent {
 
 /**
  * Narrative List Card Component
+ * Supports description toggle for showing/hiding narrative descriptions
  */
 export class NarrativeListCard extends BaseCardComponent {
   constructor(view, containerId, options = {}) {
@@ -323,6 +325,11 @@ export class NarrativeListCard extends BaseCardComponent {
     this.title = options.title || 'Related Narratives';
     this.maxItems = options.maxItems || 8;
     this.showCount = options.showCount !== false;
+    this.halfWidth = options.halfWidth || false;
+    this.fullWidth = options.fullWidth || false;
+    // Description toggle options
+    this.showDescriptionToggle = options.showDescriptionToggle || false;
+    this.defaultShowDescription = options.defaultShowDescription || false;
   }
 
   hasData() {
@@ -331,9 +338,19 @@ export class NarrativeListCard extends BaseCardComponent {
 
   getCardHtml() {
     if (!this.hasData()) return '';
+    
+    // Build description toggle button if enabled
+    const actionsHtml = this.showDescriptionToggle 
+      ? CardBuilder.descriptionToggle(`${this.containerId}-desc-toggle`)
+      : '';
+    
     return CardBuilder.create(this.title, this.containerId, {
       count: this.showCount ? this.narratives.length : undefined,
-      noPadding: true
+      noPadding: true,
+      halfWidth: this.halfWidth,
+      fullWidth: this.fullWidth,
+      bodyClass: 'card-body-scrollable',
+      actions: actionsHtml
     });
   }
 
@@ -342,11 +359,27 @@ export class NarrativeListCard extends BaseCardComponent {
 
     this.component = new NarrativeList(this.containerId, {
       maxItems: this.maxItems,
+      defaultShowDescription: this.defaultShowDescription,
       onItemClick: (n) => {
         window.location.hash = `#/narrative/${n.id}`;
       }
     });
     this.component.update({ narratives: this.narratives });
+
+    // Set up description toggle if enabled
+    if (this.showDescriptionToggle) {
+      const toggle = document.getElementById(`${this.containerId}-desc-toggle`);
+      if (toggle) {
+        // Set initial state if descriptions shown by default
+        if (this.defaultShowDescription) {
+          toggle.classList.add('active');
+        }
+        toggle.addEventListener('click', () => {
+          const isShowing = this.component.toggleDescription();
+          toggle.classList.toggle('active', isShowing);
+        });
+      }
+    }
 
     return this.component;
   }
@@ -496,10 +529,7 @@ export class DocumentTableCard extends BaseCardComponent {
     this.component = new DocumentTable(this.containerId, {
       columns: columns,
       maxItems: this.maxItems,
-      enableViewerMode: this.enableViewerMode,
-      onDocumentClick: (doc) => {
-        window.location.hash = `#/document/${doc.id}`;
-      }
+      enableViewerMode: this.enableViewerMode
     });
     this.component.update({ documents: filteredDocs });
 
@@ -547,6 +577,7 @@ export class DocumentTableCard extends BaseCardComponent {
 
 /**
  * Map Card Component
+ * Supports map view and list view (vertical timeline) with toggle
  */
 export class MapCard extends BaseCardComponent {
   constructor(view, containerId, options = {}) {
@@ -561,6 +592,10 @@ export class MapCard extends BaseCardComponent {
     this.defaultZoom = options.defaultZoom || null;
     this.centerOn = options.centerOn || null;
     this.showLocations = options.showLocations || false; // Show locations without events (checkbox)
+    // View toggle options
+    this.showViewToggle = options.showViewToggle || false;
+    this.viewMode = options.defaultView || 'map'; // 'map' or 'list'
+    this.maxListItems = options.maxListItems || 25;
   }
 
   hasData() {
@@ -569,19 +604,77 @@ export class MapCard extends BaseCardComponent {
 
   getCardHtml() {
     if (!this.hasData()) return '';
+    
+    // Build view toggle buttons if enabled
+    let actionsHtml = '';
+    if (this.showViewToggle && this.events.length > 0) {
+      actionsHtml = `
+        <div class="view-toggle map-view-toggle" data-container="${this.containerId}">
+          <button class="view-toggle-btn ${this.viewMode === 'map' ? 'active' : ''}" data-view="map" title="Map View">
+            <svg viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.5">
+              <path d="M8 1C5.2 1 3 3.2 3 6c0 4 5 9 5 9s5-5 5-9c0-2.8-2.2-5-5-5z"/>
+              <circle cx="8" cy="6" r="2"/>
+            </svg>
+          </button>
+          <button class="view-toggle-btn ${this.viewMode === 'list' ? 'active' : ''}" data-view="list" title="List View">
+            <svg viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.5">
+              <path d="M2 4h12M2 8h12M2 12h12"/>
+            </svg>
+          </button>
+        </div>
+      `;
+    }
+    
     return CardBuilder.create(this.title, this.containerId, {
       noPadding: true,
       halfWidth: this.halfWidth,
-      fullWidth: this.fullWidth
+      fullWidth: this.fullWidth,
+      actions: actionsHtml
     });
   }
 
   initialize() {
     if (!this.hasData()) return null;
 
+    // Render current view
+    this.renderCurrentView();
+    
+    // Set up view toggle listeners if enabled
+    if (this.showViewToggle && this.events.length > 0) {
+      this.setupViewToggleListeners();
+    }
+
+    return this.component;
+  }
+
+  renderCurrentView() {
+    const container = document.getElementById(this.containerId);
+    if (!container) return;
+
+    // Destroy existing map component
+    if (this.component && this.component.destroy) {
+      this.component.destroy();
+      this.component = null;
+    }
+
+    if (this.viewMode === 'map') {
+      this.renderMapView(container);
+    } else {
+      this.renderListView(container);
+    }
+  }
+
+  renderMapView(container) {
+    // Remove scrollable class for map view
+    container.classList.remove('card-body-scrollable');
+    container.innerHTML = '';
+
     const mapOptions = { 
       height: this.height,
-      showLocations: this.showLocations
+      showLocations: this.showLocations,
+      onEventClick: (e) => {
+        window.location.hash = `#/event/${e.id}`;
+      }
     };
     if (this.defaultZoom) mapOptions.defaultZoom = this.defaultZoom;
 
@@ -596,8 +689,69 @@ export class MapCard extends BaseCardComponent {
         this.component.centerOn(this.centerOn.lat, this.centerOn.lng, this.centerOn.zoom || 12);
       }, 200);
     }
+  }
 
-    return this.component;
+  renderListView(container) {
+    // Add scrollable class for list view
+    container.classList.add('card-body-scrollable');
+
+    if (this.events.length === 0) {
+      container.innerHTML = `
+        <div class="vertical-timeline-empty">
+          <div class="vertical-timeline-empty-icon">📅</div>
+          <p class="vertical-timeline-empty-text">No events to display</p>
+        </div>
+      `;
+      return;
+    }
+
+    // Sort events by date (newest first) and limit
+    const sortedEvents = [...this.events]
+      .sort((a, b) => new Date(b.date) - new Date(a.date))
+      .slice(0, this.maxListItems);
+
+    // Render vertical timeline
+    container.innerHTML = renderVerticalTimeline(sortedEvents, { 
+      sortNewestFirst: true,
+      emptyText: 'No events to display'
+    });
+
+    // Attach click listeners for timeline items
+    container.querySelectorAll('.vertical-timeline-item').forEach(item => {
+      item.addEventListener('click', () => {
+        const eventId = item.dataset.eventId;
+        window.location.hash = `#/event/${eventId}`;
+      });
+    });
+  }
+
+  setupViewToggleListeners() {
+    const toggleContainer = document.querySelector(`.map-view-toggle[data-container="${this.containerId}"]`);
+    if (!toggleContainer) return;
+
+    toggleContainer.querySelectorAll('.view-toggle-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const newMode = btn.dataset.view;
+        if (newMode !== this.viewMode) {
+          this.viewMode = newMode;
+          
+          // Update button states
+          toggleContainer.querySelectorAll('.view-toggle-btn').forEach(b => {
+            b.classList.toggle('active', b.dataset.view === newMode);
+          });
+          
+          // Re-render the view
+          this.renderCurrentView();
+        }
+      });
+    });
+  }
+
+  destroy() {
+    if (this.component && this.component.destroy) {
+      this.component.destroy();
+    }
+    this.component = null;
   }
 }
 
@@ -774,6 +928,10 @@ export class ThemeListCard extends BaseCardComponent {
 /**
  * Topic List Card Component
  */
+/**
+ * Topic List Card Component
+ * Supports bullet points toggle for showing/hiding topic bullet points
+ */
 export class TopicListCard extends BaseCardComponent {
   constructor(view, containerId, options = {}) {
     super(view, containerId);
@@ -785,7 +943,9 @@ export class TopicListCard extends BaseCardComponent {
     this.showSparkline = options.showSparkline !== false;
     this.showVolume = options.showVolume !== false;
     this.showDuration = options.showDuration !== false;
-    this.showBulletPoints = options.showBulletPoints || false;
+    // Bullet points toggle options
+    this.showBulletsToggle = options.showBulletsToggle || false;
+    this.defaultShowBulletPoints = options.defaultShowBulletPoints || false;
   }
 
   hasData() {
@@ -794,11 +954,28 @@ export class TopicListCard extends BaseCardComponent {
 
   getCardHtml() {
     if (!this.hasData()) return '';
+    
+    // Build bullet points toggle button if enabled
+    let actionsHtml = '';
+    if (this.showBulletsToggle) {
+      actionsHtml = `
+        <button class="btn-icon card-action-btn topic-bullets-toggle ${this.defaultShowBulletPoints ? 'active' : ''}" 
+                title="Toggle bullet points" 
+                id="${this.containerId}-bullets-toggle">
+          <svg viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.5">
+            <path d="M3 4h10M3 8h10M3 12h6"/>
+          </svg>
+        </button>
+      `;
+    }
+    
     return CardBuilder.create(this.title, this.containerId, {
       count: this.showCount ? this.topics.length : undefined,
       noPadding: true,
       fullWidth: this.options.fullWidth || false,
-      halfWidth: this.options.halfWidth || false
+      halfWidth: this.options.halfWidth || false,
+      bodyClass: 'card-body-scrollable',
+      actions: actionsHtml
     });
   }
 
@@ -810,12 +987,23 @@ export class TopicListCard extends BaseCardComponent {
       showSparkline: this.showSparkline,
       showVolume: this.showVolume,
       showDuration: this.showDuration,
-      showBulletPoints: this.showBulletPoints,
+      showBulletPoints: this.defaultShowBulletPoints,
       onItemClick: (t) => {
         window.location.hash = `#/topic/${t.id}`;
       }
     });
     this.component.update({ topics: this.topics });
+
+    // Set up bullet points toggle if enabled
+    if (this.showBulletsToggle) {
+      const toggle = document.getElementById(`${this.containerId}-bullets-toggle`);
+      if (toggle) {
+        toggle.addEventListener('click', () => {
+          const isShowing = this.component.toggleBulletPoints();
+          toggle.classList.toggle('active', isShowing);
+        });
+      }
+    }
 
     return this.component;
   }

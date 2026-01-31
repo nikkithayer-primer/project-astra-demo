@@ -2686,18 +2686,9 @@
   background: var(--bg-primary);
 }
 
-/* Map View Toggle (Locations / Locations + Events) */
+/* Map View Toggle - inherits from .view-toggle, positioned in card header */
 .map-view-toggle {
-  position: absolute;
-  bottom: var(--space-sm);
-  left: var(--space-sm);
-  display: flex;
-  gap: 0;
-  z-index: 450;
-  background: var(--bg-secondary);
-  border: 1px solid var(--border-color);
-  border-radius: var(--border-radius);
-  overflow: hidden;
+  /* Uses standard .view-toggle styling - no custom positioning needed */
 }
 
 .map-toggle-btn {
@@ -4394,14 +4385,96 @@
 .card-header-actions {
   display: flex;
   align-items: center;
-  gap: var(--space-xs);
+  gap: 2px;
+  background: var(--bg-tertiary);
+  padding: 2px;
+  border-radius: var(--radius-sm);
 }
 
-/* Card Action Buttons - extends .btn-icon */
+/* Card Action Buttons - styled to match view-toggle-btn */
+.card-action-btn {
+  width: auto;
+  height: auto;
+  padding: var(--space-xs) var(--space-sm);
+  background: var(--bg-primary);
+  border: none;
+  border-radius: var(--radius-xs);
+}
+
+.card-action-btn:hover {
+  background: var(--bg-hover);
+  color: var(--text-secondary);
+}
+
+.card-action-btn.active {
+  background: var(--accent-muted);
+  color: var(--accent-primary);
+}
+
 .card-action-btn svg {
+  display: block;
   width: 14px;
   height: 14px;
   stroke-width: 1.5;
+  fill: none;
+}
+
+/* Fullscreen toggle icon visibility */
+.fullscreen-toggle .fullscreen-collapse-icon {
+  display: none;
+}
+
+.card.card-fullscreen .fullscreen-toggle .fullscreen-expand-icon {
+  display: none;
+}
+
+.card.card-fullscreen .fullscreen-toggle .fullscreen-collapse-icon {
+  display: block;
+}
+
+/* Fullscreen Card State */
+.card.card-fullscreen {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 1000;
+  margin: 0;
+  border-radius: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.card.card-fullscreen .card-header {
+  flex-shrink: 0;
+}
+
+.card.card-fullscreen .card-body {
+  flex: 1;
+  max-height: none;
+  overflow-y: auto;
+}
+
+/* Hide resize handle in fullscreen */
+.card.card-fullscreen .card-resize-handle {
+  display: none;
+}
+
+/* Overlay behind fullscreen card */
+.fullscreen-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: var(--bg-primary);
+  z-index: 999;
+}
+
+/* Prevent body scroll when card is fullscreen */
+body.has-fullscreen-card {
+  overflow: hidden;
 }
 
 /* ============================================

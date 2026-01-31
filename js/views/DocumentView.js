@@ -1,23 +1,21 @@
 /**
  * DocumentView.js
- * Detail view for a single document
+ * Detail view for a single document using the CardManager pattern
  * Supports multiple document types: social_post, tiktok, news_article, internal
  */
 
 import { BaseView } from './BaseView.js';
 import { DataService } from '../data/DataService.js';
 import { PageHeader } from '../utils/PageHeader.js';
-import { CardBuilder } from '../utils/CardBuilder.js';
-import { NarrativeList } from '../components/NarrativeList.js';
-import { ThemeList } from '../components/ThemeList.js';
-import { MapView } from '../components/MapView.js';
-import { Timeline } from '../components/Timeline.js';
-import { NetworkGraph } from '../components/NetworkGraph.js';
-import { getEntityCardModal } from '../components/EntityCardModal.js';
 import { ClassificationBanner, renderClassificationBadge } from '../components/ClassificationBanner.js';
-import { DocumentContentRenderer } from '../components/DocumentContentRenderer.js';
 import { initAllCardToggles } from '../utils/cardWidthToggle.js';
-import { renderEntityList } from '../utils/entityRenderer.js';
+import {
+  CardManager,
+  NarrativeListCard,
+  ThemeListCard,
+  NetworkGraphCard,
+  MapCard
+} from '../components/CardComponents.js';
 import { 
   DOCUMENT_TYPES, 
   isSocialMedia, 
@@ -30,8 +28,7 @@ export class DocumentView extends BaseView {
   constructor(container, documentId, options = {}) {
     super(container, options);
     this.documentId = documentId;
-    this._keydownHandler = null;
-    this.networkViewMode = 'graph'; // 'graph' or 'list'
+    this.cardManager = new CardManager(this);
   }
 
   formatDate(dateString) {
@@ -57,14 +54,20 @@ export class DocumentView extends BaseView {
     // Fetch all related data
     const data = this.fetchDocumentData(doc);
     
-    // Build cards HTML
-    const cardsHtml = this.buildCardsHtml(doc, data);
+    // Store data for card setup
+    this._documentData = { doc, data };
+
+    // Set up cards using CardManager
+    this.setupCards(doc, data);
 
     // Build custom header (documents have a unique header format)
     const headerHtml = this.renderDocumentHeader(doc, data.publisher);
 
     // Build classification banner HTML
     const classificationBannerHtml = this.renderClassificationBanner(doc);
+
+    // Get cards HTML from CardManager
+    const cardsHtml = this.cardManager.getHtml();
 
     this.container.innerHTML = `
       ${classificationBannerHtml}
@@ -77,21 +80,65 @@ export class DocumentView extends BaseView {
     `;
 
     // Initialize card width toggles
-    if (cardsHtml) {
-      const contentGrid = this.container.querySelector('.content-grid');
+    const contentGrid = this.container.querySelector('.content-grid');
+    if (contentGrid) {
       initAllCardToggles(contentGrid, `doc-${this.documentId}`);
     }
 
-    // Store pre-fetched data for component initialization
-    this._prefetchedData = { doc, ...data };
-
-    await this.initializeComponents();
+    // Initialize all card components via CardManager
+    this.cardManager.initializeAll();
     
     // Set up keyboard navigation
     this.setupKeyboardNavigation();
+  }
 
-    // Initialize drag-and-drop for cards
-    this.initDragDrop();
+  /**
+   * Set up cards using CardManager
+   */
+  setupCards(doc, data) {
+    const personIds = data.persons.map(p => p.id);
+    const orgIds = data.organizations.map(o => o.id);
+
+    // Related Narratives
+    if (data.narratives.length > 0) {
+      this.cardManager.add(new NarrativeListCard(this, 'doc-narratives', {
+        title: 'Related Narratives',
+        narratives: data.narratives,
+        maxItems: 10,
+        showDescriptionToggle: true
+      }));
+    }
+
+    // Related Themes
+    if (data.themes.length > 0) {
+      this.cardManager.add(new ThemeListCard(this, 'doc-themes', {
+        title: 'Related Themes',
+        themes: data.themes,
+        maxItems: 10,
+        showDescriptionToggle: true
+      }));
+    }
+
+    // People & Organizations Network
+    if (data.hasNetwork) {
+      this.cardManager.add(new NetworkGraphCard(this, 'doc-network', {
+        title: 'Mentioned People & Organizations',
+        personIds: personIds,
+        orgIds: orgIds,
+        height: 350
+      }));
+    }
+
+    // Locations & Events Map
+    if (data.locations.length > 0 || data.events.length > 0) {
+      this.cardManager.add(new MapCard(this, 'doc-map', {
+        title: 'Locations & Events',
+        locations: data.locations,
+        events: data.events,
+        height: 300,
+        showViewToggle: data.events.length > 0
+      }));
+    }
   }
 
   /**
@@ -162,6 +209,10 @@ export class DocumentView extends BaseView {
    * Clean up components
    */
   destroy() {
+    // Destroy CardManager components
+    if (this.cardManager) {
+      this.cardManager.destroyAll();
+    }
     super.destroy();
   }
 
@@ -174,67 +225,10 @@ export class DocumentView extends BaseView {
     const locations = DataService.getLocationsForDocument(this.documentId);
     const events = DataService.getEventsForDocument(this.documentId);
     const hasNetwork = persons.length > 0 || organizations.length > 0;
-    
-    // Fetch highlights and comments for annotations
-    const highlights = DataService.getHighlightsForDocument(this.documentId);
-    const comments = DataService.getCommentsForDocument(this.documentId);
 
     return {
-      publisher, narratives, themes, persons, organizations, locations, events, hasNetwork,
-      highlights, comments
+      publisher, narratives, themes, persons, organizations, locations, events, hasNetwork
     };
-  }
-
-  buildCardsHtml(doc, data) {
-    const cards = [];
-    const docType = doc.documentType || 'news_article';
-
-    // Document Content card (for documents with content blocks or social content)
-    const hasContent = doc.contentBlocks?.length > 0 || 
-                       doc.content || 
-                       doc.transcription ||
-                       isSocialMedia(docType);
-    
-    if (hasContent) {
-      const typeInfo = getDocumentTypeInfo(docType);
-      cards.push(CardBuilder.create('Document Content', 'doc-content', {
-        subtitle: typeInfo.label
-      }));
-    }
-
-    if (data.narratives.length > 0) {
-      cards.push(CardBuilder.create('Related Narratives', 'doc-narratives', {
-        count: data.narratives.length,
-        noPadding: true
-      }));
-    }
-
-    if (data.themes.length > 0) {
-      cards.push(CardBuilder.create('Related Themes', 'doc-subnarratives', {
-        count: data.themes.length,
-        noPadding: true
-      }));
-    }
-
-    if (data.hasNetwork) {
-      const entityCount = data.persons.length + data.organizations.length;
-      cards.push(CardBuilder.create('Mentioned People & Organizations', 'doc-network', {
-        count: entityCount,
-        actions: this.getNetworkToggleHtml('doc-network')
-      }));
-    }
-
-    if (data.locations.length > 0) {
-      cards.push(CardBuilder.create('Mentioned Locations', 'doc-map', { noPadding: true }));
-    }
-
-    if (data.events.length > 0) {
-      cards.push(CardBuilder.create('Related Events', 'doc-timeline', {
-        count: data.events.length
-      }));
-    }
-
-    return cards.join('');
   }
 
   renderClassificationBanner(doc) {
@@ -321,184 +315,6 @@ export class DocumentView extends BaseView {
         ${actionButtonHtml}
       </div>
     `;
-  }
-
-  async initializeComponents() {
-    const {
-      doc, narratives, themes, persons, organizations, locations, events,
-      highlights, comments
-    } = this._prefetchedData;
-
-    // Document Content Renderer
-    const contentContainer = document.getElementById('doc-content');
-    if (contentContainer) {
-      this.components.contentRenderer = new DocumentContentRenderer('doc-content', {
-        showPortionMarks: true,
-        showAnnotations: true
-      });
-      this.components.contentRenderer.update({ 
-        document: doc,
-        highlights: highlights || [],
-        comments: comments || []
-      });
-    }
-
-    // Narratives List
-    if (narratives.length > 0) {
-      this.components.narrativeList = new NarrativeList('doc-narratives', {
-        maxItems: 10,
-        onItemClick: (n) => {
-          window.location.hash = `#/narrative/${n.id}`;
-        }
-      });
-      this.components.narrativeList.update({ narratives });
-    }
-
-    // Themes List
-    if (themes.length > 0) {
-      this.components.themeList = new ThemeList('doc-themes', {
-        maxItems: 10,
-        onItemClick: (s) => {
-          window.location.hash = `#/theme/${s.id}`;
-        }
-      });
-      this.components.themeList.update({ themes });
-    }
-
-    // Network Graph
-    if (persons.length > 0 || organizations.length > 0) {
-      const personIds = persons.map(p => p.id);
-      const orgIds = organizations.map(o => o.id);
-      
-      this._networkData = {
-        personIds,
-        orgIds,
-        persons,
-        orgs: organizations,
-        graphData: DataService.buildNetworkGraph(personIds, orgIds)
-      };
-      
-      this.renderNetworkView();
-      this.setupNetworkToggle('doc-network');
-    }
-
-    // Map
-    if (locations.length > 0) {
-      this.components.map = new MapView('doc-map', {
-        height: 300
-      });
-      this.components.map.update({ locations });
-    }
-
-    // Events Timeline
-    if (events.length > 0) {
-      this.components.timeline = new Timeline('doc-timeline', {
-        height: 200,
-        onEventClick: (e) => {
-          window.location.hash = `#/event/${e.id}`;
-        }
-      });
-      this.components.timeline.update({ events });
-    }
-  }
-
-  /**
-   * Get the HTML for the network view toggle buttons
-   */
-  getNetworkToggleHtml(containerId) {
-    return `
-      <div class="view-toggle network-view-toggle" data-container="${containerId}">
-        <button class="view-toggle-btn ${this.networkViewMode === 'graph' ? 'active' : ''}" data-view="graph" title="Network Graph">
-          <svg viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.5">
-            <circle cx="8" cy="4" r="2"/>
-            <circle cx="4" cy="12" r="2"/>
-            <circle cx="12" cy="12" r="2"/>
-            <path d="M8 6v2M6 10l-1 1M10 10l1 1"/>
-          </svg>
-        </button>
-        <button class="view-toggle-btn ${this.networkViewMode === 'list' ? 'active' : ''}" data-view="list" title="List View">
-          <svg viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.5">
-            <path d="M2 4h12M2 8h12M2 12h12"/>
-          </svg>
-        </button>
-      </div>
-    `;
-  }
-
-  /**
-   * Render the network view based on current mode
-   */
-  renderNetworkView() {
-    const container = document.getElementById('doc-network');
-    if (!container || !this._networkData) return;
-
-    if (this.components.network) {
-      this.components.network.destroy();
-      this.components.network = null;
-    }
-
-    if (this.networkViewMode === 'graph') {
-      this.components.network = new NetworkGraph('doc-network', {
-        height: 350,
-        onNodeClick: (node) => {
-          window.location.hash = `#/${node.type}/${node.id}`;
-        },
-        onNodeHover: (node, element) => {
-          getEntityCardModal().show(node.id, node.type, element);
-        },
-        onNodeHoverEnd: () => {
-          getEntityCardModal().scheduleHide();
-        },
-        onLinkClick: (link) => {
-          this.showConnectingNarrativesModal(link);
-        }
-      });
-      this.components.network.update(this._networkData.graphData);
-    } else {
-      this.renderNetworkListView(container);
-    }
-  }
-
-  /**
-   * Render list view for people and organizations
-   */
-  renderNetworkListView(container) {
-    const { persons, orgs } = this._networkData;
-    const allEntities = [
-      ...persons.map(p => ({ ...p, _type: 'person' })),
-      ...orgs.map(o => ({ ...o, _type: 'organization' }))
-    ];
-
-    container.innerHTML = renderEntityList(allEntities, { sortByName: true });
-
-    container.querySelectorAll('.entity-list-item').forEach(item => {
-      this.addListener(item, 'click', () => {
-        const id = item.dataset.id;
-        const type = item.dataset.type;
-        window.location.hash = `#/${type}/${id}`;
-      });
-    });
-  }
-
-  /**
-   * Set up network view toggle listeners
-   */
-  setupNetworkToggle(containerId) {
-    const toggleContainer = document.querySelector(`.network-view-toggle[data-container="${containerId}"]`);
-    if (!toggleContainer) return;
-
-    toggleContainer.querySelectorAll('.view-toggle-btn').forEach(btn => {
-      this.addListener(btn, 'click', () => {
-        const newView = btn.dataset.view;
-        if (newView !== this.networkViewMode) {
-          this.networkViewMode = newView;
-          toggleContainer.querySelectorAll('.view-toggle-btn').forEach(b => {
-            b.classList.toggle('active', b.dataset.view === newView);
-          });
-          this.renderNetworkView();
-        }
-      });
-    });
   }
 }
 

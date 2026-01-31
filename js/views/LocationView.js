@@ -169,10 +169,13 @@ export class LocationView extends BaseView {
         )
       : [];
 
+    // Narrative durations for volume/duration toggle
+    const narrativeDurations = DataService.getNarrativeDurations();
+
     return {
       narratives, events, allEvents, persons, organizations, documents,
       hasNetwork, personIds, orgIds, publisherData, hasPublisherData,
-      hasVolumeTimeline, topics, factions, factionOverlaps
+      hasVolumeTimeline, topics, factions, factionOverlaps, narrativeDurations
     };
   }
 
@@ -184,12 +187,14 @@ export class LocationView extends BaseView {
     this.cardManager = new CardManager(this);
 
     // Volume & Events Chart (full-width)
-    if (data.hasVolumeTimeline) {
+    const hasDurationData = data.narrativeDurations?.length > 0;
+    if (data.hasVolumeTimeline || hasDurationData) {
       this.cardManager.add(new TimelineVolumeCompositeCard(this, 'location-volume-events', {
         title: 'Volume & Events',
         volumeData: null, // No faction data for locations
         publisherData: data.publisherData,
         events: data.allEvents,
+        narrativeDurations: hasDurationData ? data.narrativeDurations : null,
         fullWidth: true,
         height: 450,
         volumeHeight: 180,
@@ -207,7 +212,8 @@ export class LocationView extends BaseView {
         fullWidth: true,
         height: 400,
         defaultZoom: 12,
-        centerOn: { lat: location.coordinates.lat, lng: location.coordinates.lng, zoom: 12 }
+        centerOn: { lat: location.coordinates.lat, lng: location.coordinates.lng, zoom: 12 },
+        showViewToggle: true
       }));
     }
 
@@ -229,7 +235,8 @@ export class LocationView extends BaseView {
         narratives: data.narratives,
         showCount: true,
         maxItems: 8,
-        halfWidth: true
+        halfWidth: true,
+        showDescriptionToggle: true
       }));
     }
 
@@ -239,7 +246,8 @@ export class LocationView extends BaseView {
         title: 'Related Topics',
         topics: data.topics,
         halfWidth: true,
-        showCount: true
+        showCount: true,
+        showBulletsToggle: true
       }));
     }
 

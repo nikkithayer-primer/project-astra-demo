@@ -171,7 +171,7 @@ Geographic locations referenced in narratives.
   id: string,              // Required. Prefix: 'loc-'
   name: string,            // Required. Location name
   description: string,     // Optional. Detailed description
-  type: enum,              // Optional. 'country' | 'region' | 'city' | 'facility' | 'virtual' | 'general'
+  type: enum,              // Optional. 'country' | 'region' | 'city' | 'facility' | 'headquarters' | 'landmark' | 'virtual' | 'general'
   coordinates: {           // Optional.
     lat: number,
     lng: number
@@ -315,6 +315,7 @@ Source documents (news articles, social posts, internal reports). **Documents ar
   // Entity extractions (from ingest)
   narrativeIds: string[],      // Optional. FKs to Narrative
   themeIds: string[],          // Optional. FKs to Theme
+  topicIds: string[],          // Optional. FKs to Topic
   personIds: string[],         // Optional. FKs to Person
   organizationIds: string[],   // Optional. FKs to Organization
   locationIds: string[],       // Optional. FKs to Location
@@ -404,10 +405,12 @@ System users for collaboration features.
 ```javascript
 {
   id: string,              // Required. Prefix: 'user-'
-  name: string,            // Required. Display name
-  email: string,           // Required.
+  displayName: string,     // Required. Display name
+  username: string,        // Optional. Username/handle
   role: string,            // Optional. User role
-  avatarUrl: string        // Optional. Profile image
+  department: string,      // Optional. Department
+  avatarUrl: string,       // Optional. Profile image
+  isCurrentUser: boolean   // Optional. Whether this is the current user
 }
 ```
 

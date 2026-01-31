@@ -9,6 +9,7 @@ export const publishers = [
   { id: 'pub-tiktok', name: 'TikTok', type: 'social', color: '#00F2EA' },
   { id: 'pub-instagram', name: 'Instagram', type: 'social', color: '#E4405F' },
   { id: 'pub-reddit', name: 'Reddit', type: 'social', color: '#FF4500' },
+  { id: 'pub-linkedin', name: 'LinkedIn', type: 'social', color: '#0A66C2' },
   
   // National News (hierarchical)
   { id: 'pub-nat-cnn', name: 'CNN', type: 'national_news', parent: 'national_news', color: '#CC0000' },

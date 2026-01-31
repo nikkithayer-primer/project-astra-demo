@@ -4,6 +4,8 @@
  * Uses a corner resize handle for intuitive resizing
  */
 
+import { initFullscreenToggle } from './cardFullscreen.js';
+
 const STORAGE_KEY = 'narrativeos-card-widths';
 
 // SVG icons for the resize handle
@@ -134,6 +136,9 @@ export function initCardWidthToggle(card, cardId, defaultWidth = 'full') {
     e.stopPropagation();
     toggleCardWidth(card, handle, cardId);
   });
+  
+  // Initialize fullscreen toggle if present
+  initFullscreenToggle(card);
   
   return handle;
 }

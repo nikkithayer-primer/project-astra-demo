@@ -196,12 +196,15 @@ export class FactionView extends BaseView {
       }).filter(Boolean)
     ];
 
+    // Narrative durations for volume/duration toggle
+    const narrativeDurations = DataService.getNarrativeDurations();
+
     return {
       relatedFactions, factionOverlaps, narratives, documents,
       affiliatedPersons, affiliatedOrgs, personsWithSentiment,
       orgsWithSentiment, hasNetwork, allFactions, personIds, orgIds,
       publisherData, hasPublisherData, allEvents, hasVolumeTimeline,
-      topics, locations, mapLocations
+      topics, locations, mapLocations, narrativeDurations
     };
   }
 
@@ -213,11 +216,13 @@ export class FactionView extends BaseView {
     this.cardManager = new CardManager(this);
 
     // 1. Volume & Events Chart (full-width)
-    if (data.hasVolumeTimeline) {
+    const hasDurationData = data.narrativeDurations?.length > 0;
+    if (data.hasVolumeTimeline || hasDurationData) {
       this.cardManager.add(new TimelineVolumeCompositeCard(this, 'faction-volume-events', {
         title: 'Volume & Events',
         publisherData: data.publisherData,
         events: data.allEvents,
+        narrativeDurations: hasDurationData ? data.narrativeDurations : null,
         fullWidth: true,
         height: 450,
         volumeHeight: 180,
@@ -253,7 +258,8 @@ export class FactionView extends BaseView {
         narratives: data.narratives,
         showCount: true,
         fullWidth: true,
-        maxItems: 8
+        maxItems: 8,
+        showDescriptionToggle: true
       }));
     }
 
@@ -286,7 +292,8 @@ export class FactionView extends BaseView {
         title: 'Topics',
         topics: data.topics,
         halfWidth: true,
-        showCount: true
+        showCount: true,
+        showBulletsToggle: true
       }));
     }
 
@@ -297,7 +304,8 @@ export class FactionView extends BaseView {
         locations: data.locations,
         events: data.allEvents,
         halfWidth: true,
-        height: 350
+        height: 350,
+        showViewToggle: true
       }));
     }
   }

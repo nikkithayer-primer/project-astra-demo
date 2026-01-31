@@ -423,7 +423,8 @@ export class MonitorView extends BaseView {
         locations: data.locations,
         events: data.allEvents,
         halfWidth: true,
-        height: 350
+        height: 350,
+        showViewToggle: true
       }));
     }
 
@@ -438,7 +439,7 @@ export class MonitorView extends BaseView {
         showSparkline: true,
         showVolume: true,
         showDuration: true,
-        showBulletPoints: false
+        showBulletsToggle: true
       }));
     }
   }

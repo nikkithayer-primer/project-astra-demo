@@ -190,6 +190,9 @@ export class TopicView extends BaseView {
       }).filter(Boolean)
     ];
 
+    // Narrative durations for volume/duration toggle
+    const narrativeDurations = DataService.getNarrativeDurations();
+
     return {
       documents,
       publisherData,
@@ -201,6 +204,7 @@ export class TopicView extends BaseView {
       orgIds: [...orgIds],
       hasNetwork,
       factions,
+      narrativeDurations,
       sentimentFactions,
       factionOverlaps,
       locations,
@@ -245,12 +249,14 @@ export class TopicView extends BaseView {
     this.cardManager = new CardManager(this);
 
     // 1. Volume & Events Chart (by source) - full-width
-    if (data.hasVolumeTimeline) {
+    const hasDurationData = data.narrativeDurations?.length > 0;
+    if (data.hasVolumeTimeline || hasDurationData) {
       this.cardManager.add(new TimelineVolumeCompositeCard(this, 'topic-volume-events', {
         title: 'Volume & Events',
         volumeData: null, // No faction data for topics
         publisherData: data.publisherData,
         events: data.allEvents,
+        narrativeDurations: hasDurationData ? data.narrativeDurations : null,
         fullWidth: true,
         height: 450,
         volumeHeight: 180,
@@ -299,7 +305,8 @@ export class TopicView extends BaseView {
         locations: data.locations,
         events: data.allEvents,
         halfWidth: true,
-        height: 350
+        height: 350,
+        showViewToggle: true
       }));
     }
 
@@ -309,7 +316,8 @@ export class TopicView extends BaseView {
         title: 'Related Narratives',
         narratives: data.narratives,
         halfWidth: true,
-        showCount: true
+        showCount: true,
+        showDescriptionToggle: true
       }));
     }
 

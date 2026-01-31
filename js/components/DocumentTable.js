@@ -13,7 +13,6 @@ import { DocumentContentRenderer } from './DocumentContentRenderer.js';
 import { NarrativeList } from './NarrativeList.js';
 import { ThemeList } from './ThemeList.js';
 import { MapView } from './MapView.js';
-import { Timeline } from './Timeline.js';
 import { NetworkGraph } from './NetworkGraph.js';
 import { CardBuilder } from '../utils/CardBuilder.js';
 import { initAllCardToggles } from '../utils/cardWidthToggle.js';
@@ -194,9 +193,8 @@ export class DocumentTable extends BaseComponent {
       maxEntitiesPerCell: 2,
       // Truncate length for entity display text
       truncateLength: 40,
-      // Click handlers
-      onDocumentClick: null,
-      onEntityClick: null, // Generic handler for any entity click
+      // Click handler for entity links
+      onEntityClick: null,
       // Enable viewer mode (click title to view document content)
       enableViewerMode: true,
       // Show read/unread indicator
@@ -629,15 +627,6 @@ export class DocumentTable extends BaseComponent {
       row.className = 'document-row';
       row.dataset.id = doc.id;
       row.innerHTML = columns.map(col => this.renderCell(doc, col)).join('');
-
-      // Handle row click for document detail
-      if (this.options.onDocumentClick) {
-        row.classList.add('clickable');
-        row.addEventListener('click', (e) => {
-          if (e.target.closest('a') || e.target.closest('.doc-title-btn')) return;
-          this.options.onDocumentClick(doc);
-        });
-      }
 
       // Handle title button clicks for viewer mode
       if (this.options.enableViewerMode) {
@@ -1089,33 +1078,6 @@ export class DocumentTable extends BaseComponent {
   }
 
   /**
-   * Render a linked list of entities for the details view
-   * @param {Array} entities - Array of entity objects
-   * @param {string} route - Route prefix (e.g., 'person', 'organization')
-   * @param {string} displayField - Field to display (e.g., 'name')
-   * @returns {string} HTML string for the list
-   */
-  renderEntityListHtml(entities, route, displayField) {
-    if (!entities || entities.length === 0) return '';
-    
-    const items = entities.map(entity => {
-      const displayText = entity[displayField] || entity.name || entity.id;
-      return `
-        <li class="details-entity-item">
-          <a href="#/${route}/${entity.id}" class="details-entity-link">
-            ${displayText}
-            <svg class="details-entity-arrow" viewBox="0 0 16 16" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2">
-              <path d="M6 4l4 4-4 4"/>
-            </svg>
-          </a>
-        </li>
-      `;
-    }).join('');
-    
-    return `<ul class="details-entity-list">${items}</ul>`;
-  }
-
-  /**
    * Render the details view showing related entities
    * @param {Object} doc - The document
    * @returns {string} HTML string
@@ -1127,6 +1089,43 @@ export class DocumentTable extends BaseComponent {
     const organizations = DataService.getOrganizationsForDocument(doc.id);
     const locations = DataService.getLocationsForDocument(doc.id);
     const events = DataService.getEventsForDocument(doc.id);
+    const hasNetwork = persons.length > 0 || organizations.length > 0;
+
+    // Build view toggle for map (if events exist)
+    const mapViewToggleHtml = events.length > 0 ? `
+      <div class="view-toggle map-view-toggle" data-container="doc-details-map">
+        <button class="view-toggle-btn active" data-view="map" title="Map View">
+          <svg viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.5">
+            <path d="M8 1C5.2 1 3 3.2 3 6c0 4 5 9 5 9s5-5 5-9c0-2.8-2.2-5-5-5z"/>
+            <circle cx="8" cy="6" r="2"/>
+          </svg>
+        </button>
+        <button class="view-toggle-btn" data-view="list" title="List View">
+          <svg viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.5">
+            <path d="M2 4h12M2 8h12M2 12h12"/>
+          </svg>
+        </button>
+      </div>
+    ` : '';
+
+    // Build view toggle for network
+    const networkViewToggleHtml = hasNetwork ? `
+      <div class="view-toggle network-view-toggle" data-container="doc-details-network">
+        <button class="view-toggle-btn active" data-view="graph" title="Network Graph">
+          <svg viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.5">
+            <circle cx="8" cy="4" r="2"/>
+            <circle cx="4" cy="12" r="2"/>
+            <circle cx="12" cy="12" r="2"/>
+            <path d="M8 6v2M6 10l-1 1M10 10l1 1"/>
+          </svg>
+        </button>
+        <button class="view-toggle-btn" data-view="list" title="List View">
+          <svg viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.5">
+            <path d="M2 4h12M2 8h12M2 12h12"/>
+          </svg>
+        </button>
+      </div>
+    ` : '';
 
     // Build cards using CardBuilder with standard layout (half/full width)
     const cards = CardBuilder.createMultiple([
@@ -1153,30 +1152,24 @@ export class DocumentTable extends BaseComponent {
         }
       },
       {
-        condition: persons.length > 0,
-        title: 'Mentioned People',
-        id: 'doc-details-persons',
-        content: this.renderEntityListHtml(persons, 'person', 'name'),
-        options: { count: persons.length, halfWidth: true, noPadding: true }
+        condition: hasNetwork,
+        title: 'People & Organizations',
+        id: 'doc-details-network',
+        options: { 
+          count: persons.length + organizations.length, 
+          halfWidth: true,
+          actions: networkViewToggleHtml
+        }
       },
       {
-        condition: organizations.length > 0,
-        title: 'Mentioned Organizations',
-        id: 'doc-details-organizations',
-        content: this.renderEntityListHtml(organizations, 'organization', 'name'),
-        options: { count: organizations.length, halfWidth: true, noPadding: true }
-      },
-      {
-        condition: locations.length > 0,
-        title: 'Mentioned Locations',
+        condition: locations.length > 0 || events.length > 0,
+        title: 'Locations & Events',
         id: 'doc-details-map',
-        options: { count: locations.length, halfWidth: true, noPadding: true }
-      },
-      {
-        condition: events.length > 0,
-        title: 'Related Events',
-        id: 'doc-details-events',
-        options: { count: events.length, halfWidth: true }
+        options: { 
+          halfWidth: true, 
+          noPadding: true,
+          actions: mapViewToggleHtml
+        }
       }
     ]);
 
@@ -1209,6 +1202,19 @@ export class DocumentTable extends BaseComponent {
     const organizations = DataService.getOrganizationsForDocument(doc.id);
     const locations = DataService.getLocationsForDocument(doc.id);
     const events = DataService.getEventsForDocument(doc.id);
+    const hasNetwork = persons.length > 0 || organizations.length > 0;
+
+    // Store data for view toggling
+    this._detailsData = {
+      persons,
+      organizations,
+      locations,
+      events,
+      personIds: persons.map(p => p.id),
+      orgIds: organizations.map(o => o.id)
+    };
+    this._detailsMapViewMode = 'map';
+    this._detailsNetworkViewMode = 'graph';
 
     // Initialize Narrative List
     if (narratives.length > 0 && document.getElementById('doc-details-narratives')) {
@@ -1234,23 +1240,22 @@ export class DocumentTable extends BaseComponent {
       this.detailsThemeList.update({ themes });
     }
 
-    // Initialize Map
-    if (locations.length > 0 && document.getElementById('doc-details-map')) {
-      this.detailsMap = new MapView('doc-details-map', {
-        height: 250
-      });
-      this.detailsMap.update({ locations });
+    // Initialize Network Graph (people & organizations)
+    if (hasNetwork && document.getElementById('doc-details-network')) {
+      this._detailsData.networkData = DataService.buildNetworkGraph(
+        this._detailsData.personIds, 
+        this._detailsData.orgIds
+      );
+      this.renderDetailsNetworkView();
+      this.setupDetailsNetworkToggle();
     }
 
-    // Initialize Timeline
-    if (events.length > 0 && document.getElementById('doc-details-events')) {
-      this.detailsTimeline = new Timeline('doc-details-events', {
-        height: 200,
-        onEventClick: (e) => {
-          window.location.hash = `#/event/${e.id}`;
-        }
-      });
-      this.detailsTimeline.update({ events });
+    // Initialize Map with locations and events
+    if ((locations.length > 0 || events.length > 0) && document.getElementById('doc-details-map')) {
+      this.renderDetailsMapView();
+      if (events.length > 0) {
+        this.setupDetailsMapToggle();
+      }
     }
 
     // Initialize card width toggles (resize buttons)
@@ -1276,6 +1281,202 @@ export class DocumentTable extends BaseComponent {
         themeDescToggle.classList.toggle('active', isShowing);
       });
     }
+  }
+
+  /**
+   * Render the network view (graph or list) for details panel
+   */
+  renderDetailsNetworkView() {
+    const container = document.getElementById('doc-details-network');
+    if (!container || !this._detailsData) return;
+
+    // Destroy existing network component
+    if (this.detailsNetwork && this.detailsNetwork.destroy) {
+      this.detailsNetwork.destroy();
+      this.detailsNetwork = null;
+    }
+
+    if (this._detailsNetworkViewMode === 'graph') {
+      this.detailsNetwork = new NetworkGraph('doc-details-network', {
+        height: 280,
+        onNodeClick: (node) => {
+          window.location.hash = `#/${node.type}/${node.id}`;
+        }
+      });
+      this.detailsNetwork.update(this._detailsData.networkData);
+    } else {
+      // Render list view
+      const allEntities = [
+        ...this._detailsData.persons.map(p => ({ ...p, _type: 'person' })),
+        ...this._detailsData.organizations.map(o => ({ ...o, _type: 'organization' }))
+      ].sort((a, b) => (a.name || '').localeCompare(b.name || ''));
+
+      container.innerHTML = `
+        <ul class="entity-list network-entity-list">
+          ${allEntities.map(e => this.renderNetworkEntityItem(e)).join('')}
+        </ul>
+      `;
+
+      // Add click handlers
+      container.querySelectorAll('.entity-list-item').forEach(item => {
+        item.addEventListener('click', () => {
+          const id = item.dataset.id;
+          const type = item.dataset.type;
+          window.location.hash = `#/${type}/${id}`;
+        });
+      });
+    }
+  }
+
+  /**
+   * Render a single entity item for network list view
+   */
+  renderNetworkEntityItem(entity) {
+    const typeLabel = entity._type === 'person' ? 'Person' : 'Organization';
+    const subtitle = entity.title || entity.type || typeLabel;
+    const icon = entity._type === 'person' 
+      ? `<svg class="entity-icon" viewBox="0 0 16 16" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.25">
+          <circle cx="8" cy="4" r="2.5"/>
+          <path d="M3 14c0-3 2.2-5 5-5s5 2 5 5"/>
+        </svg>`
+      : `<svg class="entity-icon" viewBox="0 0 16 16" width="16" height="16" fill="currentColor">
+          <path fill-rule="evenodd" clip-rule="evenodd" d="M0.5 16H9.5C9.59107 16 9.67646 15.9757 9.75 15.9331C9.82354 15.9757 9.90893 16 10 16H15.5C15.7761 16 16 15.7761 16 15.5V4.5C16 4.22386 15.7761 4 15.5 4H10V0.5C10 0.223858 9.77614 0 9.5 0H0.5C0.223858 0 0 0.223858 0 0.5V15.5C0 15.7761 0.223858 16 0.5 16ZM1 15V1H9V15H7V13C7 12.7239 6.77614 12.5 6.5 12.5H3.5C3.22386 12.5 3 12.7239 3 13V15H1ZM6 13.5V15H4V13.5H6ZM10 5V15H15V5H10Z"/>
+        </svg>`;
+
+    return `
+      <li class="entity-list-item" data-id="${entity.id}" data-type="${entity._type}">
+        <div class="entity-avatar ${entity._type}">
+          ${icon}
+        </div>
+        <div class="entity-info">
+          <div class="entity-name">${entity.name || 'Unknown'}</div>
+          <div class="entity-type">${subtitle}</div>
+        </div>
+      </li>
+    `;
+  }
+
+  /**
+   * Setup network view toggle for details panel
+   */
+  setupDetailsNetworkToggle() {
+    const toggleContainer = document.querySelector('.network-view-toggle[data-container="doc-details-network"]');
+    if (!toggleContainer) return;
+
+    toggleContainer.querySelectorAll('.view-toggle-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const newView = btn.dataset.view;
+        if (newView !== this._detailsNetworkViewMode) {
+          this._detailsNetworkViewMode = newView;
+          toggleContainer.querySelectorAll('.view-toggle-btn').forEach(b => {
+            b.classList.toggle('active', b.dataset.view === newView);
+          });
+          this.renderDetailsNetworkView();
+        }
+      });
+    });
+  }
+
+  /**
+   * Render the map view (map or list) for details panel
+   */
+  renderDetailsMapView() {
+    const container = document.getElementById('doc-details-map');
+    if (!container || !this._detailsData) return;
+
+    // Destroy existing map component
+    if (this.detailsMap && this.detailsMap.destroy) {
+      this.detailsMap.destroy();
+      this.detailsMap = null;
+    }
+
+    if (this._detailsMapViewMode === 'map') {
+      container.classList.remove('card-body-scrollable');
+      this.detailsMap = new MapView('doc-details-map', {
+        height: 250,
+        onEventClick: (e) => {
+          window.location.hash = `#/event/${e.id}`;
+        }
+      });
+      this.detailsMap.update({ 
+        locations: this._detailsData.locations,
+        events: this._detailsData.events
+      });
+    } else {
+      // Render event list view
+      container.classList.add('card-body-scrollable');
+      const events = this._detailsData.events;
+      
+      if (events.length === 0) {
+        container.innerHTML = `
+          <div class="vertical-timeline-empty">
+            <div class="vertical-timeline-empty-icon">📅</div>
+            <p class="vertical-timeline-empty-text">No events to display</p>
+          </div>
+        `;
+        return;
+      }
+
+      // Sort events by date (newest first)
+      const sortedEvents = [...events].sort((a, b) => new Date(b.date) - new Date(a.date));
+
+      container.innerHTML = `
+        <ul class="vertical-timeline">
+          ${sortedEvents.map(e => this.renderEventListItem(e)).join('')}
+        </ul>
+      `;
+
+      // Add click handlers
+      container.querySelectorAll('.vertical-timeline-item').forEach(item => {
+        item.addEventListener('click', () => {
+          const eventId = item.dataset.eventId;
+          window.location.hash = `#/event/${eventId}`;
+        });
+      });
+    }
+  }
+
+  /**
+   * Render a single event item for list view
+   */
+  renderEventListItem(event) {
+    const date = new Date(event.date);
+    const formattedDate = date.toLocaleDateString('en-US', { 
+      month: 'short', 
+      day: 'numeric',
+      year: 'numeric'
+    });
+
+    return `
+      <li class="vertical-timeline-item" data-event-id="${event.id}">
+        <div class="vertical-timeline-marker"></div>
+        <div class="vertical-timeline-content">
+          <div class="vertical-timeline-date">${formattedDate}</div>
+          <div class="vertical-timeline-text">${event.text}</div>
+        </div>
+      </li>
+    `;
+  }
+
+  /**
+   * Setup map view toggle for details panel
+   */
+  setupDetailsMapToggle() {
+    const toggleContainer = document.querySelector('.map-view-toggle[data-container="doc-details-map"]');
+    if (!toggleContainer) return;
+
+    toggleContainer.querySelectorAll('.view-toggle-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const newView = btn.dataset.view;
+        if (newView !== this._detailsMapViewMode) {
+          this._detailsMapViewMode = newView;
+          toggleContainer.querySelectorAll('.view-toggle-btn').forEach(b => {
+            b.classList.toggle('active', b.dataset.view === newView);
+          });
+          this.renderDetailsMapView();
+        }
+      });
+    });
   }
 
   /**

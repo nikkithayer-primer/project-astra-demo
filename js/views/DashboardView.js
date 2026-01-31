@@ -1,31 +1,31 @@
 /**
  * DashboardView.js
  * Aggregate overview of all narratives, filtered by mission and time range
+ * Uses CardManager pattern for consistent card component management
  */
 
 import { BaseView } from './BaseView.js';
 import { DataService } from '../data/DataService.js';
-import { NarrativeList } from '../components/NarrativeList.js';
-import { TopicList } from '../components/TopicList.js';
-import { MapView } from '../components/MapView.js';
-import { TimelineVolumeComposite } from '../components/TimelineVolumeComposite.js';
-import { SentimentChart } from '../components/SentimentChart.js';
 import { initAllCardToggles } from '../utils/cardWidthToggle.js';
 import { formatDateWithYear } from '../utils/formatters.js';
-import { CardBuilder } from '../utils/CardBuilder.js';
-import { renderVerticalTimeline } from '../utils/verticalTimeline.js';
+import {
+  CardManager,
+  NarrativeListCard,
+  TopicListCard,
+  MapCard,
+  TimelineVolumeCompositeCard,
+  SentimentChartCard
+} from '../components/CardComponents.js';
 
 export class DashboardView extends BaseView {
   constructor(container, options = {}) {
     super(container, options);
-    // Events view mode: 'map' or 'list'
-    this.eventsViewMode = 'map';
-    // Volume view mode: 'volume' or 'duration'
-    this.volumeViewMode = 'volume';
     // Tag filter: Set of selected tag IDs
     this.selectedTags = new Set();
     // Tag dropdown open state
     this.tagDropdownOpen = false;
+    // Card manager for dashboard cards
+    this.cardManager = new CardManager(this);
   }
 
   async render() {
@@ -44,6 +44,12 @@ export class DashboardView extends BaseView {
     if (this.timeRange) {
       subtitle += ` | ${formatDateWithYear(this.timeRange.start)} - ${formatDateWithYear(this.timeRange.end)}`;
     }
+
+    // Fetch data for cards
+    const dashboardData = this.fetchDashboardData(stats, topics);
+    
+    // Set up card components
+    this.setupDashboardCards(dashboardData, stats);
 
     this.container.innerHTML = `
       <div class="page-header page-header-with-tabs">
@@ -141,60 +147,7 @@ export class DashboardView extends BaseView {
 
       <div class="content-area">
         <div class="content-grid">
-          ${CardBuilder.create('Volume Over Time & Events', 'dashboard-volume-timeline', { 
-            fullWidth: true,
-            actions: `
-              <div class="view-toggle dashboard-volume-toggle">
-                <button class="view-toggle-btn ${this.volumeViewMode === 'volume' ? 'active' : ''}" data-view="volume" title="Volume View">
-                  <svg viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.5">
-                    <path d="M2 12V4M6 12V6M10 12V8M14 12V5"/>
-                  </svg>
-                </button>
-                <button class="view-toggle-btn ${this.volumeViewMode === 'duration' ? 'active' : ''}" data-view="duration" title="Duration View">
-                  <svg viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.5">
-                    <rect x="2" y="3" width="8" height="1" rx="0.5"/>
-                    <rect x="4" y="7" width="10" height="1" rx="0.5"/>
-                    <rect x="3" y="11" width="6" height="1" rx="0.5"/>
-                  </svg>
-                </button>
-              </div>
-            `
-          })}
-          ${CardBuilder.create('Top Narratives by Volume', 'dashboard-narrative-list', { 
-            noPadding: true, 
-            bodyClass: 'card-body-scrollable',
-            actions: CardBuilder.descriptionToggle('description-toggle')
-          })}
-          ${CardBuilder.create('Sentiment by Faction', 'dashboard-sentiment-chart', {})}
-          ${CardBuilder.create('Trending Topics', 'dashboard-topic-list', { 
-            noPadding: true, 
-            bodyClass: 'card-body-scrollable',
-            actions: `
-              <button class="btn-icon card-action-btn topic-bullets-toggle" title="Toggle bullet points" data-target="dashboard-topic-list">
-                <svg viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.5">
-                  <path d="M3 4h10M3 8h10M3 12h6"/>
-                </svg>
-              </button>
-            `
-          })}
-          ${CardBuilder.create('Events & Locations', 'dashboard-events-map', { 
-            noPadding: true,
-            actions: `
-              <div class="view-toggle dashboard-events-toggle">
-                <button class="view-toggle-btn ${this.eventsViewMode === 'map' ? 'active' : ''}" data-view="map" title="Map View">
-                  <svg viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.5">
-                    <path d="M8 1C5.2 1 3 3.2 3 6c0 4 5 9 5 9s5-5 5-9c0-2.8-2.2-5-5-5z"/>
-                    <circle cx="8" cy="6" r="2"/>
-                  </svg>
-                </button>
-                <button class="view-toggle-btn ${this.eventsViewMode === 'list' ? 'active' : ''}" data-view="list" title="List View">
-                  <svg viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.5">
-                    <path d="M2 4h12M2 8h12M2 12h12"/>
-                  </svg>
-                </button>
-              </div>
-            `
-          })}
+          ${this.cardManager.getHtml()}
         </div>
       </div>
     `;
@@ -219,280 +172,125 @@ export class DashboardView extends BaseView {
       });
     });
 
-    await this.initializeComponents(stats, topics);
+    // Initialize all card components
+    const components = this.cardManager.initializeAll();
+    Object.assign(this.components, components);
 
     // Set up tag filter handlers
     this.setupTagFilterHandlers();
-
-    // Add click handler for description toggle
-    const descToggle = this.container.querySelector('.description-toggle');
-    if (descToggle && this.components.narrativeList) {
-      this.addListener(descToggle, 'click', () => {
-        const isShowing = this.components.narrativeList.toggleDescription();
-        descToggle.classList.toggle('active', isShowing);
-      });
-    }
-
-    // Add click handler for topic bullets toggle
-    const bulletsToggle = this.container.querySelector('.topic-bullets-toggle');
-    if (bulletsToggle && this.components.topicList) {
-      this.addListener(bulletsToggle, 'click', () => {
-        const isShowing = this.components.topicList.toggleBulletPoints();
-        bulletsToggle.classList.toggle('active', isShowing);
-      });
-    }
-
-    // Initialize drag-and-drop for cards
-    this.initDragDrop();
   }
 
-  async initializeComponents(stats, topics) {
-    // Top Narratives List
-    this.components.narrativeList = new NarrativeList('dashboard-narrative-list', {
-      maxItems: 8,
-      onItemClick: (n) => {
-        window.location.hash = `#/narrative/${n.id}`;
-      }
-    });
-    this.components.narrativeList.update({ narratives: stats.topNarratives });
-
-    // Trending Topics List
-    if (topics && topics.length > 0) {
-      // Sort topics by total volume (descending)
-      const sortedTopics = [...topics].sort((a, b) => {
-        const volA = (a.volumeOverTime || []).reduce((sum, e) => sum + (e.volume || 0), 0);
-        const volB = (b.volumeOverTime || []).reduce((sum, e) => sum + (e.volume || 0), 0);
-        return volB - volA;
-      });
-
-      this.components.topicList = new TopicList('dashboard-topic-list', {
-        maxItems: 6,
-        showBulletPoints: false,
-        onItemClick: (t) => {
-          window.location.hash = `#/topic/${t.id}`;
-        }
-      });
-      this.components.topicList.update({ topics: sortedTopics });
-    }
-
-    // Volume Over Time & Events Combined (with time range filtering)
+  /**
+   * Fetch all data needed for dashboard cards
+   */
+  fetchDashboardData(stats, topics) {
+    // Volume Over Time data
     const volumeData = DataService.getAggregateVolumeOverTime(this.missionId, this.timeRange);
     const publisherData = DataService.getAggregatePublisherVolumeOverTime(this.missionId, this.timeRange);
-    // Pass all events with volume scores - component will filter based on zoom level
     const recentEvents = DataService.getRecentEvents(null, this.timeRange);
-    // Get narrative durations for duration view
     const narrativeDurations = DataService.getNarrativeDurations(this.missionId, this.timeRange);
 
-    const hasVolumeData = volumeData.dates.length > 0 && volumeData.factions.length > 0;
-    const hasPublisherData = publisherData.dates.length > 0 && publisherData.publishers.length > 0;
-    const hasEvents = recentEvents.length > 0;
-    const hasDurationData = narrativeDurations.length > 0;
+    // Faction sentiments
+    const factionSentiments = DataService.getAggregateFactionSentiments(this.missionId, this.timeRange);
 
-    // Store duration data availability and attach toggle handler
-    this._hasDurationData = hasDurationData;
-    this._volumeData = { volumeData, publisherData, recentEvents, narrativeDurations, hasVolumeData, hasPublisherData, hasEvents, hasDurationData };
-    
-    // Hide the toggle if no duration data
-    const volumeToggle = this.container.querySelector('.dashboard-volume-toggle');
-    if (volumeToggle && !hasDurationData) {
-      volumeToggle.style.display = 'none';
-    }
+    // Locations for map
+    const locations = DataService.getAllLocationsWithCounts(this.timeRange);
 
+    // Sort topics by total volume (descending)
+    const sortedTopics = topics && topics.length > 0 
+      ? [...topics].sort((a, b) => {
+          const volA = (a.volumeOverTime || []).reduce((sum, e) => sum + (e.volume || 0), 0);
+          const volB = (b.volumeOverTime || []).reduce((sum, e) => sum + (e.volume || 0), 0);
+          return volB - volA;
+        })
+      : [];
+
+    return {
+      narratives: stats.topNarratives || [],
+      topics: sortedTopics,
+      volumeData,
+      publisherData,
+      recentEvents,
+      narrativeDurations,
+      factionSentiments,
+      locations
+    };
+  }
+
+  /**
+   * Set up card components using CardManager
+   */
+  setupDashboardCards(data, stats) {
+    // Reset card manager for fresh setup
+    this.cardManager = new CardManager(this);
+
+    const hasVolumeData = data.volumeData?.dates?.length > 0 && data.volumeData?.factions?.length > 0;
+    const hasPublisherData = data.publisherData?.dates?.length > 0 && data.publisherData?.publishers?.length > 0;
+    const hasEvents = data.recentEvents?.length > 0;
+    const hasDurationData = data.narrativeDurations?.length > 0;
+
+    // 1. Volume Over Time & Events (full width)
     if (hasVolumeData || hasPublisherData || hasEvents || hasDurationData) {
-      this.components.volumeTimeline = new TimelineVolumeComposite('dashboard-volume-timeline', {
+      this.cardManager.add(new TimelineVolumeCompositeCard(this, 'dashboard-volume-timeline', {
+        title: 'Volume Over Time & Events',
+        volumeData: hasVolumeData ? data.volumeData : null,
+        publisherData: hasPublisherData ? data.publisherData : null,
+        events: data.recentEvents || [],
+        narrativeDurations: hasDurationData ? data.narrativeDurations : null,
+        fullWidth: true,
         height: 450,
         volumeHeight: 180,
         timelineHeight: 180,
-        showViewToggle: hasVolumeData && hasPublisherData,
-        showDisplayToggle: false, // Toggle is now in card header
-        defaultDisplayMode: this.volumeViewMode,
-        onEventClick: (e) => {
-          window.location.hash = `#/event/${e.id}`;
-        },
-        onFactionClick: (f) => {
-          window.location.hash = `#/faction/${f.id}`;
-        },
-        onNarrativeClick: (n) => {
-          window.location.hash = `#/narrative/${n.id}`;
-        }
-      });
-      this.components.volumeTimeline.update({
-        volumeData: hasVolumeData ? volumeData : null,
-        publisherData: hasPublisherData ? publisherData : null,
-        events: recentEvents,
-        narrativeDurations: hasDurationData ? narrativeDurations : null
-      });
-      this.components.volumeTimeline.enableAutoResize();
-      
-      // Attach volume view toggle handler
-      this.attachVolumeViewToggle();
+        showViewToggle: hasVolumeData && hasPublisherData
+      }));
     }
 
-    // Sentiment by Faction (aggregated across all narratives)
-    const factionSentiments = DataService.getAggregateFactionSentiments(this.missionId, this.timeRange);
-    if (factionSentiments.length > 0) {
-      this.components.sentimentChart = new SentimentChart('dashboard-sentiment-chart', {
-        height: Math.max(200, factionSentiments.length * 40),
-        onFactionClick: (f) => {
-          window.location.hash = `#/faction/${f.id}`;
-        }
-      });
-      this.components.sentimentChart.update({ factions: factionSentiments });
-      this.components.sentimentChart.enableAutoResize();
+    // 2. Top Narratives by Volume (half width)
+    if (data.narratives.length > 0) {
+      this.cardManager.add(new NarrativeListCard(this, 'dashboard-narrative-list', {
+        title: 'Top Narratives by Volume',
+        narratives: data.narratives,
+        maxItems: 8,
+        halfWidth: true,
+        showDescriptionToggle: true
+      }));
     }
 
-    // Events & Locations (Map or List)
-    const locations = DataService.getAllLocationsWithCounts(this.timeRange);
-    if (locations.length > 0 || recentEvents.length > 0) {
-      // Store data for view switching
-      this._eventsData = { events: recentEvents, locations };
-      
-      // Render current view and set up toggle
-      this.renderEventsView();
-      this.attachEventsViewToggle();
-    }
-  }
-
-  /**
-   * Render the events view (map or list) based on current mode
-   */
-  renderEventsView() {
-    if (this.eventsViewMode === 'map') {
-      this.renderEventsMap();
-    } else {
-      this.renderEventsList();
-    }
-  }
-
-  /**
-   * Render events as a map
-   */
-  renderEventsMap() {
-    // Clean up existing map
-    if (this.components.eventsMap) {
-      this.components.eventsMap.destroy();
-      this.components.eventsMap = null;
+    // 3. Sentiment by Faction (half width)
+    if (data.factionSentiments.length > 0) {
+      this.cardManager.add(new SentimentChartCard(this, 'dashboard-sentiment-chart', {
+        title: 'Sentiment by Faction',
+        factions: data.factionSentiments,
+        halfWidth: true,
+        clickRoute: 'faction'
+      }));
     }
 
-    const container = document.getElementById('dashboard-events-map');
-    if (!container || !this._eventsData) return;
-
-    // Remove scrollable class for map view
-    container.classList.remove('card-body-scrollable');
-
-    const { events, locations } = this._eventsData;
-
-    // Clear and render map
-    container.innerHTML = '';
-    
-    this.components.eventsMap = new MapView('dashboard-events-map', {
-      height: 350,
-      onEventClick: (e) => {
-        window.location.hash = `#/event/${e.id}`;
-      }
-    });
-    this.components.eventsMap.update({ locations, events });
-  }
-
-  /**
-   * Render events as a list
-   */
-  renderEventsList() {
-    // Clean up existing map
-    if (this.components.eventsMap) {
-      this.components.eventsMap.destroy();
-      this.components.eventsMap = null;
+    // 4. Trending Topics (half width)
+    if (data.topics.length > 0) {
+      this.cardManager.add(new TopicListCard(this, 'dashboard-topic-list', {
+        title: 'Trending Topics',
+        topics: data.topics,
+        maxItems: 6,
+        halfWidth: true,
+        showBulletsToggle: true,
+        defaultShowBulletPoints: false
+      }));
     }
 
-    const container = document.getElementById('dashboard-events-map');
-    if (!container || !this._eventsData) return;
-
-    // Add scrollable class for list view
-    container.classList.add('card-body-scrollable');
-
-    const { events } = this._eventsData;
-
-    if (events.length === 0) {
-      container.innerHTML = `
-        <div class="vertical-timeline-empty">
-          <div class="vertical-timeline-empty-icon">📅</div>
-          <p class="vertical-timeline-empty-text">No recent events</p>
-        </div>
-      `;
-      return;
+    // 5. Events & Locations Map (half width with map/list toggle)
+    if (data.locations.length > 0 || hasEvents) {
+      this.cardManager.add(new MapCard(this, 'dashboard-events-map', {
+        title: 'Events & Locations',
+        locations: data.locations,
+        events: data.recentEvents || [],
+        halfWidth: true,
+        height: 350,
+        showViewToggle: true,
+        defaultView: 'map',
+        maxListItems: 25
+      }));
     }
-
-    // Sort events by date (newest first) and limit to 25
-    const sortedEvents = [...events]
-      .sort((a, b) => new Date(b.date) - new Date(a.date))
-      .slice(0, 25);
-
-    // Render vertical timeline
-    container.innerHTML = renderVerticalTimeline(sortedEvents, { 
-      sortNewestFirst: true,
-      emptyText: 'No recent events'
-    });
-
-    // Attach click listeners for timeline items
-    container.querySelectorAll('.vertical-timeline-item').forEach(item => {
-      this.addListener(item, 'click', () => {
-        const eventId = item.dataset.eventId;
-        window.location.hash = `#/event/${eventId}`;
-      });
-    });
-  }
-
-  /**
-   * Attach view toggle listeners for events map/list
-   */
-  attachEventsViewToggle() {
-    const toggleContainer = this.container.querySelector('.dashboard-events-toggle');
-    if (!toggleContainer) return;
-
-    toggleContainer.querySelectorAll('.view-toggle-btn').forEach(btn => {
-      this.addListener(btn, 'click', () => {
-        const newMode = btn.dataset.view;
-        if (newMode !== this.eventsViewMode) {
-          this.eventsViewMode = newMode;
-          
-          // Update button states
-          toggleContainer.querySelectorAll('.view-toggle-btn').forEach(b => {
-            b.classList.toggle('active', b.dataset.view === newMode);
-          });
-          
-          // Re-render the view
-          this.renderEventsView();
-        }
-      });
-    });
-  }
-
-  /**
-   * Attach view toggle listeners for volume/duration view
-   */
-  attachVolumeViewToggle() {
-    const toggleContainer = this.container.querySelector('.dashboard-volume-toggle');
-    if (!toggleContainer) return;
-
-    toggleContainer.querySelectorAll('.view-toggle-btn').forEach(btn => {
-      this.addListener(btn, 'click', () => {
-        const newMode = btn.dataset.view;
-        if (newMode !== this.volumeViewMode) {
-          this.volumeViewMode = newMode;
-          
-          // Update button states
-          toggleContainer.querySelectorAll('.view-toggle-btn').forEach(b => {
-            b.classList.toggle('active', b.dataset.view === newMode);
-          });
-          
-          // Update the component's display mode and re-render
-          if (this.components.volumeTimeline) {
-            this.components.volumeTimeline.displayMode = newMode;
-            this.components.volumeTimeline.render();
-          }
-        }
-      });
-    });
   }
 
   setMission(missionId) {
@@ -613,6 +411,11 @@ export class DashboardView extends BaseView {
    */
   getSelectedTagIds() {
     return Array.from(this.selectedTags);
+  }
+
+  destroy() {
+    this.cardManager.destroyAll();
+    super.destroy();
   }
 }
 

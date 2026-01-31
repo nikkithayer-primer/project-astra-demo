@@ -200,11 +200,15 @@ export class ThemeView extends BaseView {
       }).filter(Boolean)
     ];
 
+    // Narrative durations for volume/duration toggle
+    const narrativeDurations = DataService.getNarrativeDurations();
+
     return {
       parentNarrative, factionData, factions, factionOverlaps,
       volumeOverTime, hasVolumeData, volumeData, publisherData, hasPublisherData,
       hasVolumeTimeline, locations, mapLocations, events, allEvents,
-      personIds, orgIds, hasNetwork, documents, sentimentFactions, topics
+      personIds, orgIds, hasNetwork, documents, sentimentFactions, topics,
+      narrativeDurations
     };
   }
 
@@ -216,12 +220,14 @@ export class ThemeView extends BaseView {
     this.cardManager = new CardManager(this);
 
     // 1. Volume & Events Chart (full-width)
-    if (data.hasVolumeTimeline) {
+    const hasDurationData = data.narrativeDurations?.length > 0;
+    if (data.hasVolumeTimeline || hasDurationData) {
       this.cardManager.add(new TimelineVolumeCompositeCard(this, 'theme-volume-events', {
         title: 'Volume & Events',
         volumeData: data.volumeData,
         publisherData: data.publisherData,
         events: data.allEvents,
+        narrativeDurations: hasDurationData ? data.narrativeDurations : null,
         fullWidth: true,
         height: 450,
         volumeHeight: 180,
@@ -269,7 +275,8 @@ export class ThemeView extends BaseView {
         locations: data.locations,
         events: data.allEvents,
         halfWidth: true,
-        height: 350
+        height: 350,
+        showViewToggle: true
       }));
     }
 
@@ -279,7 +286,8 @@ export class ThemeView extends BaseView {
         title: 'Related Topics',
         topics: data.topics,
         halfWidth: true,
-        showCount: true
+        showCount: true,
+        showBulletsToggle: true
       }));
     }
   }

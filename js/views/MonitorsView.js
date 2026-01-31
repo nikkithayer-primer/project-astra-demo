@@ -8,7 +8,6 @@ import { DataService } from '../data/DataService.js';
 import { dataStore } from '../data/DataStore.js';
 import { NarrativeList } from '../components/NarrativeList.js';
 import { TopicList } from '../components/TopicList.js';
-import { Timeline } from '../components/Timeline.js';
 import { StackedAreaChart } from '../components/StackedAreaChart.js';
 import { TimelineVolumeComposite } from '../components/TimelineVolumeComposite.js';
 import { VennDiagram } from '../components/VennDiagram.js';
@@ -26,7 +25,6 @@ import { PageHeader } from '../utils/PageHeader.js';
 // Available visualization types for monitors
 const VISUALIZATION_TYPES = [
   { id: 'narratives', label: 'Narratives' },
-  { id: 'events', label: 'Events' },
   { id: 'volume', label: 'Narrative volume over time' },
   { id: 'volume_events', label: 'Volume over time with events' },
   { id: 'topics', label: 'Topics' },
@@ -555,9 +553,6 @@ export class MonitorsView extends BaseView {
       case 'narratives':
         this.renderNarrativesVisualization(monitor, container);
         break;
-      case 'events':
-        this.renderEventsVisualization(monitor, container);
-        break;
       case 'volume':
         this.renderVolumeVisualization(monitor, container);
         break;
@@ -621,26 +616,6 @@ export class MonitorsView extends BaseView {
       }
     } else {
       this.showEmptyVisualization(container, 'No matching narratives');
-    }
-  }
-
-  /**
-   * Render Events visualization
-   */
-  renderEventsVisualization(monitor, container) {
-    const events = monitor.matchedEvents || DataService.getEventsForMonitor(monitor.id);
-    
-    if (events && events.length > 0) {
-      const timeline = new Timeline(container, {
-        height: 280,
-        onEventClick: (e) => {
-          window.location.hash = `#/event/${e.id}`;
-        }
-      });
-      timeline.update({ events });
-      this.visualizationComponents.push({ monitorId: monitor.id, component: timeline, type: 'events' });
-    } else {
-      this.showEmptyVisualization(container, 'No matching events');
     }
   }
 
@@ -935,10 +910,7 @@ export class MonitorsView extends BaseView {
       const docTable = new DocumentTable(container, {
         columns: columns,
         maxItems: 8,
-        enableViewerMode: true,
-        onDocumentClick: (doc) => {
-          window.location.hash = `#/document/${doc.id}`;
-        }
+        enableViewerMode: true
       });
       docTable.update({ documents });
       this.visualizationComponents.push({ monitorId: monitor.id, component: docTable, type: 'documents' });

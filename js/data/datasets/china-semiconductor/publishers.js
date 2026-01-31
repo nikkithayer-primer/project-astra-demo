@@ -26,6 +26,7 @@ export const publishers = [
   
   // Social Media
   { id: 'pub-x', name: 'X', type: 'social', color: '#000000' },
+  { id: 'pub-tiktok', name: 'TikTok', type: 'social', color: '#00F2EA' },
   { id: 'pub-linkedin', name: 'LinkedIn', type: 'social', color: '#0A66C2' },
   { id: 'pub-weibo', name: 'Weibo', type: 'social', color: '#E6162D' },
   { id: 'pub-reddit', name: 'Reddit', type: 'social', color: '#FF4500' },
