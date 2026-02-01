@@ -52,23 +52,23 @@ export class ThemeView extends BaseView {
       this.setupDashboardCards(theme, data);
     }
     
-    // Generate tabs config
-    const baseHref = `#/theme/${this.themeId}`;
+    // Generate tabs config - use context-aware routing
+    const baseHref = this.buildContextRoute('theme', this.themeId);
     const tabsConfig = hasDocuments ? this.getTabsConfig(baseHref, true) : null;
     
-    // Build breadcrumbs with optional parent narrative
-    const breadcrumbs = [
-      { label: 'Dashboard', href: '#/dashboard' },
-      { label: 'Narratives', href: '#/narratives' }
+    // Build context-aware breadcrumbs with optional parent narrative
+    const breadcrumbItems = [
+      { label: 'Narratives', route: 'narratives' }
     ];
     if (data.parentNarrative) {
-      breadcrumbs.push({ label: 'Parent', href: `#/narrative/${data.parentNarrative.id}` });
+      breadcrumbItems.push({ label: 'Parent', href: this.buildContextRoute('narrative', data.parentNarrative.id) });
     }
-    breadcrumbs.push('Theme');
+    breadcrumbItems.push('Theme');
+    const breadcrumbs = this.buildBreadcrumbs(breadcrumbItems);
 
     // Build page header
     const headerHtml = PageHeader.render({
-      breadcrumbs: breadcrumbs,
+      breadcrumbs,
       title: theme.text,
       subtitle: `<span class="badge badge-${this.getSentimentClass(theme.sentiment)}">${this.formatSentiment(theme.sentiment)}</span>`,
       description: theme.description,
@@ -80,9 +80,10 @@ export class ThemeView extends BaseView {
       activeTab: activeTab
     });
 
-    // Build parent link HTML if applicable (only on dashboard tab)
+    // Build parent link HTML if applicable (only on dashboard tab) - context-aware
+    const parentRoute = data.parentNarrative ? this.buildContextRoute('narrative', data.parentNarrative.id) : '';
     const parentLinkHtml = data.parentNarrative && this.isDashboardTab() ? `
-      <div class="parent-link" onclick="window.location.hash='#/narrative/${data.parentNarrative.id}'">
+      <div class="parent-link" onclick="window.location.hash='${parentRoute}'">
         <span class="parent-link-icon">↑</span>
         <span class="parent-link-text">${data.parentNarrative.text}</span>
       </div>
@@ -137,8 +138,10 @@ export class ThemeView extends BaseView {
 
   /**
    * Fetch all data related to the theme
+   * Uses document scope from context if available
    */
   fetchThemeData(theme) {
+    const scopeDocIds = this.getDocumentScope();
     const parentNarrative = DataService.getParentNarrative(this.themeId);
     const factionData = DataService.getFactionsForTheme(theme.id);
     const factions = factionData.map(f => f.faction).filter(Boolean);
@@ -148,8 +151,8 @@ export class ThemeView extends BaseView {
         )
       : [];
 
-    // Check data availability for each section - use document-based aggregation
-    const volumeOverTime = DataService.getVolumeOverTimeForTheme(theme.id);
+    // Check data availability for each section - use document-based aggregation (scoped)
+    const volumeOverTime = DataService.getVolumeOverTimeForTheme(theme.id, null, scopeDocIds);
     const hasVolumeData = volumeOverTime.length > 0 && factions.length > 0;
     const locations = (theme.locationIds || []).map(lid => DataService.getLocation(lid)).filter(Boolean);
     const events = (theme.eventIds || []).map(eid => DataService.getEvent(eid)).filter(Boolean);
@@ -158,8 +161,8 @@ export class ThemeView extends BaseView {
     const orgIds = theme.organizationIds || [];
     const hasNetwork = personIds.length > 0 || orgIds.length > 0;
 
-    // Get documents for the theme
-    const documents = DataService.getDocumentsForTheme(this.themeId);
+    // Get documents for the theme (scoped)
+    const documents = DataService.getDocumentsForTheme(this.themeId, scopeDocIds);
 
     // Prepare volume data for the composite chart (by faction)
     let volumeData = null;
@@ -184,9 +187,9 @@ export class ThemeView extends BaseView {
       sentiment: fd.sentiment
     }));
 
-    // Get related topics (topics that share documents with this theme's documents)
+    // Get related topics (topics that share documents with this theme's documents) - scoped
     const themeDocIds = new Set(documents.map(d => d.id));
-    const allTopics = DataService.getTopics ? DataService.getTopics() : [];
+    const allTopics = DataService.getTopics ? DataService.getTopics(scopeDocIds) : [];
     const topics = allTopics.filter(topic =>
       (topic.documentIds || []).some(dId => themeDocIds.has(dId))
     );
@@ -200,8 +203,8 @@ export class ThemeView extends BaseView {
       }).filter(Boolean)
     ];
 
-    // Narrative durations for volume/duration toggle
-    const narrativeDurations = DataService.getNarrativeDurations();
+    // Narrative durations for volume/duration toggle (scoped)
+    const narrativeDurations = DataService.getNarrativeDurations(null, null, null, scopeDocIds);
 
     return {
       parentNarrative, factionData, factions, factionOverlaps,

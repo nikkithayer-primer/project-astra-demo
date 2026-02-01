@@ -1,7 +1,11 @@
 /**
  * router.js
  * Hash-based routing for single-page navigation
+ * Supports context-scoped navigation (workspace/monitor/dashboard)
  * Manages global filter state (mission + time range)
+ * 
+ * Route Pattern: #/{context}[/{contextId}][/{entityType}[/{entityId}][/documents]]
+ * See docs/ROUTING.md for full specification
  */
 
 import { DashboardView } from './views/DashboardView.js';
@@ -31,6 +35,34 @@ import { TimeRangeFilter } from './components/TimeRangeFilter.js';
 import { DataService } from './data/DataService.js';
 import { dataStore } from './data/DataStore.js';
 import { formatDate } from './utils/formatters.js';
+
+// Context types for scoped routing
+const CONTEXT_TYPES = ['workspace', 'monitor', 'dashboard'];
+
+// Entity types that can be nested under contexts
+const ENTITY_TYPES = {
+  // Singular (detail views)
+  'narrative': { view: NarrativeView, listType: 'narratives' },
+  'theme': { view: ThemeView, listType: 'narratives' },
+  'faction': { view: FactionView, listType: 'factions' },
+  'location': { view: LocationView, listType: 'locations' },
+  'event': { view: EventView, listType: 'events' },
+  'person': { view: PersonView, listType: 'entities' },
+  'organization': { view: OrganizationView, listType: 'entities' },
+  'document': { view: DocumentView, listType: 'documents' },
+  'topic': { view: TopicView, listType: 'topics' },
+  'tag': { view: TagDetailView, listType: 'tags' },
+  // Plural (list views)
+  'narratives': { view: ListView, listType: 'narratives' },
+  'themes': { view: ListView, listType: 'narratives' },
+  'factions': { view: ListView, listType: 'factions' },
+  'locations': { view: ListView, listType: 'locations' },
+  'events': { view: ListView, listType: 'events' },
+  'entities': { view: ListView, listType: 'entities' },
+  'documents': { view: DocumentsView, listType: 'documents' },
+  'topics': { view: ListView, listType: 'topics' },
+  'tags': { view: TagsView, listType: 'tags' }
+};
 
 export class Router {
   constructor(containerId) {
@@ -360,7 +392,189 @@ export class Router {
   }
 
   /**
+   * Parse nested routes into structured components
+   * Handles patterns like:
+   *   - #/workspaces (top-level list)
+   *   - #/workspace/{id} (context home)
+   *   - #/workspace/{id}/faction/{factionId} (scoped entity)
+   *   - #/workspace/{id}/faction/{factionId}/documents (scoped entity tab)
+   *   - #/dashboard/narratives (global list)
+   *   - #/faction/{id} (legacy global - redirected to dashboard)
+   * 
+   * @param {string} hash - The hash path without #/ and query string
+   * @returns {Object} Parsed route info
+   */
+  parseNestedRoute(hash) {
+    const segments = hash.split('/').filter(s => s);
+    
+    // Default result structure
+    const result = {
+      context: null,           // 'workspace' | 'monitor' | 'dashboard' | null
+      contextId: null,         // ID of workspace/monitor (null for dashboard)
+      entityType: null,        // 'narrative', 'narratives', 'faction', etc.
+      entityId: null,          // ID of specific entity
+      subRoute: null,          // 'documents' for documents tab
+      isListView: false,       // true if entityType is plural
+      isContextHome: false,    // true if viewing context dashboard (no entity)
+      isLegacyRoute: false,    // true if old global route (needs redirect)
+      topLevelRoute: null      // For non-context routes like 'workspaces', 'search'
+    };
+
+    if (segments.length === 0) {
+      return result;
+    }
+
+    const firstSegment = segments[0];
+
+    // Check for top-level non-context routes
+    const topLevelRoutes = ['workspaces', 'monitors', 'search', 'projects', 'activity', 'settings', 'data-model', 'component-demos', 'status'];
+    if (topLevelRoutes.includes(firstSegment)) {
+      result.topLevelRoute = firstSegment;
+      return result;
+    }
+
+    // Check if first segment is a context
+    if (CONTEXT_TYPES.includes(firstSegment)) {
+      result.context = firstSegment;
+      
+      if (firstSegment === 'dashboard') {
+        // Dashboard context: #/dashboard or #/dashboard/entityType/entityId
+        if (segments.length === 1) {
+          result.isContextHome = true;
+        } else {
+          // Parse entity from remaining segments
+          this._parseEntitySegments(segments.slice(1), result);
+        }
+      } else {
+        // Workspace or Monitor context: need contextId
+        if (segments.length >= 2) {
+          result.contextId = segments[1];
+          
+          if (segments.length === 2) {
+            result.isContextHome = true;
+          } else {
+            // Parse entity from remaining segments
+            this._parseEntitySegments(segments.slice(2), result);
+          }
+        }
+      }
+    } else if (ENTITY_TYPES[firstSegment]) {
+      // Legacy global entity route: #/faction/123 → redirect to #/dashboard/faction/123
+      result.isLegacyRoute = true;
+      result.context = 'dashboard';
+      this._parseEntitySegments(segments, result);
+    } else {
+      // Unknown route - treat as top-level
+      result.topLevelRoute = firstSegment;
+    }
+
+    return result;
+  }
+
+  /**
+   * Helper to parse entity segments from a route
+   * @param {string[]} segments - Array of path segments starting with entityType
+   * @param {Object} result - Result object to populate
+   */
+  _parseEntitySegments(segments, result) {
+    if (segments.length === 0) return;
+    
+    const entityType = segments[0];
+    result.entityType = entityType;
+    result.isListView = entityType.endsWith('s') && entityType !== 'status';
+    
+    if (segments.length >= 2 && segments[1] !== 'documents') {
+      result.entityId = segments[1];
+      result.isListView = false;
+    }
+    
+    // Check for /documents sub-route
+    const lastSegment = segments[segments.length - 1];
+    if (lastSegment === 'documents' && segments.length > 1) {
+      result.subRoute = 'documents';
+    }
+  }
+
+  /**
+   * Resolve context to a scope object with document IDs
+   * @param {string} context - Context type ('workspace', 'monitor', 'dashboard')
+   * @param {string} contextId - ID of the context (null for dashboard)
+   * @returns {Object} Scope object with type, id, and documentIds
+   */
+  resolveContextScope(context, contextId) {
+    if (!context || context === 'dashboard') {
+      return { 
+        type: 'dashboard', 
+        id: null, 
+        documentIds: null,
+        getName: () => 'Dashboard'
+      };
+    }
+    
+    if (context === 'workspace') {
+      const workspace = DataService.getWorkspace(contextId);
+      if (!workspace) {
+        console.warn(`Router: Workspace ${contextId} not found`);
+        return null;
+      }
+      return { 
+        type: 'workspace', 
+        id: contextId, 
+        documentIds: workspace.documentIds || [],
+        getName: () => workspace.name || 'Workspace'
+      };
+    }
+    
+    if (context === 'monitor') {
+      const monitor = DataService.getMonitor(contextId);
+      if (!monitor) {
+        console.warn(`Router: Monitor ${contextId} not found`);
+        return null;
+      }
+      // Resolve monitor's search filters to document IDs
+      const docs = DataService.getDocumentsForMonitor(contextId);
+      return { 
+        type: 'monitor', 
+        id: contextId, 
+        documentIds: docs.map(d => d.id),
+        getName: () => monitor.name || 'Monitor'
+      };
+    }
+    
+    return null;
+  }
+
+  /**
+   * Build a context-aware route URL
+   * @param {string} entityType - Entity type (e.g., 'faction', 'narrative')
+   * @param {string} entityId - Entity ID (optional for list views)
+   * @param {Object} context - Context object from resolveContextScope
+   * @param {string} subRoute - Optional sub-route (e.g., 'documents')
+   * @returns {string} Full hash URL
+   */
+  buildContextRoute(entityType, entityId = null, context = null, subRoute = null) {
+    let path;
+    
+    if (!context || context.type === 'dashboard') {
+      path = `#/dashboard/${entityType}`;
+    } else {
+      path = `#/${context.type}/${context.id}/${entityType}`;
+    }
+    
+    if (entityId) {
+      path += `/${entityId}`;
+    }
+    
+    if (subRoute) {
+      path += `/${subRoute}`;
+    }
+    
+    return path;
+  }
+
+  /**
    * Parse current hash and route to appropriate view
+   * Supports both legacy flat routes and new nested context routes
    */
   handleRoute() {
     const fullHash = window.location.hash.slice(2) || 'dashboard'; // Remove #/
@@ -370,9 +584,21 @@ export class Router {
     const hash = queryIndex === -1 ? fullHash : fullHash.slice(0, queryIndex);
     const queryParams = this.parseQueryParams(fullHash);
     
-    const [route, id] = hash.split('/');
+    // Parse the route using new nested route parser
+    const parsed = this.parseNestedRoute(hash);
 
-    this.currentRoute = route;
+    // Handle legacy routes by redirecting to dashboard context
+    if (parsed.isLegacyRoute) {
+      let newRoute = `#/dashboard/${parsed.entityType}`;
+      if (parsed.entityId) newRoute += `/${parsed.entityId}`;
+      if (parsed.subRoute) newRoute += `/${parsed.subRoute}`;
+      window.location.hash = newRoute;
+      return;
+    }
+
+    // Determine the primary route for nav link highlighting
+    this.currentRoute = parsed.topLevelRoute || parsed.context || 'dashboard';
+    this.currentContext = parsed.context ? this.resolveContextScope(parsed.context, parsed.contextId) : null;
 
     // Destroy current view and clean up sticky header
     try {
@@ -395,7 +621,7 @@ export class Router {
 
     // Update active nav link
     try {
-      this.updateNavLinks(route);
+      this.updateNavLinks(this.currentRoute);
     } catch (e) {
       console.error('Router: Error updating nav links:', e);
     }
@@ -403,208 +629,43 @@ export class Router {
     // Get settings for default tab
     const settings = dataStore.getSettings();
     
-    // Common options with filters
+    // Determine tab based on sub-route or query params
+    let tab = 'dashboard';
+    if (parsed.subRoute === 'documents') {
+      tab = 'documents';
+    } else if (queryParams.tab) {
+      tab = queryParams.tab;
+    } else if (settings.defaultViewTab) {
+      tab = settings.defaultViewTab;
+    }
+    
+    // Common options with filters and context
     const filterOptions = {
       missionId: this.filters.missionId || 'all',
       timeRange: this.filters.timeRange,
-      tab: queryParams.tab || settings.defaultViewTab || 'dashboard' // Use settings default tab
+      tab: tab,
+      context: this.currentContext // Pass context scope to views
     };
 
-    // Track if this is the dashboard route for filter initialization
-    let isDashboard = false;
+    // Track if this is the dashboard home for filter initialization
+    let isDashboardHome = false;
 
-    // Route to appropriate view
-    switch (route) {
-      case 'dashboard':
-        // Redirect to monitors if dashboard is disabled
-        if (!settings.dashboardEnabled) {
-          window.location.hash = '#/monitors';
-          return;
-        }
-        this.currentView = new DashboardView(this.container, filterOptions);
-        isDashboard = true;
-        break;
-
-      case 'narrative':
-        if (id) {
-          this.currentView = new NarrativeView(this.container, id, filterOptions);
-        } else {
-          this.currentView = new ListView(this.container, 'narratives', filterOptions);
-        }
-        break;
-
-      case 'narratives':
-        this.currentView = new ListView(this.container, 'narratives', filterOptions);
-        break;
-
-      case 'theme':
-        if (id) {
-          this.currentView = new ThemeView(this.container, id, filterOptions);
-        } else {
-          window.location.hash = '#/narratives';
-          return;
-        }
-        break;
-
-      case 'themes':
-        // Themes are shown as part of narratives list
-        window.location.hash = '#/narratives';
-        return;
-
-      case 'faction':
-        if (id) {
-          this.currentView = new FactionView(this.container, id, filterOptions);
-        } else {
-          this.currentView = new ListView(this.container, 'factions', filterOptions);
-        }
-        break;
-
-      case 'factions':
-        this.currentView = new ListView(this.container, 'factions', filterOptions);
-        break;
-
-      case 'location':
-        if (id) {
-          this.currentView = new LocationView(this.container, id, filterOptions);
-        } else {
-          this.currentView = new ListView(this.container, 'locations', filterOptions);
-        }
-        break;
-
-      case 'locations':
-        this.currentView = new ListView(this.container, 'locations', filterOptions);
-        break;
-
-      case 'event':
-        if (id) {
-          this.currentView = new EventView(this.container, id, filterOptions);
-        } else {
-          this.currentView = new ListView(this.container, 'events', filterOptions);
-        }
-        break;
-
-      case 'events':
-        this.currentView = new ListView(this.container, 'events', filterOptions);
-        break;
-
-      case 'person':
-        if (id) {
-          this.currentView = new PersonView(this.container, id, filterOptions);
-        } else {
-          this.currentView = new ListView(this.container, 'entities', filterOptions);
-        }
-        break;
-
-      case 'organization':
-        if (id) {
-          this.currentView = new OrganizationView(this.container, id, filterOptions);
-        } else {
-          this.currentView = new ListView(this.container, 'entities', filterOptions);
-        }
-        break;
-
-      case 'document':
-        if (id) {
-          this.currentView = new DocumentView(this.container, id, filterOptions);
-        } else {
-          window.location.hash = '#/documents';
-          return;
-        }
-        break;
-
-      case 'documents':
-        this.currentView = new DocumentsView(this.container, filterOptions);
-        break;
-
-      case 'entities':
-        this.currentView = new ListView(this.container, 'entities', filterOptions);
-        break;
-
-      case 'topics':
-        this.currentView = new ListView(this.container, 'topics', filterOptions);
-        break;
-
-      case 'topic':
-        if (id) {
-          this.currentView = new TopicView(this.container, id, filterOptions);
-        } else {
-          this.currentView = new ListView(this.container, 'topics', filterOptions);
-        }
-        break;
-
-      case 'data-model':
-        // Navigate to standalone data model page
-        window.location.href = 'data-model.html';
-        return;
-
-      case 'component-demos':
-        // Navigate to standalone component demos page
-        window.location.href = 'component-demos.html';
-        return;
-
-      case 'status':
-        // Status pages have been removed - redirect to dashboard
-        // The dashboard now handles status filtering inline
-        window.location.hash = '#/dashboard';
-        return;
-
-      case 'tag':
-        if (id) {
-          this.currentView = new TagDetailView(this.container, id, filterOptions);
-        } else {
-          this.currentView = new TagsView(this.container, filterOptions);
-        }
-        break;
-
-      case 'tags':
-        this.currentView = new TagsView(this.container, filterOptions);
-        break;
-
-      case 'activity':
-        this.currentView = new ActivityFeedView(this.container, filterOptions);
-        break;
-
-      case 'monitor':
-        if (id) {
-          this.currentView = new MonitorView(this.container, id, filterOptions);
-        } else {
-          this.currentView = new MonitorsView(this.container, filterOptions);
-        }
-        break;
-
-      case 'monitors':
-        this.currentView = new MonitorsView(this.container, filterOptions);
-        break;
-
-      case 'workspace':
-        if (id) {
-          this.currentView = new WorkspaceView(this.container, id, filterOptions);
-        } else {
-          this.currentView = new WorkspacesView(this.container, filterOptions);
-        }
-        break;
-
-      case 'workspaces':
-        this.currentView = new WorkspacesView(this.container, filterOptions);
-        break;
-
-      case 'search':
-        this.currentView = new SearchView(this.container, filterOptions);
-        break;
-
-      case 'projects':
-        this.currentView = new ProjectsView(this.container, filterOptions);
-        break;
-
-      default:
-        // Default to start page based on settings
-        let defaultPage = settings.defaultStartPage || 'monitors';
-        // If dashboard is disabled and was set as start page, fall back to monitors
-        if (!settings.dashboardEnabled && defaultPage === 'dashboard') {
-          defaultPage = 'monitors';
-        }
-        window.location.hash = `#/${defaultPage}`;
-        return;
+    // Route based on parsed structure
+    if (parsed.topLevelRoute) {
+      // Handle top-level routes (workspaces, monitors, search, etc.)
+      this._handleTopLevelRoute(parsed.topLevelRoute, filterOptions, settings);
+    } else if (parsed.context) {
+      // Handle context-scoped routes
+      this._handleContextRoute(parsed, filterOptions, settings);
+      isDashboardHome = parsed.context === 'dashboard' && parsed.isContextHome;
+    } else {
+      // No recognized route - redirect to default
+      let defaultPage = settings.defaultStartPage || 'monitors';
+      if (!settings.dashboardEnabled && defaultPage === 'dashboard') {
+        defaultPage = 'monitors';
+      }
+      window.location.hash = `#/${defaultPage}`;
+      return;
     }
 
     // Render the view
@@ -612,13 +673,13 @@ export class Router {
       try {
         this.currentView.render();
         
-        // Initialize dashboard filters after render
-        if (isDashboard) {
+        // Initialize dashboard filters after render (only for dashboard home)
+        if (isDashboardHome) {
           this.initDashboardFilters();
         }
       } catch (e) {
-        console.error(`Router: Error rendering view for route '${route}':`, e);
-        this.showErrorPage('Page Error', `An error occurred while loading ${route || 'this page'}.`);
+        console.error(`Router: Error rendering view:`, e);
+        this.showErrorPage('Page Error', `An error occurred while loading this page.`);
         return;
       }
     }
@@ -639,28 +700,152 @@ export class Router {
   }
 
   /**
+   * Handle top-level routes (not scoped to a context)
+   */
+  _handleTopLevelRoute(route, filterOptions, settings) {
+    switch (route) {
+      case 'workspaces':
+        this.currentView = new WorkspacesView(this.container, filterOptions);
+        break;
+        
+      case 'monitors':
+        this.currentView = new MonitorsView(this.container, filterOptions);
+        break;
+        
+      case 'search':
+        this.currentView = new SearchView(this.container, filterOptions);
+        break;
+        
+      case 'projects':
+        this.currentView = new ProjectsView(this.container, filterOptions);
+        break;
+        
+      case 'activity':
+        this.currentView = new ActivityFeedView(this.container, filterOptions);
+        break;
+        
+      case 'data-model':
+        window.location.href = 'data-model.html';
+        return;
+        
+      case 'component-demos':
+        window.location.href = 'component-demos.html';
+        return;
+        
+      case 'status':
+        // Redirect to dashboard
+        window.location.hash = '#/dashboard';
+        return;
+        
+      default:
+        // Unknown top-level route - redirect to default
+        let defaultPage = settings.defaultStartPage || 'monitors';
+        if (!settings.dashboardEnabled && defaultPage === 'dashboard') {
+          defaultPage = 'monitors';
+        }
+        window.location.hash = `#/${defaultPage}`;
+    }
+  }
+
+  /**
+   * Handle context-scoped routes (workspace/monitor/dashboard with optional entity)
+   */
+  _handleContextRoute(parsed, filterOptions, settings) {
+    const { context, contextId, entityType, entityId, isContextHome, isListView } = parsed;
+    
+    // Dashboard context home
+    if (context === 'dashboard' && isContextHome) {
+      if (!settings.dashboardEnabled) {
+        window.location.hash = '#/monitors';
+        return;
+      }
+      this.currentView = new DashboardView(this.container, filterOptions);
+      return;
+    }
+    
+    // Workspace context home
+    if (context === 'workspace' && isContextHome) {
+      this.currentView = new WorkspaceView(this.container, contextId, filterOptions);
+      return;
+    }
+    
+    // Monitor context home
+    if (context === 'monitor' && isContextHome) {
+      this.currentView = new MonitorView(this.container, contextId, filterOptions);
+      return;
+    }
+    
+    // Entity view within context
+    if (entityType) {
+      this._handleEntityView(entityType, entityId, isListView, filterOptions);
+    }
+  }
+
+  /**
+   * Handle entity views (both list and detail)
+   */
+  _handleEntityView(entityType, entityId, isListView, filterOptions) {
+    const entityConfig = ENTITY_TYPES[entityType];
+    
+    if (!entityConfig) {
+      console.warn(`Router: Unknown entity type '${entityType}'`);
+      this.showErrorPage('Not Found', `Unknown entity type: ${entityType}`);
+      return;
+    }
+    
+    const ViewClass = entityConfig.view;
+    
+    if (isListView) {
+      // List views: ListView or specialized list view (DocumentsView, TagsView)
+      if (ViewClass === ListView) {
+        this.currentView = new ListView(this.container, entityConfig.listType, filterOptions);
+      } else if (ViewClass === DocumentsView) {
+        this.currentView = new DocumentsView(this.container, filterOptions);
+      } else if (ViewClass === TagsView) {
+        this.currentView = new TagsView(this.container, filterOptions);
+      } else {
+        // Fallback to ListView
+        this.currentView = new ListView(this.container, entityConfig.listType, filterOptions);
+      }
+    } else {
+      // Detail view
+      if (entityId) {
+        // Special case: themes redirect to narratives list if no ID
+        if (entityType === 'theme' && !entityId) {
+          const ctx = filterOptions.context;
+          const basePath = ctx && ctx.type !== 'dashboard' ? `#/${ctx.type}/${ctx.id}` : '#/dashboard';
+          window.location.hash = `${basePath}/narratives`;
+          return;
+        }
+        
+        this.currentView = new ViewClass(this.container, entityId, filterOptions);
+      } else {
+        // No ID provided for detail view - show list instead
+        if (entityConfig.listType) {
+          this.currentView = new ListView(this.container, entityConfig.listType, filterOptions);
+        }
+      }
+    }
+  }
+
+  /**
    * Update active state on navigation links
+   * Handles both top-level routes and context-scoped routes
    */
   updateNavLinks(route) {
-    const hash = window.location.hash.slice(2) || 'dashboard';
     const navLinks = document.querySelectorAll('.nav-link');
     navLinks.forEach(link => {
       link.classList.remove('active');
       const linkRoute = link.getAttribute('href')?.replace('#/', '') || '';
       
-      // Check if this link matches the current route
-      if (linkRoute === route || 
-          linkRoute === hash ||
-          (linkRoute === 'narratives' && route === 'narrative') ||
-          (linkRoute === 'factions' && route === 'faction') ||
-          (linkRoute === 'locations' && route === 'location') ||
-          (linkRoute === 'events' && route === 'event') ||
-          (linkRoute === 'entities' && (route === 'person' || route === 'organization')) ||
-          (linkRoute === 'documents' && route === 'document') ||
-          (linkRoute === 'monitors' && route === 'monitor') ||
-          (linkRoute === 'topics' && route === 'topic') ||
-          (linkRoute === 'tags' && route === 'tag') ||
-          (linkRoute === 'workspaces' && route === 'workspace')) {
+      // Check if this link matches the current route/context
+      const matches = 
+        linkRoute === route ||
+        linkRoute === 'dashboard' && route === 'dashboard' ||
+        linkRoute === 'monitors' && (route === 'monitors' || route === 'monitor') ||
+        linkRoute === 'workspaces' && (route === 'workspaces' || route === 'workspace');
+      
+      if (matches) {
         link.classList.add('active');
       }
     });
@@ -668,25 +853,56 @@ export class Router {
 
   /**
    * Navigate programmatically
+   * @param {string} route - Route path or entity type
+   * @param {string} id - Optional entity ID
+   * @param {Object} context - Optional context object (if navigating within a context)
    */
-  navigate(route, id = null) {
-    if (id) {
-      window.location.hash = `#/${route}/${id}`;
+  navigate(route, id = null, context = null) {
+    let hash;
+    
+    if (context && context.type && context.type !== 'dashboard') {
+      // Context-scoped navigation
+      hash = `#/${context.type}/${context.id}/${route}`;
+      if (id) hash += `/${id}`;
+    } else if (context && context.type === 'dashboard') {
+      // Dashboard context
+      hash = `#/dashboard/${route}`;
+      if (id) hash += `/${id}`;
     } else {
-      window.location.hash = `#/${route}`;
+      // Top-level or legacy navigation
+      hash = `#/${route}`;
+      if (id) hash += `/${id}`;
     }
+    
+    window.location.hash = hash;
   }
 
   /**
-   * Get current route info
+   * Get current route info (parsed structure)
+   * @returns {Object} Parsed route with context, entityType, entityId, etc.
    */
   getCurrentRoute() {
     const fullHash = window.location.hash.slice(2) || 'dashboard';
     const queryIndex = fullHash.indexOf('?');
     const hash = queryIndex === -1 ? fullHash : fullHash.slice(0, queryIndex);
-    const [route, id] = hash.split('/');
     const queryParams = this.parseQueryParams(fullHash);
-    return { route, id, queryParams };
+    const parsed = this.parseNestedRoute(hash);
+    
+    return {
+      ...parsed,
+      queryParams,
+      // Legacy compatibility
+      route: parsed.topLevelRoute || parsed.context || parsed.entityType,
+      id: parsed.contextId || parsed.entityId
+    };
+  }
+
+  /**
+   * Get the current context scope (if any)
+   * @returns {Object|null} Current context scope with documentIds
+   */
+  getContext() {
+    return this.currentContext || null;
   }
 
   /**
@@ -695,8 +911,9 @@ export class Router {
    * @returns {string} The full hash URL
    */
   buildUrl(params = {}) {
-    const { route, id } = this.getCurrentRoute();
-    const basePath = id ? `#/${route}/${id}` : `#/${route}`;
+    const fullHash = window.location.hash.slice(2) || 'dashboard';
+    const queryIndex = fullHash.indexOf('?');
+    const basePath = queryIndex === -1 ? `#/${fullHash}` : `#/${fullHash.slice(0, queryIndex)}`;
     
     const queryString = Object.entries(params)
       .filter(([_, value]) => value !== undefined && value !== null && value !== '')

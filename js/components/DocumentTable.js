@@ -199,6 +199,8 @@ export class DocumentTable extends BaseComponent {
       enableViewerMode: true,
       // Show read/unread indicator
       showReadIndicator: true,
+      // Context for scoped routing (from view)
+      context: null,
       ...options
     });
     
@@ -211,6 +213,32 @@ export class DocumentTable extends BaseComponent {
     this.contentRenderer = null;
     this.viewerTab = 'content'; // 'content' or 'details'
     this._keydownHandler = null;
+  }
+
+  /**
+   * Build a context-aware route for an entity
+   * @param {string} entityType - Entity type
+   * @param {string} entityId - Entity ID
+   * @returns {string} Hash route
+   */
+  buildRoute(entityType, entityId) {
+    const ctx = this.options.context;
+    if (ctx && ctx.type && ctx.type !== 'dashboard') {
+      return `#/${ctx.type}/${ctx.id}/${entityType}/${entityId}`;
+    }
+    if (ctx && ctx.type === 'dashboard') {
+      return `#/dashboard/${entityType}/${entityId}`;
+    }
+    return `#/${entityType}/${entityId}`;
+  }
+
+  /**
+   * Navigate to an entity using context-aware routing
+   * @param {string} entityType - Entity type
+   * @param {string} entityId - Entity ID
+   */
+  navigateTo(entityType, entityId) {
+    window.location.hash = this.buildRoute(entityType, entityId);
   }
 
   /**
@@ -654,7 +682,7 @@ export class DocumentTable extends BaseComponent {
           } else {
             const config = COLUMN_CONFIG[entityType];
             if (config && config.route) {
-              window.location.hash = `#/${config.route}/${entityId}`;
+              this.navigateTo(config.route, entityId);
             }
           }
         });
@@ -1223,7 +1251,7 @@ export class DocumentTable extends BaseComponent {
         showSparkline: false,
         showVolume: false,
         onItemClick: (n) => {
-          window.location.hash = `#/narrative/${n.id}`;
+          this.navigateTo('narrative', n.id);
         }
       });
       this.detailsNarrativeList.update({ narratives });
@@ -1234,7 +1262,7 @@ export class DocumentTable extends BaseComponent {
       this.detailsThemeList = new ThemeList('doc-details-themes', {
         maxItems: 10,
         onItemClick: (s) => {
-          window.location.hash = `#/theme/${s.id}`;
+          this.navigateTo('theme', s.id);
         }
       });
       this.detailsThemeList.update({ themes });
@@ -1300,7 +1328,7 @@ export class DocumentTable extends BaseComponent {
       this.detailsNetwork = new NetworkGraph('doc-details-network', {
         height: 280,
         onNodeClick: (node) => {
-          window.location.hash = `#/${node.type}/${node.id}`;
+          this.navigateTo(node.type, node.id);
         }
       });
       this.detailsNetwork.update(this._detailsData.networkData);
@@ -1322,7 +1350,7 @@ export class DocumentTable extends BaseComponent {
         item.addEventListener('click', () => {
           const id = item.dataset.id;
           const type = item.dataset.type;
-          window.location.hash = `#/${type}/${id}`;
+          this.navigateTo(type, id);
         });
       });
     }
@@ -1395,7 +1423,7 @@ export class DocumentTable extends BaseComponent {
       this.detailsMap = new MapView('doc-details-map', {
         height: 250,
         onEventClick: (e) => {
-          window.location.hash = `#/event/${e.id}`;
+          this.navigateTo('event', e.id);
         }
       });
       this.detailsMap.update({ 
@@ -1430,7 +1458,7 @@ export class DocumentTable extends BaseComponent {
       container.querySelectorAll('.vertical-timeline-item').forEach(item => {
         item.addEventListener('click', () => {
           const eventId = item.dataset.eventId;
-          window.location.hash = `#/event/${eventId}`;
+          this.navigateTo('event', eventId);
         });
       });
     }

@@ -154,17 +154,53 @@ export function getEntityTitle(entity, entityType) {
  * Get the route for an entity
  * @param {Object} entity - The entity object  
  * @param {string} entityType - The entity type
- * @returns {string} The hash route (e.g., '#/narrative/narr-123')
+ * @param {Object} context - Optional context object with type and id
+ * @returns {string} The hash route (e.g., '#/workspace/ws-123/narrative/narr-123')
  */
-export function getEntityRoute(entity, entityType) {
+export function getEntityRoute(entity, entityType, context = null) {
   const config = ENTITY_TYPE_CONFIG[entityType];
-  if (!config) return `#/${entityType}/${entity.id}`;
-  return `#/${config.route}/${entity.id}`;
+  const route = config?.route || entityType;
+  
+  // If context provided, build scoped route
+  if (context && context.type && context.type !== 'dashboard') {
+    return `#/${context.type}/${context.id}/${route}/${entity.id}`;
+  }
+  
+  // Dashboard context or no context - use dashboard path
+  if (context && context.type === 'dashboard') {
+    return `#/dashboard/${route}/${entity.id}`;
+  }
+  
+  // Legacy: no context provided, use global route
+  return `#/${route}/${entity.id}`;
+}
+
+/**
+ * Build a context-aware entity route (functional helper)
+ * @param {string} entityType - Entity type 
+ * @param {string} entityId - Entity ID
+ * @param {Object} context - Context object from router/view
+ * @returns {string} Hash route
+ */
+export function buildEntityRoute(entityType, entityId, context = null) {
+  const config = ENTITY_TYPE_CONFIG[entityType];
+  const route = config?.route || entityType;
+  
+  if (context && context.type && context.type !== 'dashboard') {
+    return `#/${context.type}/${context.id}/${route}/${entityId}`;
+  }
+  
+  if (context && context.type === 'dashboard') {
+    return `#/dashboard/${route}/${entityId}`;
+  }
+  
+  return `#/${route}/${entityId}`;
 }
 
 export default {
   getEntityIcon,
   ENTITY_TYPE_CONFIG,
   getEntityTitle,
-  getEntityRoute
+  getEntityRoute,
+  buildEntityRoute
 };

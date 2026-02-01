@@ -52,8 +52,8 @@ export class NarrativeView extends BaseView {
       this.setupDashboardCards(narrative, data);
     }
     
-    // Generate tabs config
-    const baseHref = `#/narrative/${this.narrativeId}`;
+    // Generate tabs config - use context-aware routing
+    const baseHref = this.buildContextRoute('narrative', this.narrativeId);
     const tabsConfig = hasDocuments ? this.getTabsConfig(baseHref, true) : null;
 
     // Build page header with tabs
@@ -66,12 +66,14 @@ export class NarrativeView extends BaseView {
       mission ? `<span class="text-muted ml-2">Mission: ${mission.name}</span>` : ''
     ].filter(Boolean).join('');
 
+    // Build context-aware breadcrumbs
+    const breadcrumbs = this.buildBreadcrumbs([
+      { label: 'Narratives', route: 'narratives' },
+      'Detail'
+    ]);
+
     const headerHtml = PageHeader.render({
-      breadcrumbs: [
-        { label: 'Dashboard', href: '#/dashboard' },
-        { label: 'Narratives', href: '#/narratives' },
-        'Detail'
-      ],
+      breadcrumbs,
       title: narrative.text,
       subtitle: subtitleParts,
       description: narrative.description,
@@ -131,8 +133,12 @@ export class NarrativeView extends BaseView {
 
   /**
    * Fetch all data related to the narrative
+   * Uses document scope from context if available
    */
   fetchNarrativeData(narrative) {
+    // Get document scope for context-aware data fetching
+    const scopeDocIds = this.getDocumentScope();
+    
     const themes = DataService.getThemesForNarrative(narrative.id);
     const factionData = DataService.getFactionsForNarrative(narrative.id);
     const factions = factionData.map(f => f.faction).filter(Boolean);
@@ -142,10 +148,10 @@ export class NarrativeView extends BaseView {
         )
       : [];
 
-    // Volume/Timeline data - computed from documents
+    // Volume/Timeline data - computed from documents (scoped)
     const events = DataService.getEventsForNarrative(narrative.id);
     const allEvents = events.flatMap(e => [e, ...DataService.getSubEventsForEvent(e.id)]);
-    const volumeOverTime = DataService.getVolumeOverTimeForNarrative(narrative.id);
+    const volumeOverTime = DataService.getVolumeOverTimeForNarrative(narrative.id, null, scopeDocIds);
     const hasVolumeData = volumeOverTime.length > 0 && factions.length > 0;
     const publisherVolumeTime = DataService.getPublisherVolumeOverTime(narrative.id);
     const hasPublisherData = publisherVolumeTime.dates.length > 0 && publisherVolumeTime.publishers.length > 0;
@@ -178,8 +184,8 @@ export class NarrativeView extends BaseView {
     const orgIds = narrative.organizationIds || [];
     const hasNetwork = personIds.length > 0 || orgIds.length > 0;
 
-    // Documents data
-    const documents = DataService.getDocumentsForNarrative(narrative.id);
+    // Documents data (scoped)
+    const documents = DataService.getDocumentsForNarrative(narrative.id, scopeDocIds);
 
     // Build sentiment data for the sentiment chart
     const sentimentFactions = factionData.map(fd => ({
@@ -187,8 +193,8 @@ export class NarrativeView extends BaseView {
       sentiment: fd.sentiment
     }));
 
-    // Narrative durations for volume/duration toggle
-    const narrativeDurations = DataService.getNarrativeDurations();
+    // Narrative durations for volume/duration toggle (scoped)
+    const narrativeDurations = DataService.getNarrativeDurations(null, null, null, scopeDocIds);
 
     return {
       themes, factionData, factions, factionOverlaps,

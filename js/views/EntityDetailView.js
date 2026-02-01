@@ -66,8 +66,8 @@ export class EntityDetailView extends BaseView {
       this.setupDashboardCards(entity, data);
     }
     
-    // Generate tabs config
-    const baseHref = `#/${this.entityType}/${this.entityId}`;
+    // Generate tabs config - use context-aware routing
+    const baseHref = this.buildContextRoute(this.entityType, this.entityId);
     const tabsConfig = hasDocuments ? this.getTabsConfig(baseHref, true) : null;
     
     // Render page
@@ -120,9 +120,11 @@ export class EntityDetailView extends BaseView {
 
   /**
    * Fetch all data related to the entity
+   * Uses document scope from context if available
    */
   fetchEntityData(entity) {
     const data = {};
+    const scopeDocIds = this.getDocumentScope();
 
     if (this.isPerson) {
       data.relatedPersons = DataService.getRelatedPersons(this.entityId);
@@ -131,7 +133,7 @@ export class EntityDetailView extends BaseView {
       data.locations = DataService.getLocationsForPerson(this.entityId);
       data.events = DataService.getEventsForPerson(this.entityId);
       data.narratives = DataService.getNarrativesForPerson(this.entityId);
-      data.documents = DataService.getDocumentsForPerson(this.entityId);
+      data.documents = DataService.getDocumentsForPerson(this.entityId, scopeDocIds);
     } else {
       data.relatedPersons = DataService.getRelatedPersonsForOrganization(this.entityId);
       data.relatedOrgs = DataService.getRelatedOrganizations(this.entityId);
@@ -139,7 +141,7 @@ export class EntityDetailView extends BaseView {
       data.locations = DataService.getLocationsForOrganization(this.entityId);
       data.events = []; // Organizations don't have events directly
       data.narratives = DataService.getNarrativesForOrganization(this.entityId);
-      data.documents = DataService.getDocumentsForOrganization(this.entityId);
+      data.documents = DataService.getDocumentsForOrganization(this.entityId, scopeDocIds);
     }
 
     // Build sentiment data - how factions feel about this entity
@@ -177,9 +179,9 @@ export class EntityDetailView extends BaseView {
 
     data.hasVolumeTimeline = data.hasPublisherData || data.hasVolumeData || data.allEvents.length > 0;
 
-    // Get topics related to this entity (topics that share documents)
+    // Get topics related to this entity (topics that share documents) - scoped
     const entityDocIds = new Set(data.documents.map(d => d.id));
-    const allTopics = DataService.getTopics ? DataService.getTopics() : [];
+    const allTopics = DataService.getTopics ? DataService.getTopics(scopeDocIds) : [];
     data.topics = allTopics.filter(topic =>
       (topic.documentIds || []).some(dId => entityDocIds.has(dId))
     );
@@ -400,12 +402,14 @@ export class EntityDetailView extends BaseView {
       ? `Type: ${entity.type}` 
       : (this.isPerson ? 'Person' : 'Organization');
 
+    // Build context-aware breadcrumbs
+    const breadcrumbs = this.buildBreadcrumbs([
+      { label: 'People & Orgs', route: 'entities' },
+      entity.name
+    ]);
+
     return PageHeader.render({
-      breadcrumbs: [
-        { label: 'Dashboard', href: '#/dashboard' },
-        { label: 'People & Orgs', href: '#/entities' },
-        entity.name
-      ],
+      breadcrumbs,
       title: entity.name,
       icon: icon,
       imageUrl: entity.imageUrl || null,

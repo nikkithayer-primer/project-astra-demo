@@ -51,8 +51,8 @@ export class TopicView extends BaseView {
       this.setupDashboardCards(topic, data);
     }
     
-    // Generate tabs config
-    const baseHref = `#/topic/${this.topicId}`;
+    // Generate tabs config - use context-aware routing
+    const baseHref = this.buildContextRoute('topic', this.topicId);
     const tabsConfig = hasDocuments ? this.getTabsConfig(baseHref, true) : null;
 
     // Format date range for subtitle
@@ -63,13 +63,15 @@ export class TopicView extends BaseView {
       ? '<span class="status-badge status-active">Active</span>'
       : '<span class="status-badge status-ended">Ended</span>';
 
+    // Build context-aware breadcrumbs
+    const breadcrumbs = this.buildBreadcrumbs([
+      { label: 'Topics', route: 'topics' },
+      topic.headline
+    ]);
+
     // Build page header with tabs
     const headerHtml = PageHeader.render({
-      breadcrumbs: [
-        { label: 'Dashboard', href: '#/dashboard' },
-        { label: 'Topics', href: '#/topics' },
-        topic.headline
-      ],
+      breadcrumbs,
       title: topic.headline,
       subtitle: `${dateRange} · ${duration} ${statusBadge}`,
       description: topic.description,
@@ -104,17 +106,19 @@ export class TopicView extends BaseView {
 
   /**
    * Fetch all data related to the topic
+   * Uses document scope from context if available
    */
   fetchTopicData(topic) {
-    const documents = DataService.getDocumentsForTopic(this.topicId);
+    const scopeDocIds = this.getDocumentScope();
+    const documents = DataService.getDocumentsForTopic(this.topicId, scopeDocIds);
 
     // Prepare publisher volume data for the composite chart (by source)
     const publisherData = aggregatePublisherVolumeData(documents);
     const hasPublisherData = publisherData && publisherData.dates.length > 0;
 
-    // Get related narratives (narratives that share documents with this topic)
+    // Get related narratives (narratives that share documents with this topic) - scoped
     const topicDocIds = new Set(documents.map(d => d.id));
-    const allNarratives = DataService.getNarratives ? DataService.getNarratives() : [];
+    const allNarratives = DataService.getNarratives ? DataService.getNarratives(null, null, scopeDocIds) : [];
     const narratives = allNarratives.filter(narr =>
       (narr.documentIds || []).some(dId => topicDocIds.has(dId))
     );

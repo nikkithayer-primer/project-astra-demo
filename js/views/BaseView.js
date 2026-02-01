@@ -18,7 +18,7 @@ import { escapeHtml } from '../utils/htmlUtils.js';
 export class BaseView {
   /**
    * @param {HTMLElement|string} container - Container element or ID
-   * @param {Object} options - View options including missionId and timeRange
+   * @param {Object} options - View options including missionId, timeRange, and context
    */
   constructor(container, options = {}) {
     this.container = typeof container === 'string'
@@ -34,8 +34,118 @@ export class BaseView {
     this.missionId = options.missionId || 'all';
     this.timeRange = options.timeRange || null;
     
+    // Context for scoped routing (workspace/monitor/dashboard)
+    // Contains: { type: string, id: string|null, documentIds: string[]|null, getName: () => string }
+    this.context = options.context || null;
+    
     // Centralized event listener tracking for automatic cleanup
     this._listeners = [];
+  }
+
+  /**
+   * Get the document IDs for the current scope
+   * Returns null for dashboard (global) scope or if no context
+   * @returns {string[]|null} Array of document IDs or null for global scope
+   */
+  getDocumentScope() {
+    return this.context?.documentIds || null;
+  }
+
+  /**
+   * Get the context type (workspace/monitor/dashboard)
+   * @returns {string|null} Context type or null if not set
+   */
+  getContextType() {
+    return this.context?.type || null;
+  }
+
+  /**
+   * Get the context ID (workspace ID or monitor ID)
+   * @returns {string|null} Context ID or null if dashboard or not set
+   */
+  getContextId() {
+    return this.context?.id || null;
+  }
+
+  /**
+   * Get the display name of the current context
+   * @returns {string} Context display name
+   */
+  getContextName() {
+    if (this.context && this.context.getName) {
+      return this.context.getName();
+    }
+    return this.context?.type || 'Dashboard';
+  }
+
+  /**
+   * Build a route URL within the current context
+   * @param {string} entityType - Entity type (e.g., 'faction', 'narrative')
+   * @param {string} entityId - Entity ID (optional for list views)
+   * @param {string} subRoute - Sub-route (e.g., 'documents')
+   * @returns {string} Full hash URL
+   */
+  buildContextRoute(entityType, entityId = null, subRoute = null) {
+    const ctx = this.context;
+    let path;
+    
+    if (!ctx || ctx.type === 'dashboard') {
+      path = `#/dashboard/${entityType}`;
+    } else {
+      path = `#/${ctx.type}/${ctx.id}/${entityType}`;
+    }
+    
+    if (entityId) {
+      path += `/${entityId}`;
+    }
+    
+    if (subRoute) {
+      path += `/${subRoute}`;
+    }
+    
+    return path;
+  }
+
+  /**
+   * Build context-aware breadcrumbs
+   * @param {Array} items - Array of breadcrumb items. Each can be:
+   *   - string: Label only (no link, typically the last item)
+   *   - { label: string, route?: string, href?: string }: Object with optional route/href
+   * @returns {Array} Array of breadcrumb objects for PageHeader
+   */
+  buildBreadcrumbs(items) {
+    const ctx = this.context;
+    const breadcrumbs = [];
+    
+    // Add context root as first breadcrumb
+    if (ctx) {
+      if (ctx.type === 'workspace') {
+        breadcrumbs.push({ label: 'Workspaces', href: '#/workspaces' });
+        breadcrumbs.push({ label: ctx.getName(), href: `#/workspace/${ctx.id}` });
+      } else if (ctx.type === 'monitor') {
+        breadcrumbs.push({ label: 'Monitors', href: '#/monitors' });
+        breadcrumbs.push({ label: ctx.getName(), href: `#/monitor/${ctx.id}` });
+      } else {
+        breadcrumbs.push({ label: 'Dashboard', href: '#/dashboard' });
+      }
+    } else {
+      breadcrumbs.push({ label: 'Dashboard', href: '#/dashboard' });
+    }
+    
+    // Add remaining items
+    items.forEach(item => {
+      if (typeof item === 'string') {
+        breadcrumbs.push(item);
+      } else if (item.href) {
+        breadcrumbs.push({ label: item.label, href: item.href });
+      } else if (item.route) {
+        breadcrumbs.push({ label: item.label, href: this.buildContextRoute(item.route) });
+      } else {
+        breadcrumbs.push(item.label || item);
+      }
+    });
+    
+    return breadcrumbs;
   }
 
   /**

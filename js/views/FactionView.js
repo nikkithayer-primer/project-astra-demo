@@ -53,17 +53,19 @@ export class FactionView extends BaseView {
       this.setupDashboardCards(faction, data);
     }
     
-    // Generate tabs config
-    const baseHref = `#/faction/${this.factionId}`;
+    // Generate tabs config - use context-aware routing
+    const baseHref = this.buildContextRoute('faction', this.factionId);
     const tabsConfig = hasDocuments ? this.getTabsConfig(baseHref, true) : null;
+
+    // Build context-aware breadcrumbs
+    const breadcrumbs = this.buildBreadcrumbs([
+      { label: 'Factions', route: 'factions' },
+      faction.name
+    ]);
 
     // Build page header with tabs
     const headerHtml = PageHeader.render({
-      breadcrumbs: [
-        { label: 'Dashboard', href: '#/dashboard' },
-        { label: 'Factions', href: '#/factions' },
-        faction.name
-      ],
+      breadcrumbs,
       title: faction.name,
       iconColor: faction.color,
       subtitle: faction.memberCount ? `${this.formatNumber(faction.memberCount)} members` : '',
@@ -124,16 +126,20 @@ export class FactionView extends BaseView {
 
   /**
    * Fetch all data related to the faction
+   * Uses document scope from context if available
    */
   fetchFactionData(faction) {
+    // Get document scope for context-aware data fetching
+    const scopeDocIds = this.getDocumentScope();
+    
     const relatedFactions = DataService.getRelatedFactions(this.factionId);
     const factionOverlaps = DataService.getFactionOverlapsFor(this.factionId);
     const narratives = DataService.getNarrativesForFaction(this.factionId);
     const affiliatedPersons = DataService.getAffiliatedPersonsForFaction(this.factionId);
     const affiliatedOrgs = DataService.getAffiliatedOrganizationsForFaction(this.factionId);
 
-    // Build sentiment data for persons/orgs this faction has sentiment toward
-    const personsWithSentiment = DataService.getPersons()
+    // Build sentiment data for persons/orgs this faction has sentiment toward (scoped)
+    const personsWithSentiment = DataService.getPersons(scopeDocIds)
       .filter(p => p.factionSentiment && p.factionSentiment[this.factionId])
       .map(p => ({
         ...p,
@@ -141,7 +147,7 @@ export class FactionView extends BaseView {
         color: faction.color
       }));
 
-    const orgsWithSentiment = DataService.getOrganizations()
+    const orgsWithSentiment = DataService.getOrganizations(scopeDocIds)
       .filter(o => o.factionSentiment && o.factionSentiment[this.factionId])
       .map(o => ({
         ...o,
@@ -149,7 +155,8 @@ export class FactionView extends BaseView {
         color: faction.color
       }));
 
-    const documents = DataService.getDocumentsForFaction(this.factionId);
+    // Get documents (scoped)
+    const documents = DataService.getDocumentsForFaction(this.factionId, scopeDocIds);
     const hasNetwork = affiliatedPersons.length > 0 || affiliatedOrgs.length > 0;
     const allFactions = [faction, ...relatedFactions];
 
@@ -170,9 +177,9 @@ export class FactionView extends BaseView {
 
     const hasVolumeTimeline = hasPublisherData || allEvents.length > 0;
 
-    // Get topics related to this faction (topics that share documents)
+    // Get topics related to this faction (topics that share documents) (scoped)
     const factionDocIds = new Set(documents.map(d => d.id));
-    const allTopics = DataService.getTopics ? DataService.getTopics() : [];
+    const allTopics = DataService.getTopics ? DataService.getTopics(scopeDocIds) : [];
     const topics = allTopics.filter(topic =>
       (topic.documentIds || []).some(dId => factionDocIds.has(dId))
     );
@@ -196,8 +203,8 @@ export class FactionView extends BaseView {
       }).filter(Boolean)
     ];
 
-    // Narrative durations for volume/duration toggle
-    const narrativeDurations = DataService.getNarrativeDurations();
+    // Narrative durations for volume/duration toggle (scoped)
+    const narrativeDurations = DataService.getNarrativeDurations(null, null, null, scopeDocIds);
 
     return {
       relatedFactions, factionOverlaps, narratives, documents,
