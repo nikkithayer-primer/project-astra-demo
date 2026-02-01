@@ -226,11 +226,15 @@ const SCHEMAS = {
     idPrefix: 'monitor-',
     required: ['id', 'name', 'scope', 'enabled'],
     optional: ['description', 'options', 'triggers', 'lastTriggered',
-               'createdAt', 'updatedAt'],
+               'includedDocIds', 'excludedDocIds', 'createdAt', 'updatedAt'],
     types: {
       name: 'string',
       enabled: 'boolean',
       scope: 'object'
+    },
+    references: {
+      includedDocIds: 'documents',
+      excludedDocIds: 'documents'
     }
   },
 
@@ -254,14 +258,17 @@ const SCHEMAS = {
   workspaces: {
     idPrefix: 'workspace-',
     required: ['id', 'name'],
-    optional: ['query', 'description', 'documentIds', 'filters', 'status',
-               'createdAt', 'updatedAt'],
+    optional: ['query', 'description', 'documentIds', 'scope', 'includedDocIds',
+               'excludedDocIds', 'filters', 'status', 'createdAt', 'updatedAt'],
     types: {
       name: 'string',
-      status: ['active', 'archived']
+      status: ['active', 'archived'],
+      scope: 'object'
     },
     references: {
-      documentIds: 'documents'
+      documentIds: 'documents',
+      includedDocIds: 'documents',
+      excludedDocIds: 'documents'
     }
   },
 

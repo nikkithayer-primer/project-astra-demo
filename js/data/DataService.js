@@ -128,6 +128,169 @@ const intersectDocumentIds = (entityDocIds, scopeDocIds) => {
   return entityDocIds.filter(docId => scopeSet.has(docId));
 };
 
+// ============================================
+// Unified Document Scope Matching
+// ============================================
+
+/**
+ * Match a document against a scope definition.
+ * @param {Object} doc - Document to check
+ * @param {Object} scope - Scope definition
+ * @param {string[]} scope.personIds - Person IDs to match
+ * @param {string[]} scope.organizationIds - Organization IDs to match
+ * @param {string[]} scope.factionIds - Faction IDs to match
+ * @param {string[]} scope.locationIds - Location IDs to match
+ * @param {string[]} scope.eventIds - Event IDs to match
+ * @param {string[]} scope.narrativeIds - Narrative IDs to match
+ * @param {string[]} scope.themeIds - Theme IDs to match
+ * @param {string[]} scope.keywords - Keywords to search in text
+ * @param {string} scope.logic - 'AND' | 'OR' (default: 'OR')
+ * @returns {boolean} Whether document matches the scope
+ */
+const matchDocumentToScope = (doc, scope) => {
+  if (!doc || !scope) return false;
+  
+  const logic = scope.logic || 'OR';
+  
+  // Build array of match results (null = criteria not set)
+  const matchResults = [];
+  
+  // Check person matches
+  if (scope.personIds?.length > 0) {
+    const match = doc.personIds?.some(id => scope.personIds.includes(id)) || false;
+    matchResults.push(match);
+  }
+  
+  // Check organization matches
+  if (scope.organizationIds?.length > 0) {
+    const match = doc.organizationIds?.some(id => scope.organizationIds.includes(id)) || false;
+    matchResults.push(match);
+  }
+  
+  // Check faction matches (via factionMentions keys)
+  if (scope.factionIds?.length > 0) {
+    const docFactionIds = Object.keys(doc.factionMentions || {});
+    const match = scope.factionIds.some(id => docFactionIds.includes(id));
+    matchResults.push(match);
+  }
+  
+  // Check location matches
+  if (scope.locationIds?.length > 0) {
+    const match = doc.locationIds?.some(id => scope.locationIds.includes(id)) || false;
+    matchResults.push(match);
+  }
+  
+  // Check event matches
+  if (scope.eventIds?.length > 0) {
+    const match = doc.eventIds?.some(id => scope.eventIds.includes(id)) || false;
+    matchResults.push(match);
+  }
+  
+  // Check narrative matches
+  if (scope.narrativeIds?.length > 0) {
+    const match = doc.narrativeIds?.some(id => scope.narrativeIds.includes(id)) || false;
+    matchResults.push(match);
+  }
+  
+  // Check theme matches
+  if (scope.themeIds?.length > 0) {
+    const match = doc.themeIds?.some(id => scope.themeIds.includes(id)) || false;
+    matchResults.push(match);
+  }
+  
+  // Check keyword matches (text search in title, excerpt, content)
+  if (scope.keywords?.length > 0) {
+    const docText = [
+      doc.title || '',
+      doc.excerpt || '',
+      ...(doc.contentBlocks || []).map(b => typeof b.content === 'string' ? b.content : ''),
+      doc.transcription || ''
+    ].join(' ').toLowerCase();
+    
+    const match = scope.keywords.some(kw => docText.includes(kw.toLowerCase()));
+    matchResults.push(match);
+  }
+  
+  // If no criteria set, no match
+  if (matchResults.length === 0) return false;
+  
+  // Apply logic
+  if (logic === 'AND') {
+    return matchResults.every(m => m === true);
+  } else {
+    return matchResults.some(m => m === true);
+  }
+};
+
+/**
+ * Get documents matching a scope definition with optional manual overrides.
+ * This is the unified method for both Monitors and Workspaces.
+ * 
+ * @param {Object} scope - Scope definition (see matchDocumentToScope)
+ * @param {Object} options - Additional options
+ * @param {string[]} options.includedDocIds - Document IDs to always include (manual additions)
+ * @param {string[]} options.excludedDocIds - Document IDs to always exclude (manual removals)
+ * @param {Object} options.timeRange - { start: Date, end: Date } to filter by date
+ * @param {string[]} options.repositoryIds - Filter to specific repositories
+ * @returns {Object[]} Matching documents sorted by publishedDate (newest first)
+ */
+const getDocumentsForScope = (scope, options = {}) => {
+  const { includedDocIds = [], excludedDocIds = [], timeRange = null, repositoryIds = [] } = options;
+  
+  let documents = dataStore.data?.documents || [];
+  
+  // Apply repository filter if specified
+  if (repositoryIds.length > 0) {
+    documents = documents.filter(doc => repositoryIds.includes(doc.repositoryId));
+  }
+  
+  // Apply time range filter if specified
+  if (timeRange && timeRange.start && timeRange.end) {
+    documents = documents.filter(doc => {
+      if (!doc.publishedDate) return false;
+      const docDate = new Date(doc.publishedDate);
+      return docDate >= timeRange.start && docDate <= timeRange.end;
+    });
+  }
+  
+  // Build exclusion set
+  const excludeSet = new Set(excludedDocIds);
+  
+  // Build result set starting with manually included docs
+  const resultSet = new Set(includedDocIds);
+  
+  // Check if we have any scope criteria
+  const hasScope = scope && (
+    scope.personIds?.length > 0 ||
+    scope.organizationIds?.length > 0 ||
+    scope.factionIds?.length > 0 ||
+    scope.locationIds?.length > 0 ||
+    scope.eventIds?.length > 0 ||
+    scope.narrativeIds?.length > 0 ||
+    scope.themeIds?.length > 0 ||
+    scope.keywords?.length > 0
+  );
+  
+  // If we have scope criteria, match documents against it
+  if (hasScope) {
+    documents.forEach(doc => {
+      if (matchDocumentToScope(doc, scope)) {
+        resultSet.add(doc.id);
+      }
+    });
+  }
+  
+  // Apply exclusions
+  excludedDocIds.forEach(id => resultSet.delete(id));
+  
+  // Resolve to full document objects
+  const allDocs = dataStore.data?.documents || [];
+  return [...resultSet]
+    .map(docId => allDocs.find(d => d.id === docId))
+    .filter(doc => doc && !excludeSet.has(doc.id))
+    .sort((a, b) => new Date(b.publishedDate) - new Date(a.publishedDate));
+};
+
 export const DataService = {
   // ============================================
   // Dataset Information
@@ -187,6 +350,45 @@ export const DataService = {
       return DataService.isDateInRange(narrative.createdAt, timeRange);
     }
     return volumeOverTime.some(entry => DataService.isDateInRange(entry.date, timeRange));
+  },
+
+  // ============================================
+  // Unified Document Scope Methods
+  // ============================================
+
+  /**
+   * Get documents matching a scope definition with optional manual overrides.
+   * This is the unified method for both Monitors and Workspaces.
+   * 
+   * @param {Object} scope - Scope definition
+   * @param {string[]} scope.personIds - Person IDs to match
+   * @param {string[]} scope.organizationIds - Organization IDs to match
+   * @param {string[]} scope.factionIds - Faction IDs to match
+   * @param {string[]} scope.locationIds - Location IDs to match
+   * @param {string[]} scope.eventIds - Event IDs to match
+   * @param {string[]} scope.narrativeIds - Narrative IDs to match
+   * @param {string[]} scope.themeIds - Theme IDs to match
+   * @param {string[]} scope.keywords - Keywords to search in text
+   * @param {string} scope.logic - 'AND' | 'OR' (default: 'OR')
+   * @param {Object} options - Additional options
+   * @param {string[]} options.includedDocIds - Document IDs to always include (manual additions)
+   * @param {string[]} options.excludedDocIds - Document IDs to always exclude (manual removals)
+   * @param {Object} options.timeRange - { start: Date, end: Date } to filter by date
+   * @param {string[]} options.repositoryIds - Filter to specific repositories
+   * @returns {Object[]} Matching documents sorted by publishedDate (newest first)
+   */
+  getDocumentsForScope: (scope, options = {}) => {
+    return getDocumentsForScope(scope, options);
+  },
+
+  /**
+   * Check if a document matches a scope definition
+   * @param {Object} doc - Document to check
+   * @param {Object} scope - Scope definition (see getDocumentsForScope)
+   * @returns {boolean} Whether document matches the scope
+   */
+  documentMatchesScope: (doc, scope) => {
+    return matchDocumentToScope(doc, scope);
   },
 
   // ============================================
@@ -2685,21 +2887,21 @@ export const DataService = {
   },
 
   /**
-   * Get all documents from narratives matching a monitor's scope.
+   * Get all documents matching a monitor's scope.
+   * Uses unified document scope matching (queries documents directly).
+   * Supports manual includedDocIds and excludedDocIds overrides.
    */
   getDocumentsForMonitor: (monitorId) => {
-    const narratives = DataService.getNarrativesForMonitor(monitorId);
-    const documentIds = new Set();
+    const monitor = findById('monitors', monitorId);
+    if (!monitor) return [];
     
-    narratives.forEach(n => {
-      (n.documentIds || []).forEach(dId => documentIds.add(dId));
+    const scope = monitor.scope || {};
+    
+    // Use the unified scope method with manual overrides
+    return getDocumentsForScope(scope, {
+      includedDocIds: monitor.includedDocIds || [],
+      excludedDocIds: monitor.excludedDocIds || []
     });
-    
-    const documents = dataStore.data?.documents ?? [];
-    return [...documentIds]
-      .map(dId => documents.find(d => d.id === dId))
-      .filter(Boolean)
-      .sort((a, b) => new Date(b.publishedDate) - new Date(a.publishedDate));
   },
 
   /**
@@ -2774,13 +2976,51 @@ export const DataService = {
   getArchivedWorkspaces: () => 
     (dataStore.data?.workspaces ?? []).filter(w => w.status === 'archived'),
 
+  /**
+   * Get all documents for a workspace.
+   * Supports both dynamic scope matching and explicit document lists.
+   * 
+   * Document resolution order:
+   * 1. If workspace has scope, match documents against scope criteria
+   * 2. Add any documents in includedDocIds (manual additions)
+   * 3. Remove any documents in excludedDocIds (manual removals)
+   * 4. For backwards compatibility, workspace.documentIds are treated as includedDocIds
+   */
   getDocumentsForWorkspace: (workspaceId) => {
     const workspace = findById('workspaces', workspaceId);
     if (!workspace) return [];
-    return (workspace.documentIds ?? [])
-      .map(id => findById('documents', id))
-      .filter(Boolean)
-      .sort((a, b) => new Date(b.publishedDate) - new Date(a.publishedDate));
+    
+    // For backwards compatibility, treat documentIds as includedDocIds if no scope
+    const hasScope = workspace.scope && (
+      workspace.scope.personIds?.length > 0 ||
+      workspace.scope.organizationIds?.length > 0 ||
+      workspace.scope.factionIds?.length > 0 ||
+      workspace.scope.locationIds?.length > 0 ||
+      workspace.scope.eventIds?.length > 0 ||
+      workspace.scope.narrativeIds?.length > 0 ||
+      workspace.scope.themeIds?.length > 0 ||
+      workspace.scope.keywords?.length > 0
+    );
+    
+    // If no scope, use documentIds directly (original behavior)
+    if (!hasScope && !workspace.includedDocIds) {
+      return (workspace.documentIds ?? [])
+        .map(id => findById('documents', id))
+        .filter(Boolean)
+        .sort((a, b) => new Date(b.publishedDate) - new Date(a.publishedDate));
+    }
+    
+    // Use unified scope method
+    // Combine documentIds with includedDocIds for backwards compatibility
+    const allIncluded = [
+      ...(workspace.documentIds || []),
+      ...(workspace.includedDocIds || [])
+    ];
+    
+    return getDocumentsForScope(workspace.scope || {}, {
+      includedDocIds: allIncluded,
+      excludedDocIds: workspace.excludedDocIds || []
+    });
   },
 
   // Search across all entities

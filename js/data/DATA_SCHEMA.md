@@ -420,7 +420,7 @@ System users for collaboration features.
 
 ### Monitor
 
-Automated tracking configuration for entities and conditions.
+Automated tracking configuration for entities and conditions. Monitors query documents directly based on scope criteria and support manual curation via includedDocIds/excludedDocIds.
 
 ```javascript
 {
@@ -433,9 +433,13 @@ Automated tracking configuration for entities and conditions.
     factionIds: string[],
     locationIds: string[],
     eventIds: string[],
+    narrativeIds: string[],  // Directly filter by narrative
+    themeIds: string[],      // Directly filter by theme
     keywords: string[],    // Free-text keywords/phrases to match
     logic: 'AND' | 'OR'    // How to combine scope conditions
   },
+  includedDocIds: string[], // Optional. FKs to Document. Always include these documents
+  excludedDocIds: string[], // Optional. FKs to Document. Always exclude these documents
   options: {               // Optional. Additional settings
     includeSubEvents: boolean,
     includeThemes: boolean,
@@ -496,21 +500,39 @@ Generated when monitor conditions are met.
 
 ### Workspace
 
-User-defined collections for focused analysis.
+User-defined collections for focused analysis. Workspaces support three document sourcing modes:
+1. **Explicit only** (legacy): Documents listed in documentIds
+2. **Scope-based**: Documents matching scope criteria (like monitors)
+3. **Hybrid**: Scope matching + manual includedDocIds/excludedDocIds overrides
 
 ```javascript
 {
   id: string,              // Required. Prefix: 'workspace-'
   name: string,            // Required. Workspace name
-  query: string,           // Optional. Search query
+  query: string,           // Optional. Search query (for display/reference)
   description: string,     // Optional. Workspace purpose
-  documentIds: string[],   // Optional. FKs to Document
+  documentIds: string[],   // Optional. FKs to Document (legacy explicit mode)
+  scope: {                 // Optional. Dynamic document matching criteria
+    personIds: string[],
+    organizationIds: string[],
+    factionIds: string[],
+    locationIds: string[],
+    eventIds: string[],
+    narrativeIds: string[],
+    themeIds: string[],
+    keywords: string[],
+    logic: 'AND' | 'OR'
+  },
+  includedDocIds: string[], // Optional. FKs to Document. Always include these documents
+  excludedDocIds: string[], // Optional. FKs to Document. Always exclude these documents
   filters: object,         // Optional. Saved filter state
   status: enum,            // Optional. 'active' | 'archived'
   createdAt: datetime,
   updatedAt: datetime
 }
 ```
+
+**Document Resolution:** If both `scope` and `documentIds` are present, documents are resolved as: (scope matches ∪ documentIds ∪ includedDocIds) − excludedDocIds
 
 ### SearchFilter
 
