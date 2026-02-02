@@ -171,7 +171,7 @@ const SCHEMAS = {
                'structuredData'],
     types: {
       title: 'string',
-      documentType: ['news_article', 'social_media', 'social_post', 'tiktok', 'internal_report',
+      documentType: ['news_article', 'social_post', 'tiktok', 'internal_report',
                      'intelligence_report', 'memo', 'transcript', 'internal',
                      'corporate_record', 'watchlist_match', 'political_finance', 'event_attendance'],
       classification: ['U', 'CUI', 'C', 'S', 'TS'],
@@ -489,7 +489,7 @@ export class SchemaValidator {
   validateFieldType(field, value, typeSpec, entityId) {
     const result = new ValidationResult();
 
-    // Handle enum arrays (e.g., ['news_article', 'social_media'])
+    // Handle enum arrays (e.g., ['news_article', 'social_post'])
     if (Array.isArray(typeSpec)) {
       if (!typeSpec.includes(value)) {
         result.addError(

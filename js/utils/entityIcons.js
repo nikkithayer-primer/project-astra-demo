@@ -116,6 +116,12 @@ export function getEntityIcon(type, size = 16) {
       <rect x="1" y="1" width="14" height="14" rx="1"/>
       <path d="M1 5h14"/>
       <path d="M5 5v10"/>
+    </svg>`,
+    projects: `<svg class="entity-icon" viewBox="0 0 16 16" width="${size}" height="${size}" fill="currentColor">
+      <path fill-rule="evenodd" clip-rule="evenodd" d="M2 1C1.44771 1 1 1.44772 1 2V14C1 14.5523 1.44771 15 2 15H14C14.5523 15 15 14.5523 15 14V3.5C15 2.94772 14.5523 2.5 14 2.5H8.26759L7.56446 1.4453C7.37899 1.1671 7.06676 1 6.73241 1H2ZM2 2H6.73241L7.43554 3.0547C7.62101 3.3329 7.93324 3.5 8.26759 3.5H14V4.5H2V2ZM2 5.5V14H14V5.5H2Z"/>
+    </svg>`,
+    project: `<svg class="entity-icon" viewBox="0 0 16 16" width="${size}" height="${size}" fill="currentColor">
+      <path fill-rule="evenodd" clip-rule="evenodd" d="M2 1C1.44771 1 1 1.44772 1 2V14C1 14.5523 1.44771 15 2 15H14C14.5523 15 15 14.5523 15 14V3.5C15 2.94772 14.5523 2.5 14 2.5H8.26759L7.56446 1.4453C7.37899 1.1671 7.06676 1 6.73241 1H2ZM2 2H6.73241L7.43554 3.0547C7.62101 3.3329 7.93324 3.5 8.26759 3.5H14V4.5H2V2ZM2 5.5V14H14V5.5H2Z"/>
     </svg>`
   };
   return icons[type] || icons.narratives;
@@ -147,7 +153,9 @@ export const ENTITY_TYPE_CONFIG = {
   monitors: { label: 'Monitors', singular: 'Monitor', route: 'monitor', titleField: 'name' },
   monitor: { label: 'Monitors', singular: 'Monitor', route: 'monitor', titleField: 'name' },
   workspaces: { label: 'Workspaces', singular: 'Workspace', route: 'workspace', titleField: 'name' },
-  workspace: { label: 'Workspaces', singular: 'Workspace', route: 'workspace', titleField: 'name' }
+  workspace: { label: 'Workspaces', singular: 'Workspace', route: 'workspace', titleField: 'name' },
+  projects: { label: 'Projects', singular: 'Project', route: 'project', titleField: 'name' },
+  project: { label: 'Projects', singular: 'Project', route: 'project', titleField: 'name' }
 };
 
 /**

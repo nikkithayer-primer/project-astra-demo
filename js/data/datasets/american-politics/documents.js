@@ -623,7 +623,7 @@ export const documents = [
   },
   {
     id: 'doc-011',
-    documentType: 'social_media',
+    documentType: 'social_post',
     repositoryId: 'repo-osint',
     classification: 'U',
     tagIds: ['tag-003'],
@@ -1188,7 +1188,7 @@ export const documents = [
   },
   {
     id: 'doc-023',
-    documentType: 'social_media',
+    documentType: 'social_post',
     repositoryId: 'repo-osint',
     classification: 'U',
     title: 'TikTok: Health news channel covers RFK Jr. confirmation hearings',
@@ -1237,7 +1237,7 @@ export const documents = [
   // Social media posts as documents
   {
     id: 'doc-024',
-    documentType: 'social_media',
+    documentType: 'social_post',
     repositoryId: 'repo-osint',
     classification: 'U',
     title: 'X post: Immigrant rights group documents ICE raid',
@@ -1281,7 +1281,7 @@ export const documents = [
   },
   {
     id: 'doc-025',
-    documentType: 'social_media',
+    documentType: 'social_post',
     repositoryId: 'repo-osint',
     classification: 'U',
     title: 'Reddit post: Minneapolis resident describes ICE presence in neighborhood',
@@ -2518,7 +2518,7 @@ export const documents = [
   // New social media documents (doc-057 to doc-070)
   {
     id: 'doc-057',
-    documentType: 'social_media',
+    documentType: 'social_post',
     repositoryId: 'repo-osint',
     classification: 'U',
     url: 'https://reddit.com/r/politics/comments/greenland_megathread',
@@ -2550,7 +2550,7 @@ export const documents = [
   },
   {
     id: 'doc-058',
-    documentType: 'social_media',
+    documentType: 'social_post',
     repositoryId: 'repo-osint',
     classification: 'U',
     url: 'https://x.com/political_analyst/status/immigration_thread',
@@ -2583,7 +2583,7 @@ export const documents = [
   },
   {
     id: 'doc-059',
-    documentType: 'social_media',
+    documentType: 'social_post',
     repositoryId: 'repo-osint',
     classification: 'U',
     url: 'https://tiktok.com/@nutrition_facts/video/preservatives',
@@ -2618,7 +2618,7 @@ export const documents = [
   },
   {
     id: 'doc-060',
-    documentType: 'social_media',
+    documentType: 'social_post',
     repositoryId: 'repo-osint',
     classification: 'U',
     url: 'https://facebook.com/groups/minnesota_community/posts/ice_discussion',
@@ -2650,7 +2650,7 @@ export const documents = [
   },
   {
     id: 'doc-061',
-    documentType: 'social_media',
+    documentType: 'social_post',
     repositoryId: 'repo-osint',
     classification: 'U',
     url: 'https://linkedin.com/posts/policy-expert_dietary-guidelines',
@@ -2681,7 +2681,7 @@ export const documents = [
   },
   {
     id: 'doc-062',
-    documentType: 'social_media',
+    documentType: 'social_post',
     repositoryId: 'repo-osint',
     classification: 'U',
     url: 'https://reddit.com/r/news/comments/judge_shooting',
@@ -2712,7 +2712,7 @@ export const documents = [
   },
   {
     id: 'doc-063',
-    documentType: 'social_media',
+    documentType: 'social_post',
     repositoryId: 'repo-osint',
     classification: 'U',
     url: 'https://x.com/border_reporter/status/texas_guard',
@@ -2744,7 +2744,7 @@ export const documents = [
   },
   {
     id: 'doc-064',
-    documentType: 'social_media',
+    documentType: 'social_post',
     repositoryId: 'repo-osint',
     classification: 'U',
     url: 'https://tiktok.com/@govt_worker/video/shutdown_diary',
@@ -2779,7 +2779,7 @@ export const documents = [
   },
   {
     id: 'doc-065',
-    documentType: 'social_media',
+    documentType: 'social_post',
     repositoryId: 'repo-osint',
     classification: 'U',
     url: 'https://facebook.com/groups/church_community/posts/protest_response',
@@ -2811,7 +2811,7 @@ export const documents = [
   },
   {
     id: 'doc-066',
-    documentType: 'social_media',
+    documentType: 'social_post',
     repositoryId: 'repo-osint',
     classification: 'U',
     url: 'https://linkedin.com/posts/legal-analyst_face-act',
@@ -2842,7 +2842,7 @@ export const documents = [
   },
   {
     id: 'doc-067',
-    documentType: 'social_media',
+    documentType: 'social_post',
     repositoryId: 'repo-osint',
     classification: 'U',
     url: 'https://reddit.com/r/opioidcrisis/comments/settlement_funds',
@@ -2874,7 +2874,7 @@ export const documents = [
   },
   {
     id: 'doc-068',
-    documentType: 'social_media',
+    documentType: 'social_post',
     repositoryId: 'repo-osint',
     classification: 'U',
     url: 'https://x.com/capitol_watch/status/certification_prep',
@@ -2907,7 +2907,7 @@ export const documents = [
   },
   {
     id: 'doc-069',
-    documentType: 'social_media',
+    documentType: 'social_post',
     repositoryId: 'repo-osint',
     classification: 'U',
     url: 'https://tiktok.com/@plantbased_living/video/rfk_guidelines',
@@ -2942,7 +2942,7 @@ export const documents = [
   },
   {
     id: 'doc-070',
-    documentType: 'social_media',
+    documentType: 'social_post',
     repositoryId: 'repo-osint',
     classification: 'U',
     url: 'https://facebook.com/groups/california_politics/posts/newsom_lawsuit',

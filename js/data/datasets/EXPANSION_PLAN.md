@@ -492,13 +492,13 @@
 | ID | Title | Date | Publisher | Type | Narratives | Themes | Factions |
 |----|-------|------|-----------|------|------------|--------|----------|
 | doc-038 | Black Friday online sales surge overwhelms Walmart delivery | 2025-11-29 | pub-wsj | news_article | narr-011 | sub-023 | faction-001: -0.72, faction-005: -0.65, faction-006: 0.48 |
-| doc-039 | Thousands of Walmart orders stuck in transit | 2025-11-30 | pub-x | social_media | narr-011 | sub-023 | faction-001: -0.82 |
+| doc-039 | Thousands of Walmart orders stuck in transit | 2025-11-30 | pub-x | social_post | narr-011 | sub-023 | faction-001: -0.82 |
 
 ### December 2025
 | ID | Title | Date | Publisher | Type | Narratives | Themes | Factions |
 |----|-------|------|-----------|------|------------|--------|----------|
 | doc-040 | Walmart CEO apologizes for holiday delivery failures | 2025-12-05 | pub-reuters | news_article | narr-011 | sub-023, sub-024 | faction-001: -0.58, faction-005: -0.42 |
-| doc-041 | Customer fury mounts as Walmart gifts arrive late | 2025-12-10 | pub-tiktok | social_media | narr-011 | sub-023 | faction-001: -0.85 |
+| doc-041 | Customer fury mounts as Walmart gifts arrive late | 2025-12-10 | pub-tiktok | social_post | narr-011 | sub-023 | faction-001: -0.85 |
 | doc-042 | Consumer groups file FTC complaint over Walmart delivery | 2025-12-15 | pub-consumeraffairs | news_article | narr-011 | sub-024 | faction-001: 0.62, faction-004: 0.72 |
 | doc-043 | How Walmart's delivery system failed during peak season | 2025-12-20 | pub-retaildive | news_article | narr-011 | sub-023, sub-024 | faction-005: -0.52, faction-006: 0.45 |
 | doc-044 | Walmart announces $500M investment in delivery infrastructure | 2025-12-28 | pub-bloomberg | news_article | narr-011 | sub-024 | faction-001: 0.35, faction-005: 0.58 |
@@ -506,7 +506,7 @@
 ### January 2026 (early)
 | ID | Title | Date | Publisher | Type | Narratives | Themes | Factions |
 |----|-------|------|-----------|------|------------|--------|----------|
-| doc-045 | Walmart delivery still struggling as new year begins | 2026-01-02 | pub-x | social_media | narr-011 | sub-023 | faction-001: -0.72 |
+| doc-045 | Walmart delivery still struggling as new year begins | 2026-01-02 | pub-x | social_post | narr-011 | sub-023 | faction-001: -0.72 |
 | doc-046 | Historic: Atlanta Walmart fulfillment center votes to unionize | 2026-01-10 | pub-reuters | news_article | narr-009 | sub-019 | faction-002: 0.85, faction-003: 0.88 |
 | doc-047 | What the Atlanta union vote means for retail workers | 2026-01-12 | pub-wsj | news_article | narr-009 | sub-020 | faction-002: 0.72, faction-003: 0.78, faction-005: -0.35 |
 | doc-048 | Walmart responds to union victory with new worker benefits | 2026-01-15 | pub-bloomberg | news_article | narr-009, narr-003 | sub-008, sub-019 | faction-002: 0.45, faction-003: 0.52 |

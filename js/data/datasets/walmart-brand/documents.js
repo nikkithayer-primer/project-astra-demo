@@ -7,7 +7,7 @@ export const documents = [
   // Self-checkout narrative documents
   {
     id: 'doc-001',
-    documentType: 'social_media',
+    documentType: 'social_post',
     repositoryId: 'repo-osint',
     classification: 'U',
     tagIds: ['tag-002'],
@@ -78,7 +78,7 @@ export const documents = [
   },
   {
     id: 'doc-002',
-    documentType: 'social_media',
+    documentType: 'social_post',
     repositoryId: 'repo-osint',
     classification: 'U',
     title: 'Reddit thread: Walmart self-checkout experiences',
@@ -220,7 +220,7 @@ export const documents = [
   // Empty shelves narrative documents
   {
     id: 'doc-005',
-    documentType: 'social_media',
+    documentType: 'social_post',
     repositoryId: 'repo-osint',
     classification: 'U',
     title: 'X post: Photos of empty Walmart grocery aisles',
@@ -260,7 +260,7 @@ export const documents = [
   },
   {
     id: 'doc-006',
-    documentType: 'social_media',
+    documentType: 'social_post',
     repositoryId: 'repo-osint',
     classification: 'U',
     title: 'Facebook group discussion: Walmart inventory problems',
@@ -349,7 +349,7 @@ export const documents = [
   // Worker conditions narrative documents
   {
     id: 'doc-008',
-    documentType: 'social_media',
+    documentType: 'social_post',
     repositoryId: 'repo-osint',
     classification: 'U',
     tagIds: ['tag-001'],
@@ -392,7 +392,7 @@ export const documents = [
   },
   {
     id: 'doc-009',
-    documentType: 'social_media',
+    documentType: 'social_post',
     repositoryId: 'repo-osint',
     classification: 'U',
     title: 'Reddit: Current Walmart employees share staffing concerns',
@@ -692,7 +692,7 @@ export const documents = [
   // Pricing narrative documents
   {
     id: 'doc-015',
-    documentType: 'social_media',
+    documentType: 'social_post',
     repositoryId: 'repo-osint',
     classification: 'U',
     title: 'TikTok: Walmart vs Aldi price comparison',
@@ -734,7 +734,7 @@ export const documents = [
   },
   {
     id: 'doc-016',
-    documentType: 'social_media',
+    documentType: 'social_post',
     repositoryId: 'repo-osint',
     classification: 'U',
     title: 'X thread: Is Walmart still the low-price leader?',
@@ -915,7 +915,7 @@ export const documents = [
   },
   {
     id: 'doc-020',
-    documentType: 'social_media',
+    documentType: 'social_post',
     repositoryId: 'repo-osint',
     classification: 'U',
     title: 'Reddit discussion: Comparing delivery services',
@@ -1028,7 +1028,7 @@ export const documents = [
   },
   {
     id: 'doc-022',
-    documentType: 'social_media',
+    documentType: 'social_post',
     repositoryId: 'repo-osint',
     classification: 'U',
     title: 'Facebook: Rural community organizes protest',
@@ -1609,7 +1609,7 @@ export const documents = [
   },
   {
     id: 'doc-039',
-    documentType: 'social_media',
+    documentType: 'social_post',
     repositoryId: 'repo-osint',
     classification: 'U',
     url: 'https://x.com/example/status/walmart-orders-stuck',
@@ -1672,7 +1672,7 @@ export const documents = [
   },
   {
     id: 'doc-041',
-    documentType: 'social_media',
+    documentType: 'social_post',
     repositoryId: 'repo-osint',
     classification: 'U',
     url: 'https://www.tiktok.com/example/walmart-gift-late',
@@ -1799,7 +1799,7 @@ export const documents = [
   },
   {
     id: 'doc-045',
-    documentType: 'social_media',
+    documentType: 'social_post',
     repositoryId: 'repo-osint',
     classification: 'U',
     url: 'https://x.com/example/status/walmart-still-failing',
@@ -1928,7 +1928,7 @@ export const documents = [
   // New social media documents (doc-049 to doc-070)
   {
     id: 'doc-049',
-    documentType: 'social_media',
+    documentType: 'social_post',
     repositoryId: 'repo-osint',
     classification: 'U',
     url: 'https://reddit.com/r/walmart/comments/checkout_horror',
@@ -1960,7 +1960,7 @@ export const documents = [
   },
   {
     id: 'doc-050',
-    documentType: 'social_media',
+    documentType: 'social_post',
     repositoryId: 'repo-osint',
     classification: 'U',
     url: 'https://tiktok.com/@momof3_shopping/video/empty_shelves',
@@ -1995,7 +1995,7 @@ export const documents = [
   },
   {
     id: 'doc-051',
-    documentType: 'social_media',
+    documentType: 'social_post',
     repositoryId: 'repo-osint',
     classification: 'U',
     url: 'https://x.com/retail_analyst/status/walmart_inventory',
@@ -2027,7 +2027,7 @@ export const documents = [
   },
   {
     id: 'doc-052',
-    documentType: 'social_media',
+    documentType: 'social_post',
     repositoryId: 'repo-osint',
     classification: 'U',
     url: 'https://facebook.com/groups/walmart_workers_united/posts/staffing_crisis',
@@ -2059,7 +2059,7 @@ export const documents = [
   },
   {
     id: 'doc-053',
-    documentType: 'social_media',
+    documentType: 'social_post',
     repositoryId: 'repo-osint',
     classification: 'U',
     url: 'https://reddit.com/r/foodsafety/comments/great_value_recall',
@@ -2090,7 +2090,7 @@ export const documents = [
   },
   {
     id: 'doc-054',
-    documentType: 'social_media',
+    documentType: 'social_post',
     repositoryId: 'repo-osint',
     classification: 'U',
     url: 'https://tiktok.com/@budget_shopper/video/price_compare',
@@ -2126,7 +2126,7 @@ export const documents = [
   },
   {
     id: 'doc-055',
-    documentType: 'social_media',
+    documentType: 'social_post',
     repositoryId: 'repo-osint',
     classification: 'U',
     url: 'https://x.com/delivery_watch/status/walmart_delays',
@@ -2158,7 +2158,7 @@ export const documents = [
   },
   {
     id: 'doc-056',
-    documentType: 'social_media',
+    documentType: 'social_post',
     repositoryId: 'repo-osint',
     classification: 'U',
     url: 'https://facebook.com/groups/small_town_missouri/posts/walmart_closing',
@@ -2189,7 +2189,7 @@ export const documents = [
   },
   {
     id: 'doc-057',
-    documentType: 'social_media',
+    documentType: 'social_post',
     repositoryId: 'repo-osint',
     classification: 'U',
     url: 'https://reddit.com/r/antiwork/comments/walmart_conditions',
@@ -2221,7 +2221,7 @@ export const documents = [
   },
   {
     id: 'doc-058',
-    documentType: 'social_media',
+    documentType: 'social_post',
     repositoryId: 'repo-osint',
     classification: 'U',
     url: 'https://tiktok.com/@warehouse_life/video/fulfillment_center',
@@ -2257,7 +2257,7 @@ export const documents = [
   },
   {
     id: 'doc-059',
-    documentType: 'social_media',
+    documentType: 'social_post',
     repositoryId: 'repo-osint',
     classification: 'U',
     url: 'https://x.com/consumer_rights/status/great_value_investigation',
@@ -2288,7 +2288,7 @@ export const documents = [
   },
   {
     id: 'doc-060',
-    documentType: 'social_media',
+    documentType: 'social_post',
     repositoryId: 'repo-osint',
     classification: 'U',
     url: 'https://facebook.com/groups/rural_america_voices/posts/food_desert',
@@ -2319,7 +2319,7 @@ export const documents = [
   },
   {
     id: 'doc-061',
-    documentType: 'social_media',
+    documentType: 'social_post',
     repositoryId: 'repo-osint',
     classification: 'U',
     url: 'https://reddit.com/r/personalfinance/comments/walmart_prices',
@@ -2351,7 +2351,7 @@ export const documents = [
   },
   {
     id: 'doc-062',
-    documentType: 'social_media',
+    documentType: 'social_post',
     repositoryId: 'repo-osint',
     classification: 'U',
     url: 'https://tiktok.com/@healthcare_access/video/walmart_health',
@@ -2386,7 +2386,7 @@ export const documents = [
   },
   {
     id: 'doc-063',
-    documentType: 'social_media',
+    documentType: 'social_post',
     repositoryId: 'repo-osint',
     classification: 'U',
     url: 'https://x.com/labor_news/status/union_vote_dallas',
@@ -2418,7 +2418,7 @@ export const documents = [
   },
   {
     id: 'doc-064',
-    documentType: 'social_media',
+    documentType: 'social_post',
     repositoryId: 'repo-osint',
     classification: 'U',
     url: 'https://facebook.com/groups/frugal_living/posts/walmart_alternatives',
@@ -2450,7 +2450,7 @@ export const documents = [
   },
   {
     id: 'doc-065',
-    documentType: 'social_media',
+    documentType: 'social_post',
     repositoryId: 'repo-osint',
     classification: 'U',
     url: 'https://reddit.com/r/legaladvice/comments/walmart_detention',
@@ -2482,7 +2482,7 @@ export const documents = [
   },
   {
     id: 'doc-066',
-    documentType: 'social_media',
+    documentType: 'social_post',
     repositoryId: 'repo-osint',
     classification: 'U',
     url: 'https://tiktok.com/@holiday_disasters/video/delivery_fail',
@@ -2517,7 +2517,7 @@ export const documents = [
   },
   {
     id: 'doc-067',
-    documentType: 'social_media',
+    documentType: 'social_post',
     repositoryId: 'repo-osint',
     classification: 'U',
     url: 'https://x.com/retail_workers_united/status/atlanta_win',
@@ -2549,7 +2549,7 @@ export const documents = [
   },
   {
     id: 'doc-068',
-    documentType: 'social_media',
+    documentType: 'social_post',
     repositoryId: 'repo-osint',
     classification: 'U',
     url: 'https://facebook.com/groups/holiday_shoppers/posts/delivery_complaints',
@@ -2580,7 +2580,7 @@ export const documents = [
   },
   {
     id: 'doc-069',
-    documentType: 'social_media',
+    documentType: 'social_post',
     repositoryId: 'repo-osint',
     classification: 'U',
     url: 'https://tiktok.com/@union_strong/video/organizing_tips',
@@ -2616,7 +2616,7 @@ export const documents = [
   },
   {
     id: 'doc-070',
-    documentType: 'social_media',
+    documentType: 'social_post',
     repositoryId: 'repo-osint',
     classification: 'U',
     url: 'https://reddit.com/r/walmart/comments/new_benefits_reaction',

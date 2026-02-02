@@ -36,6 +36,7 @@ const tools = [
           factionId: { type: 'string', description: 'Filter to documents mentioning this faction' },
           personId: { type: 'string', description: 'Filter to documents mentioning this person' },
           organizationId: { type: 'string', description: 'Filter to documents mentioning this organization' },
+          eventId: { type: 'string', description: 'Filter to documents linked to this event' },
           startDate: { type: 'string', description: 'Filter to documents after this date (ISO format)' },
           endDate: { type: 'string', description: 'Filter to documents before this date (ISO format)' },
           limit: { type: 'number', description: 'Max results to return (default 10)' }
@@ -205,7 +206,7 @@ function createFunctionHandlers(router) {
       return buildPageContext(route, id);
     },
 
-    search_documents: ({ keywords, narrativeId, themeId, factionId, personId, organizationId, startDate, endDate, limit = 10 }) => {
+    search_documents: ({ keywords, narrativeId, themeId, factionId, personId, organizationId, eventId, startDate, endDate, limit = 10 }) => {
       let docs = DataService.getDocuments();
       
       if (narrativeId) {
@@ -222,6 +223,9 @@ function createFunctionHandlers(router) {
       }
       if (organizationId) {
         docs = docs.filter(d => d.organizationIds?.includes(organizationId));
+      }
+      if (eventId) {
+        docs = docs.filter(d => d.eventIds?.includes(eventId));
       }
       if (startDate) {
         docs = docs.filter(d => new Date(d.publishedDate) >= new Date(startDate));
@@ -528,6 +532,30 @@ function buildPageContext(route, id) {
       }
       break;
       
+    case 'event':
+      if (id) {
+        const event = DataService.getEvent(id);
+        if (event) {
+          context.description = `User is viewing event: "${event.name}"`;
+          context.event = { 
+            id: event.id, 
+            name: event.name, 
+            date: event.date,
+            description: event.description,
+            type: event.type
+          };
+          // Include document count for context
+          const docs = DataService.getDocumentsForEvent(id);
+          context.documentCount = docs.length;
+          context.documents = docs.slice(0, 5).map(d => ({
+            id: d.id,
+            title: d.title,
+            excerpt: d.excerpt?.substring(0, 150)
+          }));
+        }
+      }
+      break;
+      
     case 'person':
       if (id) {
         const person = DataService.getPerson(id);
@@ -575,21 +603,19 @@ function buildPageContext(route, id) {
 // ChatService Class
 // ============================================
 
-const SYSTEM_PROMPT = `You are an intelligence analyst assistant for a disinformation and narrative tracking dashboard. Your role is to help users understand:
+const SYSTEM_PROMPT = `You are an intelligence analyst with the goal of synthesizing the trends across the data you're presented with in order to see the big picture and make policy recommendations. Your role is to help users understand:
 
-- Narratives and themes being tracked
-- Faction activity and their engagement with narratives  
+- Narratives and themes being tracked, and which factions, people, and organizations are central to those narratives.
 - Relationships between people, organizations, and narratives
-- Document sources and evidence
-- Trends and patterns over time
+- Which documents inform these relationships.
+- Trends and patterns over time.
 
 Guidelines:
 1. Start by getting the current page context to understand what the user is viewing
 2. Use the provided functions to retrieve specific data before answering
-3. Cite specific documents, entities, or data points when making claims
-4. Be concise but thorough - provide actionable insights
-5. When discussing sentiment, explain what it means (negative = critical coverage, positive = favorable)
-6. Suggest relevant follow-up questions or areas to explore
+3. Cite specific documents, entities, or data points when making claims.
+4. Start with the bottom line up front. Be concise but thorough, focusing on analysis at the top before showing evidence.
+5. Assume the end user is well informed about the data you're presenting, and don't insult their intelligence.
 
 Remember: You're helping an analyst understand complex information networks. Focus on clarity and actionable intelligence.`;
 

@@ -619,11 +619,17 @@ export class SearchView extends BaseView {
     if (scope.documentTypes?.length > 0) {
       const docTypeLabels = {
         'news_article': 'News Article',
-        'social_media': 'Social Media',
+        'social_post': 'Social Post',
+        'tiktok': 'TikTok',
         'internal_report': 'Internal Report',
         'intelligence_report': 'Intelligence Report',
         'memo': 'Memo',
-        'transcript': 'Transcript'
+        'transcript': 'Transcript',
+        'internal': 'Internal',
+        'corporate_record': 'Corporate Record',
+        'watchlist_match': 'Watchlist Match',
+        'political_finance': 'Political Finance',
+        'event_attendance': 'Event Attendance'
       };
       scope.documentTypes.forEach(docType => {
         chips.push({

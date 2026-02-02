@@ -290,7 +290,6 @@ export class DocumentContentRenderer extends BaseComponent {
   }
 
   renderSocialPost(doc, highlights = [], comments = []) {
-    const author = doc.author || {};
     const media = doc.media || [];
     const video = doc.video;
 
@@ -329,28 +328,16 @@ export class DocumentContentRenderer extends BaseComponent {
       </div>
     ` : '';
 
-    // Apply highlights to content (for social posts, blockIndex is null)
-    const contentWithHighlights = this.applyContentHighlights(
-      this.escapeHtml(doc.content || ''), 
-      highlights
-    );
+    // Render content blocks
+    const contentBlocks = doc.contentBlocks || [];
+    const contentHtml = contentBlocks.length > 0 
+      ? this.renderContentBlocks(contentBlocks, this.shouldShowPortionMarks(), highlights, comments)
+      : (doc.excerpt ? `<p class="social-post-text">${this.escapeHtml(doc.excerpt)}</p>` : '');
 
     const html = `
       <div class="social-post">
-        <div class="social-post-header">
-          <div class="social-post-avatar">
-            <img src="${author.avatarUrl || PLACEHOLDERS.avatar}" alt="${author.displayName || 'User'}">
-          </div>
-          <div class="social-post-author">
-            <span class="social-post-displayname">${author.displayName || 'Unknown'}</span>
-            <span class="social-post-username">${author.username || ''}</span>
-          </div>
-        </div>
-        
         ${videoHtml}
-        
-        <div class="social-post-content">${contentWithHighlights}</div>
-        
+        <div class="social-post-content">${contentHtml}</div>
         ${mediaHtml}
       </div>
     `;
@@ -359,27 +346,16 @@ export class DocumentContentRenderer extends BaseComponent {
   }
 
   renderTikTok(doc, highlights = [], comments = []) {
-    const author = doc.author || {};
     const video = doc.video || {};
 
-    // Apply highlights to content
-    const contentWithHighlights = this.applyContentHighlights(
-      this.escapeHtml(doc.content || ''), 
-      highlights
-    );
+    // Render content blocks
+    const contentBlocks = doc.contentBlocks || [];
+    const contentHtml = contentBlocks.length > 0 
+      ? this.renderContentBlocks(contentBlocks, this.shouldShowPortionMarks(), highlights, comments)
+      : (doc.excerpt ? `<p class="social-post-text">${this.escapeHtml(doc.excerpt)}</p>` : '');
 
     const html = `
       <div class="tiktok-post">
-        <div class="social-post-header">
-          <div class="social-post-avatar">
-            <img src="${author.avatarUrl || PLACEHOLDERS.avatar}" alt="${author.displayName || 'User'}">
-          </div>
-          <div class="social-post-author">
-            <span class="social-post-displayname">${author.displayName || 'Unknown'}</span>
-            <span class="social-post-username">${author.username || ''}</span>
-          </div>
-        </div>
-
         <div class="tiktok-video-container">
           <div class="tiktok-video-placeholder">
             <img src="${video.thumbnailUrl || PLACEHOLDERS.video}" alt="Video thumbnail">
@@ -389,7 +365,7 @@ export class DocumentContentRenderer extends BaseComponent {
           </div>
         </div>
 
-        <div class="social-post-content">${contentWithHighlights}</div>
+        <div class="social-post-content">${contentHtml}</div>
 
         ${doc.transcription ? `
           <div class="tiktok-transcription">

@@ -285,8 +285,9 @@ Source documents (news articles, social posts, internal reports). **Documents ar
 ```javascript
 {
   id: string,              // Required. Prefix: 'doc-'
-  documentType: enum,      // Required. 'news_article' | 'social_media' | 'internal_report' | 
-                           //           'intelligence_report' | 'memo' | 'transcript'
+  documentType: enum,      // Required. 'news_article' | 'social_post' | 'tiktok' | 'internal_report' | 
+                           //           'intelligence_report' | 'memo' | 'transcript' | 'internal' |
+                           //           'corporate_record' | 'watchlist_match' | 'political_finance' | 'event_attendance'
   repositoryId: string,    // Required. FK to Repository (e.g., 'repo-news', 'repo-osint', 'repo-edl')
   classification: string,  // Optional. 'U' | 'C' | 'S' | 'TS'
   title: string,           // Required. Document title
@@ -572,8 +573,9 @@ Reusable entity/keyword selections that can be applied across monitors and other
     eventIds: string[],
     keywords: string[],
     // Document attribute filters
-    documentTypes: string[],   // 'news_article' | 'social_media' | 'internal_report' | 
-                               // 'intelligence_report' | 'memo' | 'transcript'
+    documentTypes: string[],   // 'news_article' | 'social_post' | 'tiktok' | 'internal_report' | 
+                               // 'intelligence_report' | 'memo' | 'transcript' | 'internal' |
+                               // 'corporate_record' | 'watchlist_match' | 'political_finance' | 'event_attendance'
     publisherIds: string[],    // FKs to Publisher
     authors: string[]          // Author names (exact match)
     // Note: No 'logic' field - logic is determined by the consumer (e.g., Monitor)

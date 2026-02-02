@@ -1570,19 +1570,18 @@ export class DocumentTable extends BaseComponent {
               </svg>
             </a>
           ` : ''}
-          <button class="btn btn-small btn-secondary" id="viewer-add-to-project" title="Add to Project">
-            <svg viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.5">
-              <path d="M3 7h7l2 2h4v7H3V7z"/>
-              <path d="M3 7V5a2 2 0 012-2h5l2 2"/>
+          <button class="btn btn-small btn-primary" id="viewer-add-to-project" title="Add to Project">
+            <svg viewBox="0 0 16 16" width="14" height="14" fill="currentColor">
+              <path fill-rule="evenodd" clip-rule="evenodd" d="M2 1C1.44771 1 1 1.44772 1 2V14C1 14.5523 1.44771 15 2 15H14C14.5523 15 15 14.5523 15 14V3.5C15 2.94772 14.5523 2.5 14 2.5H8.26759L7.56446 1.4453C7.37899 1.1671 7.06676 1 6.73241 1H2ZM2 2H6.73241L7.43554 3.0547C7.62101 3.3329 7.93324 3.5 8.26759 3.5H14V4.5H2V2ZM2 5.5V14H14V5.5H2Z"/>
             </svg>
-            Project
+            Add to Project
           </button>
           <button class="btn btn-small btn-secondary ${this.detailsPanelOpen ? 'active' : ''}" id="viewer-toggle-details" title="Toggle Details">
             <svg viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.5">
-              <circle cx="8" cy="8" r="6"/>
-              <path d="M8 5v3M8 10v1"/>
+              <rect x="1" y="2" width="14" height="12" rx="1"/>
+              <path d="M10 2v12"/>
             </svg>
-            Details
+            Show Details
           </button>
         </div>
       </div>
@@ -1666,19 +1665,18 @@ export class DocumentTable extends BaseComponent {
               </svg>
             </a>
           ` : ''}
-          <button class="btn btn-small btn-secondary" id="viewer-add-to-project" title="Add to Project">
-            <svg viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.5">
-              <path d="M3 7h7l2 2h4v7H3V7z"/>
-              <path d="M3 7V5a2 2 0 012-2h5l2 2"/>
+          <button class="btn btn-small btn-primary" id="viewer-add-to-project" title="Add to Project">
+            <svg viewBox="0 0 16 16" width="14" height="14" fill="currentColor">
+              <path fill-rule="evenodd" clip-rule="evenodd" d="M2 1C1.44771 1 1 1.44772 1 2V14C1 14.5523 1.44771 15 2 15H14C14.5523 15 15 14.5523 15 14V3.5C15 2.94772 14.5523 2.5 14 2.5H8.26759L7.56446 1.4453C7.37899 1.1671 7.06676 1 6.73241 1H2ZM2 2H6.73241L7.43554 3.0547C7.62101 3.3329 7.93324 3.5 8.26759 3.5H14V4.5H2V2ZM2 5.5V14H14V5.5H2Z"/>
             </svg>
-            Project
+            Add to Project
           </button>
           <button class="btn btn-small btn-secondary ${this.detailsPanelOpen ? 'active' : ''}" id="viewer-toggle-details" title="Toggle Details">
             <svg viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.5">
-              <circle cx="8" cy="8" r="6"/>
-              <path d="M8 5v3M8 10v1"/>
+              <rect x="1" y="2" width="14" height="12" rx="1"/>
+              <path d="M10 2v12"/>
             </svg>
-            Details
+            Show Details
           </button>
         </div>
       </div>
@@ -1720,19 +1718,18 @@ export class DocumentTable extends BaseComponent {
               </svg>
             </a>
           ` : ''}
-          <button class="btn btn-small btn-secondary" id="viewer-add-to-project" title="Add to Project">
-            <svg viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.5">
-              <path d="M3 7h7l2 2h4v7H3V7z"/>
-              <path d="M3 7V5a2 2 0 012-2h5l2 2"/>
+          <button class="btn btn-small btn-primary" id="viewer-add-to-project" title="Add to Project">
+            <svg viewBox="0 0 16 16" width="14" height="14" fill="currentColor">
+              <path fill-rule="evenodd" clip-rule="evenodd" d="M2 1C1.44771 1 1 1.44772 1 2V14C1 14.5523 1.44771 15 2 15H14C14.5523 15 15 14.5523 15 14V3.5C15 2.94772 14.5523 2.5 14 2.5H8.26759L7.56446 1.4453C7.37899 1.1671 7.06676 1 6.73241 1H2ZM2 2H6.73241L7.43554 3.0547C7.62101 3.3329 7.93324 3.5 8.26759 3.5H14V4.5H2V2ZM2 5.5V14H14V5.5H2Z"/>
             </svg>
-            Project
+            Add to Project
           </button>
           <button class="btn btn-small btn-secondary ${this.detailsPanelOpen ? 'active' : ''}" id="viewer-toggle-details" title="Toggle Details">
             <svg viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.5">
-              <circle cx="8" cy="8" r="6"/>
-              <path d="M8 5v3M8 10v1"/>
+              <rect x="1" y="2" width="14" height="12" rx="1"/>
+              <path d="M10 2v12"/>
             </svg>
-            Details
+            Show Details
           </button>
         </div>
       </div>
@@ -1770,19 +1767,18 @@ export class DocumentTable extends BaseComponent {
         </div>
 
         <div class="viewer-header-actions">
-          <button class="btn btn-small btn-secondary" id="viewer-add-to-project" title="Add to Project">
-            <svg viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.5">
-              <path d="M3 7h7l2 2h4v7H3V7z"/>
-              <path d="M3 7V5a2 2 0 012-2h5l2 2"/>
+          <button class="btn btn-small btn-primary" id="viewer-add-to-project" title="Add to Project">
+            <svg viewBox="0 0 16 16" width="14" height="14" fill="currentColor">
+              <path fill-rule="evenodd" clip-rule="evenodd" d="M2 1C1.44771 1 1 1.44772 1 2V14C1 14.5523 1.44771 15 2 15H14C14.5523 15 15 14.5523 15 14V3.5C15 2.94772 14.5523 2.5 14 2.5H8.26759L7.56446 1.4453C7.37899 1.1671 7.06676 1 6.73241 1H2ZM2 2H6.73241L7.43554 3.0547C7.62101 3.3329 7.93324 3.5 8.26759 3.5H14V4.5H2V2ZM2 5.5V14H14V5.5H2Z"/>
             </svg>
-            Project
+            Add to Project
           </button>
           <button class="btn btn-small btn-secondary ${this.detailsPanelOpen ? 'active' : ''}" id="viewer-toggle-details" title="Toggle Details">
             <svg viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.5">
-              <circle cx="8" cy="8" r="6"/>
-              <path d="M8 5v3M8 10v1"/>
+              <rect x="1" y="2" width="14" height="12" rx="1"/>
+              <path d="M10 2v12"/>
             </svg>
-            Details
+            Show Details
           </button>
         </div>
       </div>
@@ -1881,9 +1877,8 @@ export class DocumentTable extends BaseComponent {
       </div>
       <div class="document-selection-actions">
         <button class="btn btn-small btn-primary" id="add-to-project-btn">
-          <svg viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.5">
-            <path d="M3 7h7l2 2h4v7H3V7z"/>
-            <path d="M3 7V5a2 2 0 012-2h5l2 2"/>
+          <svg viewBox="0 0 16 16" width="14" height="14" fill="currentColor">
+            <path fill-rule="evenodd" clip-rule="evenodd" d="M2 1C1.44771 1 1 1.44772 1 2V14C1 14.5523 1.44771 15 2 15H14C14.5523 15 15 14.5523 15 14V3.5C15 2.94772 14.5523 2.5 14 2.5H8.26759L7.56446 1.4453C7.37899 1.1671 7.06676 1 6.73241 1H2ZM2 2H6.73241L7.43554 3.0547C7.62101 3.3329 7.93324 3.5 8.26759 3.5H14V4.5H2V2ZM2 5.5V14H14V5.5H2Z"/>
           </svg>
           Add to Project
         </button>

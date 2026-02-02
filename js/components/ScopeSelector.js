@@ -346,11 +346,17 @@ export class ScopeSelector {
   getDocumentTypes() {
     return [
       { id: 'news_article', name: 'News Article' },
-      { id: 'social_media', name: 'Social Media' },
+      { id: 'social_post', name: 'Social Post' },
+      { id: 'tiktok', name: 'TikTok' },
       { id: 'internal_report', name: 'Internal Report' },
       { id: 'intelligence_report', name: 'Intelligence Report' },
       { id: 'memo', name: 'Memo' },
-      { id: 'transcript', name: 'Transcript' }
+      { id: 'transcript', name: 'Transcript' },
+      { id: 'internal', name: 'Internal' },
+      { id: 'corporate_record', name: 'Corporate Record' },
+      { id: 'watchlist_match', name: 'Watchlist Match' },
+      { id: 'political_finance', name: 'Political Finance' },
+      { id: 'event_attendance', name: 'Event Attendance' }
     ];
   }
 

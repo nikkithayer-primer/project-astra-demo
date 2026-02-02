@@ -428,6 +428,28 @@ class App {
             </div>
             <button type="button" class="btn btn-small btn-danger" id="clear-api-key">Clear Key</button>
           </div>
+          
+          <div class="settings-row">
+            <div class="settings-label">
+              <span class="settings-label-text">Auto-Summarize Pages</span>
+              <span class="settings-label-description">Automatically generate an AI summary when navigating to a new page</span>
+            </div>
+            <label class="toggle-switch">
+              <input type="checkbox" id="setting-auto-summary" ${settings.autoSummary ? 'checked' : ''}>
+              <span class="toggle-slider"></span>
+            </label>
+          </div>
+          
+          <div class="settings-row">
+            <div class="settings-label">
+              <span class="settings-label-text">Show Suggested Questions</span>
+              <span class="settings-label-description">Display clickable question suggestions in the chat panel</span>
+            </div>
+            <label class="toggle-switch">
+              <input type="checkbox" id="setting-suggested-questions" ${settings.suggestedQuestions ? 'checked' : ''}>
+              <span class="toggle-slider"></span>
+            </label>
+          </div>
           ` : ''}
         </div>
       </div>
@@ -487,6 +509,8 @@ class App {
     let defaultStartPage = document.getElementById('setting-start-page')?.value || 'cop';
     const defaultViewTab = document.getElementById('setting-default-tab')?.value || 'dashboard';
     const showClassification = document.getElementById('setting-show-classification')?.checked ?? true;
+    const autoSummary = document.getElementById('setting-auto-summary')?.checked ?? false;
+    const suggestedQuestions = document.getElementById('setting-suggested-questions')?.checked ?? true;
     
     // If COP is disabled and was selected as start page, fall back to monitors
     if (!copEnabled && defaultStartPage === 'cop') {
@@ -497,8 +521,13 @@ class App {
       copEnabled,
       defaultStartPage,
       defaultViewTab,
-      showClassification
+      showClassification,
+      autoSummary,
+      suggestedQuestions
     });
+    
+    // Update suggested questions visibility
+    this.updateSuggestedQuestions();
     
     // Save API key if provided (stored separately in localStorage, not in dataStore)
     const apiKeyInput = document.getElementById('setting-openai-key');
@@ -1044,6 +1073,187 @@ class App {
         requestAnimationFrame(() => this.renderChatSparklines(contentElement));
       }
     }
+    
+    // Update suggested questions for this page
+    this.updateSuggestedQuestions();
+    
+    // Auto-generate AI summary if enabled
+    const settings = this.dataStore.getSettings();
+    if (settings.autoSummary && ChatService.hasApiKey() && this.chatService) {
+      this.generateAISummary(route, id);
+    }
+  }
+
+  /**
+   * Generate an AI summary of the current page
+   */
+  async generateAISummary(route, id) {
+    const welcomeElement = document.getElementById('chat-welcome');
+    if (!welcomeElement) return;
+    
+    const contentElement = welcomeElement.querySelector('.chat-message-content');
+    if (!contentElement) return;
+    
+    // Show loading state (same typing indicator as chat replies)
+    const originalContent = contentElement.innerHTML;
+    contentElement.innerHTML = `
+      <div class="chat-typing">
+        <span class="chat-typing-dot"></span>
+        <span class="chat-typing-dot"></span>
+        <span class="chat-typing-dot"></span>
+      </div>
+    `;
+    
+    try {
+      const prompt = this.getAutoSummaryPrompt(route, id);
+      const response = await this.chatService.sendMessage(prompt);
+      
+      // Display the AI summary above the original content
+      contentElement.innerHTML = `
+        <div class="chat-ai-summary">
+          <div class="chat-ai-summary-label">AI Summary</div>
+          <div class="chat-ai-summary-content">${this.formatAIResponse(response)}</div>
+        </div>
+      `;
+    } catch (error) {
+      console.error('Auto-summary error:', error);
+      // Restore original content on error
+      contentElement.innerHTML = originalContent;
+    }
+  }
+
+  /**
+   * Get the prompt for auto-summarizing a page
+   */
+  getAutoSummaryPrompt(route, id) {
+    switch (route) {
+      case 'narrative':
+        return 'Give me a brief 2-3 sentence summary of this narrative, including key themes and the overall sentiment.';
+      case 'theme':
+        return 'Briefly summarize this theme and how it relates to its parent narrative.';
+      case 'faction':
+        return 'Give me a brief summary of this faction, their key narratives, and notable affiliated entities.';
+      case 'person':
+        return 'Briefly summarize this person, their role, affiliations, and which narratives they appear in.';
+      case 'organization':
+        return 'Briefly summarize this organization, its type, affiliations, and involvement in narratives.';
+      case 'document':
+        return 'Summarize the key points of this document and its relevance to tracked narratives.';
+      case 'dashboard':
+      case 'monitor':
+        return 'Give me a brief overview of the current activity - what are the top narratives and any notable trends?';
+      default:
+        return 'Briefly summarize what I\'m looking at on this page.';
+    }
+  }
+
+  /**
+   * Update suggested questions based on current page
+   */
+  updateSuggestedQuestions() {
+    const container = document.getElementById('chat-suggested-questions');
+    if (!container) return;
+    
+    const settings = this.dataStore.getSettings();
+    
+    // Hide if setting is disabled or no API key
+    if (!settings.suggestedQuestions || !ChatService.hasApiKey()) {
+      container.style.display = 'none';
+      return;
+    }
+    
+    container.style.display = 'block';
+    
+    const { route, id } = this.router.getCurrentRoute();
+    const questions = this.getSuggestedQuestions(route, id);
+    
+    container.innerHTML = questions.map(q => `
+      <button class="suggested-question-btn" data-question="${this.escapeHtml(q)}">
+        ${this.escapeHtml(q)}
+      </button>
+    `).join('');
+    
+    // Add click handlers
+    container.querySelectorAll('.suggested-question-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const question = btn.dataset.question;
+        this.askSuggestedQuestion(question);
+      });
+    });
+  }
+
+  /**
+   * Get suggested questions based on current page type
+   */
+  getSuggestedQuestions(route, id) {
+    switch (route) {
+      case 'narrative':
+        return [
+          'What are the main themes in this narrative?',
+          'Which factions are most engaged with this narrative?',
+          'What are the most recent documents about this?'
+        ];
+      case 'theme':
+        return [
+          'How does this theme relate to the parent narrative?',
+          'What entities are mentioned in this theme?',
+          'What documents support this theme?'
+        ];
+      case 'faction':
+        return [
+          'What narratives is this faction most active in?',
+          'Who are the key people affiliated with this faction?',
+          'How does this faction\'s sentiment compare to others?'
+        ];
+      case 'person':
+        return [
+          'What narratives mention this person?',
+          'What factions is this person affiliated with?',
+          'What are the most recent documents about this person?'
+        ];
+      case 'organization':
+        return [
+          'What narratives involve this organization?',
+          'Which factions is this organization connected to?',
+          'Who are the key people associated with this organization?'
+        ];
+      case 'document':
+        return [
+          'What are the key claims in this document?',
+          'What narratives is this document linked to?',
+          'What entities are mentioned in this document?'
+        ];
+      case 'dashboard':
+      case 'monitor':
+        return [
+          'What are the top trending narratives?',
+          'Which factions have been most active recently?',
+          'Are there any emerging themes I should know about?'
+        ];
+      default:
+        return [
+          'What should I focus on here?',
+          'What are the key insights?',
+          'What related information is available?'
+        ];
+    }
+  }
+
+  /**
+   * Ask a suggested question
+   */
+  askSuggestedQuestion(question) {
+    // Open chat if not already open
+    if (!this.chatOpen) {
+      this.toggleChat(true);
+    }
+    
+    // Put the question in the input and send it
+    const chatInput = document.getElementById('chat-input');
+    if (chatInput) {
+      chatInput.value = question;
+      this.sendChatMessage();
+    }
   }
 
   /**
@@ -1120,7 +1330,7 @@ class App {
       case 'document':
         return id ? this.getDocumentSummary(id) : null;
       default:
-        return `<strong>${route.charAt(0).toUpperCase() + route.slice(1)}</strong> page. Ask questions about this data to get started.`;
+        return `<strong>${route.charAt(0).toUpperCase() + route.slice(1)}</strong>`;
     }
   }
 
@@ -1244,8 +1454,7 @@ class App {
       `<strong>Status:</strong> ${narrative.status || 'unknown'}<br>` +
       `<strong>Sentiment:</strong> ${sentimentLabel} (${(sentiment * 100).toFixed(0)}%)<br>` +
       `<strong>Themes:</strong> ${themes.length}<br>` +
-      `<strong>Factions involved:</strong> ${factions.length}<br><br>` +
-      `Ask about factions pushing this narrative, sentiment trends, or related events.`;
+      `<strong>Factions involved:</strong> ${factions.length}`;
   }
 
   /**
@@ -1256,9 +1465,8 @@ class App {
     const newCount = narratives.filter(n => n.status === 'new').length;
     
     return `<strong>Narratives List</strong><br><br>` +
-      `Viewing <strong>${narratives.length} narratives</strong> total.<br>` +
-      `${newCount > 0 ? `<strong>${newCount} new narratives</strong> require attention.<br><br>` : '<br>'}` +
-      `Ask about emerging patterns or high-priority narratives.`;
+      `Viewing <strong>${narratives.length} narratives</strong> total.` +
+      `${newCount > 0 ? `<br><strong>${newCount} new narratives</strong> require attention.` : ''}`;
   }
 
   /**
@@ -1270,9 +1478,8 @@ class App {
     
     const parentNarrative = DataService.getNarrativeById(theme.narrativeId);
     
-    return `<strong>Theme: ${this.escapeHtml(theme.title || theme.text?.substring(0, 50) + '...')}</strong><br><br>` +
-      (parentNarrative ? `<strong>Parent narrative:</strong> ${this.escapeHtml(parentNarrative.title || 'Untitled')}<br><br>` : '') +
-      `Ask about how this theme relates to the broader narrative or faction involvement.`;
+    return `<strong>Theme: ${this.escapeHtml(theme.title || theme.text?.substring(0, 50) + '...')}</strong>` +
+      (parentNarrative ? `<br><br><strong>Parent narrative:</strong> ${this.escapeHtml(parentNarrative.title || 'Untitled')}` : '');
   }
 
   /**
@@ -1286,8 +1493,7 @@ class App {
     
     return `<strong>Faction: ${this.escapeHtml(faction.name)}</strong><br><br>` +
       (faction.description ? `${this.escapeHtml(faction.description.substring(0, 150))}...<br><br>` : '') +
-      `<strong>Associated narratives:</strong> ${narratives.length}<br><br>` +
-      `Ask about this faction's narrative patterns, activity trends, or coordinated behavior.`;
+      `<strong>Associated narratives:</strong> ${narratives.length}`;
   }
 
   /**
@@ -1311,8 +1517,7 @@ class App {
     const narratives = DataService.getNarrativesForLocation(id);
     
     return `<strong>Location: ${this.escapeHtml(location.name)}</strong><br><br>` +
-      `<strong>Narratives mentioning this location:</strong> ${narratives.length}<br><br>` +
-      `Ask about regional narrative patterns or activity trends for this area.`;
+      `<strong>Narratives mentioning this location:</strong> ${narratives.length}`;
   }
 
   /**
@@ -1337,8 +1542,7 @@ class App {
     
     return `<strong>Event: ${this.escapeHtml(event.title || event.name)}</strong><br><br>` +
       (event.date ? `<strong>Date:</strong> ${new Date(event.date).toLocaleDateString()}<br>` : '') +
-      `<strong>Related narratives:</strong> ${narratives.length}<br><br>` +
-      `Ask about narrative activity around this event or related developments.`;
+      `<strong>Related narratives:</strong> ${narratives.length}`;
   }
 
   /**
@@ -1348,8 +1552,7 @@ class App {
     const events = DataService.getEvents();
     
     return `<strong>Events Timeline</strong><br><br>` +
-      `Tracking <strong>${events.length} events</strong>.<br><br>` +
-      `Ask about correlations between events and narrative spikes.`;
+      `Tracking <strong>${events.length} events</strong>.`;
   }
 
   /**
@@ -1363,8 +1566,7 @@ class App {
     
     return `<strong>Person: ${this.escapeHtml(person.name)}</strong><br><br>` +
       (person.role ? `<strong>Role:</strong> ${this.escapeHtml(person.role)}<br>` : '') +
-      `<strong>Mentioned in:</strong> ${narratives.length} narratives<br><br>` +
-      `Ask about narratives involving this person or sentiment trends.`;
+      `<strong>Mentioned in:</strong> ${narratives.length} narratives`;
   }
 
   /**
@@ -1378,8 +1580,7 @@ class App {
     
     return `<strong>Organization: ${this.escapeHtml(org.name)}</strong><br><br>` +
       (org.type ? `<strong>Type:</strong> ${this.escapeHtml(org.type)}<br>` : '') +
-      `<strong>Mentioned in:</strong> ${narratives.length} narratives<br><br>` +
-      `Ask about narratives involving this organization or related entities.`;
+      `<strong>Mentioned in:</strong> ${narratives.length} narratives`;
   }
 
   /**
@@ -1390,8 +1591,7 @@ class App {
     const orgs = DataService.getOrganizations();
     
     return `<strong>Entities List</strong><br><br>` +
-      `Tracking <strong>${persons.length} people</strong> and <strong>${orgs.length} organizations</strong>.<br><br>` +
-      `Ask about entity relationships or key actors in specific narratives.`;
+      `Tracking <strong>${persons.length} people</strong> and <strong>${orgs.length} organizations</strong>.`;
   }
 
   /**
@@ -1403,8 +1603,7 @@ class App {
     
     return `<strong>Document: ${this.escapeHtml(doc.title || 'Untitled')}</strong><br><br>` +
       (doc.source ? `<strong>Source:</strong> ${this.escapeHtml(doc.source)}<br>` : '') +
-      (doc.date ? `<strong>Date:</strong> ${new Date(doc.date).toLocaleDateString()}<br><br>` : '<br>') +
-      `Ask about key claims in this document or related narratives.`;
+      (doc.date ? `<strong>Date:</strong> ${new Date(doc.date).toLocaleDateString()}` : '');
   }
 
   /**

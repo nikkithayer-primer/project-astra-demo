@@ -113,9 +113,8 @@ export class ProjectsView extends BaseView {
       <div class="card">
         <div class="card-body" style="padding: var(--space-2xl);">
           <div style="max-width: 400px; margin: 0 auto; text-align: center;">
-            <svg viewBox="0 0 24 24" width="48" height="48" fill="none" stroke="var(--text-muted)" stroke-width="1.5" style="margin-bottom: var(--space-md);">
-              <path d="M3 7h7l2 2h9v11H3V7z"/>
-              <path d="M3 7V5a2 2 0 012-2h5l2 2"/>
+            <svg viewBox="0 0 16 16" width="48" height="48" fill="var(--text-muted)" style="margin-bottom: var(--space-md);">
+              <path fill-rule="evenodd" clip-rule="evenodd" d="M2 1C1.44771 1 1 1.44772 1 2V14C1 14.5523 1.44771 15 2 15H14C14.5523 15 15 14.5523 15 14V3.5C15 2.94772 14.5523 2.5 14 2.5H8.26759L7.56446 1.4453C7.37899 1.1671 7.06676 1 6.73241 1H2ZM2 2H6.73241L7.43554 3.0547C7.62101 3.3329 7.93324 3.5 8.26759 3.5H14V4.5H2V2ZM2 5.5V14H14V5.5H2Z"/>
             </svg>
             <h2 style="font-size: var(--text-lg); font-weight: 500; color: var(--text-primary); margin-bottom: var(--space-sm);">No Projects Yet</h2>
             <p class="text-secondary text-sm mb-lg">Projects help you organize curated collections of documents for research and reporting.</p>

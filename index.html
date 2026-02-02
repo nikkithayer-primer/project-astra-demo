@@ -96,9 +96,8 @@
           <span>Monitors</span>
         </a>
         <a href="#/projects" class="nav-link" data-view="projects">
-          <svg class="nav-icon" viewBox="0 0 16 16" fill="none" stroke="var(--text-secondary)" stroke-width="1">
-            <path d="M2 4h5l2 2h5v8H2V4z" rx="1"/>
-            <path d="M2 4V3a1 1 0 011-1h4l2 2"/>
+          <svg class="nav-icon" viewBox="0 0 16 16" fill="currentColor">
+            <path fill-rule="evenodd" clip-rule="evenodd" d="M2 1C1.44771 1 1 1.44772 1 2V14C1 14.5523 1.44771 15 2 15H14C14.5523 15 15 14.5523 15 14V3.5C15 2.94772 14.5523 2.5 14 2.5H8.26759L7.56446 1.4453C7.37899 1.1671 7.06676 1 6.73241 1H2ZM2 2H6.73241L7.43554 3.0547C7.62101 3.3329 7.93324 3.5 8.26759 3.5H14V4.5H2V2ZM2 5.5V14H14V5.5H2Z"/>
           </svg>
           <span>Projects</span>
         </a>
@@ -257,6 +256,9 @@
         <div class="chat-message-content">
           Loading page summary...
         </div>
+      </div>
+      <div id="chat-suggested-questions" class="chat-suggested-questions">
+        <!-- Populated dynamically -->
       </div>
     </div>
     <div id="chat-status" class="chat-status"></div>

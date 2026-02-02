@@ -75,7 +75,7 @@ export const documents = [
   },
   {
     id: 'doc-002',
-    documentType: 'social_media',
+    documentType: 'social_post',
     repositoryId: 'repo-osint',
     classification: 'U',
     title: 'HWZ thread: Another NSF dies in training - when will this stop?',
@@ -171,7 +171,7 @@ export const documents = [
   // NS Policy Debate documents (topic-002)
   {
     id: 'doc-004',
-    documentType: 'social_media',
+    documentType: 'social_post',
     repositoryId: 'repo-osint',
     classification: 'U',
     title: 'TikTok: Why does Singapore have 2-year NS when Taiwan has 4 months?',
@@ -234,7 +234,7 @@ export const documents = [
   },
   {
     id: 'doc-005',
-    documentType: 'social_media',
+    documentType: 'social_post',
     repositoryId: 'repo-osint',
     classification: 'U',
     title: 'Reddit r/singapore: Honest discussion about NS duration needed',
@@ -302,7 +302,7 @@ export const documents = [
   },
   {
     id: 'doc-009',
-    documentType: 'social_media',
+    documentType: 'social_post',
     repositoryId: 'repo-osint',
     classification: 'U',
     title: 'Malaysian Twitter reactions to SAF border exercises',
@@ -523,7 +523,7 @@ export const documents = [
   },
   {
     id: 'doc-014',
-    documentType: 'social_media',
+    documentType: 'social_post',
     repositoryId: 'repo-osint',
     classification: 'U',
     title: 'Weibo amplification of Global Times Singapore commentary',
@@ -592,7 +592,7 @@ export const documents = [
   // HWZ NS Debate Thread
   {
     id: 'doc-016',
-    documentType: 'social_media',
+    documentType: 'social_post',
     repositoryId: 'repo-osint',
     classification: 'U',
     title: 'HWZ Mega-thread: Complete list of NS inequities [Updated]',
@@ -715,7 +715,7 @@ export const documents = [
   },
   {
     id: 'doc-019',
-    documentType: 'social_media',
+    documentType: 'social_post',
     repositoryId: 'repo-osint',
     classification: 'U',
     title: 'Reddit reactions to Total Defence Day messaging',
@@ -783,7 +783,7 @@ export const documents = [
   },
   {
     id: 'doc-021',
-    documentType: 'social_media',
+    documentType: 'social_post',
     repositoryId: 'repo-osint',
     classification: 'U',
     title: 'Facebook reactions to EP data release',
@@ -1019,7 +1019,7 @@ export const documents = [
   },
   {
     id: 'doc-028',
-    documentType: 'social_media',
+    documentType: 'social_post',
     repositoryId: 'repo-osint',
     classification: 'U',
     title: 'Malaysian Twitter reactions to water talks announcement',
@@ -1123,7 +1123,7 @@ export const documents = [
   },
   {
     id: 'doc-031',
-    documentType: 'social_media',
+    documentType: 'social_post',
     repositoryId: 'repo-osint',
     classification: 'U',
     title: 'Positive social media reactions to SAF equipment showcase',
@@ -1191,7 +1191,7 @@ export const documents = [
   },
   {
     id: 'doc-033',
-    documentType: 'social_media',
+    documentType: 'social_post',
     repositoryId: 'repo-osint',
     classification: 'U',
     title: 'WeChat amplification of embassy statement',

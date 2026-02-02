@@ -964,7 +964,7 @@ export const documents = [
   // X/Twitter - Tech analyst thread on SMIC
   {
     id: 'doc-023',
-    documentType: 'social_media',
+    documentType: 'social_post',
     repositoryId: 'repo-osint',
     classification: 'U',
     title: 'X thread: Tech analyst breaks down SMIC 5nm achievement',
@@ -1006,7 +1006,7 @@ export const documents = [
   // LinkedIn - Industry executive post
   {
     id: 'doc-024',
-    documentType: 'social_media',
+    documentType: 'social_post',
     repositoryId: 'repo-osint',
     classification: 'U',
     title: 'LinkedIn post: Industry executive reflects on SMIC achievement',
@@ -1048,7 +1048,7 @@ export const documents = [
   // Weibo - Chinese tech celebration post
   {
     id: 'doc-025',
-    documentType: 'social_media',
+    documentType: 'social_post',
     repositoryId: 'repo-osint',
     classification: 'U',
     title: 'Weibo post: Chinese tech blogger celebrates SMIC 5nm success',
@@ -1090,7 +1090,7 @@ export const documents = [
   // Reddit - Export controls discussion
   {
     id: 'doc-026',
-    documentType: 'social_media',
+    documentType: 'social_post',
     repositoryId: 'repo-osint',
     classification: 'U',
     title: 'Reddit discussion: Are US chip export controls backfiring?',
@@ -1137,7 +1137,7 @@ export const documents = [
   // X/Twitter - Policy hawk perspective
   {
     id: 'doc-027',
-    documentType: 'social_media',
+    documentType: 'social_post',
     repositoryId: 'repo-osint',
     classification: 'U',
     title: 'X post: National security analyst defends export controls',
@@ -1183,7 +1183,7 @@ export const documents = [
   // LinkedIn - ASML impact discussion
   {
     id: 'doc-028',
-    documentType: 'social_media',
+    documentType: 'social_post',
     repositoryId: 'repo-osint',
     classification: 'U',
     title: 'LinkedIn post: ASML\'s $2.5B China revenue hit analyzed',
@@ -1227,7 +1227,7 @@ export const documents = [
   // X/Twitter - Huawei Mate 70 teardown
   {
     id: 'doc-029',
-    documentType: 'social_media',
+    documentType: 'social_post',
     repositoryId: 'repo-osint',
     classification: 'U',
     title: 'X post: Huawei Mate 70 teardown confirms SMIC 5nm chip',
@@ -1269,7 +1269,7 @@ export const documents = [
   // Reddit - TSMC Arizona worker perspective
   {
     id: 'doc-030',
-    documentType: 'social_media',
+    documentType: 'social_post',
     repositoryId: 'repo-osint',
     classification: 'U',
     title: 'Reddit AMA: TSMC Arizona worker shares insider perspective',
@@ -2683,7 +2683,7 @@ export const documents = [
   // New social media documents (doc-061 to doc-070)
   {
     id: 'doc-061',
-    documentType: 'social_media',
+    documentType: 'social_post',
     repositoryId: 'repo-osint',
     classification: 'U',
     url: 'https://reddit.com/r/hardware/comments/smic_analysis',
@@ -2715,7 +2715,7 @@ export const documents = [
   },
   {
     id: 'doc-062',
-    documentType: 'social_media',
+    documentType: 'social_post',
     repositoryId: 'repo-osint',
     classification: 'U',
     url: 'https://x.com/chip_industry/status/asml_restrictions',
@@ -2747,7 +2747,7 @@ export const documents = [
   },
   {
     id: 'doc-063',
-    documentType: 'social_media',
+    documentType: 'social_post',
     repositoryId: 'repo-osint',
     classification: 'U',
     url: 'https://weibo.com/techwatch/bigfund_announcement',
@@ -2779,7 +2779,7 @@ export const documents = [
   },
   {
     id: 'doc-064',
-    documentType: 'social_media',
+    documentType: 'social_post',
     repositoryId: 'repo-osint',
     classification: 'U',
     url: 'https://tiktok.com/@tech_explained/video/chips_act',
@@ -2815,7 +2815,7 @@ export const documents = [
   },
   {
     id: 'doc-065',
-    documentType: 'social_media',
+    documentType: 'social_post',
     repositoryId: 'repo-osint',
     classification: 'U',
     url: 'https://reddit.com/r/stocks/comments/intel_struggles',
@@ -2847,7 +2847,7 @@ export const documents = [
   },
   {
     id: 'doc-066',
-    documentType: 'social_media',
+    documentType: 'social_post',
     repositoryId: 'repo-osint',
     classification: 'U',
     url: 'https://x.com/supply_chain_analyst/status/huawei_stockpile',
@@ -2879,7 +2879,7 @@ export const documents = [
   },
   {
     id: 'doc-067',
-    documentType: 'social_media',
+    documentType: 'social_post',
     repositoryId: 'repo-osint',
     classification: 'U',
     url: 'https://weibo.com/huawei_fan/mate70_launch',
@@ -2911,7 +2911,7 @@ export const documents = [
   },
   {
     id: 'doc-068',
-    documentType: 'social_media',
+    documentType: 'social_post',
     repositoryId: 'repo-osint',
     classification: 'U',
     url: 'https://tiktok.com/@nvidia_stan/video/gpu_shortage',
@@ -2947,7 +2947,7 @@ export const documents = [
   },
   {
     id: 'doc-069',
-    documentType: 'social_media',
+    documentType: 'social_post',
     repositoryId: 'repo-osint',
     classification: 'U',
     url: 'https://reddit.com/r/semiconductors/comments/ymtc_found',
@@ -2979,7 +2979,7 @@ export const documents = [
   },
   {
     id: 'doc-070',
-    documentType: 'social_media',
+    documentType: 'social_post',
     repositoryId: 'repo-osint',
     classification: 'U',
     url: 'https://x.com/korea_chip_news/status/subsidy_dispute',

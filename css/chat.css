@@ -217,7 +217,7 @@
   background: var(--bg-tertiary);
   border: 1px solid var(--border-subtle);
   border-radius: var(--border-radius);
-  max-width: 60px;
+  max-width: fit-content;
 }
 
 .chat-typing-dot {
@@ -436,6 +436,70 @@
 .chat-status-link:hover {
   color: var(--accent-primary);
   text-decoration: underline;
+}
+
+/* ============================================
+   Suggested Questions
+   ============================================ */
+
+.chat-suggested-questions {
+  padding: 0 16px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.suggested-question-btn {
+  display: block;
+  width: 100%;
+  padding: 10px 14px;
+  background: var(--bg-tertiary);
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius);
+  font-size: 13px;
+  color: var(--text-secondary);
+  text-align: left;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.suggested-question-btn:hover {
+  background: var(--accent-muted);
+  border-color: var(--accent-primary);
+  color: var(--text-primary);
+}
+
+.suggested-question-btn:active {
+  transform: scale(0.98);
+}
+
+/* ============================================
+   AI Summary
+   ============================================ */
+
+.chat-ai-summary {
+  margin-bottom: 12px;
+}
+
+.chat-ai-summary-label {
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--accent-primary);
+  margin-bottom: 6px;
+}
+
+.chat-ai-summary-content {
+  font-size: 13px;
+  line-height: 1.5;
+  color: var(--text-primary);
+}
+
+.chat-ai-summary-loading {
+  margin-bottom: 12px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--border-subtle);
 }
 
 /* ============================================

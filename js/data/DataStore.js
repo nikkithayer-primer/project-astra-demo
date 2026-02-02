@@ -55,7 +55,9 @@ class DataStore {
       copEnabled: true,              // Enable Common Operating Picture (global view)
       defaultStartPage: 'cop',       // 'cop' or 'monitors'
       defaultViewTab: 'dashboard',   // 'dashboard' or 'documents' (view tab, not COP)
-      showClassification: true       // Show portion marks and classification
+      showClassification: true,      // Show portion marks and classification
+      autoSummary: false,            // Auto-generate AI summary on page navigation
+      suggestedQuestions: true       // Show suggested questions in chat
     };
   }
 
@@ -140,9 +142,10 @@ class DataStore {
     this.data = { ...mockDataModule };
     this.save();
     
-    // Apply dataset-specific default settings if provided
+    // Apply dataset-specific default settings if provided, but preserve user settings
     if (defaultSettings) {
-      this.settings = { ...this.getDefaultSettings(), ...defaultSettings };
+      // Merge: defaults -> dataset defaults -> user's existing settings
+      this.settings = { ...this.getDefaultSettings(), ...defaultSettings, ...this.settings };
       try {
         localStorage.setItem(this.settingsKey, JSON.stringify(this.settings));
       } catch (e) {
@@ -1068,7 +1071,7 @@ class DataStore {
     this.data.documents = this.data.documents || [];
     this.data.documents.push({
       id,
-      type: doc.type || 'social_media',
+      type: doc.type || 'social_post',
       publisherId: doc.publisherId || '',
       content: doc.content || '',
       sentiment: doc.sentiment || 'neutral',
