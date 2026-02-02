@@ -4,19 +4,14 @@
  * Consolidates the nearly identical PersonView and OrganizationView
  */
 
-import { BaseView } from './BaseView.js';
+import { DetailViewBase } from './DetailViewBase.js';
 import { DataService } from '../data/DataService.js';
 import { PageHeader } from '../utils/PageHeader.js';
-import { initAllCardToggles } from '../utils/cardWidthToggle.js';
-import { aggregateFactionSentiment } from '../utils/volumeDataUtils.js';
-import { TagChips } from '../components/TagChips.js';
-import { getTagPicker } from '../components/TagPickerModal.js';
 import { StatCards } from '../components/StatCards.js';
 import {
   CardManager,
   NetworkGraphCard,
   NarrativeListCard,
-  DocumentTableCard,
   MapCard,
   SentimentChartCard,
   VennDiagramCard,
@@ -24,7 +19,7 @@ import {
   TopicListCard
 } from '../components/CardComponents.js';
 
-export class EntityDetailView extends BaseView {
+export class EntityDetailView extends DetailViewBase {
   /**
    * @param {HTMLElement|string} container - Container element or ID
    * @param {string} entityId - ID of the entity
@@ -61,8 +56,9 @@ export class EntityDetailView extends BaseView {
     const hasDocuments = data.documents.length > 0;
     
     // Build cards based on active tab
+    const prefix = this.isPerson ? 'person' : 'org';
     if (this.isDocumentsTab()) {
-      this.setupDocumentsCard(entity, data);
+      super.setupDocumentsCard(entity, data, prefix);
     } else {
       this.setupDashboardCards(entity, data);
     }
@@ -83,44 +79,18 @@ export class EntityDetailView extends BaseView {
 
     // Initialize stat card dropdowns
     const contextId = this.context?.id || null;
-    this._statDropdowns = StatCards.initDropdowns(this.container, { contextId });
+    this.initStatDropdowns(contextId);
 
-    // Initialize card width toggles
-    const contentGrid = this.container.querySelector('.content-grid');
-    if (contentGrid) {
-      const tabSuffix = this.isDocumentsTab() ? '-docs' : '';
-      // First 4 cards default to half-width for entity views (dashboard only)
-      const defaults = this.isDocumentsTab() ? {} : { 0: 'half', 1: 'half', 2: 'half', 3: 'half' };
-      initAllCardToggles(contentGrid, `${this.entityType}-${this.entityId}${tabSuffix}`, defaults);
-    }
+    // Initialize card width toggles - first 4 cards default to half-width (dashboard only)
+    const defaults = this.isDocumentsTab() ? {} : { 0: 'half', 1: 'half', 2: 'half', 3: 'half' };
+    this.initCardWidthToggles(this.entityType, this.entityId, defaults);
 
     // Initialize all card components
     const components = this.cardManager.initializeAll();
     Object.assign(this.components, components);
 
     // Initialize tag chips
-    this.initTagChips(entity);
-  }
-
-  /**
-   * Initialize tag chips component
-   */
-  initTagChips(entity) {
-    const tagsContainer = this.container.querySelector('#entity-tags-container');
-    if (tagsContainer) {
-      this.tagChips = new TagChips({
-        entityType: this.entityType,
-        entityId: entity.id,
-        editable: true,
-        onAddClick: () => {
-          const picker = getTagPicker();
-          picker.open(this.entityType, entity.id, () => {
-            this.tagChips.refresh();
-          });
-        }
-      });
-      this.tagChips.render(tagsContainer);
-    }
+    this.initTagChips(entity, this.entityType, 'entity-tags-container');
   }
 
   /**
@@ -216,6 +186,9 @@ export class EntityDetailView extends BaseView {
       };
     }).filter(Boolean);
 
+    // Combine related persons and orgs as entities for stat cards
+    data.entities = [...data.relatedPersons, ...data.relatedOrgs];
+
     // Get faction overlaps from the factions found
     const factionIdsForOverlaps = data.factions.map(f => f.id);
     data.factionOverlaps = (DataService.getFactionOverlaps ? DataService.getFactionOverlaps() : [])
@@ -231,6 +204,11 @@ export class EntityDetailView extends BaseView {
 
     // Narrative durations for volume/duration toggle
     data.narrativeDurations = DataService.getNarrativeDurations();
+
+    // Get activity (comments and highlights) for this entity's documents
+    const activityDocIds = new Set(data.documents.map(d => d.id));
+    const allActivity = DataService.getAllActivity();
+    data.activity = allActivity.filter(item => activityDocIds.has(item.documentId));
 
     return data;
   }
@@ -345,27 +323,6 @@ export class EntityDetailView extends BaseView {
   }
 
   /**
-   * Set up card for Documents tab (full-width document table)
-   */
-  setupDocumentsCard(entity, data) {
-    // Reset card manager for fresh setup
-    this.cardManager = new CardManager(this);
-    
-    const prefix = this.isPerson ? 'person' : 'org';
-
-    if (data.documents.length > 0) {
-      this.cardManager.add(new DocumentTableCard(this, `${prefix}-documents`, {
-        title: 'Source Documents',
-        documents: data.documents,
-        showCount: true,
-        fullWidth: true,
-        maxItems: 50,
-        enableViewerMode: true
-      }));
-    }
-  }
-
-  /**
    * Render the page header
    * @param {Object} entity - The entity object
    * @param {Object} data - The fetched entity data (for stats)
@@ -438,15 +395,6 @@ export class EntityDetailView extends BaseView {
     });
   }
 
-  destroy() {
-    // Clean up stat dropdowns
-    if (this._statDropdowns) {
-      this._statDropdowns.forEach(d => d.destroy && d.destroy());
-      this._statDropdowns = null;
-    }
-    this.cardManager.destroyAll();
-    super.destroy();
-  }
 }
 
 export default EntityDetailView;

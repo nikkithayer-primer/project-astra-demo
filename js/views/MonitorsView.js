@@ -272,12 +272,13 @@ export class MonitorsView extends BaseView {
     const activeTab = this.getCurrentTab();
     const allAlerts = DataService.getAlerts();
     
-    // Render the page header with tabs
+    // Render the page header with tabs and action button
     const headerHtml = PageHeader.render({
       title: 'Monitors',
       subtitle: 'Track entities and narratives with custom alert thresholds',
       tabs: this.getMonitorsTabsConfig(),
-      activeTab: activeTab
+      activeTab: activeTab,
+      actions: '<button class="btn btn-small btn-primary" id="new-monitor-btn">+ New Monitor</button>'
     });
     
     // Render content based on active tab
@@ -292,19 +293,21 @@ export class MonitorsView extends BaseView {
    * Render the Monitors tab (grid of monitor cards)
    */
   renderMonitorsTab(headerHtml) {
-    // Load monitors from DataService
-    const monitors = DataService.getMonitors();
+    // Load monitors from DataService and split into active/archived
+    const allMonitors = DataService.getMonitors();
+    const activeMonitors = allMonitors.filter(m => m.enabled !== false);
+    const archivedMonitors = allMonitors.filter(m => m.enabled === false);
     
     // Initialize default visualization types for monitors (only if not already set)
-    monitors.forEach(monitor => {
+    allMonitors.forEach(monitor => {
       if (!this.monitorVisualizationTypes.has(monitor.id)) {
         const defaultViz = DEFAULT_MONITOR_VISUALIZATIONS[monitor.name] || 'narratives';
         this.monitorVisualizationTypes.set(monitor.id, defaultViz);
       }
     });
     
-    // Build enriched monitor data with computed fields
-    const enrichedMonitors = monitors.map(monitor => {
+    // Helper to enrich a monitor with computed fields
+    const enrichMonitor = (monitor) => {
       const scopeType = DataService.getMonitorScopeType(monitor.id);
       const scopeLabel = DataService.getMonitorScopeLabel(monitor.id);
       const triggerLabels = DataService.getMonitorTriggerLabels(monitor.id);
@@ -331,10 +334,16 @@ export class MonitorsView extends BaseView {
         scopeLogic,
         lastTriggeredFormatted: this.formatRelativeTime(monitor.lastTriggered)
       };
-    });
+    };
+    
+    // Build enriched monitor data for active and archived
+    const enrichedActiveMonitors = activeMonitors.map(enrichMonitor);
+    const enrichedArchivedMonitors = archivedMonitors.map(enrichMonitor);
+    const enrichedMonitors = [...enrichedActiveMonitors, ...enrichedArchivedMonitors];
     
     // Build monitor cards HTML using CardBuilder
-    const monitorCardsHtml = enrichedMonitors.map(monitor => {
+    // Helper to build card HTML for a monitor
+    const buildMonitorCard = (monitor) => {
       // Build alerts HTML
       const alertsHtml = monitor.alerts && monitor.alerts.length > 0 
         ? monitor.alerts.slice(0, 3).map(alert => `
@@ -378,16 +387,16 @@ export class MonitorsView extends BaseView {
         </div>
       `;
       
-      // Build actions HTML with visualization dropdown, edit button, and description toggle
+      // Build actions HTML with visualization dropdown, description toggle, and action menu
       const descToggleId = `desc-toggle-${monitor.id}`;
-      const editBtnHtml = `
-        <button class="btn-icon monitor-edit-btn" data-monitor-id="${monitor.id}" title="Edit monitor">
-          <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5">
-            <path d="M11.5 2.5l2 2M2 11l-.5 3.5L5 14l9-9-2-2-10 10z"/>
-          </svg>
-        </button>
-      `;
-      const actionsHtml = this.buildVisualizationDropdown(monitor.id) + editBtnHtml + CardBuilder.descriptionToggle(descToggleId);
+      const isArchived = monitor.enabled === false;
+      const currentVizType = this.monitorVisualizationTypes.get(monitor.id) || 'narratives';
+      const showDescToggle = currentVizType === 'narratives' || currentVizType === 'topics';
+      
+      // Wrap description toggle in a container with visibility control
+      const descToggleHtml = `<span class="desc-toggle-wrapper" data-monitor-id="${monitor.id}" style="${showDescToggle ? '' : 'display: none;'}">${CardBuilder.descriptionToggle(descToggleId)}</span>`;
+      const actionMenuHtml = CardBuilder.actionMenu('monitor', monitor.id, { isArchived });
+      const actionsHtml = this.buildVisualizationDropdown(monitor.id) + descToggleHtml;
       
       // Content for the card body
       const cardBodyContent = `
@@ -407,7 +416,8 @@ export class MonitorsView extends BaseView {
       let cardHtml = CardBuilder.create(monitor.name, `monitor-body-${monitor.id}`, {
         noPadding: true,
         halfWidth: true,
-        actions: actionsHtml
+        actions: actionsHtml,
+        actionMenuHtml: actionMenuHtml
       });
       
       // Wrap the title with tooltip container
@@ -422,19 +432,30 @@ export class MonitorsView extends BaseView {
         `id="monitor-body-${monitor.id}"></div>`,
         `id="monitor-body-${monitor.id}">${cardBodyContent}</div>`
       );
-    }).join('');
+    };
+
+    // Build card HTML for active and archived monitors
+    const activeCardsHtml = enrichedActiveMonitors.map(buildMonitorCard).join('');
+    const archivedCardsHtml = enrichedArchivedMonitors.map(buildMonitorCard).join('');
+    
+    // Build archived section if there are any
+    const archivedSectionHtml = enrichedArchivedMonitors.length > 0 ? `
+      <div class="content-section">
+        <h3 class="section-title text-muted">Archived</h3>
+        <div class="content-grid monitors-grid monitors-grid-archived">
+          ${archivedCardsHtml}
+        </div>
+      </div>
+    ` : '';
     
     this.container.innerHTML = `
       ${headerHtml}
       
-      <div class="monitors-section">
-        <div class="monitors-section-header">
-          <h2 class="section-title">Active Monitors</h2>
-          <button class="btn btn-small btn-primary" id="new-monitor-btn">+ New Monitor</button>
-        </div>
+      <div class="content-area">
         <div class="content-grid monitors-grid">
-          ${monitorCardsHtml}
+          ${activeCardsHtml}
         </div>
+        ${archivedSectionHtml}
       </div>
     `;
     
@@ -447,13 +468,25 @@ export class MonitorsView extends BaseView {
     // Setup visualization dropdown handlers
     this.setupVisualizationDropdowns(enrichedMonitors);
     
-    // Initialize card width toggles for all monitor cards (default to half width)
-    const monitorsGrid = this.container.querySelector('.monitors-grid');
-    const defaultWidths = {};
-    enrichedMonitors.forEach((_, index) => {
-      defaultWidths[index] = 'half';
-    });
-    initAllCardToggles(monitorsGrid, 'monitors', defaultWidths);
+    // Initialize card width toggles for active monitor cards (default to half width)
+    const activeGrid = this.container.querySelector('.monitors-grid:not(.monitors-grid-archived)');
+    if (activeGrid) {
+      const activeWidths = {};
+      enrichedActiveMonitors.forEach((_, index) => {
+        activeWidths[index] = 'half';
+      });
+      initAllCardToggles(activeGrid, 'monitors-active', activeWidths);
+    }
+    
+    // Initialize card width toggles for archived monitor cards
+    const archivedGrid = this.container.querySelector('.monitors-grid-archived');
+    if (archivedGrid) {
+      const archivedWidths = {};
+      enrichedArchivedMonitors.forEach((_, index) => {
+        archivedWidths[index] = 'half';
+      });
+      initAllCardToggles(archivedGrid, 'monitors-archived', archivedWidths);
+    }
     
     // Store enriched monitors for later use
     this.enrichedMonitors = enrichedMonitors;
@@ -477,33 +510,22 @@ export class MonitorsView extends BaseView {
       new Date(b.triggeredAt) - new Date(a.triggeredAt)
     );
     
-    // Build alerts table rows
-    const alertRowsHtml = sortedAlerts.length > 0
+    // Build alerts list using same format as monitor card alerts
+    const alertsListHtml = sortedAlerts.length > 0
       ? sortedAlerts.map(alert => {
           const monitor = monitorsMap.get(alert.monitorId);
           const monitorName = monitor ? monitor.name : 'Unknown Monitor';
           
           return `
-            <tr data-alert-id="${alert.id}">
-              <td class="alert-col-type">
-                <span class="alert-type-badge ${this.getAlertTypeClass(alert.type)}">${this.getAlertTypeLabel(alert.type)}</span>
-              </td>
-              <td class="alert-col-monitor">
-                <a href="#/${alert.monitorId}/" class="text-link">${this.escapeHtml(monitorName)}</a>
-              </td>
-              <td class="alert-col-description">
-                <div class="alert-content">
-                  <span class="alert-title-text">${this.escapeHtml(alert.title || '')}</span>
-                  <span class="alert-description-text">${formatAlertDescriptionWithLinks(alert, DataService)}</span>
-                </div>
-              </td>
-              <td class="alert-col-time">
-                ${this.formatRelativeTime(alert.triggeredAt)}
-              </td>
-            </tr>
+            <div class="alerts-list-item" data-alert-id="${alert.id}">
+              <span class="alert-type-badge ${this.getAlertTypeClass(alert.type)}">${this.getAlertTypeLabel(alert.type)}</span>
+              <a href="#/${alert.monitorId}/" class="alert-monitor-link">${this.escapeHtml(monitorName)}</a>
+              <span class="alert-description">${formatAlertDescriptionWithLinks(alert, DataService)}</span>
+              <span class="alert-time">${this.formatRelativeTime(alert.triggeredAt)}</span>
+            </div>
           `;
         }).join('')
-      : `<tr><td colspan="4" class="text-center text-muted" style="padding: 48px;">No alerts found</td></tr>`;
+      : `<div class="alerts-list-empty">No alerts found</div>`;
     
     this.container.innerHTML = `
       ${headerHtml}
@@ -515,20 +537,8 @@ export class MonitorsView extends BaseView {
             <span class="badge badge-default">${sortedAlerts.length} total</span>
           </div>
           <div class="card-body card-body-no-padding">
-            <div class="table-container">
-              <table class="table alerts-list-table">
-                <thead>
-                  <tr>
-                    <th class="alert-col-type">Type</th>
-                    <th class="alert-col-monitor">Monitor</th>
-                    <th class="alert-col-description">Description</th>
-                    <th class="alert-col-time">Triggered</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  ${alertRowsHtml}
-                </tbody>
-              </table>
+            <div class="alerts-list">
+              ${alertsListHtml}
             </div>
           </div>
         </div>
@@ -1019,6 +1029,13 @@ export class MonitorsView extends BaseView {
               opt.classList.toggle('active', opt.dataset.vizType === vizType);
             });
             
+            // Show/hide description toggle based on visualization type
+            const descToggleWrapper = this.container.querySelector(`.desc-toggle-wrapper[data-monitor-id="${monitorId}"]`);
+            if (descToggleWrapper) {
+              const showToggle = vizType === 'narratives' || vizType === 'topics';
+              descToggleWrapper.style.display = showToggle ? '' : 'none';
+            }
+            
             // Close dropdown
             dropdown.classList.remove('open');
             
@@ -1092,21 +1109,71 @@ export class MonitorsView extends BaseView {
         });
       });
     }
+
+    // Setup action menu dropdowns
+    this.setupActionMenus(enrichedMonitors);
+  }
+
+  /**
+   * Setup action menu dropdown handlers
+   */
+  setupActionMenus(enrichedMonitors) {
+    const actionMenus = this.container.querySelectorAll('.card-action-menu');
     
-    // Handle edit button clicks
-    const editBtns = this.container.querySelectorAll('.monitor-edit-btn');
-    editBtns.forEach(btn => {
-      this.addListener(btn, 'click', (e) => {
-        e.stopPropagation();
-        const monitorId = btn.dataset.monitorId;
-        const monitor = enrichedMonitors.find(m => m.id === monitorId);
-        if (monitor) {
-          this.monitorEditor.openEdit(monitor, () => {
-            // Re-render the view after save
-            this.render();
+    actionMenus.forEach(menu => {
+      const trigger = menu.querySelector('.card-action-menu-trigger');
+      const monitorId = menu.dataset.monitorId;
+      
+      if (trigger) {
+        this.addListener(trigger, 'click', (e) => {
+          e.stopPropagation();
+          
+          // Close other open menus
+          actionMenus.forEach(otherMenu => {
+            if (otherMenu !== menu) {
+              otherMenu.classList.remove('open');
+            }
           });
-        }
-      });
+          
+          // Toggle this menu
+          menu.classList.toggle('open');
+        });
+      }
+      
+      // Handle edit button click
+      const editBtn = menu.querySelector('.monitor-edit-btn');
+      if (editBtn && !editBtn.disabled) {
+        this.addListener(editBtn, 'click', (e) => {
+          e.stopPropagation();
+          menu.classList.remove('open');
+          const monitor = enrichedMonitors.find(m => m.id === monitorId);
+          if (monitor) {
+            this.monitorEditor.openEdit(monitor, () => {
+              this.render();
+            });
+          }
+        });
+      }
+      
+      // Handle archive button click
+      const archiveBtn = menu.querySelector('.monitor-archive-btn');
+      if (archiveBtn) {
+        this.addListener(archiveBtn, 'click', (e) => {
+          e.stopPropagation();
+          menu.classList.remove('open');
+          const monitor = enrichedMonitors.find(m => m.id === monitorId);
+          if (monitor) {
+            const newEnabled = monitor.enabled === false ? true : false;
+            dataStore.updateMonitor(monitorId, { enabled: newEnabled });
+            this.render();
+          }
+        });
+      }
+    });
+    
+    // Close menus when clicking outside
+    this.addListener(document, 'click', () => {
+      actionMenus.forEach(menu => menu.classList.remove('open'));
     });
   }
 

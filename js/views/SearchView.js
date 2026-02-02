@@ -26,6 +26,21 @@ export class SearchView extends BaseView {
     this.scopeSelector = null;
     // Filter panel expanded state
     this.filtersExpanded = false;
+    // Classification filter (set of selected classifications, empty = all)
+    this.selectedClassifications = new Set();
+  }
+
+  /**
+   * Get available classification levels
+   */
+  getClassificationLevels() {
+    return [
+      { id: 'U', name: 'Unclassified', short: 'U' },
+      { id: 'CUI', name: 'Controlled Unclassified', short: 'CUI' },
+      { id: 'C', name: 'Confidential', short: 'C' },
+      { id: 'S', name: 'Secret', short: 'S' },
+      { id: 'TS', name: 'Top Secret', short: 'TS' }
+    ];
   }
 
   /**
@@ -107,27 +122,45 @@ export class SearchView extends BaseView {
               </svg>
             </button>
             
-            <!-- Repositories Dropdown -->
-            <div class="repo-dropdown-wrapper">
-              <button class="btn btn-secondary repo-dropdown-btn" id="repo-dropdown-toggle">
-                <svg viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.5">
-                  <path d="M2 3h12v10H2zM2 6h12"/>
-                  <circle cx="4" cy="4.5" r="0.5" fill="currentColor"/>
+            <!-- Classification Dropdown -->
+            <div class="filter-dropdown-wrapper">
+              <button class="btn btn-secondary filter-dropdown-btn" id="classification-dropdown-toggle">
+                <span>${this.getClassificationButtonLabel()}</span>
+                <svg class="dropdown-chevron" viewBox="0 0 16 16" width="12" height="12" fill="none" stroke="currentColor" stroke-width="1.5">
+                  <path d="M4 6l4 4 4-4"/>
                 </svg>
+              </button>
+              <div class="filter-dropdown-popover" id="classification-dropdown-popover">
+                <div class="filter-dropdown-header">
+                  <label class="dropdown-option dropdown-select-all">
+                    <input type="checkbox" id="classification-select-all" ${this.areAllClassificationsSelected() ? 'checked' : ''} />
+                    <span>All Classifications</span>
+                  </label>
+                </div>
+                <div class="filter-dropdown-divider"></div>
+                <div class="filter-dropdown-list">
+                  ${this.renderClassificationOptions()}
+                </div>
+              </div>
+            </div>
+            
+            <!-- Repositories Dropdown -->
+            <div class="filter-dropdown-wrapper">
+              <button class="btn btn-secondary filter-dropdown-btn" id="repo-dropdown-toggle">
                 <span>${this.getRepositoryButtonLabel()}</span>
                 <svg class="dropdown-chevron" viewBox="0 0 16 16" width="12" height="12" fill="none" stroke="currentColor" stroke-width="1.5">
                   <path d="M4 6l4 4 4-4"/>
                 </svg>
               </button>
-              <div class="repo-dropdown-popover" id="repo-dropdown-popover">
-                <div class="repo-dropdown-header">
-                  <label class="repo-option repo-select-all">
+              <div class="filter-dropdown-popover" id="repo-dropdown-popover">
+                <div class="filter-dropdown-header">
+                  <label class="dropdown-option dropdown-select-all">
                     <input type="checkbox" id="repo-select-all" ${this.areAllRepositoriesSelected() ? 'checked' : ''} />
                     <span>All Repositories</span>
                   </label>
                 </div>
-                <div class="repo-dropdown-divider"></div>
-                <div class="repo-dropdown-list">
+                <div class="filter-dropdown-divider"></div>
+                <div class="filter-dropdown-list">
                   ${this.renderRepositoryOptions()}
                 </div>
               </div>
@@ -192,8 +225,10 @@ export class SearchView extends BaseView {
            (scope.organizationIds?.length > 0) ||
            (scope.factionIds?.length > 0) ||
            (scope.locationIds?.length > 0) ||
-           (scope.eventIds?.length > 0) ||
-           (scope.keywords?.length > 0);
+           (scope.keywords?.length > 0) ||
+           (scope.documentTypes?.length > 0) ||
+           (scope.publisherIds?.length > 0) ||
+           (scope.authors?.length > 0);
   }
 
   /**
@@ -350,6 +385,32 @@ export class SearchView extends BaseView {
   }
 
   /**
+   * Get the label for the classification dropdown button
+   */
+  getClassificationButtonLabel() {
+    const levels = this.getClassificationLevels();
+    const selectedCount = this.selectedClassifications.size;
+    
+    if (selectedCount === 0 || selectedCount === levels.length) {
+      return 'All Classifications';
+    } else if (selectedCount === 1) {
+      const selectedId = Array.from(this.selectedClassifications)[0];
+      const level = levels.find(l => l.id === selectedId);
+      return level ? level.short : '1 classification';
+    } else {
+      return `${selectedCount} classifications`;
+    }
+  }
+
+  /**
+   * Check if all classifications are selected
+   */
+  areAllClassificationsSelected() {
+    const levels = this.getClassificationLevels();
+    return this.selectedClassifications.size === 0 || this.selectedClassifications.size === levels.length;
+  }
+
+  /**
    * Get the label for the repository dropdown button
    */
   getRepositoryButtonLabel() {
@@ -379,26 +440,46 @@ export class SearchView extends BaseView {
   }
 
   /**
+   * Render classification options for the dropdown
+   */
+  renderClassificationOptions() {
+    const levels = this.getClassificationLevels();
+    return levels.map(level => {
+      const isChecked = this.selectedClassifications.size === 0 || this.selectedClassifications.has(level.id);
+      return `
+        <label class="dropdown-option">
+          <input 
+            type="checkbox" 
+            name="classification-option" 
+            value="${level.id}" 
+            ${isChecked ? 'checked' : ''}
+          />
+          <span class="dropdown-option-name">${this.escapeHtml(level.name)}</span>
+        </label>
+      `;
+    }).join('');
+  }
+
+  /**
    * Render repository options for the dropdown
    */
   renderRepositoryOptions() {
     const repositories = DataService.getRepositories();
     if (!repositories || repositories.length === 0) {
-      return '<div class="repo-dropdown-empty">No repositories available</div>';
+      return '<div class="dropdown-empty">No repositories available</div>';
     }
     
     return repositories.map(repo => {
       const isChecked = this.selectedRepositories.has(repo.id);
       return `
-        <label class="repo-option">
+        <label class="dropdown-option">
           <input 
             type="checkbox" 
             name="repo-option" 
             value="${repo.id}" 
             ${isChecked ? 'checked' : ''}
           />
-          <span class="repo-option-name">${this.escapeHtml(repo.name)}</span>
-          <span class="repo-option-code">${this.escapeHtml(repo.code)}</span>
+          <span class="dropdown-option-name">${this.escapeHtml(repo.name)}</span>
         </label>
       `;
     }).join('');
@@ -413,6 +494,19 @@ export class SearchView extends BaseView {
       const labelSpan = btn.querySelector('span:not(.dropdown-chevron)');
       if (labelSpan) {
         labelSpan.textContent = this.getRepositoryButtonLabel();
+      }
+    }
+  }
+
+  /**
+   * Update the classification dropdown button label
+   */
+  updateClassificationButtonLabel() {
+    const btn = document.getElementById('classification-dropdown-toggle');
+    if (btn) {
+      const labelSpan = btn.querySelector('span:not(.dropdown-chevron):not(.classification-badge)');
+      if (labelSpan) {
+        labelSpan.textContent = this.getClassificationButtonLabel();
       }
     }
   }
@@ -507,24 +601,6 @@ export class SearchView extends BaseView {
       });
     }
     
-    // Events
-    if (scope.eventIds?.length > 0) {
-      scope.eventIds.forEach(id => {
-        const event = DataService.getEvent(id);
-        if (event) {
-          chips.push({
-            type: 'event',
-            id: id,
-            label: event.text?.substring(0, 40) + (event.text?.length > 40 ? '...' : ''),
-            icon: `<svg viewBox="0 0 16 16" width="12" height="12" fill="none" stroke="currentColor" stroke-width="1.5">
-              <circle cx="8" cy="8" r="6"/>
-              <path d="M8 4v4l3 2"/>
-            </svg>`
-          });
-        }
-      });
-    }
-    
     // Keywords
     if (scope.keywords?.length > 0) {
       scope.keywords.forEach(keyword => {
@@ -534,6 +610,62 @@ export class SearchView extends BaseView {
           label: keyword,
           icon: `<svg viewBox="0 0 16 16" width="12" height="12" fill="none" stroke="currentColor" stroke-width="1.5">
             <path d="M2 5h12M2 8h8M2 11h10"/>
+          </svg>`
+        });
+      });
+    }
+    
+    // Document Types
+    if (scope.documentTypes?.length > 0) {
+      const docTypeLabels = {
+        'news_article': 'News Article',
+        'social_media': 'Social Media',
+        'internal_report': 'Internal Report',
+        'intelligence_report': 'Intelligence Report',
+        'memo': 'Memo',
+        'transcript': 'Transcript'
+      };
+      scope.documentTypes.forEach(docType => {
+        chips.push({
+          type: 'documentType',
+          id: docType,
+          label: docTypeLabels[docType] || docType,
+          icon: `<svg viewBox="0 0 16 16" width="12" height="12" fill="none" stroke="currentColor" stroke-width="1.5">
+            <path d="M3 2h7l3 3v9a1 1 0 01-1 1H3a1 1 0 01-1-1V3a1 1 0 011-1z"/>
+            <path d="M10 2v3h3"/>
+          </svg>`
+        });
+      });
+    }
+    
+    // Publishers
+    if (scope.publisherIds?.length > 0) {
+      scope.publisherIds.forEach(publisherId => {
+        const publisher = DataService.getPublisher(publisherId);
+        if (publisher) {
+          chips.push({
+            type: 'publisher',
+            id: publisherId,
+            label: publisher.name,
+            icon: `<svg viewBox="0 0 16 16" width="12" height="12" fill="none" stroke="currentColor" stroke-width="1.5">
+              <rect x="2" y="3" width="12" height="10" rx="1"/>
+              <path d="M5 6h6M5 9h4"/>
+            </svg>`
+          });
+        }
+      });
+    }
+    
+    // Authors
+    if (scope.authors?.length > 0) {
+      scope.authors.forEach(author => {
+        chips.push({
+          type: 'author',
+          id: author,
+          label: author,
+          icon: `<svg viewBox="0 0 16 16" width="12" height="12" fill="none" stroke="currentColor" stroke-width="1.5">
+            <circle cx="8" cy="5" r="3"/>
+            <path d="M3 14c0-2.5 2-4.5 5-4.5s5 2 5 4.5"/>
           </svg>`
         });
       });
@@ -614,11 +746,17 @@ export class SearchView extends BaseView {
       case 'location':
         scope.locationIds = scope.locationIds.filter(i => i !== id);
         break;
-      case 'event':
-        scope.eventIds = scope.eventIds.filter(i => i !== id);
-        break;
       case 'keyword':
         scope.keywords = scope.keywords.filter(k => k !== id);
+        break;
+      case 'documentType':
+        scope.documentTypes = (scope.documentTypes || []).filter(dt => dt !== id);
+        break;
+      case 'publisher':
+        scope.publisherIds = (scope.publisherIds || []).filter(p => p !== id);
+        break;
+      case 'author':
+        scope.authors = (scope.authors || []).filter(a => a !== id);
         break;
     }
     
@@ -694,6 +832,85 @@ export class SearchView extends BaseView {
       });
     }
 
+    // Classification dropdown handlers
+    const classDropdownToggle = document.getElementById('classification-dropdown-toggle');
+    const classDropdownPopover = document.getElementById('classification-dropdown-popover');
+    
+    if (classDropdownToggle && classDropdownPopover) {
+      // Toggle dropdown
+      this.addListener(classDropdownToggle, 'click', (e) => {
+        e.stopPropagation();
+        classDropdownPopover.classList.toggle('open');
+        // Close other dropdowns
+        document.getElementById('repo-dropdown-popover')?.classList.remove('open');
+      });
+      
+      // Close dropdown when clicking outside
+      this.addListener(document, 'click', (e) => {
+        if (!e.target.closest('.filter-dropdown-wrapper')) {
+          classDropdownPopover.classList.remove('open');
+        }
+      });
+      
+      // Select All checkbox
+      const selectAllCheckbox = document.getElementById('classification-select-all');
+      if (selectAllCheckbox) {
+        this.addListener(selectAllCheckbox, 'change', (e) => {
+          const levels = this.getClassificationLevels();
+          if (e.target.checked) {
+            // Select all (empty set means all)
+            this.selectedClassifications = new Set();
+          } else {
+            // Deselect all
+            this.selectedClassifications = new Set();
+          }
+          // Update individual checkboxes
+          const classCheckboxes = classDropdownPopover.querySelectorAll('input[name="classification-option"]');
+          classCheckboxes.forEach(cb => {
+            cb.checked = e.target.checked;
+          });
+          this.updateClassificationButtonLabel();
+          this.updateMatchCount();
+        });
+      }
+      
+      // Individual classification checkboxes
+      const classCheckboxes = classDropdownPopover.querySelectorAll('input[name="classification-option"]');
+      classCheckboxes.forEach(checkbox => {
+        this.addListener(checkbox, 'change', (e) => {
+          const classId = e.target.value;
+          const levels = this.getClassificationLevels();
+          
+          // If currently "all" (empty set), initialize with all levels first
+          if (this.selectedClassifications.size === 0) {
+            levels.forEach(l => this.selectedClassifications.add(l.id));
+          }
+          
+          if (e.target.checked) {
+            this.selectedClassifications.add(classId);
+          } else {
+            this.selectedClassifications.delete(classId);
+          }
+          
+          // If all are selected, reset to empty (meaning "all")
+          if (this.selectedClassifications.size === levels.length) {
+            this.selectedClassifications = new Set();
+          }
+          
+          // Update "Select All" checkbox state
+          if (selectAllCheckbox) {
+            const allSelected = this.selectedClassifications.size === 0;
+            const noneSelected = this.selectedClassifications.size === 0 && !e.target.checked;
+            selectAllCheckbox.checked = allSelected;
+            selectAllCheckbox.indeterminate = this.selectedClassifications.size > 0 && 
+                                               this.selectedClassifications.size < levels.length;
+          }
+          this.updateClassificationButtonLabel();
+          this.updateMatchCount();
+        });
+      });
+    }
+
     // Repository dropdown handlers
     const repoDropdownToggle = document.getElementById('repo-dropdown-toggle');
     const repoDropdownPopover = document.getElementById('repo-dropdown-popover');
@@ -707,7 +924,7 @@ export class SearchView extends BaseView {
       
       // Close dropdown when clicking outside
       this.addListener(document, 'click', (e) => {
-        if (!e.target.closest('.repo-dropdown-wrapper')) {
+        if (!e.target.closest('.filter-dropdown-wrapper')) {
           repoDropdownPopover.classList.remove('open');
         }
       });
@@ -806,7 +1023,17 @@ export class SearchView extends BaseView {
       timeRange: this.timeRange,
       scope: hasScope ? scope : null
     });
-    this.matchCount = results.documents.length;
+    
+    // Apply classification filter if specific ones are selected
+    let documents = results.documents;
+    if (this.selectedClassifications.size > 0) {
+      documents = documents.filter(doc => {
+        const docClassification = doc.classification || 'U';
+        return this.selectedClassifications.has(docClassification);
+      });
+    }
+    
+    this.matchCount = documents.length;
     
     if (countContainer) {
       countContainer.classList.remove('hidden');
@@ -832,7 +1059,17 @@ export class SearchView extends BaseView {
       timeRange: this.timeRange,
       scope: hasScope ? scope : null
     });
-    const documentIds = results.documents.map(d => d.id);
+    
+    // Apply classification filter if specific ones are selected
+    let documents = results.documents;
+    if (this.selectedClassifications.size > 0) {
+      documents = documents.filter(doc => {
+        const docClassification = doc.classification || 'U';
+        return this.selectedClassifications.has(docClassification);
+      });
+    }
+    
+    const documentIds = documents.map(d => d.id);
 
     // Build workspace name and description
     const repositories = DataService.getRepositories();
@@ -859,6 +1096,15 @@ export class SearchView extends BaseView {
     if (repositoryIds.length !== repositories.length) {
       description += ` in ${repoNames}`;
     }
+    if (this.selectedClassifications.size > 0) {
+      const levels = this.getClassificationLevels();
+      const selectedLevels = levels.filter(l => this.selectedClassifications.has(l.id));
+      if (selectedLevels.length === 1) {
+        description += `, ${selectedLevels[0].name} only`;
+      } else {
+        description += `, ${selectedLevels.map(l => l.short).join('/')} classifications`;
+      }
+    }
     if (this.timeRange) {
       description += ` (${formatDate(this.timeRange.start)} - ${formatDate(this.timeRange.end)})`;
     }
@@ -872,7 +1118,8 @@ export class SearchView extends BaseView {
       filters: { 
         repositoryIds, 
         timeRange: this.timeRange,
-        scope: hasScope ? scope : null
+        scope: hasScope ? scope : null,
+        classifications: this.selectedClassifications.size > 0 ? Array.from(this.selectedClassifications) : null
       },
       status: 'active'
     });
@@ -890,8 +1137,10 @@ export class SearchView extends BaseView {
            (scope.organizationIds?.length || 0) +
            (scope.factionIds?.length || 0) +
            (scope.locationIds?.length || 0) +
-           (scope.eventIds?.length || 0) +
-           (scope.keywords?.length || 0);
+           (scope.keywords?.length || 0) +
+           (scope.documentTypes?.length || 0) +
+           (scope.publisherIds?.length || 0) +
+           (scope.authors?.length || 0);
   }
 
   /**

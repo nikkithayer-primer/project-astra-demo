@@ -3,14 +3,10 @@
  * Detail view for a single workspace using the CardManager pattern
  */
 
-import { BaseView } from './BaseView.js';
+import { DetailViewBase } from './DetailViewBase.js';
 import { DataService } from '../data/DataService.js';
-import { dataStore } from '../data/DataStore.js';
 import { PageHeader } from '../utils/PageHeader.js';
-import { initAllCardToggles } from '../utils/cardWidthToggle.js';
-import { getWorkspaceEditor } from '../components/WorkspaceEditorModal.js';
-import { TagChips } from '../components/TagChips.js';
-import { getTagPicker } from '../components/TagPickerModal.js';
+import { StatCards } from '../components/StatCards.js';
 import {
   CardManager,
   NetworkGraphCard,
@@ -19,11 +15,10 @@ import {
   SentimentChartCard,
   VennDiagramCard,
   MapCard,
-  DocumentTableCard,
   TimelineVolumeCompositeCard
 } from '../components/CardComponents.js';
 
-export class WorkspaceView extends BaseView {
+export class WorkspaceView extends DetailViewBase {
   constructor(container, workspaceId, options = {}) {
     super(container, options);
     this.workspaceId = workspaceId;
@@ -49,7 +44,7 @@ export class WorkspaceView extends BaseView {
     
     // Build cards based on active tab
     if (this.isDocumentsTab()) {
-      this.setupDocumentsCard(workspace, data);
+      super.setupDocumentsCard(workspace, data, 'workspace');
     } else {
       this.setupDashboardCards(workspace, data);
     }
@@ -73,26 +68,9 @@ export class WorkspaceView extends BaseView {
       ? '<span class="badge badge-status-paused">Archived</span>'
       : '<span class="badge badge-status-active">Active</span>';
 
-    // Action buttons for header
-    const archiveBtnLabel = isArchived ? 'Restore' : 'Archive';
-    const archiveBtnIcon = isArchived
-      ? '<path d="M3 10h10l-3-3M3 10l3 3M13 6v8H3V6"/>'  // Restore icon
-      : '<path d="M3 5h10M4 5v9h8V5M6 8v3M10 8v3"/>';    // Archive icon
-    
-    const actionsHtml = `
-      <button class="btn btn-small btn-secondary" id="workspace-edit-btn">
-        <svg viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.5">
-          <path d="M11.5 2.5l2 2M2 11l-.5 3.5L5 14l9-9-2-2-10 10z"/>
-        </svg>
-        Edit
-      </button>
-      <button class="btn btn-small btn-secondary" id="workspace-archive-btn">
-        <svg viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.5">
-          ${archiveBtnIcon}
-        </svg>
-        ${archiveBtnLabel}
-      </button>
-    `;
+    // Build stats for the header with dropdown support
+    const contextId = this.workspaceId;
+    const statsData = StatCards.buildEntityStatsWithItems(data, contextId);
 
     const headerHtml = PageHeader.render({
       breadcrumbs: [
@@ -104,7 +82,9 @@ export class WorkspaceView extends BaseView {
       badge: statusBadge,
       subtitle: subtitleParts,
       description: workspace.description,
-      actions: actionsHtml,
+      stats: statsData,
+      statsMode: 'dropdowns',
+      statsContextId: contextId,
       tagsContainerId: 'workspace-tags-container',
       tabs: tabsConfig,
       activeTab: activeTab
@@ -121,42 +101,17 @@ export class WorkspaceView extends BaseView {
     `;
 
     // Initialize card width toggles
-    const contentGrid = this.container.querySelector('.content-grid');
-    if (contentGrid) {
-      const tabSuffix = this.isDocumentsTab() ? '-docs' : '';
-      initAllCardToggles(contentGrid, `workspace-${this.workspaceId}${tabSuffix}`);
-    }
+    this.initCardWidthToggles('workspace', this.workspaceId);
 
     // Initialize all card components
     const components = this.cardManager.initializeAll();
     Object.assign(this.components, components);
 
-    // Set up action button handlers
-    this.setupActionButtons(workspace);
+    // Initialize stat card dropdowns
+    this.initStatDropdowns(contextId);
 
     // Initialize tag chips
-    this.initTagChips(workspace);
-  }
-
-  /**
-   * Initialize tag chips component
-   */
-  initTagChips(workspace) {
-    const tagsContainer = this.container.querySelector('#workspace-tags-container');
-    if (tagsContainer) {
-      this.tagChips = new TagChips({
-        entityType: 'workspace',
-        entityId: workspace.id,
-        editable: true,
-        onAddClick: () => {
-          const picker = getTagPicker();
-          picker.open('workspace', workspace.id, () => {
-            this.tagChips.refresh();
-          });
-        }
-      });
-      this.tagChips.render(tagsContainer);
-    }
+    this.initTagChips(workspace, 'workspace');
   }
 
   /**
@@ -220,6 +175,14 @@ export class WorkspaceView extends BaseView {
     // Get narrative durations for duration view toggle (scoped to workspace documents)
     const narrativeDurations = DataService.getNarrativeDurations(null, null, null, scopeDocIds);
 
+    // Combine persons and orgs as entities for stat cards
+    const entities = [...persons, ...organizations];
+
+    // Get activity (comments and highlights) for this workspace's documents
+    const activityDocIds = new Set(documents.map(d => d.id));
+    const allActivity = DataService.getAllActivity();
+    const activity = allActivity.filter(item => activityDocIds.has(item.documentId));
+
     return {
       documents,
       persons, organizations,
@@ -231,7 +194,8 @@ export class WorkspaceView extends BaseView {
       hasNetwork,
       volumeData,
       publisherData,
-      narrativeDurations
+      narrativeDurations,
+      entities, activity
     };
   }
 
@@ -381,61 +345,6 @@ export class WorkspaceView extends BaseView {
     }
   }
 
-  /**
-   * Set up card for Documents tab (full-width document table)
-   */
-  setupDocumentsCard(workspace, data) {
-    // Reset card manager for fresh setup
-    this.cardManager = new CardManager(this);
-
-    if (data.documents.length > 0) {
-      this.cardManager.add(new DocumentTableCard(this, 'workspace-documents', {
-        title: 'Documents',
-        documents: data.documents,
-        showCount: true,
-        fullWidth: true,
-        maxItems: 100,
-        enableViewerMode: true
-      }));
-    }
-  }
-
-  /**
-   * Set up action button handlers (Edit, Archive)
-   */
-  setupActionButtons(workspace) {
-    // Edit button
-    const editBtn = this.container.querySelector('#workspace-edit-btn');
-    if (editBtn) {
-      this.addListener(editBtn, 'click', () => {
-        const editor = getWorkspaceEditor();
-        editor.openEdit(workspace, (updatedWorkspace) => {
-          // Re-render the view with updated data
-          this.render();
-        });
-      });
-    }
-
-    // Archive/Restore button
-    const archiveBtn = this.container.querySelector('#workspace-archive-btn');
-    if (archiveBtn) {
-      this.addListener(archiveBtn, 'click', () => {
-        const isArchived = workspace.status === 'archived';
-        const newStatus = isArchived ? 'active' : 'archived';
-        
-        // Update workspace status (auto-save)
-        dataStore.updateWorkspace(workspace.id, { status: newStatus });
-        
-        // Re-render to reflect the change
-        this.render();
-      });
-    }
-  }
-
-  destroy() {
-    this.cardManager.destroyAll();
-    super.destroy();
-  }
 }
 
 export default WorkspaceView;

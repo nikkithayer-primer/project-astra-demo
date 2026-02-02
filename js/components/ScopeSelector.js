@@ -42,8 +42,11 @@ export class ScopeSelector {
       organizationIds: [],
       factionIds: [],
       locationIds: [],
-      eventIds: [],
-      keywords: []
+      keywords: [],
+      // Document attribute filters
+      documentTypes: [],
+      publisherIds: [],
+      authors: []
     };
     
     // Advanced mode state
@@ -96,7 +99,7 @@ export class ScopeSelector {
       this.mode = 'advanced';
       this.booleanExpression = scope.booleanExpression || '';
       this.entityMap = { ...scope.entityMap };
-      this.scope = { personIds: [], organizationIds: [], factionIds: [], locationIds: [], eventIds: [], keywords: [] };
+      this.scope = { personIds: [], organizationIds: [], factionIds: [], locationIds: [], keywords: [], documentTypes: [], publisherIds: [], authors: [] };
     } else {
       this.mode = 'simple';
       this.scope = {
@@ -104,8 +107,11 @@ export class ScopeSelector {
         organizationIds: [...(scope?.organizationIds || [])],
         factionIds: [...(scope?.factionIds || [])],
         locationIds: [...(scope?.locationIds || [])],
-        eventIds: [...(scope?.eventIds || [])],
-        keywords: [...(scope?.keywords || [])]
+        keywords: [...(scope?.keywords || [])],
+        // Document attribute filters
+        documentTypes: [...(scope?.documentTypes || [])],
+        publisherIds: [...(scope?.publisherIds || [])],
+        authors: [...(scope?.authors || [])]
       };
       this.booleanExpression = '';
       this.entityMap = {};
@@ -117,7 +123,9 @@ export class ScopeSelector {
     if (this.scope.organizationIds.length > 0) this.expandedSections.add('organizations');
     if (this.scope.factionIds.length > 0) this.expandedSections.add('factions');
     if (this.scope.locationIds.length > 0) this.expandedSections.add('locations');
-    if (this.scope.eventIds.length > 0) this.expandedSections.add('events');
+    if (this.scope.documentTypes.length > 0) this.expandedSections.add('documentTypes');
+    if (this.scope.publisherIds.length > 0) this.expandedSections.add('publishers');
+    if (this.scope.authors.length > 0) this.expandedSections.add('authors');
     
     this.render();
   }
@@ -162,7 +170,7 @@ export class ScopeSelector {
     const terms = [];
     
     // Build entity references and populate entityMap
-    ['personIds', 'organizationIds', 'factionIds', 'locationIds', 'eventIds'].forEach(scopeKey => {
+    ['personIds', 'organizationIds', 'factionIds', 'locationIds'].forEach(scopeKey => {
       const ids = this.scope[scopeKey] || [];
       const typeConfig = Object.values(allEntities).find(t => t.scopeKey === scopeKey);
       
@@ -239,7 +247,7 @@ export class ScopeSelector {
     const filterScope = filter.scope || {};
     
     // Add entities from filter (avoiding duplicates)
-    ['personIds', 'organizationIds', 'factionIds', 'locationIds', 'eventIds'].forEach(key => {
+    ['personIds', 'organizationIds', 'factionIds', 'locationIds'].forEach(key => {
       const filterIds = filterScope[key] || [];
       filterIds.forEach(id => {
         if (!this.scope[key].includes(id)) {
@@ -255,12 +263,35 @@ export class ScopeSelector {
       }
     });
     
+    // Add document types (avoiding duplicates)
+    (filterScope.documentTypes || []).forEach(docType => {
+      if (!this.scope.documentTypes.includes(docType)) {
+        this.scope.documentTypes.push(docType);
+      }
+    });
+    
+    // Add publisher IDs (avoiding duplicates)
+    (filterScope.publisherIds || []).forEach(publisherId => {
+      if (!this.scope.publisherIds.includes(publisherId)) {
+        this.scope.publisherIds.push(publisherId);
+      }
+    });
+    
+    // Add authors (avoiding duplicates)
+    (filterScope.authors || []).forEach(author => {
+      if (!this.scope.authors.includes(author)) {
+        this.scope.authors.push(author);
+      }
+    });
+    
     // Update expanded sections
     if (this.scope.personIds.length > 0) this.expandedSections.add('persons');
     if (this.scope.organizationIds.length > 0) this.expandedSections.add('organizations');
     if (this.scope.factionIds.length > 0) this.expandedSections.add('factions');
     if (this.scope.locationIds.length > 0) this.expandedSections.add('locations');
-    if (this.scope.eventIds.length > 0) this.expandedSections.add('events');
+    if (this.scope.documentTypes.length > 0) this.expandedSections.add('documentTypes');
+    if (this.scope.publisherIds.length > 0) this.expandedSections.add('publishers');
+    if (this.scope.authors.length > 0) this.expandedSections.add('authors');
     
     this.render();
     this.options.onChange(this.scope);
@@ -275,8 +306,10 @@ export class ScopeSelector {
       organizationIds: [],
       factionIds: [],
       locationIds: [],
-      eventIds: [],
-      keywords: []
+      keywords: [],
+      documentTypes: [],
+      publisherIds: [],
+      authors: []
     };
     this.expandedSections = new Set();
     this.render();
@@ -303,9 +336,43 @@ export class ScopeSelector {
       persons: { label: 'Persons', scopeKey: 'personIds', entities: DataService.getPersons() },
       organizations: { label: 'Organizations', scopeKey: 'organizationIds', entities: DataService.getOrganizations() },
       factions: { label: 'Factions', scopeKey: 'factionIds', entities: DataService.getFactions() },
-      locations: { label: 'Locations', scopeKey: 'locationIds', entities: DataService.getLocations() },
-      events: { label: 'Events', scopeKey: 'eventIds', entities: DataService.getEvents() }
+      locations: { label: 'Locations', scopeKey: 'locationIds', entities: DataService.getLocations() }
     };
+  }
+
+  /**
+   * Get available document types for filtering
+   */
+  getDocumentTypes() {
+    return [
+      { id: 'news_article', name: 'News Article' },
+      { id: 'social_media', name: 'Social Media' },
+      { id: 'internal_report', name: 'Internal Report' },
+      { id: 'intelligence_report', name: 'Intelligence Report' },
+      { id: 'memo', name: 'Memo' },
+      { id: 'transcript', name: 'Transcript' }
+    ];
+  }
+
+  /**
+   * Get all publishers for filtering
+   */
+  getPublishers() {
+    return DataService.getPublishers() || [];
+  }
+
+  /**
+   * Get unique authors from documents
+   */
+  getAuthors() {
+    const documents = DataService.getDocuments() || [];
+    const authorSet = new Set();
+    documents.forEach(doc => {
+      if (doc.author && typeof doc.author === 'string' && doc.author.trim()) {
+        authorSet.add(doc.author.trim());
+      }
+    });
+    return Array.from(authorSet).sort().map(author => ({ id: author, name: author }));
   }
 
   /**
@@ -705,6 +772,62 @@ export class ScopeSelector {
       `);
     }
     
+    // Render document type chips
+    const documentTypes = this.getDocumentTypes();
+    for (const docTypeId of this.scope.documentTypes || []) {
+      const docType = documentTypes.find(dt => dt.id === docTypeId);
+      if (docType) {
+        chips.push(`
+          <span class="scope-chip scope-chip-docattr" data-id="${docTypeId}" data-scope-key="documentTypes" data-type="documentType">
+            <span class="scope-chip-icon">
+              <svg viewBox="0 0 16 16" width="12" height="12" fill="none" stroke="currentColor" stroke-width="1.5">
+                <path d="M3 2h7l3 3v9a1 1 0 01-1 1H3a1 1 0 01-1-1V3a1 1 0 011-1z"/>
+                <path d="M10 2v3h3"/>
+              </svg>
+            </span>
+            <span class="scope-chip-label">${this.escapeHtml(docType.name)}</span>
+            <button class="chip-remove" aria-label="Remove">&times;</button>
+          </span>
+        `);
+      }
+    }
+    
+    // Render publisher chips
+    const publishers = this.getPublishers();
+    for (const publisherId of this.scope.publisherIds || []) {
+      const publisher = publishers.find(p => p.id === publisherId);
+      if (publisher) {
+        chips.push(`
+          <span class="scope-chip scope-chip-docattr" data-id="${publisherId}" data-scope-key="publisherIds" data-type="publisher">
+            <span class="scope-chip-icon">
+              <svg viewBox="0 0 16 16" width="12" height="12" fill="none" stroke="currentColor" stroke-width="1.5">
+                <rect x="2" y="3" width="12" height="10" rx="1"/>
+                <path d="M5 6h6M5 9h4"/>
+              </svg>
+            </span>
+            <span class="scope-chip-label">${this.escapeHtml(publisher.name)}</span>
+            <button class="chip-remove" aria-label="Remove">&times;</button>
+          </span>
+        `);
+      }
+    }
+    
+    // Render author chips
+    for (const author of this.scope.authors || []) {
+      chips.push(`
+        <span class="scope-chip scope-chip-docattr" data-id="${this.escapeHtml(author)}" data-scope-key="authors" data-type="author">
+          <span class="scope-chip-icon">
+            <svg viewBox="0 0 16 16" width="12" height="12" fill="none" stroke="currentColor" stroke-width="1.5">
+              <circle cx="8" cy="5" r="3"/>
+              <path d="M3 14c0-2.5 2-4.5 5-4.5s5 2 5 4.5"/>
+            </svg>
+          </span>
+          <span class="scope-chip-label">${this.escapeHtml(author)}</span>
+          <button class="chip-remove" aria-label="Remove">&times;</button>
+        </span>
+      `);
+    }
+    
     if (chips.length === 0) {
       return '<span class="scope-chips-empty">No items selected</span>';
     }
@@ -777,7 +900,10 @@ export class ScopeSelector {
       `;
     }).join('');
     
-    const combinedGroups = searchFiltersHtml + groups;
+    // Render document attribute sections
+    const documentAttributesHtml = this.renderDocumentAttributeGroups();
+    
+    const combinedGroups = searchFiltersHtml + groups + documentAttributesHtml;
     
     if (!combinedGroups.trim()) {
       return '<div class="scope-entity-list-empty">All entities have been selected</div>';
@@ -788,6 +914,142 @@ export class ScopeSelector {
     }
     
     return combinedGroups;
+  }
+
+  /**
+   * Render document attribute filter groups (document types, publishers, authors)
+   */
+  renderDocumentAttributeGroups() {
+    const filterLower = this.filterText.toLowerCase();
+    let html = '';
+    
+    // Document Types section
+    const documentTypes = this.getDocumentTypes();
+    const selectedDocTypes = this.scope.documentTypes || [];
+    const filteredDocTypes = documentTypes.filter(dt => {
+      if (selectedDocTypes.includes(dt.id)) return false;
+      if (!filterLower) return true;
+      return dt.name.toLowerCase().includes(filterLower);
+    });
+    
+    if (filteredDocTypes.length > 0 || selectedDocTypes.length < documentTypes.length) {
+      const isExpanded = this.expandedSections.has('documentTypes');
+      const filteredDocTypeIds = filteredDocTypes.map(dt => dt.id);
+      html += `
+        <div class="scope-entity-group ${isExpanded ? 'expanded' : ''}" data-type="documentTypes">
+          <button class="scope-entity-group-header" data-type="documentTypes">
+            <svg class="scope-group-chevron" viewBox="0 0 16 16" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M4 6l4 4 4-4"/>
+            </svg>
+            <span class="scope-group-label">Document Types</span>
+            <span class="scope-group-count">${filteredDocTypes.length}</span>
+            ${filteredDocTypes.length >= 1 ? `<span class="scope-add-all" data-scope-key="documentTypes" data-ids="${filteredDocTypeIds.join(',')}">${filteredDocTypes.length === 1 ? 'Add' : 'Add all'}</span>` : ''}
+          </button>
+          <div class="scope-entity-group-items">
+            ${filteredDocTypes.length > 0 ? filteredDocTypes.map(dt => `
+              <button class="scope-entity-item scope-docattr-item" 
+                      data-id="${dt.id}" 
+                      data-scope-key="documentTypes"
+                      data-type="documentType">
+                <span class="scope-entity-item-icon">
+                  <svg viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.5">
+                    <path d="M3 2h7l3 3v9a1 1 0 01-1 1H3a1 1 0 01-1-1V3a1 1 0 011-1z"/>
+                    <path d="M10 2v3h3"/>
+                  </svg>
+                </span>
+                <span class="scope-entity-item-name">${this.escapeHtml(dt.name)}</span>
+              </button>
+            `).join('') : `<div class="scope-entity-group-empty">No matching document types</div>`}
+          </div>
+        </div>
+      `;
+    }
+    
+    // Publishers section
+    const publishers = this.getPublishers();
+    const selectedPublisherIds = this.scope.publisherIds || [];
+    const filteredPublishers = publishers.filter(pub => {
+      if (selectedPublisherIds.includes(pub.id)) return false;
+      if (!filterLower) return true;
+      return pub.name.toLowerCase().includes(filterLower);
+    });
+    
+    if (filteredPublishers.length > 0 || selectedPublisherIds.length < publishers.length) {
+      const isExpanded = this.expandedSections.has('publishers');
+      const filteredPublisherIds = filteredPublishers.map(pub => pub.id);
+      html += `
+        <div class="scope-entity-group ${isExpanded ? 'expanded' : ''}" data-type="publishers">
+          <button class="scope-entity-group-header" data-type="publishers">
+            <svg class="scope-group-chevron" viewBox="0 0 16 16" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M4 6l4 4 4-4"/>
+            </svg>
+            <span class="scope-group-label">Publishers</span>
+            <span class="scope-group-count">${filteredPublishers.length}</span>
+            ${filteredPublishers.length >= 1 ? `<span class="scope-add-all" data-scope-key="publisherIds" data-ids="${filteredPublisherIds.join(',')}">${filteredPublishers.length === 1 ? 'Add' : 'Add all'}</span>` : ''}
+          </button>
+          <div class="scope-entity-group-items">
+            ${filteredPublishers.length > 0 ? filteredPublishers.map(pub => `
+              <button class="scope-entity-item scope-docattr-item" 
+                      data-id="${pub.id}" 
+                      data-scope-key="publisherIds"
+                      data-type="publisher">
+                <span class="scope-entity-item-icon">
+                  <svg viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.5">
+                    <rect x="2" y="3" width="12" height="10" rx="1"/>
+                    <path d="M5 6h6M5 9h4"/>
+                  </svg>
+                </span>
+                <span class="scope-entity-item-name">${this.escapeHtml(pub.name)}</span>
+              </button>
+            `).join('') : `<div class="scope-entity-group-empty">No matching publishers</div>`}
+          </div>
+        </div>
+      `;
+    }
+    
+    // Authors section
+    const authors = this.getAuthors();
+    const selectedAuthors = this.scope.authors || [];
+    const filteredAuthors = authors.filter(author => {
+      if (selectedAuthors.includes(author.id)) return false;
+      if (!filterLower) return true;
+      return author.name.toLowerCase().includes(filterLower);
+    });
+    
+    if (filteredAuthors.length > 0 || selectedAuthors.length < authors.length) {
+      const isExpanded = this.expandedSections.has('authors');
+      const filteredAuthorIds = filteredAuthors.map(author => author.id);
+      html += `
+        <div class="scope-entity-group ${isExpanded ? 'expanded' : ''}" data-type="authors">
+          <button class="scope-entity-group-header" data-type="authors">
+            <svg class="scope-group-chevron" viewBox="0 0 16 16" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M4 6l4 4 4-4"/>
+            </svg>
+            <span class="scope-group-label">Authors</span>
+            <span class="scope-group-count">${filteredAuthors.length}</span>
+            ${filteredAuthors.length >= 1 ? `<span class="scope-add-all" data-scope-key="authors" data-ids="${filteredAuthorIds.join(',')}">${filteredAuthors.length === 1 ? 'Add' : 'Add all'}</span>` : ''}
+          </button>
+          <div class="scope-entity-group-items">
+            ${filteredAuthors.length > 0 ? filteredAuthors.map(author => `
+              <button class="scope-entity-item scope-docattr-item" 
+                      data-id="${this.escapeHtml(author.id)}" 
+                      data-scope-key="authors"
+                      data-type="author">
+                <span class="scope-entity-item-icon">
+                  <svg viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.5">
+                    <circle cx="8" cy="5" r="3"/>
+                    <path d="M3 14c0-2.5 2-4.5 5-4.5s5 2 5 4.5"/>
+                  </svg>
+                </span>
+                <span class="scope-entity-item-name">${this.escapeHtml(author.name)}</span>
+              </button>
+            `).join('') : `<div class="scope-entity-group-empty">No matching authors</div>`}
+          </div>
+        </div>
+      `;
+    }
+    
+    return html;
   }
 
   /**
@@ -883,8 +1145,10 @@ export class ScopeSelector {
            (scope.organizationIds?.length || 0) +
            (scope.factionIds?.length || 0) +
            (scope.locationIds?.length || 0) +
-           (scope.eventIds?.length || 0) +
-           (scope.keywords?.length || 0);
+           (scope.keywords?.length || 0) +
+           (scope.documentTypes?.length || 0) +
+           (scope.publisherIds?.length || 0) +
+           (scope.authors?.length || 0);
   }
 
   /**
@@ -900,8 +1164,7 @@ export class ScopeSelector {
       personIds: 'persons',
       organizationIds: 'organizations',
       factionIds: 'factions',
-      locationIds: 'locations',
-      eventIds: 'events'
+      locationIds: 'locations'
     };
     
     // Resolve entity IDs to names
@@ -1022,12 +1285,14 @@ export class ScopeSelector {
       }
       return this.booleanExpression ? 1 : 0;
     }
-    return this.scope.personIds.length +
-           this.scope.organizationIds.length +
-           this.scope.factionIds.length +
-           this.scope.locationIds.length +
-           this.scope.eventIds.length +
-           this.scope.keywords.length;
+    return (this.scope.personIds?.length || 0) +
+           (this.scope.organizationIds?.length || 0) +
+           (this.scope.factionIds?.length || 0) +
+           (this.scope.locationIds?.length || 0) +
+           (this.scope.keywords?.length || 0) +
+           (this.scope.documentTypes?.length || 0) +
+           (this.scope.publisherIds?.length || 0) +
+           (this.scope.authors?.length || 0);
   }
 
   /**
@@ -1131,8 +1396,10 @@ export class ScopeSelector {
           organizationIds: [...this.scope.organizationIds],
           factionIds: [...this.scope.factionIds],
           locationIds: [...this.scope.locationIds],
-          eventIds: [...this.scope.eventIds],
-          keywords: [...this.scope.keywords]
+          keywords: [...this.scope.keywords],
+          documentTypes: [...(this.scope.documentTypes || [])],
+          publisherIds: [...(this.scope.publisherIds || [])],
+          authors: [...(this.scope.authors || [])]
         }
       });
     }
@@ -1232,7 +1499,12 @@ export class ScopeSelector {
             this.scope.keywords = this.scope.keywords.filter(k => k !== chip.dataset.keyword);
           } else if (chip.dataset.id && chip.dataset.scopeKey) {
             const scopeKey = chip.dataset.scopeKey;
-            this.scope[scopeKey] = this.scope[scopeKey].filter(id => id !== chip.dataset.id);
+            // Handle authors specially since they store the actual value, not an ID
+            if (scopeKey === 'authors') {
+              this.scope.authors = this.scope.authors.filter(a => a !== chip.dataset.id);
+            } else {
+              this.scope[scopeKey] = this.scope[scopeKey].filter(id => id !== chip.dataset.id);
+            }
           }
           this.refreshChips();
           this.refreshEntityList();
@@ -1318,11 +1590,17 @@ export class ScopeSelector {
       if (item) {
         e.preventDefault();
         const { id, scopeKey } = item.dataset;
-        if (id && scopeKey && !this.scope[scopeKey].includes(id)) {
-          this.scope[scopeKey].push(id);
-          this.refreshChips();
-          this.refreshEntityList();
-          this.notifyChange();
+        if (id && scopeKey) {
+          // Initialize array if needed
+          if (!this.scope[scopeKey]) {
+            this.scope[scopeKey] = [];
+          }
+          if (!this.scope[scopeKey].includes(id)) {
+            this.scope[scopeKey].push(id);
+            this.refreshChips();
+            this.refreshEntityList();
+            this.notifyChange();
+          }
         }
       }
     });
@@ -1417,7 +1695,7 @@ export class ScopeSelector {
     // Build expression from filter contents
     const terms = [];
     
-    ['personIds', 'organizationIds', 'factionIds', 'locationIds', 'eventIds'].forEach(scopeKey => {
+    ['personIds', 'organizationIds', 'factionIds', 'locationIds'].forEach(scopeKey => {
       const ids = filterScope[scopeKey] || [];
       const typeConfig = Object.values(allEntities).find(t => t.scopeKey === scopeKey);
       const entityType = scopeKey.replace('Ids', '').replace(/s$/, '');

@@ -16,17 +16,36 @@ export class VennDiagram extends BaseComponent {
   }
 
   /**
-   * Override resize to update width only
-   * NOTE: Height stays fixed to prevent resize feedback loops
+   * Override resize to update dimensions
+   * NOTE: Height is only updated in fullscreen mode where CSS constrains dimensions
+   * (prevents resize loops in normal mode where container height = content height)
    */
   resize() {
     if (this.container) {
+      const oldWidth = this.options.width;
+      const oldHeight = this.options.height;
+      
       const newWidth = this.container.clientWidth;
-      if (newWidth === this.options.width) {
-        // No width change, skip re-render
+      this.options.width = newWidth;
+      
+      // Check if we're in fullscreen mode - if so, also update height
+      const card = this.container.closest('.card');
+      const isFullscreen = card && card.classList.contains('card-fullscreen');
+      
+      let newHeight = oldHeight;
+      if (isFullscreen) {
+        const containerHeight = this.container.clientHeight;
+        if (containerHeight > 0) {
+          newHeight = containerHeight;
+          this.options.height = newHeight;
+        }
+      }
+      
+      // Skip re-render if no dimension changes
+      if (newWidth === oldWidth && newHeight === oldHeight) {
         return this;
       }
-      this.options.width = newWidth;
+      
       if (this.data) {
         this.render();
       }
@@ -45,12 +64,17 @@ export class VennDiagram extends BaseComponent {
 
     this.clear();
 
+    // Check if we're in fullscreen mode
+    const card = this.container.closest('.card');
+    const isFullscreen = card && card.classList.contains('card-fullscreen');
+
     // Create container div for venn.js with centering
+    // In fullscreen mode, use 100% to let CSS control sizing
     const container = d3.select(this.container)
       .append('div')
       .attr('class', 'venn-container')
-      .style('width', width + 'px')
-      .style('height', height + 'px')
+      .style('width', isFullscreen ? '100%' : width + 'px')
+      .style('height', isFullscreen ? '100%' : height + 'px')
       .style('display', 'flex')
       .style('justify-content', 'center')
       .style('align-items', 'center');

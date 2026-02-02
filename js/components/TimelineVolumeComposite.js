@@ -183,11 +183,17 @@ export class TimelineVolumeComposite extends BaseComponent {
     `;
     this.container.appendChild(controlsDiv);
 
-    // Create SVG
+    // Check if we're in fullscreen mode
+    const card = this.container.closest('.card');
+    const isFullscreen = card && card.classList.contains('card-fullscreen');
+
+    // Create SVG - in fullscreen mode, use 100% to let CSS control sizing
     const svg = d3.select(this.container)
       .append('svg')
-      .attr('width', width)
-      .attr('height', totalHeight)
+      .attr('width', isFullscreen ? '100%' : width)
+      .attr('height', isFullscreen ? '100%' : totalHeight)
+      .attr('viewBox', [0, 0, width, totalHeight])
+      .attr('preserveAspectRatio', 'xMidYMid meet')
       .attr('class', 'composite-svg');
 
     this.svg = svg;

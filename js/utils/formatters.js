@@ -170,6 +170,16 @@ export function getTimeFormatter(format = '%b %d') {
 }
 
 /**
+ * Status labels mapping for common statuses
+ */
+export const STATUS_LABELS = {
+  'new': 'New',
+  'in_progress': 'In Progress',
+  'under_investigation': 'Investigating',
+  'resolved': 'Resolved'
+};
+
+/**
  * Format a status value for display
  * @param {string} status - Status value (active, paused, archived, draft, etc.)
  * @returns {string} Formatted status string
@@ -184,10 +194,11 @@ export function formatStatus(status) {
     'draft': 'Draft',
     'pending': 'Pending',
     'completed': 'Completed',
-    'inactive': 'Inactive'
+    'inactive': 'Inactive',
+    ...STATUS_LABELS
   };
   
-  return statusMap[status.toLowerCase()] || status.charAt(0).toUpperCase() + status.slice(1);
+  return statusMap[status.toLowerCase()] || status;
 }
 
 /**

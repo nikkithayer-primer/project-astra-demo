@@ -6,7 +6,9 @@
 import { BaseView } from './BaseView.js';
 import { DataService } from '../data/DataService.js';
 import { PageHeader } from '../utils/PageHeader.js';
+import { CardBuilder } from '../utils/CardBuilder.js';
 import { getWorkspaceEditor } from '../components/WorkspaceEditorModal.js';
+import { dataStore } from '../data/DataStore.js';
 
 export class WorkspacesView extends BaseView {
   constructor(container, options = {}) {
@@ -71,11 +73,15 @@ export class WorkspacesView extends BaseView {
       ? '<span class="tag tag-neutral">Archived</span>'
       : '<span class="tag">Active</span>';
 
+    // Build actions HTML using CardBuilder
+    const actionsHtml = CardBuilder.actionMenu('workspace', workspace.id, { isArchived });
+
     return `
-      <div class="card card-half workspace-card" data-workspace-id="${workspace.id}">
+      <div class="card card-half-width workspace-card" data-workspace-id="${workspace.id}">
         <div class="card-header">
-          <span class="card-title">${this.escapeHtml(workspace.name)}</span>
+          <h2 class="card-title">${this.escapeHtml(workspace.name)}</h2>
           ${statusTag}
+          <div class="card-header-actions">${actionsHtml}</div>
         </div>
         <div class="card-body">
           <p class="text-sm text-secondary mb-md">Search: "${this.escapeHtml(workspace.query)}"</p>
@@ -115,6 +121,9 @@ export class WorkspacesView extends BaseView {
    * Set up click handlers for cards and buttons
    */
   setupEventHandlers() {
+    // Setup action menu dropdowns
+    this.setupActionMenus();
+
     // Workspace card clicks - navigate to detail view
     const workspaceCards = this.container.querySelectorAll('.workspace-card');
     workspaceCards.forEach(card => {
@@ -140,6 +149,70 @@ export class WorkspacesView extends BaseView {
         this.handleCreateWorkspace();
       });
     }
+  }
+
+  /**
+   * Setup action menu dropdown handlers
+   */
+  setupActionMenus() {
+    const actionMenus = this.container.querySelectorAll('.card-action-menu');
+    
+    actionMenus.forEach(menu => {
+      const trigger = menu.querySelector('.card-action-menu-trigger');
+      const workspaceId = menu.dataset.workspaceId;
+      
+      if (trigger) {
+        this.addListener(trigger, 'click', (e) => {
+          e.stopPropagation();
+          
+          // Close other open menus
+          actionMenus.forEach(otherMenu => {
+            if (otherMenu !== menu) {
+              otherMenu.classList.remove('open');
+            }
+          });
+          
+          // Toggle this menu
+          menu.classList.toggle('open');
+        });
+      }
+      
+      // Handle edit button click
+      const editBtn = menu.querySelector('.workspace-edit-btn');
+      if (editBtn && !editBtn.disabled) {
+        this.addListener(editBtn, 'click', (e) => {
+          e.stopPropagation();
+          menu.classList.remove('open');
+          const workspace = DataService.getWorkspace(workspaceId);
+          if (workspace) {
+            const editor = getWorkspaceEditor();
+            editor.openEdit(workspace, () => {
+              this.render();
+            });
+          }
+        });
+      }
+      
+      // Handle archive button click
+      const archiveBtn = menu.querySelector('.workspace-archive-btn');
+      if (archiveBtn) {
+        this.addListener(archiveBtn, 'click', (e) => {
+          e.stopPropagation();
+          menu.classList.remove('open');
+          const workspace = DataService.getWorkspace(workspaceId);
+          if (workspace) {
+            const newStatus = workspace.status === 'archived' ? 'active' : 'archived';
+            dataStore.updateWorkspace(workspaceId, { status: newStatus });
+            this.render();
+          }
+        });
+      }
+    });
+    
+    // Close menus when clicking outside
+    this.addListener(document, 'click', () => {
+      actionMenus.forEach(menu => menu.classList.remove('open'));
+    });
   }
 
   /**

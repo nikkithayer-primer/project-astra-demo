@@ -1,5 +1,31 @@
 /* Primer - Component Styles
-   Compact, information-dense UI components */
+   Compact, information-dense UI components
+   
+   NOTE: This file is large (~8000 lines) and could be split into focused modules:
+   
+   Recommended CSS file structure for future refactoring:
+   - buttons.css (lines 4-100) - Button variants and states
+   - stat-cards.css (lines 305-512) - Stat grid and stat card dropdowns
+   - tables.css (lines 513-889) - Tables and document table styles
+   - classification.css (lines 890-1275) - Classification banners and badges
+   - badges.css (lines 1276-1342) - Tags/badges and status badges
+   - entity-list.css (lines 1343-1459) - Entity list patterns
+   - search.css (lines 1731-2487) - Search view and filter components
+   - charts.css (lines 2488-2590) - Chart containers and legends
+   - maps.css (lines 2591-2996) - Map containers, markers, and popups
+   - venn.css (lines 3064-3091) - Venn diagram overrides
+   - document-viewer.css (lines 5227-5960) - Document viewer split layout
+   - social-posts.css (lines 5696-5891) - Social media post headers
+   - annotations.css (lines 6001-6373) - Highlights and comments
+   - drag-drop.css (lines 6374-6463) - Drag-drop card functionality
+   - timeline.css (lines 6465-6654) - Vertical timeline
+   - tags.css (lines 7084-7728) - Tag chips and tag picker
+   - scope-selector.css (lines 7729-7908) - Scope selector component
+   - dashboard.css (lines 7909-8074) - Dashboard-specific styles
+   - add-to-project.css (lines 8075-8237) - Add to project modal
+   
+   When splitting, ensure @import order in main stylesheet preserves CSS specificity.
+*/
 
 /* Buttons */
 .btn {
@@ -427,11 +453,11 @@
 .stat-dropdown-menu {
   position: absolute;
   top: 100%;
-  left: 0;
+  right: 0;
   z-index: 1000;
-  min-width: 200px;
-  max-width: 300px;
-  max-height: 300px;
+  min-width: 280px;
+  max-width: 400px;
+  max-height: 400px;
   overflow-y: auto;
   background: var(--bg-primary);
   border: 1px solid var(--border-color);
@@ -450,16 +476,18 @@
 }
 
 .stat-dropdown-item {
-  display: block;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
   padding: var(--space-sm) var(--space-md);
   color: var(--text-primary);
   text-decoration: none;
-  font-size: var(--text-sm);
-  line-height: 1.4;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
   transition: background 0.1s;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.stat-dropdown-item:last-of-type {
+  border-bottom: none;
 }
 
 .stat-dropdown-item:hover {
@@ -468,6 +496,29 @@
 
 .stat-dropdown-item:active {
   background: var(--bg-secondary);
+}
+
+.stat-dropdown-item-title {
+  font-size: var(--text-sm);
+  font-weight: 500;
+  line-height: 1.3;
+  color: var(--text-primary);
+  /* Allow wrapping for full title */
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.stat-dropdown-item-desc {
+  font-size: var(--text-xs);
+  line-height: 1.4;
+  color: var(--text-muted);
+  /* Truncate description to 2 lines */
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
 }
 
 .stat-dropdown-more {
@@ -1909,12 +1960,12 @@
   border-radius: 9px;
 }
 
-/* Repository Dropdown */
-.repo-dropdown-wrapper {
+/* Filter Dropdown (shared pattern for Classification, Repository, etc.) */
+.filter-dropdown-wrapper {
   position: relative;
 }
 
-.repo-dropdown-btn {
+.filter-dropdown-btn {
   display: inline-flex;
   align-items: center;
   gap: var(--space-sm);
@@ -1922,16 +1973,16 @@
   font-size: 13px;
 }
 
-.repo-dropdown-btn .dropdown-chevron {
+.filter-dropdown-btn .dropdown-chevron {
   transition: transform 0.2s ease;
 }
 
-.repo-dropdown-popover {
+.filter-dropdown-popover {
   position: absolute;
   top: 100%;
   left: 0;
   margin-top: 4px;
-  min-width: 240px;
+  min-width: 220px;
   background: var(--bg-primary);
   border: 1px solid var(--border-color);
   border-radius: var(--radius-md);
@@ -1940,27 +1991,31 @@
   display: none;
 }
 
-.repo-dropdown-popover.open {
+.filter-dropdown-popover.open {
   display: block;
 }
 
-.repo-dropdown-header {
+.filter-dropdown-header {
+  padding: 0;
+}
+
+.filter-dropdown-header .dropdown-option {
   padding: var(--space-sm) var(--space-md);
 }
 
-.repo-dropdown-divider {
+.filter-dropdown-divider {
   height: 1px;
   background: var(--border-subtle);
   margin: 0;
 }
 
-.repo-dropdown-list {
+.filter-dropdown-list {
   max-height: 240px;
   overflow-y: auto;
   padding: var(--space-xs) 0;
 }
 
-.repo-option {
+.dropdown-option {
   display: flex;
   align-items: center;
   gap: var(--space-sm);
@@ -1969,35 +2024,29 @@
   transition: background 0.1s ease;
 }
 
-.repo-option:hover {
+.dropdown-option:hover {
   background: var(--bg-hover);
 }
 
-.repo-option input[type="checkbox"] {
+.dropdown-option input[type="checkbox"] {
   flex-shrink: 0;
 }
 
-.repo-option-name {
+.dropdown-option-name {
   flex: 1;
   font-size: 13px;
   color: var(--text-primary);
 }
 
-.repo-option-code {
-  font-size: 12px;
-  color: var(--text-muted);
-  font-family: var(--font-mono);
-}
-
-.repo-select-all {
+.dropdown-select-all {
   font-weight: 500;
 }
 
-.repo-select-all span {
+.dropdown-select-all span {
   font-size: 13px;
 }
 
-.repo-dropdown-empty {
+.dropdown-empty {
   padding: var(--space-md);
   text-align: center;
   color: var(--text-muted);
@@ -2061,8 +2110,10 @@
 .selected-scope-chips .scope-chip-organization svg { color: #8b5cf6; }
 .selected-scope-chips .scope-chip-faction svg { color: #f59e0b; }
 .selected-scope-chips .scope-chip-location svg { color: #10b981; }
-.selected-scope-chips .scope-chip-event svg { color: #ec4899; }
 .selected-scope-chips .scope-chip-keyword svg { color: var(--text-muted); }
+.selected-scope-chips .scope-chip-documentType svg { color: #6366f1; }
+.selected-scope-chips .scope-chip-publisher svg { color: #0ea5e9; }
+.selected-scope-chips .scope-chip-author svg { color: #14b8a6; }
 
 .selected-scope-chips .chip-label {
   max-width: 200px;
@@ -3022,17 +3073,51 @@
 }
 
 .dropdown-item {
-  display: block;
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
   padding: var(--space-sm) var(--space-md);
   font-size: var(--text-sm);
   color: var(--text-secondary);
   text-decoration: none;
   cursor: pointer;
+  border: none;
+  background: none;
+  width: 100%;
+  text-align: left;
 }
 
 .dropdown-item:hover {
   background: var(--bg-hover);
   color: var(--text-primary);
+}
+
+.dropdown-item:disabled,
+.dropdown-item.disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.dropdown-item:disabled:hover,
+.dropdown-item.disabled:hover {
+  background: none;
+  color: var(--text-secondary);
+}
+
+.dropdown-item svg {
+  flex-shrink: 0;
+}
+
+/* Card action menu - positioned right */
+.card-action-menu {
+  position: relative;
+}
+
+.card-action-menu .dropdown-menu {
+  right: 0;
+  left: auto;
+  min-width: 120px;
+  z-index: 100;
 }
 
 /* Venn Diagram overrides */
@@ -4500,7 +4585,6 @@
   width: auto;
   height: auto;
   padding: var(--space-xs) var(--space-sm);
-  background: var(--bg-primary);
   border: none;
   border-radius: var(--radius-xs);
 }
@@ -4520,7 +4604,6 @@
   width: 14px;
   height: 14px;
   stroke-width: 1.5;
-  fill: none;
 }
 
 /* Fullscreen toggle icon visibility */
@@ -4557,7 +4640,55 @@
 .card.card-fullscreen .card-body {
   flex: 1;
   max-height: none;
-  overflow-y: auto;
+  overflow: hidden;
+  /* Enable flex layout so visualizations can fill and center */
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+/* Make visualization containers fill available space in fullscreen */
+.card.card-fullscreen .card-body > svg {
+  flex: 1;
+  width: 100% !important;
+  height: 100% !important;
+  min-height: 0;
+}
+
+.card.card-fullscreen .card-body > .venn-container {
+  flex: 1;
+  width: 100% !important;
+  height: 100% !important;
+  min-height: 0;
+}
+
+.card.card-fullscreen .card-body > .chart-container {
+  flex: 1;
+  width: 100%;
+  height: 100% !important;
+  min-height: 0;
+}
+
+/* Map containers in fullscreen */
+.card.card-fullscreen .card-body.map-container,
+.card.card-fullscreen .card-body > .map-container {
+  flex: 1;
+  width: 100%;
+  height: 100% !important;
+  min-height: 0;
+}
+
+/* TimelineVolumeComposite has controls + svg */
+.card.card-fullscreen .card-body > .composite-controls {
+  flex-shrink: 0;
+}
+
+.card.card-fullscreen .card-body > .composite-controls ~ svg {
+  flex: 1;
+  width: 100% !important;
+  height: auto !important;
+  min-height: 0;
 }
 
 /* Hide resize handle in fullscreen */

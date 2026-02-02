@@ -40,8 +40,16 @@ export class MapView extends BaseComponent {
     this.clear();
     this.markers = [];
 
-    // Set container dimensions
-    this.container.style.height = `${this.options.height}px`;
+    // Check if we're in fullscreen mode
+    const card = this.container.closest('.card');
+    const isFullscreen = card && card.classList.contains('card-fullscreen');
+
+    // Set container dimensions - in fullscreen mode, let CSS control sizing
+    if (!isFullscreen) {
+      this.container.style.height = `${this.options.height}px`;
+    } else {
+      this.container.style.height = '100%';
+    }
     this.container.classList.add('map-container');
 
     // Initialize map without default zoom control

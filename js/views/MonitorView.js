@@ -3,14 +3,11 @@
  * Detail view for a single monitor using the CardManager pattern
  */
 
-import { BaseView } from './BaseView.js';
+import { DetailViewBase } from './DetailViewBase.js';
 import { DataService } from '../data/DataService.js';
 import { PageHeader } from '../utils/PageHeader.js';
-import { CardBuilder } from '../utils/CardBuilder.js';
 import { initAllCardToggles } from '../utils/cardWidthToggle.js';
-import { getMonitorEditor } from '../components/MonitorEditorModal.js';
-import { TagChips } from '../components/TagChips.js';
-import { getTagPicker } from '../components/TagPickerModal.js';
+import { StatCards } from '../components/StatCards.js';
 import {
   CardManager,
   NetworkGraphCard,
@@ -18,8 +15,7 @@ import {
   TopicListCard,
   SentimentChartCard,
   MapCard,
-  TimelineVolumeCompositeCard,
-  DocumentTableCard
+  TimelineVolumeCompositeCard
 } from '../components/CardComponents.js';
 
 /**
@@ -129,12 +125,11 @@ function formatAlertDescriptionWithLinks(alert, DataServiceRef) {
 // Export for use in other views
 export { formatAlertDescriptionWithLinks };
 
-export class MonitorView extends BaseView {
+export class MonitorView extends DetailViewBase {
   constructor(container, monitorId, options = {}) {
     super(container, options);
     this.monitorId = monitorId;
     this.cardManager = new CardManager(this);
-    this.monitorEditor = null;
   }
 
   async render() {
@@ -157,7 +152,7 @@ export class MonitorView extends BaseView {
     
     // Build cards based on active tab
     if (this.isDocumentsTab()) {
-      this.setupDocumentsCard(monitor, data);
+      super.setupDocumentsCard(monitor, data, 'monitor');
     } else if (this.isAlertsTab()) {
       this.setupAlertsCard(monitor, data);
     } else {
@@ -179,15 +174,9 @@ export class MonitorView extends BaseView {
       scopeLabel ? `<span class="text-muted">Scope: ${scopeLabel}</span>` : ''
     ].filter(Boolean).join(' ');
 
-    // Edit button for header actions
-    const editBtnHtml = `
-      <button class="btn btn-small btn-secondary" id="monitor-edit-btn">
-        <svg viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.5">
-          <path d="M11.5 2.5l2 2M2 11l-.5 3.5L5 14l9-9-2-2-10 10z"/>
-        </svg>
-        Edit Monitor
-      </button>
-    `;
+    // Build stats for the header with dropdown support
+    const contextId = this.monitorId;
+    const statsData = StatCards.buildEntityStatsWithItems(data, contextId);
 
     const headerHtml = PageHeader.render({
       breadcrumbs: [
@@ -201,7 +190,9 @@ export class MonitorView extends BaseView {
         : `<span class="badge badge-status-paused">Paused</span>`,
       subtitle: subtitleParts,
       description: monitor.description,
-      actions: editBtnHtml,
+      stats: statsData,
+      statsMode: 'dropdowns',
+      statsContextId: contextId,
       tagsContainerId: 'monitor-tags-container',
       tabs: tabsConfig,
       activeTab: activeTab
@@ -218,7 +209,7 @@ export class MonitorView extends BaseView {
       </div>
     `;
 
-    // Initialize card width toggles
+    // Initialize card width toggles - MonitorView has custom tab suffix for alerts
     const contentGrid = this.container.querySelector('.content-grid');
     if (contentGrid) {
       const tabSuffix = this.isDocumentsTab() ? '-docs' : (this.isAlertsTab() ? '-alerts' : '');
@@ -229,8 +220,8 @@ export class MonitorView extends BaseView {
     const components = this.cardManager.initializeAll();
     Object.assign(this.components, components);
 
-    // Set up edit button handler
-    this.setupEditButton(monitor);
+    // Initialize stat card dropdowns
+    this.initStatDropdowns(contextId);
 
     // Set up description toggle for narratives (Dashboard tab)
     if (this.isDashboardTab()) {
@@ -244,28 +235,7 @@ export class MonitorView extends BaseView {
     }
 
     // Initialize tag chips
-    this.initTagChips(monitor);
-  }
-
-  /**
-   * Initialize tag chips component
-   */
-  initTagChips(monitor) {
-    const tagsContainer = this.container.querySelector('#monitor-tags-container');
-    if (tagsContainer) {
-      this.tagChips = new TagChips({
-        entityType: 'monitor',
-        entityId: monitor.id,
-        editable: true,
-        onAddClick: () => {
-          const picker = getTagPicker();
-          picker.open('monitor', monitor.id, () => {
-            this.tagChips.refresh();
-          });
-        }
-      });
-      this.tagChips.render(tagsContainer);
-    }
+    this.initTagChips(monitor, 'monitor');
   }
 
   /**
@@ -317,12 +287,21 @@ export class MonitorView extends BaseView {
     const orgIds = organizations.map(o => o.id);
     const hasNetwork = personIds.length > 0 || orgIds.length > 0;
 
+    // Combine persons and orgs as entities for stat cards
+    const entities = [...persons, ...organizations];
+
+    // Get activity (comments and highlights) for this monitor's documents
+    const activityDocIds = new Set(documents.map(d => d.id));
+    const allActivity = DataService.getAllActivity();
+    const activity = allActivity.filter(item => activityDocIds.has(item.documentId));
+
     return {
       narratives, events, allEvents, alerts,
       persons, organizations, locations, factions, documents, topics,
       volumeData, hasVolumeData, hasVolumeTimeline,
       narrativeDurations, hasDurationData,
-      mapLocations, personIds, orgIds, hasNetwork
+      mapLocations, personIds, orgIds, hasNetwork,
+      entities, activity
     };
   }
 
@@ -608,45 +587,6 @@ export class MonitorView extends BaseView {
     return date.toLocaleDateString();
   }
 
-  /**
-   * Setup edit button click handler
-   */
-  setupEditButton(monitor) {
-    const editBtn = this.container.querySelector('#monitor-edit-btn');
-    if (editBtn) {
-      this.addListener(editBtn, 'click', () => {
-        this.monitorEditor = getMonitorEditor();
-        this.monitorEditor.openEdit(monitor, () => {
-          // Re-render the view after save
-          this.render();
-        });
-      });
-    }
-  }
-
-  /**
-   * Set up card for Documents tab (full-width document table)
-   */
-  setupDocumentsCard(monitor, data) {
-    // Reset card manager for fresh setup
-    this.cardManager = new CardManager(this);
-
-    if (data.documents.length > 0) {
-      this.cardManager.add(new DocumentTableCard(this, 'monitor-documents', {
-        title: 'Source Documents',
-        documents: data.documents,
-        showCount: true,
-        fullWidth: true,
-        maxItems: 50,
-        enableViewerMode: true
-      }));
-    }
-  }
-
-  destroy() {
-    this.cardManager.destroyAll();
-    super.destroy();
-  }
 }
 
 export default MonitorView;

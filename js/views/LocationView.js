@@ -3,12 +3,10 @@
  * Detail view for a location using the CardManager pattern
  */
 
-import { BaseView } from './BaseView.js';
+import { DetailViewBase } from './DetailViewBase.js';
 import { DataService } from '../data/DataService.js';
 import { PageHeader } from '../utils/PageHeader.js';
-import { initAllCardToggles } from '../utils/cardWidthToggle.js';
-import { TagChips } from '../components/TagChips.js';
-import { getTagPicker } from '../components/TagPickerModal.js';
+import { StatCards } from '../components/StatCards.js';
 import {
   CardManager,
   NetworkGraphCard,
@@ -16,11 +14,10 @@ import {
   TopicListCard,
   MapCard,
   VennDiagramCard,
-  TimelineVolumeCompositeCard,
-  DocumentTableCard
+  TimelineVolumeCompositeCard
 } from '../components/CardComponents.js';
 
-export class LocationView extends BaseView {
+export class LocationView extends DetailViewBase {
   constructor(container, locationId, options = {}) {
     super(container, options);
     this.locationId = locationId;
@@ -46,13 +43,13 @@ export class LocationView extends BaseView {
     
     // Build cards based on active tab
     if (this.isDocumentsTab()) {
-      this.setupDocumentsCard(location, data);
+      super.setupDocumentsCard(location, data, 'location');
     } else {
       this.setupDashboardCards(location, data);
     }
     
-    // Generate tabs config
-    const baseHref = `#/location/${this.locationId}`;
+    // Generate tabs config - use ID-based routing
+    const baseHref = this.buildContextRoute(this.locationId);
     const tabsConfig = hasDocuments ? this.getTabsConfig(baseHref, true) : null;
 
     // Build subtitle
@@ -61,13 +58,19 @@ export class LocationView extends BaseView {
       location.coordinates ? `Coordinates: ${location.coordinates.lat.toFixed(4)}, ${location.coordinates.lng.toFixed(4)}` : ''
     ].filter(Boolean).join(' • ');
 
+    // Build context-aware breadcrumbs
+    const breadcrumbs = this.buildBreadcrumbs([
+      { label: 'Locations', route: 'locations' },
+      location.name
+    ]);
+
+    // Build stats for the header with dropdown support
+    const contextId = this.context?.id || null;
+    const statsData = StatCards.buildEntityStatsWithItems(data, contextId);
+
     // Build page header with tabs
     const headerHtml = PageHeader.render({
-      breadcrumbs: [
-        { label: 'Dashboard', href: '#/dashboard' },
-        { label: 'Locations', href: '#/locations' },
-        location.name
-      ],
+      breadcrumbs,
       title: location.name,
       subtitle: subtitleParts,
       description: location.description,
@@ -75,6 +78,9 @@ export class LocationView extends BaseView {
         ? `<a href="#" class="btn btn-small btn-secondary source-link" data-source-type="location" data-source-id="${location.id}">View source</a>` 
         : '',
       tagsContainerId: 'location-tags-container',
+      stats: statsData,
+      statsMode: 'dropdowns',
+      statsContextId: contextId,
       tabs: tabsConfig,
       activeTab: activeTab
     });
@@ -89,40 +95,18 @@ export class LocationView extends BaseView {
       </div>
     `;
 
+    // Initialize stat card dropdowns
+    this.initStatDropdowns(contextId);
+
     // Initialize card width toggles
-    const contentGrid = this.container.querySelector('.content-grid');
-    if (contentGrid) {
-      const tabSuffix = this.isDocumentsTab() ? '-docs' : '';
-      initAllCardToggles(contentGrid, `location-${this.locationId}${tabSuffix}`);
-    }
+    this.initCardWidthToggles('location', this.locationId);
 
     // Initialize all card components
     const components = this.cardManager.initializeAll();
     Object.assign(this.components, components);
 
     // Initialize tag chips
-    this.initTagChips(location);
-  }
-
-  /**
-   * Initialize tag chips component
-   */
-  initTagChips(location) {
-    const tagsContainer = this.container.querySelector('#location-tags-container');
-    if (tagsContainer) {
-      this.tagChips = new TagChips({
-        entityType: 'location',
-        entityId: location.id,
-        editable: true,
-        onAddClick: () => {
-          const picker = getTagPicker();
-          picker.open('location', location.id, () => {
-            this.tagChips.refresh();
-          });
-        }
-      });
-      this.tagChips.render(tagsContainer);
-    }
+    this.initTagChips(location, 'location');
   }
 
   /**
@@ -173,10 +157,18 @@ export class LocationView extends BaseView {
     // Narrative durations for volume/duration toggle
     const narrativeDurations = DataService.getNarrativeDurations();
 
+    // Combine persons and organizations as entities for stat cards
+    const entities = [...persons, ...organizations];
+
+    // Get activity (comments and highlights) for this location's documents
+    const docIdSet = new Set(documents.map(d => d.id));
+    const allActivityData = DataService.getAllActivity();
+    const activity = allActivityData.filter(item => docIdSet.has(item.documentId));
+
     return {
       narratives, events, allEvents, persons, organizations, documents,
       hasNetwork, personIds, orgIds, publisherData, hasPublisherData,
-      hasVolumeTimeline, topics, factions, factionOverlaps, narrativeDurations
+      hasVolumeTimeline, topics, factions, factionOverlaps, narrativeDurations, entities, activity
     };
   }
 
@@ -264,29 +256,6 @@ export class LocationView extends BaseView {
     }
   }
 
-  /**
-   * Set up card for Documents tab (full-width document table)
-   */
-  setupDocumentsCard(location, data) {
-    // Reset card manager for fresh setup
-    this.cardManager = new CardManager(this);
-
-    if (data.documents.length > 0) {
-      this.cardManager.add(new DocumentTableCard(this, 'location-documents', {
-        title: 'Source Documents',
-        documents: data.documents,
-        showCount: true,
-        fullWidth: true,
-        maxItems: 50,
-        enableViewerMode: true
-      }));
-    }
-  }
-
-  destroy() {
-    this.cardManager.destroyAll();
-    super.destroy();
-  }
 }
 
 export default LocationView;

@@ -3,13 +3,10 @@
  * Detail view for a single project using the CardManager pattern
  */
 
-import { BaseView } from './BaseView.js';
+import { DetailViewBase } from './DetailViewBase.js';
 import { DataService } from '../data/DataService.js';
-import { dataStore } from '../data/DataStore.js';
 import { PageHeader } from '../utils/PageHeader.js';
-import { initAllCardToggles } from '../utils/cardWidthToggle.js';
-import { TagChips } from '../components/TagChips.js';
-import { getTagPicker } from '../components/TagPickerModal.js';
+import { StatCards } from '../components/StatCards.js';
 import {
   CardManager,
   NetworkGraphCard,
@@ -18,11 +15,10 @@ import {
   SentimentChartCard,
   VennDiagramCard,
   MapCard,
-  DocumentTableCard,
   TimelineVolumeCompositeCard
 } from '../components/CardComponents.js';
 
-export class ProjectView extends BaseView {
+export class ProjectView extends DetailViewBase {
   constructor(container, projectId, options = {}) {
     super(container, options);
     this.projectId = projectId;
@@ -48,7 +44,7 @@ export class ProjectView extends BaseView {
     
     // Build cards based on active tab
     if (this.isDocumentsTab()) {
-      this.setupDocumentsCard(project, data);
+      super.setupDocumentsCard(project, data, 'project');
     } else {
       this.setupDashboardCards(project, data);
     }
@@ -71,20 +67,9 @@ export class ProjectView extends BaseView {
       ? '<span class="badge badge-status-paused">Archived</span>'
       : '<span class="badge badge-status-active">Active</span>';
 
-    // Action buttons for header
-    const archiveBtnLabel = isArchived ? 'Restore' : 'Archive';
-    const archiveBtnIcon = isArchived
-      ? '<path d="M3 10h10l-3-3M3 10l3 3M13 6v8H3V6"/>'  // Restore icon
-      : '<path d="M3 5h10M4 5v9h8V5M6 8v3M10 8v3"/>';    // Archive icon
-    
-    const actionsHtml = `
-      <button class="btn btn-small btn-secondary" id="project-archive-btn">
-        <svg viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.5">
-          ${archiveBtnIcon}
-        </svg>
-        ${archiveBtnLabel}
-      </button>
-    `;
+    // Build stats for the header with dropdown support
+    const contextId = this.projectId;
+    const statsData = StatCards.buildEntityStatsWithItems(data, contextId);
 
     const headerHtml = PageHeader.render({
       breadcrumbs: [
@@ -96,7 +81,9 @@ export class ProjectView extends BaseView {
       badge: statusBadge,
       subtitle: subtitleParts,
       description: project.description,
-      actions: actionsHtml,
+      stats: statsData,
+      statsMode: 'dropdowns',
+      statsContextId: contextId,
       tagsContainerId: 'project-tags-container',
       tabs: tabsConfig,
       activeTab: activeTab
@@ -113,42 +100,17 @@ export class ProjectView extends BaseView {
     `;
 
     // Initialize card width toggles
-    const contentGrid = this.container.querySelector('.content-grid');
-    if (contentGrid) {
-      const tabSuffix = this.isDocumentsTab() ? '-docs' : '';
-      initAllCardToggles(contentGrid, `project-${this.projectId}${tabSuffix}`);
-    }
+    this.initCardWidthToggles('project', this.projectId);
 
     // Initialize all card components
     const components = this.cardManager.initializeAll();
     Object.assign(this.components, components);
 
-    // Set up action button handlers
-    this.setupActionButtons(project);
+    // Initialize stat card dropdowns
+    this.initStatDropdowns(contextId);
 
     // Initialize tag chips
-    this.initTagChips(project);
-  }
-
-  /**
-   * Initialize tag chips component
-   */
-  initTagChips(project) {
-    const tagsContainer = this.container.querySelector('#project-tags-container');
-    if (tagsContainer) {
-      this.tagChips = new TagChips({
-        entityType: 'project',
-        entityId: project.id,
-        editable: true,
-        onAddClick: () => {
-          const picker = getTagPicker();
-          picker.open('project', project.id, () => {
-            this.tagChips.refresh();
-          });
-        }
-      });
-      this.tagChips.render(tagsContainer);
-    }
+    this.initTagChips(project, 'project');
   }
 
   /**
@@ -181,6 +143,14 @@ export class ProjectView extends BaseView {
     // Get narrative durations for duration view toggle (scoped to project documents)
     const narrativeDurations = DataService.getNarrativeDurations(null, null, null, scopeDocIds);
 
+    // Combine persons and orgs as entities for stat cards (named 'combinedEntities' to avoid shadowing)
+    const combinedEntities = [...entities.persons, ...entities.organizations];
+
+    // Get activity (comments and highlights) for this project's documents
+    const activityDocIds = new Set(documents.map(d => d.id));
+    const allActivity = DataService.getAllActivity();
+    const activity = allActivity.filter(item => activityDocIds.has(item.documentId));
+
     return {
       documents,
       persons: entities.persons,
@@ -196,7 +166,9 @@ export class ProjectView extends BaseView {
       orgIds: entities.organizations.map(o => o.id),
       hasNetwork,
       volumeData,
-      narrativeDurations
+      narrativeDurations,
+      entities: combinedEntities,
+      activity
     };
   }
 
@@ -343,58 +315,6 @@ export class ProjectView extends BaseView {
     }
   }
 
-  /**
-   * Set up card for Documents tab (full-width document table)
-   */
-  setupDocumentsCard(project, data) {
-    // Reset card manager for fresh setup
-    this.cardManager = new CardManager(this);
-
-    if (data.documents.length > 0) {
-      this.cardManager.add(new DocumentTableCard(this, 'project-documents', {
-        title: 'Documents',
-        documents: data.documents,
-        showCount: true,
-        fullWidth: true,
-        maxItems: 100,
-        enableViewerMode: true
-      }));
-    }
-  }
-
-  /**
-   * Set up action button handlers (Archive/Restore)
-   */
-  setupActionButtons(project) {
-    // Archive/Restore button
-    const archiveBtn = this.container.querySelector('#project-archive-btn');
-    if (archiveBtn) {
-      this.addListener(archiveBtn, 'click', () => {
-        const isArchived = project.status === 'archived';
-        const newStatus = isArchived ? 'active' : 'archived';
-        
-        // Update project status
-        const projects = dataStore.data.projects || [];
-        const projectIndex = projects.findIndex(p => p.id === project.id);
-        if (projectIndex !== -1) {
-          projects[projectIndex] = { 
-            ...projects[projectIndex], 
-            status: newStatus,
-            updatedAt: new Date().toISOString()
-          };
-          dataStore.save();
-        }
-        
-        // Re-render to reflect the change
-        this.render();
-      });
-    }
-  }
-
-  destroy() {
-    this.cardManager.destroyAll();
-    super.destroy();
-  }
 }
 
 export default ProjectView;

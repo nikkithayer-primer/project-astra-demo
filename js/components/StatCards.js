@@ -3,9 +3,8 @@
  * Reusable stat cards component for displaying counts with icons
  * Used in page headers (Dashboard, Entity details, etc.)
  * 
- * Stat cards can be rendered as:
- * 1. Simple clickable cards (legacy) - navigates to list view
- * 2. Dropdown triggers (new) - shows entity list, click to navigate
+ * Stat cards are rendered as dropdowns that show entity lists
+ * with click-through navigation to detail views.
  */
 
 import { StatCardDropdown } from './StatCardDropdown.js';
@@ -57,6 +56,10 @@ const STAT_ICONS = {
     <rect x="2" y="4" width="12" height="10" rx="1"/>
     <path d="M5 4V2h6v2"/>
     <path d="M2 8h12"/>
+  </svg>`,
+  activity: `<svg class="stat-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.25">
+    <path d="M2 2h12v9H6l-3 3v-3H2V2z" rx="1"/>
+    <path d="M5 5h6M5 8h4"/>
   </svg>`
 };
 
@@ -73,7 +76,8 @@ const STAT_ROUTES = {
   entities: '#/entities',
   documents: '#/documents',
   persons: '#/entities',
-  organizations: '#/entities'
+  organizations: '#/entities',
+  activity: '#/activity'
 };
 
 /**
@@ -89,7 +93,8 @@ const STAT_LABELS = {
   entities: 'Entities',
   documents: 'Documents',
   persons: 'People',
-  organizations: 'Orgs'
+  organizations: 'Orgs',
+  activity: 'Activity'
 };
 
 /**
@@ -124,129 +129,145 @@ export const StatCards = {
   },
 
   /**
-   * Render a single stat card
-   * @param {string} type - Stat type (narratives, themes, etc.)
-   * @param {number} value - The stat value
-   * @param {Object} options - Options
-   * @param {boolean} options.clickable - Whether card is clickable (default: true)
-   * @param {string} options.href - Custom href (defaults to type's route)
-   * @param {string} options.label - Custom label (defaults to type's label)
-   * @returns {string} HTML string
+   * Build dashboard stats with items for dropdown rendering
+   * @param {Object} data - Dashboard data with entity arrays
+   * @param {string} contextId - Optional context ID for building routes
+   * @returns {Array} Stats array with items for renderDropdowns()
    */
-  renderCard(type, value, options = {}) {
-    const { clickable = true, href, label } = options;
-    const icon = this.getIcon(type);
-    const route = href || this.getRoute(type);
-    const displayLabel = label || this.getLabel(type);
-    const clickableClass = clickable ? ' clickable' : '';
-    const dataHref = clickable ? ` data-href="${route}"` : '';
-
-    return `
-      <div class="stat-card${clickableClass}"${dataHref}>
-        ${icon}
-        <div class="stat-value">${value}</div>
-        <div class="stat-label">${displayLabel}</div>
-      </div>
-    `;
-  },
-
-  /**
-   * Render multiple stat cards
-   * @param {Array} stats - Array of stat configs [{type, value, href?, label?}]
-   * @param {Object} options - Options applied to all cards
-   * @param {boolean} options.clickable - Whether cards are clickable (default: true)
-   * @returns {string} HTML string wrapped in stats-grid
-   */
-  render(stats, options = {}) {
-    if (!stats || stats.length === 0) return '';
-
-    const { clickable = true, wrapInGrid = true } = options;
-    
-    const cardsHtml = stats
-      .map(stat => this.renderCard(stat.type, stat.value, { 
-        clickable, 
-        href: stat.href, 
-        label: stat.label 
-      }))
-      .join('');
-
-    return wrapInGrid ? `<div class="stats-grid">${cardsHtml}</div>` : cardsHtml;
-  },
-
-  /**
-   * Attach click handlers to stat cards within a container
-   * @param {HTMLElement} container - Container element
-   * @param {Function} onClick - Optional custom click handler (receives href)
-   */
-  attachClickHandlers(container, onClick) {
-    container.querySelectorAll('.stat-card.clickable').forEach(card => {
-      card.addEventListener('click', () => {
-        const href = card.dataset.href;
-        if (href) {
-          if (onClick) {
-            onClick(href);
-          } else {
-            window.location.hash = href;
-          }
-        }
-      });
-    });
-  },
-
-  /**
-   * Build dashboard stats array from DataService stats object
-   * @param {Object} stats - Stats from DataService.getDashboardStats()
-   * @param {number} topicsCount - Number of topics
-   * @returns {Array} Stats array for render()
-   */
-  buildDashboardStats(stats, topicsCount) {
-    return [
-      { type: 'narratives', value: stats.totalNarratives },
-      { type: 'themes', value: stats.totalThemes },
-      { type: 'topics', value: topicsCount },
-      { type: 'factions', value: stats.totalFactions },
-      { type: 'locations', value: stats.totalLocations },
-      { type: 'events', value: stats.totalEvents },
-      { type: 'entities', value: stats.totalPersons + stats.totalOrganizations }
-    ];
-  },
-
-  /**
-   * Build entity stats array for entity detail views
-   * @param {Object} data - Entity data from fetchEntityData()
-   * @param {Function} routeBuilder - Optional function(entityType) => href for context-aware routing
-   * @returns {Array} Stats array for render()
-   */
-  buildEntityStats(data, routeBuilder = null) {
+  buildDashboardStatsWithItems(data, contextId = null) {
     const stats = [];
     
-    // Helper to build href - uses routeBuilder if provided, otherwise falls back to default
-    const buildHref = (type) => {
-      if (routeBuilder) {
-        // Map stat type to route entity type (plurals to singular for some)
-        const routeType = type === 'entities' ? 'entities' : type;
-        return routeBuilder(routeType);
-      }
-      return this.getRoute(type);
-    };
-    
     if (data.narratives?.length > 0) {
-      stats.push({ type: 'narratives', value: data.narratives.length, href: buildHref('narratives') });
+      stats.push({ 
+        type: 'narratives', 
+        value: data.narratives.length, 
+        items: data.narratives.map(n => ({ 
+          id: n.id, 
+          name: n.text,
+          description: n.description 
+        }))
+      });
     }
     if (data.topics?.length > 0) {
-      stats.push({ type: 'topics', value: data.topics.length, href: buildHref('topics') });
+      stats.push({ 
+        type: 'topics', 
+        value: data.topics.length,
+        items: data.topics.map(t => ({ 
+          id: t.id, 
+          name: t.headline,
+          description: t.description 
+        }))
+      });
     }
-    if (data.documents?.length > 0) {
-      stats.push({ type: 'documents', value: data.documents.length, href: buildHref('documents') });
+    if (data.factions?.length > 0) {
+      stats.push({ 
+        type: 'factions', 
+        value: data.factions.length,
+        items: data.factions.map(f => ({ 
+          id: f.id, 
+          name: f.name,
+          description: f.description 
+        }))
+      });
     }
     if (data.locations?.length > 0) {
-      stats.push({ type: 'locations', value: data.locations.length, href: buildHref('locations') });
+      stats.push({ 
+        type: 'locations', 
+        value: data.locations.length,
+        items: data.locations.map(l => ({ 
+          id: l.id, 
+          name: l.name,
+          description: l.description 
+        }))
+      });
     }
-    if (data.allEvents?.length > 0 || data.events?.length > 0) {
-      stats.push({ type: 'events', value: (data.allEvents || data.events).length, href: buildHref('events') });
+    if (data.events?.length > 0) {
+      stats.push({ 
+        type: 'events', 
+        value: data.events.length,
+        items: data.events.map(e => ({ 
+          id: e.id, 
+          name: e.text || e.headline || e.name,
+          description: e.description 
+        }))
+      });
+    }
+    if (data.entities?.length > 0) {
+      stats.push({ 
+        type: 'entities', 
+        value: data.entities.length,
+        items: data.entities.map(e => ({ 
+          id: e.id, 
+          name: e.name,
+          description: e.description 
+        }))
+      });
+    }
+    if (data.documents?.length > 0) {
+      stats.push({ 
+        type: 'documents', 
+        value: data.documents.length,
+        items: data.documents.map(d => ({ 
+          id: d.id, 
+          name: d.title,
+          description: d.excerpt || d.summary 
+        }))
+      });
+    }
+    if (data.activity?.length > 0) {
+      // Group activity by comments (with their replies)
+      const groupedActivity = this._groupActivityItems(data.activity);
+      stats.push({ 
+        type: 'activity', 
+        value: groupedActivity.length,
+        items: groupedActivity.map(item => ({ 
+          id: item.documentId,  // Link to document
+          name: item.type === 'highlight' 
+            ? `"${this._truncateText(item.highlightedText, 60)}"` 
+            : this._truncateText(item.content, 60),
+          description: `${item.type === 'highlight' ? 'Highlight' : 'Comment'}${item.replyCount ? ` (${item.replyCount} replies)` : ''} in ${item.documentTitle}`
+        }))
+      });
     }
     
     return stats;
+  },
+
+  /**
+   * Group activity items - excludes replies (they're counted with parent comment)
+   * @param {Array} activity - Raw activity from DataService.getAllActivity()
+   * @returns {Array} Filtered activity (highlights and comments only, no replies)
+   */
+  _groupActivityItems(activity) {
+    // Filter out replies - they'll be counted with their parent comment
+    return activity.filter(item => item.type !== 'reply');
+  },
+
+  /**
+   * Truncate text to a maximum length
+   * @param {string} text - Text to truncate
+   * @param {number} maxLength - Maximum length
+   * @returns {string} Truncated text
+   */
+  _truncateText(text, maxLength) {
+    if (!text) return '';
+    if (text.length <= maxLength) return text;
+    return text.substring(0, maxLength - 3) + '...';
+  },
+
+  /**
+   * Escape a string for safe use in an HTML attribute
+   * @param {string} str - String to escape
+   * @returns {string} Escaped string
+   */
+  _escapeHtmlAttr(str) {
+    if (!str) return '';
+    return str
+      .replace(/&/g, '&amp;')
+      .replace(/'/g, '&#39;')
+      .replace(/"/g, '&quot;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;');
   },
 
   /**
@@ -262,28 +283,44 @@ export const StatCards = {
       stats.push({ 
         type: 'narratives', 
         value: data.narratives.length, 
-        items: data.narratives.map(n => ({ id: n.id, name: n.text }))
+        items: data.narratives.map(n => ({ 
+          id: n.id, 
+          name: n.text,
+          description: n.description 
+        }))
       });
     }
     if (data.topics?.length > 0) {
       stats.push({ 
         type: 'topics', 
         value: data.topics.length,
-        items: data.topics.map(t => ({ id: t.id, name: t.headline }))
+        items: data.topics.map(t => ({ 
+          id: t.id, 
+          name: t.headline,
+          description: t.description 
+        }))
       });
     }
     if (data.documents?.length > 0) {
       stats.push({ 
         type: 'documents', 
         value: data.documents.length,
-        items: data.documents.map(d => ({ id: d.id, name: d.title }))
+        items: data.documents.map(d => ({ 
+          id: d.id, 
+          name: d.title,
+          description: d.excerpt || d.summary 
+        }))
       });
     }
     if (data.locations?.length > 0) {
       stats.push({ 
         type: 'locations', 
         value: data.locations.length,
-        items: data.locations.map(l => ({ id: l.id, name: l.name }))
+        items: data.locations.map(l => ({ 
+          id: l.id, 
+          name: l.name,
+          description: l.description 
+        }))
       });
     }
     if (data.allEvents?.length > 0 || data.events?.length > 0) {
@@ -291,7 +328,53 @@ export const StatCards = {
       stats.push({ 
         type: 'events', 
         value: events.length,
-        items: events.map(e => ({ id: e.id, name: e.headline || e.name }))
+        items: events.map(e => ({ 
+          id: e.id, 
+          name: e.text || e.headline || e.name,  // Events use 'text' field
+          description: e.description 
+        }))
+      });
+    }
+    if (data.factions?.length > 0) {
+      stats.push({ 
+        type: 'factions', 
+        value: data.factions.length,
+        items: data.factions.map(f => ({ 
+          id: f.id, 
+          name: f.name,
+          description: f.description 
+        }))
+      });
+    }
+    // Entities can come as combined array or separate persons/organizations
+    const entities = data.entities || [
+      ...(data.persons || []),
+      ...(data.organizations || [])
+    ];
+    if (entities.length > 0) {
+      stats.push({ 
+        type: 'entities', 
+        value: entities.length,
+        items: entities.map(e => ({ 
+          id: e.id, 
+          name: e.name,
+          description: e.description 
+        }))
+      });
+    }
+    if (data.activity?.length > 0) {
+      // Group activity by comments (with their replies)
+      const groupedActivity = this._groupActivityItems(data.activity);
+      stats.push({ 
+        type: 'activity', 
+        value: groupedActivity.length,
+        items: groupedActivity.map(item => ({ 
+          id: item.documentId,  // Link to document
+          name: item.type === 'highlight' 
+            ? `"${this._truncateText(item.highlightedText, 60)}"` 
+            : this._truncateText(item.content, 60),
+          description: `${item.type === 'highlight' ? 'Highlight' : 'Comment'}${item.replyCount ? ` (${item.replyCount} replies)` : ''} in ${item.documentTitle}`
+        }))
       });
     }
     
@@ -309,12 +392,18 @@ export const StatCards = {
   renderDropdowns(stats, options = {}) {
     if (!stats || stats.length === 0) return '';
 
-    const dropdownsHtml = stats.map((stat, index) => {
+    // Only include stats that have items
+    const statsWithItems = stats.filter(stat => stat.items && stat.items.length > 0);
+    if (statsWithItems.length === 0) return '';
+
+    const dropdownsHtml = statsWithItems.map((stat, index) => {
       const containerId = `stat-dropdown-${stat.type}-${index}`;
+      // Escape the JSON string for safe embedding in HTML attribute
+      const itemsJson = this._escapeHtmlAttr(JSON.stringify(stat.items || []));
       return `<div id="${containerId}" class="stat-dropdown-container" 
         data-type="${stat.type}" 
         data-count="${stat.value}"
-        data-items='${JSON.stringify(stat.items || [])}'
+        data-items='${itemsJson}'
         data-context-id="${options.contextId || ''}"></div>`;
     }).join('');
 

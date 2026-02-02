@@ -3,12 +3,10 @@
  * Detail view for a single narrative using the CardManager pattern
  */
 
-import { BaseView } from './BaseView.js';
+import { DetailViewBase } from './DetailViewBase.js';
 import { DataService } from '../data/DataService.js';
 import { PageHeader } from '../utils/PageHeader.js';
-import { initAllCardToggles } from '../utils/cardWidthToggle.js';
-import { TagChips } from '../components/TagChips.js';
-import { getTagPicker } from '../components/TagPickerModal.js';
+import { StatCards } from '../components/StatCards.js';
 // Source viewer handled by delegated event listener in app.js
 import {
   CardManager,
@@ -17,11 +15,10 @@ import {
   SentimentChartCard,
   VennDiagramCard,
   ThemeListCard,
-  TimelineVolumeCompositeCard,
-  DocumentTableCard
+  TimelineVolumeCompositeCard
 } from '../components/CardComponents.js';
 
-export class NarrativeView extends BaseView {
+export class NarrativeView extends DetailViewBase {
   constructor(container, narrativeId, options = {}) {
     super(container, options);
     this.narrativeId = narrativeId;
@@ -47,7 +44,7 @@ export class NarrativeView extends BaseView {
     
     // Build cards based on active tab
     if (this.isDocumentsTab()) {
-      this.setupDocumentsCard(narrative, data);
+      super.setupDocumentsCard(narrative, data, 'narrative');
     } else {
       this.setupDashboardCards(narrative, data);
     }
@@ -72,6 +69,10 @@ export class NarrativeView extends BaseView {
       'Detail'
     ]);
 
+    // Build stats for the header with dropdown support
+    const contextId = this.context?.id || null;
+    const statsData = StatCards.buildEntityStatsWithItems(data, contextId);
+
     const headerHtml = PageHeader.render({
       breadcrumbs,
       title: narrative.text,
@@ -81,6 +82,9 @@ export class NarrativeView extends BaseView {
         ? `<a href="#" class="btn btn-small btn-secondary source-link" data-source-type="narrative" data-source-id="${narrative.id}">View source</a>` 
         : '',
       tagsContainerId: 'narrative-tags-container',
+      stats: statsData,
+      statsMode: 'dropdowns',
+      statsContextId: contextId,
       tabs: tabsConfig,
       activeTab: activeTab
     });
@@ -95,40 +99,18 @@ export class NarrativeView extends BaseView {
       </div>
     `;
 
+    // Initialize stat card dropdowns
+    this.initStatDropdowns(contextId);
+
     // Initialize card width toggles
-    const contentGrid = this.container.querySelector('.content-grid');
-    if (contentGrid) {
-      const tabSuffix = this.isDocumentsTab() ? '-docs' : '';
-      initAllCardToggles(contentGrid, `narrative-${this.narrativeId}${tabSuffix}`);
-    }
+    this.initCardWidthToggles('narrative', this.narrativeId);
 
     // Initialize all card components
     const components = this.cardManager.initializeAll();
     Object.assign(this.components, components);
 
     // Initialize tag chips
-    this.initTagChips(narrative);
-  }
-
-  /**
-   * Initialize tag chips component
-   */
-  initTagChips(narrative) {
-    const tagsContainer = this.container.querySelector('#narrative-tags-container');
-    if (tagsContainer) {
-      this.tagChips = new TagChips({
-        entityType: 'narrative',
-        entityId: narrative.id,
-        editable: true,
-        onAddClick: () => {
-          const picker = getTagPicker();
-          picker.open('narrative', narrative.id, () => {
-            this.tagChips.refresh();
-          });
-        }
-      });
-      this.tagChips.render(tagsContainer);
-    }
+    this.initTagChips(narrative, 'narrative');
   }
 
   /**
@@ -184,8 +166,20 @@ export class NarrativeView extends BaseView {
     const orgIds = narrative.organizationIds || [];
     const hasNetwork = personIds.length > 0 || orgIds.length > 0;
 
+    // Get actual person and organization entities for stat cards
+    const persons = personIds.map(id => DataService.getPerson(id)).filter(Boolean);
+    const organizations = orgIds.map(id => DataService.getOrganization(id)).filter(Boolean);
+    const entities = [...persons, ...organizations];
+
     // Documents data (scoped)
     const documents = DataService.getDocumentsForNarrative(narrative.id, scopeDocIds);
+
+    // Get topics related to this narrative (share documents)
+    const narrativeDocIds = new Set(documents.map(d => d.id));
+    const allTopics = DataService.getTopics ? DataService.getTopics(scopeDocIds) : [];
+    const topics = allTopics.filter(topic =>
+      (topic.documentIds || []).some(dId => narrativeDocIds.has(dId))
+    );
 
     // Build sentiment data for the sentiment chart
     const sentimentFactions = factionData.map(fd => ({
@@ -196,12 +190,18 @@ export class NarrativeView extends BaseView {
     // Narrative durations for volume/duration toggle (scoped)
     const narrativeDurations = DataService.getNarrativeDurations(null, null, null, scopeDocIds);
 
+    // Get activity (comments and highlights) for this narrative's documents
+    const docIds = new Set(documents.map(d => d.id));
+    const allActivity = DataService.getAllActivity();
+    const activity = allActivity.filter(item => docIds.has(item.documentId));
+
     return {
       themes, factionData, factions, factionOverlaps,
       events, allEvents, volumeOverTime, hasVolumeData, volumeData,
       publisherVolumeTime, hasPublisherData, hasVolumeTimeline,
-      locations, mapLocations, personIds, orgIds, hasNetwork, 
-      documents, sentimentFactions, narrativeDurations
+      locations, mapLocations, personIds, orgIds, hasNetwork,
+      persons, organizations, entities, topics,
+      documents, sentimentFactions, narrativeDurations, activity
     };
   }
 
@@ -285,29 +285,6 @@ export class NarrativeView extends BaseView {
     }
   }
 
-  /**
-   * Set up card for Documents tab (full-width document table)
-   */
-  setupDocumentsCard(narrative, data) {
-    // Reset card manager for fresh setup
-    this.cardManager = new CardManager(this);
-
-    if (data.documents.length > 0) {
-      this.cardManager.add(new DocumentTableCard(this, 'narrative-documents', {
-        title: 'Source Documents',
-        documents: data.documents,
-        showCount: true,
-        fullWidth: true,
-        maxItems: 50,
-        enableViewerMode: true
-      }));
-    }
-  }
-
-  destroy() {
-    this.cardManager.destroyAll();
-    super.destroy();
-  }
 }
 
 export default NarrativeView;

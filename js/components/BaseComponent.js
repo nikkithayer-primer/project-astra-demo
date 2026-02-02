@@ -75,11 +75,24 @@ export class BaseComponent {
 
   /**
    * Handle window resize
+   * In fullscreen mode, also updates height to fill available space
    */
   resize() {
     if (this.container) {
       try {
         this.options.width = this.container.clientWidth || this.options.width;
+        
+        // In fullscreen mode, also update height to fill available space
+        // This is safe because fullscreen constrains dimensions via CSS (position: fixed)
+        // so reading clientHeight won't cause resize feedback loops
+        const card = this.container.closest('.card');
+        if (card && card.classList.contains('card-fullscreen')) {
+          const containerHeight = this.container.clientHeight;
+          if (containerHeight > 0) {
+            this.options.height = containerHeight;
+          }
+        }
+        
         if (this.data) {
           this.render();
         }
@@ -203,7 +216,17 @@ export class BaseComponent {
   }
 
   /**
+   * Check if this component is inside a fullscreen card
+   */
+  isInFullscreen() {
+    if (!this.container) return false;
+    const card = this.container.closest('.card');
+    return card && card.classList.contains('card-fullscreen');
+  }
+
+  /**
    * Create SVG element with proper dimensions
+   * In fullscreen mode, uses 100% width/height to let CSS control sizing
    */
   createSvg() {
     const { width, height } = this.options;
@@ -222,11 +245,14 @@ export class BaseComponent {
     }
 
     try {
+      const isFullscreen = this.isInFullscreen();
+      
       this.svg = d3.select(this.container)
         .append('svg')
-        .attr('width', width)
-        .attr('height', height)
-        .attr('viewBox', [0, 0, width, height]);
+        .attr('width', isFullscreen ? '100%' : width)
+        .attr('height', isFullscreen ? '100%' : height)
+        .attr('viewBox', [0, 0, width, height])
+        .attr('preserveAspectRatio', 'xMidYMid meet');
 
       return this.svg;
     } catch (e) {

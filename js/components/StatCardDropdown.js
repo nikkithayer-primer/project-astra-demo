@@ -50,45 +50,44 @@ export class StatCardDropdown extends BaseComponent {
     const { type, count, items, icon, label, maxItems } = this.options;
     const hasItems = items && items.length > 0;
     
+    // Don't render anything if there are no items
+    if (!hasItems) {
+      return;
+    }
+    
     // Build dropdown items
-    let dropdownItemsHtml = '';
-    if (hasItems) {
-      const displayItems = items.slice(0, maxItems);
-      dropdownItemsHtml = displayItems.map(item => {
-        const href = this.buildRoute(item.id);
-        return `
-          <a class="stat-dropdown-item" href="${href}" data-entity-id="${item.id}">
-            ${this.escapeHtml(item.name || item.text || item.headline || item.id)}
-          </a>
-        `;
-      }).join('');
+    const displayItems = items.slice(0, maxItems);
+    let dropdownItemsHtml = displayItems.map(item => {
+      const href = this.buildRoute(item.id);
+      const title = item.name || item.text || item.headline || item.id;
+      const description = item.description ? `<span class="stat-dropdown-item-desc">${this.escapeHtml(item.description)}</span>` : '';
+      return `
+        <a class="stat-dropdown-item" href="${href}" data-entity-id="${item.id}">
+          <span class="stat-dropdown-item-title">${this.escapeHtml(title)}</span>
+          ${description}
+        </a>
+      `;
+    }).join('');
 
-      // Show "more" indicator if truncated
-      if (items.length > maxItems) {
-        dropdownItemsHtml += `
-          <div class="stat-dropdown-more">
-            +${items.length - maxItems} more
-          </div>
-        `;
-      }
-    } else {
-      dropdownItemsHtml = `
-        <div class="stat-dropdown-empty">No ${label.toLowerCase()}</div>
+    // Show "more" indicator if truncated
+    if (items.length > maxItems) {
+      dropdownItemsHtml += `
+        <div class="stat-dropdown-more">
+          +${items.length - maxItems} more
+        </div>
       `;
     }
 
     // Build the dropdown HTML
     const dropdownHtml = `
       <div class="stat-card-dropdown" data-type="${type}">
-        <button class="stat-card-trigger" type="button" ${!hasItems ? 'disabled' : ''}>
+        <button class="stat-card-trigger" type="button">
           ${icon}
           <div class="stat-value">${count}</div>
           <div class="stat-label">${label}</div>
-          ${hasItems ? `
-            <svg class="stat-dropdown-arrow" viewBox="0 0 16 16" width="10" height="10" fill="none" stroke="currentColor" stroke-width="1.5">
-              <path d="M4 6l4 4 4-4"/>
-            </svg>
-          ` : ''}
+          <svg class="stat-dropdown-arrow" viewBox="0 0 16 16" width="10" height="10" fill="none" stroke="currentColor" stroke-width="1.5">
+            <path d="M4 6l4 4 4-4"/>
+          </svg>
         </button>
         <div class="stat-dropdown-menu">
           ${dropdownItemsHtml}

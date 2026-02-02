@@ -3,12 +3,10 @@
  * Detail view for a topic using the CardManager pattern
  */
 
-import { BaseView } from './BaseView.js';
+import { DetailViewBase } from './DetailViewBase.js';
 import { DataService } from '../data/DataService.js';
 import { PageHeader } from '../utils/PageHeader.js';
-import { initAllCardToggles } from '../utils/cardWidthToggle.js';
-import { TagChips } from '../components/TagChips.js';
-import { getTagPicker } from '../components/TagPickerModal.js';
+import { StatCards } from '../components/StatCards.js';
 import {
   CardManager,
   BulletPointsCard,
@@ -17,11 +15,10 @@ import {
   MapCard,
   NarrativeListCard,
   SentimentChartCard,
-  TimelineVolumeCompositeCard,
-  DocumentTableCard
+  TimelineVolumeCompositeCard
 } from '../components/CardComponents.js';
 
-export class TopicView extends BaseView {
+export class TopicView extends DetailViewBase {
   constructor(container, topicId, options = {}) {
     super(container, options);
     this.topicId = topicId;
@@ -47,7 +44,7 @@ export class TopicView extends BaseView {
     
     // Build cards based on active tab
     if (this.isDocumentsTab()) {
-      this.setupDocumentsCard(topic, data);
+      super.setupDocumentsCard(topic, data, 'topic');
     } else {
       this.setupDashboardCards(topic, data);
     }
@@ -70,6 +67,10 @@ export class TopicView extends BaseView {
       topic.headline
     ]);
 
+    // Build stats for the header with dropdown support
+    const contextId = this.context?.id || null;
+    const statsData = StatCards.buildEntityStatsWithItems(data, contextId);
+
     // Build page header with tabs
     const headerHtml = PageHeader.render({
       breadcrumbs,
@@ -80,6 +81,9 @@ export class TopicView extends BaseView {
         ? `<a href="#" class="btn btn-small btn-secondary source-link" data-source-type="topic" data-source-id="${topic.id}">View source</a>` 
         : '',
       tagsContainerId: 'topic-tags-container',
+      stats: statsData,
+      statsMode: 'dropdowns',
+      statsContextId: contextId,
       tabs: tabsConfig,
       activeTab: activeTab
     });
@@ -94,40 +98,18 @@ export class TopicView extends BaseView {
       </div>
     `;
 
+    // Initialize stat card dropdowns
+    this.initStatDropdowns(contextId);
+
     // Initialize card width toggles
-    const contentGrid = this.container.querySelector('.content-grid');
-    if (contentGrid) {
-      const tabSuffix = this.isDocumentsTab() ? '-docs' : '';
-      initAllCardToggles(contentGrid, `topic-${this.topicId}${tabSuffix}`);
-    }
+    this.initCardWidthToggles('topic', this.topicId);
 
     // Initialize all card components
     const components = this.cardManager.initializeAll();
     Object.assign(this.components, components);
 
     // Initialize tag chips
-    this.initTagChips(topic);
-  }
-
-  /**
-   * Initialize tag chips component
-   */
-  initTagChips(topic) {
-    const tagsContainer = this.container.querySelector('#topic-tags-container');
-    if (tagsContainer) {
-      this.tagChips = new TagChips({
-        entityType: 'topic',
-        entityId: topic.id,
-        editable: true,
-        onAddClick: () => {
-          const picker = getTagPicker();
-          picker.open('topic', topic.id, () => {
-            this.tagChips.refresh();
-          });
-        }
-      });
-      this.tagChips.render(tagsContainer);
-    }
+    this.initTagChips(topic, 'topic');
   }
 
   /**
@@ -225,12 +207,23 @@ export class TopicView extends BaseView {
     // Narrative durations for volume/duration toggle
     const narrativeDurations = DataService.getNarrativeDurations();
 
+    // Get actual person and org entities for stat cards
+    const persons = [...personIds].map(id => DataService.getPerson(id)).filter(Boolean);
+    const organizations = [...orgIds].map(id => DataService.getOrganization(id)).filter(Boolean);
+    const entities = [...persons, ...organizations];
+
+    // Get activity (comments and highlights) for this topic's documents
+    const docIdSet = new Set(documents.map(d => d.id));
+    const allActivityData = DataService.getAllActivity();
+    const activity = allActivityData.filter(item => docIdSet.has(item.documentId));
+
     return {
       documents,
       publisherData,
       hasPublisherData,
       hasVolumeTimeline,
       allEvents,
+      events: allEvents,
       narratives,
       personIds: [...personIds],
       orgIds: [...orgIds],
@@ -240,7 +233,9 @@ export class TopicView extends BaseView {
       sentimentFactions,
       factionOverlaps,
       locations,
-      mapLocations
+      mapLocations,
+      entities,
+      activity
     };
   }
 
@@ -364,29 +359,6 @@ export class TopicView extends BaseView {
     }
   }
 
-  /**
-   * Set up card for Documents tab (full-width document table)
-   */
-  setupDocumentsCard(topic, data) {
-    // Reset card manager for fresh setup
-    this.cardManager = new CardManager(this);
-
-    if (data.documents.length > 0) {
-      this.cardManager.add(new DocumentTableCard(this, 'topic-documents', {
-        title: 'Source Documents',
-        documents: data.documents,
-        showCount: true,
-        fullWidth: true,
-        maxItems: 50,
-        enableViewerMode: true
-      }));
-    }
-  }
-
-  destroy() {
-    this.cardManager.destroyAll();
-    super.destroy();
-  }
 }
 
 export default TopicView;

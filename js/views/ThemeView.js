@@ -3,12 +3,9 @@
  * Detail view for a theme using the CardManager pattern
  */
 
-import { BaseView } from './BaseView.js';
+import { DetailViewBase } from './DetailViewBase.js';
 import { DataService } from '../data/DataService.js';
 import { PageHeader } from '../utils/PageHeader.js';
-import { initAllCardToggles } from '../utils/cardWidthToggle.js';
-import { TagChips } from '../components/TagChips.js';
-import { getTagPicker } from '../components/TagPickerModal.js';
 import {
   CardManager,
   NetworkGraphCard,
@@ -16,11 +13,10 @@ import {
   SentimentChartCard,
   VennDiagramCard,
   TimelineVolumeCompositeCard,
-  TopicListCard,
-  DocumentTableCard
+  TopicListCard
 } from '../components/CardComponents.js';
 
-export class ThemeView extends BaseView {
+export class ThemeView extends DetailViewBase {
   constructor(container, themeId, options = {}) {
     super(container, options);
     this.themeId = themeId;
@@ -46,7 +42,7 @@ export class ThemeView extends BaseView {
     
     // Build cards based on active tab
     if (this.isDocumentsTab()) {
-      this.setupDocumentsCard(theme, data);
+      super.setupDocumentsCard(theme, data, 'theme');
     } else {
       this.setupDashboardCards(theme, data);
     }
@@ -100,39 +96,14 @@ export class ThemeView extends BaseView {
     `;
 
     // Initialize card width toggles
-    const contentGrid = this.container.querySelector('.content-grid');
-    if (contentGrid) {
-      const tabSuffix = this.isDocumentsTab() ? '-docs' : '';
-      initAllCardToggles(contentGrid, `theme-${this.themeId}${tabSuffix}`);
-    }
+    this.initCardWidthToggles('theme', this.themeId);
 
     // Initialize all card components
     const components = this.cardManager.initializeAll();
     Object.assign(this.components, components);
 
     // Initialize tag chips
-    this.initTagChips(theme);
-  }
-
-  /**
-   * Initialize tag chips component
-   */
-  initTagChips(theme) {
-    const tagsContainer = this.container.querySelector('#theme-tags-container');
-    if (tagsContainer) {
-      this.tagChips = new TagChips({
-        entityType: 'theme',
-        entityId: theme.id,
-        editable: true,
-        onAddClick: () => {
-          const picker = getTagPicker();
-          picker.open('theme', theme.id, () => {
-            this.tagChips.refresh();
-          });
-        }
-      });
-      this.tagChips.render(tagsContainer);
-    }
+    this.initTagChips(theme, 'theme');
   }
 
   /**
@@ -296,29 +267,6 @@ export class ThemeView extends BaseView {
     }
   }
 
-  /**
-   * Set up card for Documents tab (full-width document table)
-   */
-  setupDocumentsCard(theme, data) {
-    // Reset card manager for fresh setup
-    this.cardManager = new CardManager(this);
-
-    if (data.documents.length > 0) {
-      this.cardManager.add(new DocumentTableCard(this, 'theme-documents', {
-        title: 'Source Documents',
-        documents: data.documents,
-        showCount: true,
-        fullWidth: true,
-        maxItems: 50,
-        enableViewerMode: true
-      }));
-    }
-  }
-
-  destroy() {
-    this.cardManager.destroyAll();
-    super.destroy();
-  }
 }
 
 export default ThemeView;

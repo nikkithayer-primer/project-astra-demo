@@ -564,12 +564,18 @@ Reusable entity/keyword selections that can be applied across monitors and other
   name: string,            // Required. User-provided filter name
   description: string,     // Optional. Filter description
   scope: {                 // Required. What entities/keywords are in this filter
+    // Entity filters
     personIds: string[],
     organizationIds: string[],
     factionIds: string[],
     locationIds: string[],
     eventIds: string[],
-    keywords: string[]
+    keywords: string[],
+    // Document attribute filters
+    documentTypes: string[],   // 'news_article' | 'social_media' | 'internal_report' | 
+                               // 'intelligence_report' | 'memo' | 'transcript'
+    publisherIds: string[],    // FKs to Publisher
+    authors: string[]          // Author names (exact match)
     // Note: No 'logic' field - logic is determined by the consumer (e.g., Monitor)
   },
   createdAt: datetime,
@@ -577,7 +583,7 @@ Reusable entity/keyword selections that can be applied across monitors and other
 }
 ```
 
-**Usage:** SearchFilters are created from the ScopeSelector component and can be applied to monitors or other scope-based features. When applied, the filter's entities and keywords are merged into the current selection.
+**Usage:** SearchFilters are created from the ScopeSelector component and can be applied to monitors or other scope-based features. When applied, the filter's entities, keywords, and document attributes are merged into the current selection.
 
 ### TagGroup
 

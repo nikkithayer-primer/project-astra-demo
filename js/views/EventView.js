@@ -3,13 +3,11 @@
  * Detail view for an event using the CardManager pattern
  */
 
-import { BaseView } from './BaseView.js';
+import { DetailViewBase } from './DetailViewBase.js';
 import { DataService } from '../data/DataService.js';
 import { PageHeader } from '../utils/PageHeader.js';
-import { initAllCardToggles } from '../utils/cardWidthToggle.js';
 import { aggregateFactionSentiment } from '../utils/volumeDataUtils.js';
-import { TagChips } from '../components/TagChips.js';
-import { getTagPicker } from '../components/TagPickerModal.js';
+import { StatCards } from '../components/StatCards.js';
 import {
   CardManager,
   NetworkGraphCard,
@@ -18,11 +16,10 @@ import {
   TimelineVolumeCompositeCard,
   TopicListCard,
   SentimentChartCard,
-  VennDiagramCard,
-  DocumentTableCard
+  VennDiagramCard
 } from '../components/CardComponents.js';
 
-export class EventView extends BaseView {
+export class EventView extends DetailViewBase {
   constructor(container, eventId, options = {}) {
     super(container, options);
     this.eventId = eventId;
@@ -48,13 +45,13 @@ export class EventView extends BaseView {
     
     // Build cards based on active tab
     if (this.isDocumentsTab()) {
-      this.setupDocumentsCard(event, data);
+      super.setupDocumentsCard(event, data, 'event');
     } else {
       this.setupDashboardCards(event, data);
     }
     
-    // Generate tabs config
-    const baseHref = `#/event/${this.eventId}`;
+    // Generate tabs config - use ID-based routing
+    const baseHref = this.buildContextRoute(this.eventId);
     const tabsConfig = hasDocuments ? this.getTabsConfig(baseHref, true) : null;
 
     // Format date for subtitle
@@ -73,19 +70,21 @@ export class EventView extends BaseView {
       data.location ? data.location.name : ''
     ].filter(Boolean).join(' • ');
 
-    // Build breadcrumbs with optional parent event
-    const breadcrumbs = [
-      { label: 'Dashboard', href: '#/dashboard' },
-      { label: 'Events', href: '#/events' }
-    ];
+    // Build context-aware breadcrumbs
+    const breadcrumbItems = [{ label: 'Events', route: 'events' }];
     if (data.parentEvent) {
-      breadcrumbs.push({ label: this.truncateText(data.parentEvent.text, 30), href: `#/event/${data.parentEvent.id}` });
+      breadcrumbItems.push({ label: this.truncateText(data.parentEvent.text, 30), id: data.parentEvent.id });
     }
-    breadcrumbs.push(this.truncateText(event.text, 40));
+    breadcrumbItems.push(this.truncateText(event.text, 40));
+    const breadcrumbs = this.buildBreadcrumbs(breadcrumbItems);
+
+    // Build stats for the header with dropdown support
+    const contextId = this.context?.id || null;
+    const statsData = StatCards.buildEntityStatsWithItems(data, contextId);
 
     // Build page header with tabs
     const headerHtml = PageHeader.render({
-      breadcrumbs: breadcrumbs,
+      breadcrumbs,
       title: event.text,
       subtitle: subtitleParts,
       description: event.description,
@@ -93,13 +92,17 @@ export class EventView extends BaseView {
         ? `<a href="#" class="btn btn-small btn-secondary source-link" data-source-type="event" data-source-id="${event.id}">View source</a>` 
         : '',
       tagsContainerId: 'event-tags-container',
+      stats: statsData,
+      statsMode: 'dropdowns',
+      statsContextId: contextId,
       tabs: tabsConfig,
       activeTab: activeTab
     });
 
     // Build parent link HTML if applicable (only on dashboard tab)
+    const parentLinkRoute = data.parentEvent ? this.buildContextRoute(data.parentEvent.id) : '';
     const parentLinkHtml = data.parentEvent && this.isDashboardTab() ? `
-      <div class="parent-link" onclick="window.location.hash='#/event/${data.parentEvent.id}'">
+      <div class="parent-link" onclick="window.location.hash='${parentLinkRoute}'">
         <span class="parent-link-icon">↑</span>
         <span class="parent-link-text">${data.parentEvent.text}</span>
       </div>
@@ -116,40 +119,18 @@ export class EventView extends BaseView {
       </div>
     `;
 
+    // Initialize stat card dropdowns
+    this.initStatDropdowns(contextId);
+
     // Initialize card width toggles
-    const contentGrid = this.container.querySelector('.content-grid');
-    if (contentGrid) {
-      const tabSuffix = this.isDocumentsTab() ? '-docs' : '';
-      initAllCardToggles(contentGrid, `event-${this.eventId}${tabSuffix}`);
-    }
+    this.initCardWidthToggles('event', this.eventId);
 
     // Initialize all card components
     const components = this.cardManager.initializeAll();
     Object.assign(this.components, components);
 
     // Initialize tag chips
-    this.initTagChips(event);
-  }
-
-  /**
-   * Initialize tag chips component
-   */
-  initTagChips(event) {
-    const tagsContainer = this.container.querySelector('#event-tags-container');
-    if (tagsContainer) {
-      this.tagChips = new TagChips({
-        entityType: 'event',
-        entityId: event.id,
-        editable: true,
-        onAddClick: () => {
-          const picker = getTagPicker();
-          picker.open('event', event.id, () => {
-            this.tagChips.refresh();
-          });
-        }
-      });
-      this.tagChips.render(tagsContainer);
-    }
+    this.initTagChips(event, 'event');
   }
 
   /**
@@ -203,12 +184,24 @@ export class EventView extends BaseView {
     // Narrative durations for volume/duration toggle
     const narrativeDurations = DataService.getNarrativeDurations();
 
+    // Combine persons and organizations as entities for stat cards
+    const entities = [...persons, ...organizations];
+    
+    // Locations as array for stat cards
+    const locations = location ? [location] : [];
+
+    // Get activity (comments and highlights) for this event's documents
+    const docIdSet = new Set(documents.map(d => d.id));
+    const allActivityData = DataService.getAllActivity();
+    const activity = allActivityData.filter(item => docIdSet.has(item.documentId));
+
     return { 
       parentEvent, subEvents, location, persons, organizations, 
       narratives, documents, hasNetwork, personIds, orgIds, allEvents,
+      events: allEvents,
       publisherData, hasPublisherData, hasVolumeTimeline, topics,
       factions, sentimentFactions, factionOverlaps, mapLocations,
-      narrativeDurations
+      narrativeDurations, entities, locations, activity
     };
   }
 
@@ -303,29 +296,6 @@ export class EventView extends BaseView {
     }
   }
 
-  /**
-   * Set up card for Documents tab (full-width document table)
-   */
-  setupDocumentsCard(event, data) {
-    // Reset card manager for fresh setup
-    this.cardManager = new CardManager(this);
-
-    if (data.documents.length > 0) {
-      this.cardManager.add(new DocumentTableCard(this, 'event-documents', {
-        title: 'Source Documents',
-        documents: data.documents,
-        showCount: true,
-        fullWidth: true,
-        maxItems: 50,
-        enableViewerMode: true
-      }));
-    }
-  }
-
-  destroy() {
-    this.cardManager.destroyAll();
-    super.destroy();
-  }
 }
 
 export default EventView;

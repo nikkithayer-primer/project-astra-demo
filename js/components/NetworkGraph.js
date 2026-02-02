@@ -23,32 +23,54 @@ export class NetworkGraph extends BaseComponent {
 
   /**
    * Override resize to recenter nodes within new dimensions
-   * NOTE: Only width is updated from container; height remains fixed to prevent resize loops
+   * NOTE: Height is only updated in fullscreen mode where CSS constrains dimensions
+   * (prevents resize loops in normal mode where container height = content height)
    */
   resize() {
     if (this.container && this.data) {
       const oldWidth = this.options.width;
       const oldHeight = this.options.height;
       
-      // Only update width from container - height stays fixed to prevent resize feedback loop
-      // (SVG renders into container, so reading container height would cause infinite growth)
+      // Always update width from container
       const newWidth = this.container.clientWidth;
-      if (newWidth === oldWidth) {
-        // No width change, skip re-render
-        return this;
-      }
       this.options.width = newWidth;
       
-      // Recenter existing node positions proportionally (only for width changes)
-      if (this.data.nodes && oldWidth > 0) {
+      // Check if we're in fullscreen mode - if so, also update height
+      // This is safe because fullscreen constrains dimensions via CSS (position: fixed)
+      const card = this.container.closest('.card');
+      const isFullscreen = card && card.classList.contains('card-fullscreen');
+      
+      let newHeight = oldHeight;
+      if (isFullscreen) {
+        const containerHeight = this.container.clientHeight;
+        if (containerHeight > 0) {
+          newHeight = containerHeight;
+          this.options.height = newHeight;
+        }
+      }
+      
+      // Skip re-render if no dimension changes
+      if (newWidth === oldWidth && newHeight === oldHeight) {
+        return this;
+      }
+      
+      // Recenter existing node positions proportionally
+      if (this.data.nodes && oldWidth > 0 && oldHeight > 0) {
         const widthRatio = this.options.width / oldWidth;
+        const heightRatio = this.options.height / oldHeight;
         const oldCenterX = oldWidth / 2;
+        const oldCenterY = oldHeight / 2;
         const newCenterX = this.options.width / 2;
+        const newCenterY = this.options.height / 2;
         
         this.data.nodes.forEach(node => {
           if (node.x !== undefined) {
             // Translate node x position relative to new center
             node.x = newCenterX + (node.x - oldCenterX) * widthRatio;
+          }
+          if (node.y !== undefined && isFullscreen) {
+            // Translate node y position relative to new center (only in fullscreen)
+            node.y = newCenterY + (node.y - oldCenterY) * heightRatio;
           }
         });
       }

@@ -211,6 +211,26 @@ const matchDocumentToScope = (doc, scope) => {
     matchResults.push(match);
   }
   
+  // Check document type matches
+  if (scope.documentTypes?.length > 0) {
+    const match = scope.documentTypes.includes(doc.documentType);
+    matchResults.push(match);
+  }
+  
+  // Check publisher matches
+  if (scope.publisherIds?.length > 0) {
+    const match = scope.publisherIds.includes(doc.publisherId);
+    matchResults.push(match);
+  }
+  
+  // Check author matches
+  if (scope.authors?.length > 0) {
+    const match = doc.author && scope.authors.some(a => 
+      a.toLowerCase() === doc.author.toLowerCase()
+    );
+    matchResults.push(match);
+  }
+  
   // If no criteria set, no match
   if (matchResults.length === 0) return false;
   
@@ -268,7 +288,10 @@ const getDocumentsForScope = (scope, options = {}) => {
     scope.eventIds?.length > 0 ||
     scope.narrativeIds?.length > 0 ||
     scope.themeIds?.length > 0 ||
-    scope.keywords?.length > 0
+    scope.keywords?.length > 0 ||
+    scope.documentTypes?.length > 0 ||
+    scope.publisherIds?.length > 0 ||
+    scope.authors?.length > 0
   );
   
   // If we have scope criteria, match documents against it
@@ -3254,7 +3277,10 @@ export const DataService = {
       (scope.factionIds?.length > 0) ||
       (scope.locationIds?.length > 0) ||
       (scope.eventIds?.length > 0) ||
-      (scope.keywords?.length > 0)
+      (scope.keywords?.length > 0) ||
+      (scope.documentTypes?.length > 0) ||
+      (scope.publisherIds?.length > 0) ||
+      (scope.authors?.length > 0)
     );
     
     if (!hasQuery && !hasScope) {
@@ -3332,6 +3358,27 @@ export const DataService = {
             ].join(' ').toLowerCase();
             
             if (scope.keywords.some(kw => docText.includes(kw.toLowerCase()))) {
+              return true;
+            }
+          }
+          
+          // Check document type matches
+          if (scope.documentTypes?.length > 0) {
+            if (scope.documentTypes.includes(doc.documentType)) {
+              return true;
+            }
+          }
+          
+          // Check publisher matches
+          if (scope.publisherIds?.length > 0) {
+            if (scope.publisherIds.includes(doc.publisherId)) {
+              return true;
+            }
+          }
+          
+          // Check author matches
+          if (scope.authors?.length > 0) {
+            if (doc.author && scope.authors.some(a => a.toLowerCase() === doc.author.toLowerCase())) {
               return true;
             }
           }

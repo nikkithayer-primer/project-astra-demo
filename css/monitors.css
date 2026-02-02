@@ -110,6 +110,11 @@
   gap: var(--space-sm);
   padding: var(--space-xs) 0;
   font-size: 12px;
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.monitor-alert-item:last-child {
+  border-bottom: none;
 }
 
 .monitor-alert-item .alert-description {
@@ -118,6 +123,18 @@
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+}
+
+/* Remove underlines from links in alert descriptions */
+.monitor-alert-item .alert-description a,
+.alerts-list-item .alert-description a {
+  color: var(--accent-primary);
+  text-decoration: none;
+}
+
+.monitor-alert-item .alert-description a:hover,
+.alerts-list-item .alert-description a:hover {
+  color: var(--accent-primary-hover, var(--accent-primary));
 }
 
 .monitor-alert-item .alert-time {
@@ -444,67 +461,79 @@
 }
 
 /* ============================================
-   Alerts Tab - Full List View Table
+   Alerts Tab - Full List View
    ============================================ */
 
-/* Alerts list table - extends base .table styles */
-.alerts-list-table {
-  table-layout: fixed;
+/* Alerts list container */
+.alerts-list {
+  display: flex;
+  flex-direction: column;
 }
 
-/* Column widths */
-.alert-col-type {
-  width: 150px;
+/* Individual alert item - matches monitor card alert format */
+.alerts-list-item {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  padding: var(--space-sm) var(--space-md);
+  font-size: 13px;
+  border-bottom: 1px solid var(--border-subtle);
 }
 
-.alert-col-monitor {
-  width: 200px;
+.alerts-list-item:last-child {
+  border-bottom: none;
 }
 
-.alert-col-description {
-  /* Takes remaining space */
+.alerts-list-item:hover {
+  background: var(--bg-hover);
 }
 
-.alert-col-time {
-  width: 100px;
+/* Monitor link in alerts list */
+.alert-monitor-link {
+  flex-shrink: 0;
+  color: var(--text-primary);
+  text-decoration: none;
+  font-weight: 500;
+  font-size: 12px;
+  min-width: 140px;
+  max-width: 200px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.alert-monitor-link:hover {
+  color: var(--accent-primary);
+}
+
+/* Alert description in list - takes remaining space */
+.alerts-list-item .alert-description {
+  flex: 1;
+  color: var(--text-secondary);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Alert time in list */
+.alerts-list-item .alert-time {
+  flex-shrink: 0;
+  font-size: 12px;
+  color: var(--text-muted);
   text-align: right;
+  min-width: 80px;
+}
+
+/* Empty state */
+.alerts-list-empty {
+  padding: 48px;
+  text-align: center;
   color: var(--text-muted);
 }
 
-/* Alert content cell - title + description stacked */
-.alert-content {
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-}
-
-.alert-title-text {
-  font-weight: 500;
-  color: var(--text-primary);
-}
-
-.alert-description-text {
-  color: var(--text-secondary);
-  font-size: 12px;
-  display: -webkit-box;
-  -webkit-line-clamp: 1;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-}
-
 /* Responsive */
-@media (max-width: 900px) {
-  .alert-col-monitor {
-    width: 160px;
-  }
-  
-  .alert-col-type {
-    width: 130px;
-  }
-}
-
 @media (max-width: 600px) {
-  .alert-col-monitor {
+  .alert-monitor-link {
     display: none;
   }
 }

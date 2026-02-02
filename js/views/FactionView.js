@@ -3,12 +3,10 @@
  * Detail view for a faction using the CardManager pattern
  */
 
-import { BaseView } from './BaseView.js';
+import { DetailViewBase } from './DetailViewBase.js';
 import { DataService } from '../data/DataService.js';
 import { PageHeader } from '../utils/PageHeader.js';
-import { initAllCardToggles } from '../utils/cardWidthToggle.js';
-import { TagChips } from '../components/TagChips.js';
-import { getTagPicker } from '../components/TagPickerModal.js';
+import { StatCards } from '../components/StatCards.js';
 import {
   CardManager,
   NetworkGraphCard,
@@ -17,11 +15,10 @@ import {
   VennDiagramCard,
   TimelineVolumeCompositeCard,
   TopicListCard,
-  MapCard,
-  DocumentTableCard
+  MapCard
 } from '../components/CardComponents.js';
 
-export class FactionView extends BaseView {
+export class FactionView extends DetailViewBase {
   constructor(container, factionId, options = {}) {
     super(container, options);
     this.factionId = factionId;
@@ -47,7 +44,7 @@ export class FactionView extends BaseView {
     
     // Build cards based on active tab
     if (this.isDocumentsTab()) {
-      this.setupDocumentsCard(faction, data);
+      super.setupDocumentsCard(faction, data, 'faction');
     } else {
       this.setupDashboardCards(faction, data);
     }
@@ -62,6 +59,10 @@ export class FactionView extends BaseView {
       faction.name
     ]);
 
+    // Build stats for the header with dropdown support
+    const contextId = this.context?.id || null;
+    const statsData = StatCards.buildEntityStatsWithItems(data, contextId);
+
     // Build page header with tabs
     const headerHtml = PageHeader.render({
       breadcrumbs,
@@ -73,6 +74,9 @@ export class FactionView extends BaseView {
         ? `<a href="#" class="btn btn-small btn-secondary source-link" data-source-type="faction" data-source-id="${faction.id}">View source</a>` 
         : '',
       tagsContainerId: 'faction-tags-container',
+      stats: statsData,
+      statsMode: 'dropdowns',
+      statsContextId: contextId,
       tabs: tabsConfig,
       activeTab: activeTab
     });
@@ -87,40 +91,18 @@ export class FactionView extends BaseView {
       </div>
     `;
 
+    // Initialize stat card dropdowns
+    this.initStatDropdowns(contextId);
+
     // Initialize card width toggles
-    const contentGrid = this.container.querySelector('.content-grid');
-    if (contentGrid) {
-      const tabSuffix = this.isDocumentsTab() ? '-docs' : '';
-      initAllCardToggles(contentGrid, `faction-${this.factionId}${tabSuffix}`);
-    }
+    this.initCardWidthToggles('faction', this.factionId);
 
     // Initialize all card components
     const components = this.cardManager.initializeAll();
     Object.assign(this.components, components);
 
     // Initialize tag chips
-    this.initTagChips(faction);
-  }
-
-  /**
-   * Initialize tag chips component
-   */
-  initTagChips(faction) {
-    const tagsContainer = this.container.querySelector('#faction-tags-container');
-    if (tagsContainer) {
-      this.tagChips = new TagChips({
-        entityType: 'faction',
-        entityId: faction.id,
-        editable: true,
-        onAddClick: () => {
-          const picker = getTagPicker();
-          picker.open('faction', faction.id, () => {
-            this.tagChips.refresh();
-          });
-        }
-      });
-      this.tagChips.render(tagsContainer);
-    }
+    this.initTagChips(faction, 'faction');
   }
 
   /**
@@ -207,12 +189,20 @@ export class FactionView extends BaseView {
     // Narrative durations for volume/duration toggle (scoped)
     const narrativeDurations = DataService.getNarrativeDurations(null, null, null, scopeDocIds);
 
+    // Combine affiliated persons and orgs as entities for stat cards
+    const entities = [...affiliatedPersons, ...affiliatedOrgs];
+
+    // Get activity (comments and highlights) for this faction's documents
+    const docIdSet = new Set(documents.map(d => d.id));
+    const allActivityData = DataService.getAllActivity();
+    const activity = allActivityData.filter(item => docIdSet.has(item.documentId));
+
     return {
       relatedFactions, factionOverlaps, narratives, documents,
       affiliatedPersons, affiliatedOrgs, personsWithSentiment,
       orgsWithSentiment, hasNetwork, allFactions, personIds, orgIds,
-      publisherData, hasPublisherData, allEvents, hasVolumeTimeline,
-      topics, locations, mapLocations, narrativeDurations
+      publisherData, hasPublisherData, allEvents, events: allEvents, hasVolumeTimeline,
+      topics, locations, mapLocations, narrativeDurations, entities, activity
     };
   }
 
@@ -318,29 +308,6 @@ export class FactionView extends BaseView {
     }
   }
 
-  /**
-   * Set up card for Documents tab (full-width document table)
-   */
-  setupDocumentsCard(faction, data) {
-    // Reset card manager for fresh setup
-    this.cardManager = new CardManager(this);
-
-    if (data.documents.length > 0) {
-      this.cardManager.add(new DocumentTableCard(this, 'faction-documents', {
-        title: 'Source Documents',
-        documents: data.documents,
-        showCount: true,
-        fullWidth: true,
-        maxItems: 50,
-        enableViewerMode: true
-      }));
-    }
-  }
-
-  destroy() {
-    this.cardManager.destroyAll();
-    super.destroy();
-  }
 }
 
 export default FactionView;

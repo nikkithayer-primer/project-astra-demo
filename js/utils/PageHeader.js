@@ -247,20 +247,16 @@ export const PageHeader = {
   },
 
   /**
-   * Render stats grid using StatCards component
-   * @param {Array} stats - Array of stat configs [{type, value, href?, label?, items?}]
-   * @param {string} mode - 'cards' (default) or 'dropdowns'
+   * Render stats grid using StatCards component (dropdowns only)
+   * @param {Array} stats - Array of stat configs [{type, value, items}]
+   * @param {string} mode - Ignored, always uses dropdowns
    * @param {string} contextId - Context ID for dropdown routes
    * @returns {string} Stats HTML
    */
-  renderStats(stats, mode = 'cards', contextId = null) {
+  renderStats(stats, mode = 'dropdowns', contextId = null) {
     if (!stats || stats.length === 0) return '';
     
-    if (mode === 'dropdowns') {
-      return StatCards.renderDropdowns(stats, { contextId });
-    }
-    
-    return StatCards.render(stats, { clickable: true, wrapInGrid: true });
+    return StatCards.renderDropdowns(stats, { contextId });
   }
 };
 

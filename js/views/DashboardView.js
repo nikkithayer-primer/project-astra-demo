@@ -52,8 +52,9 @@ export class DashboardView extends BaseView {
     // Set up card components
     this.setupDashboardCards(dashboardData, stats);
 
-    // Build stats array for StatCards
-    const statsData = StatCards.buildDashboardStats(stats, topics.length);
+    // Get full entity data for stat card dropdowns
+    const statsEntityData = this.fetchStatsData(tagFilter);
+    const statsData = StatCards.buildDashboardStatsWithItems(statsEntityData);
 
     this.container.innerHTML = `
       <div class="page-header page-header-with-tabs page-header-with-stats">
@@ -62,7 +63,7 @@ export class DashboardView extends BaseView {
             <h1>${datasetName}</h1>
             <p class="subtitle">${subtitle}</p>
           </div>
-          ${StatCards.render(statsData, { clickable: true, wrapInGrid: true })}
+          ${StatCards.renderDropdowns(statsData)}
         </div>
         <div class="page-header-tabs page-header-filters">
           <div class="filter-group mission-filter-group">
@@ -107,8 +108,8 @@ export class DashboardView extends BaseView {
       4: 'half'  // Events & Locations Map - half width
     });
 
-    // Add click handlers for stat cards (navigate to list views)
-    StatCards.attachClickHandlers(this.container);
+    // Initialize stat card dropdowns
+    this._statDropdowns = StatCards.initDropdowns(this.container);
 
     // Initialize all card components
     const components = this.cardManager.initializeAll();
@@ -152,6 +153,61 @@ export class DashboardView extends BaseView {
       narrativeDurations,
       factionSentiments,
       locations
+    };
+  }
+
+  /**
+   * Fetch entity data for stat card dropdowns
+   * @param {Array} tagFilter - Optional tag filter
+   * @returns {Object} Entity data with arrays for each type
+   */
+  fetchStatsData(tagFilter) {
+    const tagIds = tagFilter?.length > 0 ? tagFilter : null;
+    
+    // Get narratives (filtered)
+    let narratives = DataService.getNarratives(this.missionId, this.timeRange);
+    if (tagIds) {
+      narratives = narratives.filter(n => n.tagIds && tagIds.some(t => n.tagIds.includes(t)));
+    }
+    
+    // Get topics
+    const topics = DataService.getTopicsInRange(this.timeRange, tagIds);
+    
+    // Get factions
+    const factions = DataService.getFactions();
+    
+    // Get locations
+    const locations = DataService.getLocations();
+    
+    // Get events (filtered by time range)
+    let events = DataService.getEvents();
+    if (this.timeRange) {
+      events = events.filter(e => DataService.isDateInRange(e.date, this.timeRange));
+    }
+    
+    // Get entities (persons + organizations)
+    const persons = DataService.getPersons();
+    const organizations = DataService.getOrganizations();
+    const entities = [...persons, ...organizations];
+    
+    // Get documents (filtered by time range)
+    let documents = DataService.getDocuments();
+    if (this.timeRange) {
+      documents = documents.filter(d => DataService.isDateInRange(d.publishedDate, this.timeRange));
+    }
+    
+    // Get activity (comments and highlights)
+    const activity = DataService.getAllActivity();
+    
+    return {
+      narratives,
+      topics,
+      factions,
+      locations,
+      events,
+      entities,
+      documents,
+      activity
     };
   }
 
@@ -378,6 +434,11 @@ export class DashboardView extends BaseView {
   }
 
   destroy() {
+    // Clean up stat dropdowns
+    if (this._statDropdowns) {
+      this._statDropdowns.forEach(d => d.destroy && d.destroy());
+      this._statDropdowns = null;
+    }
     this.cardManager.destroyAll();
     super.destroy();
   }

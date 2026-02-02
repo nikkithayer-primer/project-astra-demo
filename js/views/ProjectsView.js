@@ -5,7 +5,9 @@
 
 import { BaseView } from './BaseView.js';
 import { DataService } from '../data/DataService.js';
+import { dataStore } from '../data/DataStore.js';
 import { PageHeader } from '../utils/PageHeader.js';
+import { CardBuilder } from '../utils/CardBuilder.js';
 
 export class ProjectsView extends BaseView {
   constructor(container, options = {}) {
@@ -70,11 +72,19 @@ export class ProjectsView extends BaseView {
       ? '<span class="tag tag-neutral">Archived</span>'
       : '<span class="tag">Active</span>';
 
+    // Build actions HTML using CardBuilder
+    const actionsHtml = CardBuilder.actionMenu('project', project.id, { 
+      isArchived, 
+      editDisabled: true, 
+      editTitle: 'Edit (coming soon)' 
+    });
+
     return `
-      <div class="card card-half project-card" data-project-id="${project.id}">
+      <div class="card card-half-width project-card" data-project-id="${project.id}">
         <div class="card-header">
-          <span class="card-title">${this.escapeHtml(project.name)}</span>
+          <h2 class="card-title">${this.escapeHtml(project.name)}</h2>
           ${statusTag}
+          <div class="card-header-actions">${actionsHtml}</div>
         </div>
         <div class="card-body">
           ${project.description ? `<p class="text-sm text-secondary mb-md">${this.escapeHtml(project.description)}</p>` : ''}
@@ -113,6 +123,9 @@ export class ProjectsView extends BaseView {
    * Set up click handlers for cards and buttons
    */
   setupEventHandlers() {
+    // Setup action menu dropdowns
+    this.setupActionMenus();
+
     // Project card clicks - navigate to detail view
     const projectCards = this.container.querySelectorAll('.project-card');
     projectCards.forEach(card => {
@@ -130,6 +143,75 @@ export class ProjectsView extends BaseView {
         // TODO: Open create project modal when implemented
         console.log('Create project - coming soon');
       });
+    });
+  }
+
+  /**
+   * Setup action menu dropdown handlers
+   */
+  setupActionMenus() {
+    const actionMenus = this.container.querySelectorAll('.card-action-menu');
+    
+    actionMenus.forEach(menu => {
+      const trigger = menu.querySelector('.card-action-menu-trigger');
+      const projectId = menu.dataset.projectId;
+      
+      if (trigger) {
+        this.addListener(trigger, 'click', (e) => {
+          e.stopPropagation();
+          
+          // Close other open menus
+          actionMenus.forEach(otherMenu => {
+            if (otherMenu !== menu) {
+              otherMenu.classList.remove('open');
+            }
+          });
+          
+          // Toggle this menu
+          menu.classList.toggle('open');
+        });
+      }
+      
+      // Handle edit button click (currently disabled)
+      const editBtn = menu.querySelector('.project-edit-btn');
+      if (editBtn && !editBtn.disabled) {
+        this.addListener(editBtn, 'click', (e) => {
+          e.stopPropagation();
+          menu.classList.remove('open');
+          // TODO: Open edit modal when implemented
+          console.log('Edit project - coming soon');
+        });
+      }
+      
+      // Handle archive button click
+      const archiveBtn = menu.querySelector('.project-archive-btn');
+      if (archiveBtn) {
+        this.addListener(archiveBtn, 'click', (e) => {
+          e.stopPropagation();
+          menu.classList.remove('open');
+          const project = DataService.getProject(projectId);
+          if (project) {
+            const newStatus = project.status === 'archived' ? 'active' : 'archived';
+            // Update project status
+            const projects = dataStore.data.projects || [];
+            const projectIndex = projects.findIndex(p => p.id === projectId);
+            if (projectIndex !== -1) {
+              projects[projectIndex] = { 
+                ...projects[projectIndex], 
+                status: newStatus,
+                updatedAt: new Date().toISOString()
+              };
+              dataStore.save();
+            }
+            this.render();
+          }
+        });
+      }
+    });
+    
+    // Close menus when clicking outside
+    this.addListener(document, 'click', () => {
+      actionMenus.forEach(menu => menu.classList.remove('open'));
     });
   }
 
