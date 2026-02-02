@@ -1,13 +1,14 @@
 /**
  * DocumentContentRenderer.js
  * Renders document content based on document type
- * Supports: social_post, tiktok, news_article, internal
+ * Supports: social_post, tiktok, news_article, internal, and structured data types
  * Includes highlight and comment annotations
  */
 
 import { BaseComponent } from './BaseComponent.js';
 import { 
   DOCUMENT_TYPES, 
+  DOCUMENT_TYPE_INFO,
   PLACEHOLDERS,
   formatPortionMark 
 } from '../utils/classification.js';
@@ -102,6 +103,12 @@ export class DocumentContentRenderer extends BaseComponent {
         break;
       case DOCUMENT_TYPES.INTERNAL:
         this.renderInternalDocument(doc, highlights, comments);
+        break;
+      case DOCUMENT_TYPES.CORPORATE_RECORD:
+      case DOCUMENT_TYPES.WATCHLIST_MATCH:
+      case DOCUMENT_TYPES.POLITICAL_FINANCE:
+      case DOCUMENT_TYPES.EVENT_ATTENDANCE:
+        this.renderStructuredDataDocument(doc, highlights, comments);
         break;
       default:
         this.renderNewsArticle(doc, highlights, comments);
@@ -454,6 +461,284 @@ export class DocumentContentRenderer extends BaseComponent {
     `;
 
     this.container.innerHTML = html;
+  }
+
+  /**
+   * Render structured data documents (corporate_record, watchlist_match, political_finance, event_attendance)
+   */
+  renderStructuredDataDocument(doc, highlights = [], comments = []) {
+    const structuredData = doc.structuredData || {};
+    const contentBlocks = doc.contentBlocks || [];
+    const typeInfo = DOCUMENT_TYPE_INFO[doc.documentType] || { label: 'Structured Data' };
+
+    // Render the structured data fields
+    const fieldsHtml = this.renderStructuredDataFields(structuredData, doc.documentType);
+
+    // Render content blocks (narrative summary)
+    const contentHtml = contentBlocks.length > 0 
+      ? this.renderContentBlocks(contentBlocks, true, highlights, comments)
+      : '';
+
+    const html = `
+      <div class="structured-data-document">
+        <div class="structured-data-fields">
+          ${fieldsHtml}
+        </div>
+        
+        ${contentHtml ? `
+          <div class="structured-data-narrative">
+            <div class="structured-data-section-label">Summary</div>
+            <div class="structured-data-content document-content-wrapper">
+              ${contentHtml}
+            </div>
+          </div>
+        ` : ''}
+      </div>
+    `;
+
+    this.container.innerHTML = html;
+  }
+
+  /**
+   * Render structured data fields as key-value pairs
+   */
+  renderStructuredDataFields(data, documentType) {
+    if (!data || Object.keys(data).length === 0) {
+      return '<p class="structured-data-empty">No structured data available</p>';
+    }
+
+    // Define field display configuration by document type
+    const fieldConfig = this.getFieldConfig(documentType);
+    
+    // Group fields by category
+    const groupedFields = this.groupFieldsByCategory(data, fieldConfig);
+    
+    return Object.entries(groupedFields).map(([category, fields]) => {
+      const fieldsHtml = fields.map(({ key, label, value, type }) => {
+        const formattedValue = this.formatFieldValue(value, type, key);
+        if (formattedValue === null || formattedValue === '') return '';
+        
+        return `
+          <div class="structured-data-field">
+            <div class="structured-data-label">${label}</div>
+            <div class="structured-data-value ${type === 'flags' ? 'structured-data-flags' : ''}">${formattedValue}</div>
+          </div>
+        `;
+      }).filter(Boolean).join('');
+
+      if (!fieldsHtml) return '';
+
+      return `
+        <div class="structured-data-group">
+          ${category !== 'main' ? `<div class="structured-data-group-label">${category}</div>` : ''}
+          ${fieldsHtml}
+        </div>
+      `;
+    }).filter(Boolean).join('');
+  }
+
+  /**
+   * Get field configuration based on document type
+   */
+  getFieldConfig(documentType) {
+    const configs = {
+      corporate_record: {
+        main: [
+          { key: 'companyName', label: 'Company Name' },
+          { key: 'entityType', label: 'Entity Type' },
+          { key: 'status', label: 'Status', type: 'status' },
+          { key: 'jurisdiction', label: 'Jurisdiction' },
+          { key: 'registrationNumber', label: 'Registration #' },
+          { key: 'incorporationDate', label: 'Incorporated', type: 'date' }
+        ],
+        'Registration Details': [
+          { key: 'registeredAddress', label: 'Registered Address' },
+          { key: 'source', label: 'Source' }
+        ],
+        'Ownership & Management': [
+          { key: 'beneficialOwners', label: 'Beneficial Owners', type: 'list' },
+          { key: 'directors', label: 'Directors', type: 'list' }
+        ],
+        'Flags': [
+          { key: 'flags', label: 'Flags', type: 'flags' }
+        ]
+      },
+      watchlist_match: {
+        main: [
+          { key: 'matchedName', label: 'Matched Name' },
+          { key: 'matchType', label: 'Match Type', type: 'status' },
+          { key: 'matchStatus', label: 'Status', type: 'status' },
+          { key: 'listName', label: 'List' },
+          { key: 'program', label: 'Program' }
+        ],
+        'Listing Details': [
+          { key: 'listingId', label: 'Listing ID' },
+          { key: 'dateAdded', label: 'Date Added', type: 'date' },
+          { key: 'listingReason', label: 'Reason' },
+          { key: 'matchedAliases', label: 'Aliases', type: 'list' }
+        ],
+        'Sanctions': [
+          { key: 'sanctionTypes', label: 'Sanction Types', type: 'list' }
+        ],
+        'Review': [
+          { key: 'reviewedBy', label: 'Reviewed By' },
+          { key: 'reviewDate', label: 'Review Date', type: 'date' }
+        ]
+      },
+      political_finance: {
+        main: [
+          { key: 'filer', label: 'Filer' },
+          { key: 'filingType', label: 'Filing Type' },
+          { key: 'amount', label: 'Amount', type: 'currency' },
+          { key: 'reportingPeriod', label: 'Period' }
+        ],
+        'Filing Details': [
+          { key: 'filingId', label: 'Filing ID' },
+          { key: 'source', label: 'Source' },
+          { key: 'client', label: 'Client' }
+        ],
+        'Lobbying Activity': [
+          { key: 'issuesLobbied', label: 'Issues', type: 'list' },
+          { key: 'agenciesLobbied', label: 'Agencies', type: 'list' },
+          { key: 'lobbyists', label: 'Lobbyists', type: 'list' },
+          { key: 'recipients', label: 'Recipients', type: 'list' }
+        ],
+        'Flags': [
+          { key: 'flags', label: 'Flags', type: 'flags' }
+        ]
+      },
+      event_attendance: {
+        main: [
+          { key: 'eventName', label: 'Event' },
+          { key: 'eventDate', label: 'Date', type: 'date' },
+          { key: 'venue', label: 'Venue' },
+          { key: 'confidence', label: 'Confidence', type: 'status' }
+        ],
+        'Attendee': [
+          { key: 'attendee', label: 'Attendee' },
+          { key: 'role', label: 'Role' },
+          { key: 'representingOrg', label: 'Representing' }
+        ],
+        'Observations': [
+          { key: 'observedWith', label: 'Observed With', type: 'list' },
+          { key: 'topics', label: 'Topics', type: 'list' }
+        ],
+        'Source': [
+          { key: 'source', label: 'Source' }
+        ]
+      }
+    };
+
+    return configs[documentType] || { main: [] };
+  }
+
+  /**
+   * Group fields by category based on config
+   */
+  groupFieldsByCategory(data, fieldConfig) {
+    const grouped = {};
+    
+    Object.entries(fieldConfig).forEach(([category, fields]) => {
+      const categoryFields = fields
+        .filter(field => data[field.key] !== undefined && data[field.key] !== null)
+        .map(field => ({
+          key: field.key,
+          label: field.label,
+          value: data[field.key],
+          type: field.type || 'text'
+        }));
+      
+      if (categoryFields.length > 0) {
+        grouped[category] = categoryFields;
+      }
+    });
+
+    return grouped;
+  }
+
+  /**
+   * Format field value based on type
+   */
+  formatFieldValue(value, type, key) {
+    if (value === null || value === undefined) return null;
+    
+    switch (type) {
+      case 'date':
+        if (!value) return null;
+        const date = new Date(value);
+        return isNaN(date.getTime()) ? this.escapeHtml(value) : date.toLocaleDateString('en-US', {
+          year: 'numeric',
+          month: 'short',
+          day: 'numeric'
+        });
+      
+      case 'currency':
+        if (typeof value === 'number') {
+          return new Intl.NumberFormat('en-US', {
+            style: 'currency',
+            currency: 'USD',
+            maximumFractionDigits: 0
+          }).format(value);
+        }
+        return this.escapeHtml(value);
+      
+      case 'list':
+        if (Array.isArray(value) && value.length > 0) {
+          return `<ul class="structured-data-list">${value.map(item => 
+            `<li>${this.escapeHtml(String(item))}</li>`
+          ).join('')}</ul>`;
+        }
+        return null;
+      
+      case 'flags':
+        if (Array.isArray(value) && value.length > 0) {
+          return value.map(flag => 
+            `<span class="structured-data-flag structured-data-flag-${this.escapeHtml(flag)}">${this.formatFlagLabel(flag)}</span>`
+          ).join('');
+        }
+        return null;
+      
+      case 'status':
+        const statusClass = this.getStatusClass(value);
+        return `<span class="structured-data-status ${statusClass}">${this.formatStatusLabel(value)}</span>`;
+      
+      default:
+        if (typeof value === 'boolean') {
+          return value ? 'Yes' : 'No';
+        }
+        return this.escapeHtml(String(value));
+    }
+  }
+
+  /**
+   * Format flag label for display
+   */
+  formatFlagLabel(flag) {
+    return flag.replace(/_/g, ' ').replace(/\b\w/g, c => c.toUpperCase());
+  }
+
+  /**
+   * Format status label for display
+   */
+  formatStatusLabel(status) {
+    return String(status).replace(/_/g, ' ').replace(/\b\w/g, c => c.toUpperCase());
+  }
+
+  /**
+   * Get CSS class for status values
+   */
+  getStatusClass(status) {
+    const statusLower = String(status).toLowerCase();
+    if (['active', 'confirmed', 'exact', 'approved'].includes(statusLower)) {
+      return 'status-positive';
+    }
+    if (['inactive', 'rejected', 'false_positive', 'expired'].includes(statusLower)) {
+      return 'status-negative';
+    }
+    if (['pending', 'partial', 'review', 'under_investigation'].includes(statusLower)) {
+      return 'status-warning';
+    }
+    return 'status-neutral';
   }
 
   renderContentBlocks(blocks, showPortionMarks = this.shouldShowPortionMarks(), highlights = [], comments = []) {

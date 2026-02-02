@@ -8411,3 +8411,213 @@ body.dragging-active * {
   align-items: center;
   gap: var(--space-sm);
 }
+
+/* ============================================
+   Structured Data Documents
+   ============================================ */
+
+.structured-data-document {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-lg);
+}
+
+.structured-data-fields {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+}
+
+.structured-data-group {
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+}
+
+.structured-data-group-label {
+  padding: var(--space-sm) var(--space-md);
+  background: var(--bg-tertiary);
+  border-bottom: 1px solid var(--border-subtle);
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--text-secondary);
+}
+
+.structured-data-field {
+  display: grid;
+  grid-template-columns: 140px 1fr;
+  gap: var(--space-md);
+  padding: var(--space-sm) var(--space-md);
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.structured-data-field:last-child {
+  border-bottom: none;
+}
+
+.structured-data-label {
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--text-secondary);
+  padding-top: 2px;
+}
+
+.structured-data-value {
+  font-size: 13px;
+  color: var(--text-primary);
+  word-break: break-word;
+}
+
+.structured-data-empty {
+  color: var(--text-muted);
+  font-style: italic;
+  padding: var(--space-md);
+}
+
+/* Structured Data Lists */
+.structured-data-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.structured-data-list li {
+  font-size: 13px;
+  color: var(--text-primary);
+  padding-left: var(--space-sm);
+  position: relative;
+}
+
+.structured-data-list li::before {
+  content: '•';
+  position: absolute;
+  left: 0;
+  color: var(--text-muted);
+}
+
+/* Structured Data Flags */
+.structured-data-flags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.structured-data-flag {
+  display: inline-flex;
+  align-items: center;
+  padding: 2px 8px;
+  border-radius: var(--radius-sm);
+  font-size: 11px;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  background: var(--bg-tertiary);
+  color: var(--text-secondary);
+  border: 1px solid var(--border-subtle);
+}
+
+/* Flag variants */
+.structured-data-flag-sanctioned,
+.structured-data-flag-entity_list,
+.structured-data-flag-under_investigation {
+  background: rgba(239, 68, 68, 0.1);
+  color: #ef4444;
+  border-color: rgba(239, 68, 68, 0.3);
+}
+
+.structured-data-flag-offshore,
+.structured-data-flag-nominee_directors,
+.structured-data-flag-foreign_owned,
+.structured-data-flag-foreign_client,
+.structured-data-flag-foreign_company,
+.structured-data-flag-foreign_principal {
+  background: rgba(245, 158, 11, 0.1);
+  color: #f59e0b;
+  border-color: rgba(245, 158, 11, 0.3);
+}
+
+.structured-data-flag-cfius_review,
+.structured-data-flag-national_security,
+.structured-data-flag-export_controlled {
+  background: rgba(139, 92, 246, 0.1);
+  color: #8b5cf6;
+  border-color: rgba(139, 92, 246, 0.3);
+}
+
+.structured-data-flag-state_affiliated,
+.structured-data-flag-state_owned {
+  background: rgba(59, 130, 246, 0.1);
+  color: #3b82f6;
+  border-color: rgba(59, 130, 246, 0.3);
+}
+
+.structured-data-flag-chips_act_recipient,
+.structured-data-flag-domestic_manufacturing {
+  background: rgba(34, 197, 94, 0.1);
+  color: #22c55e;
+  border-color: rgba(34, 197, 94, 0.3);
+}
+
+/* Structured Data Status */
+.structured-data-status {
+  display: inline-flex;
+  align-items: center;
+  padding: 2px 8px;
+  border-radius: var(--radius-sm);
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.structured-data-status.status-positive {
+  background: rgba(34, 197, 94, 0.1);
+  color: #22c55e;
+}
+
+.structured-data-status.status-negative {
+  background: rgba(239, 68, 68, 0.1);
+  color: #ef4444;
+}
+
+.structured-data-status.status-warning {
+  background: rgba(245, 158, 11, 0.1);
+  color: #f59e0b;
+}
+
+.structured-data-status.status-neutral {
+  background: var(--bg-tertiary);
+  color: var(--text-secondary);
+}
+
+/* Narrative Section */
+.structured-data-narrative {
+  margin-top: var(--space-sm);
+}
+
+.structured-data-section-label {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--text-secondary);
+  margin-bottom: var(--space-sm);
+}
+
+.structured-data-content {
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  padding: var(--space-md);
+}
+
+.structured-data-content p {
+  margin: 0;
+  font-size: 14px;
+  line-height: 1.6;
+  color: var(--text-primary);
+}
