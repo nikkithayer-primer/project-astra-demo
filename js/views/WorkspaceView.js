@@ -55,7 +55,7 @@ export class WorkspaceView extends BaseView {
     }
     
     // Generate tabs config
-    const baseHref = `#/workspace/${this.workspaceId}`;
+    const baseHref = `#/${this.workspaceId}/`;
     const tabsConfig = hasDocuments ? this.getTabsConfig(baseHref, true) : null;
 
     // Build subtitle with stats

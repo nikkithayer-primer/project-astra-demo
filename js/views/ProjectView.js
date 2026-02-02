@@ -54,7 +54,7 @@ export class ProjectView extends BaseView {
     }
     
     // Generate tabs config
-    const baseHref = `#/project/${this.projectId}`;
+    const baseHref = `#/${this.projectId}/`;
     const tabsConfig = hasDocuments ? this.getTabsConfig(baseHref, true) : null;
 
     // Build subtitle with stats

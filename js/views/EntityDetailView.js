@@ -11,6 +11,7 @@ import { initAllCardToggles } from '../utils/cardWidthToggle.js';
 import { aggregateFactionSentiment } from '../utils/volumeDataUtils.js';
 import { TagChips } from '../components/TagChips.js';
 import { getTagPicker } from '../components/TagPickerModal.js';
+import { StatCards } from '../components/StatCards.js';
 import {
   CardManager,
   NetworkGraphCard,
@@ -66,19 +67,23 @@ export class EntityDetailView extends BaseView {
       this.setupDashboardCards(entity, data);
     }
     
-    // Generate tabs config - use context-aware routing
-    const baseHref = this.buildContextRoute(this.entityType, this.entityId);
+    // Generate tabs config - use ID-based routing
+    const baseHref = this.buildContextRoute(this.entityId);
     const tabsConfig = hasDocuments ? this.getTabsConfig(baseHref, true) : null;
     
     // Render page
     this.container.innerHTML = `
-      ${this.renderHeader(entity, tabsConfig, activeTab)}
+      ${this.renderHeader(entity, data, tabsConfig, activeTab)}
       <div class="content-area">
         <div class="content-grid">
           ${this.cardManager.getHtml()}
         </div>
       </div>
     `;
+
+    // Initialize stat card dropdowns
+    const contextId = this.context?.id || null;
+    this._statDropdowns = StatCards.initDropdowns(this.container, { contextId });
 
     // Initialize card width toggles
     const contentGrid = this.container.querySelector('.content-grid');
@@ -363,10 +368,11 @@ export class EntityDetailView extends BaseView {
   /**
    * Render the page header
    * @param {Object} entity - The entity object
+   * @param {Object} data - The fetched entity data (for stats)
    * @param {Array} tabsConfig - Tabs configuration for PageHeader
    * @param {string} activeTab - The currently active tab
    */
-  renderHeader(entity, tabsConfig = null, activeTab = 'dashboard') {
+  renderHeader(entity, data, tabsConfig = null, activeTab = 'dashboard') {
     const personIcon = `<svg viewBox="0 0 16 16" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.25">
       <circle cx="8" cy="4" r="2.5"/>
       <path d="M3 14c0-3 2.2-5 5-5s5 2 5 5"/>
@@ -408,6 +414,10 @@ export class EntityDetailView extends BaseView {
       entity.name
     ]);
 
+    // Build stats for the header with dropdown support
+    const contextId = this.context?.id || null;
+    const statsData = StatCards.buildEntityStatsWithItems(data, contextId);
+
     return PageHeader.render({
       breadcrumbs,
       title: entity.name,
@@ -420,12 +430,20 @@ export class EntityDetailView extends BaseView {
         ? `<a href="#" class="btn btn-small btn-secondary source-link" data-source-type="${this.entityType}" data-source-id="${entity.id}">View source</a>` 
         : '',
       tagsContainerId: 'entity-tags-container',
+      stats: statsData,
+      statsMode: 'dropdowns',
+      statsContextId: contextId,
       tabs: tabsConfig,
       activeTab: activeTab
     });
   }
 
   destroy() {
+    // Clean up stat dropdowns
+    if (this._statDropdowns) {
+      this._statDropdowns.forEach(d => d.destroy && d.destroy());
+      this._statDropdowns = null;
+    }
     this.cardManager.destroyAll();
     super.destroy();
   }

@@ -23,8 +23,8 @@ const SCHEMAS = {
 
   narratives: {
     idPrefix: 'narr-',
-    required: ['id', 'missionId', 'text'],
-    optional: ['description', 'sentiment', 'tagIds', 'themeIds', 'personIds',
+    required: ['id', 'text'],
+    optional: ['missionId', 'description', 'sentiment', 'tagIds', 'themeIds', 'personIds',
                'organizationIds', 'locationIds', 'eventIds', 'documentIds',
                'createdAt', 'updatedAt'],
     types: {
@@ -32,7 +32,7 @@ const SCHEMAS = {
       sentiment: { type: 'number', min: -1, max: 1 }
     },
     references: {
-      missionId: 'missions',
+      missionId: 'missions',  // DEPRECATED: Use tagIds with Mission group tags
       themeIds: 'themes',
       personIds: 'persons',
       organizationIds: 'organizations',
@@ -296,11 +296,32 @@ const SCHEMAS = {
     }
   },
 
+  tagGroups: {
+    idPrefix: 'tag-group-',
+    required: ['id', 'name'],
+    optional: ['description', 'exclusive', 'color', 'sortOrder', 'createdAt', 'updatedAt'],
+    types: {
+      name: 'string',
+      description: 'string',
+      exclusive: 'boolean',
+      color: 'string',
+      sortOrder: 'number'
+    }
+  },
+
   tags: {
     idPrefix: 'tag-',
     required: ['id', 'name'],
-    optional: ['color', 'description', 'createdAt', 'updatedAt'],
-    types: { name: 'string' }
+    optional: ['groupId', 'color', 'description', 'sortOrder', 'createdAt', 'updatedAt'],
+    types: {
+      name: 'string',
+      description: 'string',
+      color: 'string',
+      sortOrder: 'number'
+    },
+    references: {
+      groupId: 'tagGroups'
+    }
   },
 
   users: {

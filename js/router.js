@@ -1,10 +1,16 @@
 /**
  * router.js
  * Hash-based routing for single-page navigation
- * Supports context-scoped navigation (workspace/monitor/dashboard)
+ * Uses ID-based routing where entity types are inferred from ID prefixes
  * Manages global filter state (mission + time range)
  * 
- * Route Pattern: #/{context}[/{contextId}][/{entityType}[/{entityId}][/documents]]
+ * Route Pattern: #/{contextId?}/{entityId}/
+ * Examples:
+ *   - #/monitor-001/person-003/ (person within monitor scope)
+ *   - #/workspace-001/narr-005/ (narrative within workspace scope)  
+ *   - #/person-003/ (person in COP/global scope)
+ *   - #/cop/ (COP home)
+ * 
  * See docs/ROUTING.md for full specification
  */
 
@@ -36,13 +42,15 @@ import { TimeRangeFilter } from './components/TimeRangeFilter.js';
 import { DataService } from './data/DataService.js';
 import { dataStore } from './data/DataStore.js';
 import { formatDate } from './utils/formatters.js';
+import { 
+  getEntityTypeFromId, 
+  isContextId, 
+  parseIdRoute,
+  getEntityTypeDisplayName 
+} from './utils/idUtils.js';
 
-// Context types for scoped routing
-const CONTEXT_TYPES = ['workspace', 'monitor', 'dashboard', 'project'];
-
-// Entity types that can be nested under contexts
-const ENTITY_TYPES = {
-  // Singular (detail views)
+// View classes mapped by entity type (derived from ID prefix)
+const ENTITY_VIEW_MAP = {
   'narrative': { view: NarrativeView, listType: 'narratives' },
   'theme': { view: ThemeView, listType: 'narratives' },
   'faction': { view: FactionView, listType: 'factions' },
@@ -53,17 +61,13 @@ const ENTITY_TYPES = {
   'document': { view: DocumentView, listType: 'documents' },
   'topic': { view: TopicView, listType: 'topics' },
   'tag': { view: TagDetailView, listType: 'tags' },
-  // Plural (list views)
-  'narratives': { view: ListView, listType: 'narratives' },
-  'themes': { view: ListView, listType: 'narratives' },
-  'factions': { view: ListView, listType: 'factions' },
-  'locations': { view: ListView, listType: 'locations' },
-  'events': { view: ListView, listType: 'events' },
-  'entities': { view: ListView, listType: 'entities' },
-  'documents': { view: DocumentsView, listType: 'documents' },
-  'topics': { view: ListView, listType: 'topics' },
-  'tags': { view: TagsView, listType: 'tags' }
+  'monitor': { view: MonitorView, listType: 'monitors' },
+  'workspace': { view: WorkspaceView, listType: 'workspaces' },
+  'project': { view: ProjectView, listType: 'projects' }
 };
+
+// Top-level routes that don't follow the ID-based pattern
+const TOP_LEVEL_ROUTES = ['workspaces', 'monitors', 'search', 'projects', 'activity', 'settings', 'data-model', 'component-demos', 'status', 'cop'];
 
 export class Router {
   constructor(containerId) {
@@ -149,7 +153,7 @@ export class Router {
         <div class="content-area">
           <div class="card">
             <div class="card-body" style="padding: var(--space-2xl); text-align: center;">
-              <p>Try <a href="#/dashboard">returning to the dashboard</a> or refreshing the page.</p>
+              <p>Try <a href="#/cop/">returning to the Common Operating Picture</a> or refreshing the page.</p>
             </div>
           </div>
         </div>
@@ -173,8 +177,8 @@ export class Router {
       const settings = dataStore.getSettings();
       let defaultPage = settings.defaultStartPage || 'monitors';
       
-      // If dashboard is disabled and was set as start page, fall back to monitors
-      if (!settings.dashboardEnabled && defaultPage === 'dashboard') {
+      // If COP is disabled and was set as start page, fall back to monitors
+      if (!settings.copEnabled && (defaultPage === 'cop' || defaultPage === 'dashboard')) {
         defaultPage = 'monitors';
       }
       
@@ -393,126 +397,125 @@ export class Router {
   }
 
   /**
-   * Parse nested routes into structured components
-   * Handles patterns like:
+   * Parse ID-based route structure
+   * 
+   * Routes use entity ID prefixes to determine types:
+   *   - #/monitor-001/person-003/ (person within monitor scope)
+   *   - #/workspace-001/narr-005/ (narrative within workspace scope)
+   *   - #/person-003/ (person in COP scope)
+   *   - #/cop/ (COP home)
    *   - #/workspaces (top-level list)
-   *   - #/workspace/{id} (context home)
-   *   - #/workspace/{id}/faction/{factionId} (scoped entity)
-   *   - #/workspace/{id}/faction/{factionId}/documents (scoped entity tab)
-   *   - #/dashboard/narratives (global list)
-   *   - #/faction/{id} (legacy global - redirected to dashboard)
    * 
    * @param {string} hash - The hash path without #/ and query string
    * @returns {Object} Parsed route info
    */
-  parseNestedRoute(hash) {
+  parseIdBasedRoute(hash) {
     const segments = hash.split('/').filter(s => s);
     
     // Default result structure
     const result = {
-      context: null,           // 'workspace' | 'monitor' | 'dashboard' | null
-      contextId: null,         // ID of workspace/monitor (null for dashboard)
-      entityType: null,        // 'narrative', 'narratives', 'faction', etc.
-      entityId: null,          // ID of specific entity
+      contextId: null,         // ID of context (monitor-001, workspace-001, etc.)
+      contextType: null,       // 'monitor' | 'workspace' | 'project' | 'cop'
+      entityId: null,          // Primary entity ID being viewed
+      entityType: null,        // Entity type derived from ID prefix
+      entityChain: [],         // Full chain of entity IDs for nested navigation
       subRoute: null,          // 'documents' for documents tab
-      isListView: false,       // true if entityType is plural
-      isContextHome: false,    // true if viewing context dashboard (no entity)
-      isLegacyRoute: false,    // true if old global route (needs redirect)
+      isContextHome: false,    // true if viewing context home (no entity)
+      isCopHome: false,        // true if viewing COP home
+      is404: false,            // true if route is invalid
       topLevelRoute: null      // For non-context routes like 'workspaces', 'search'
     };
 
     if (segments.length === 0) {
+      // Empty hash - default to COP home
+      result.isCopHome = true;
+      result.contextType = 'cop';
       return result;
     }
 
     const firstSegment = segments[0];
 
     // Check for top-level non-context routes
-    const topLevelRoutes = ['workspaces', 'monitors', 'search', 'projects', 'activity', 'settings', 'data-model', 'component-demos', 'status'];
-    if (topLevelRoutes.includes(firstSegment)) {
-      result.topLevelRoute = firstSegment;
+    if (TOP_LEVEL_ROUTES.includes(firstSegment)) {
+      if (firstSegment === 'cop') {
+        result.contextType = 'cop';
+        if (segments.length === 1) {
+          result.isCopHome = true;
+        } else {
+          // COP with entity chain
+          this._parseEntityChain(segments.slice(1), result);
+        }
+      } else {
+        result.topLevelRoute = firstSegment;
+      }
       return result;
     }
 
-    // Check if first segment is a context
-    if (CONTEXT_TYPES.includes(firstSegment)) {
-      result.context = firstSegment;
+    // Check if first segment is a context ID (monitor-, workspace-, project-)
+    if (isContextId(firstSegment)) {
+      result.contextId = firstSegment;
+      result.contextType = getEntityTypeFromId(firstSegment);
       
-      if (firstSegment === 'dashboard') {
-        // Dashboard context: #/dashboard or #/dashboard/entityType/entityId
-        if (segments.length === 1) {
-          result.isContextHome = true;
-        } else {
-          // Parse entity from remaining segments
-          this._parseEntitySegments(segments.slice(1), result);
-        }
+      if (segments.length === 1) {
+        result.isContextHome = true;
       } else {
-        // Workspace or Monitor context: need contextId
-        if (segments.length >= 2) {
-          result.contextId = segments[1];
-          
-          if (segments.length === 2) {
-            result.isContextHome = true;
-          } else {
-            // Parse entity from remaining segments
-            this._parseEntitySegments(segments.slice(2), result);
-          }
-        }
+        // Parse remaining segments as entity chain
+        this._parseEntityChain(segments.slice(1), result);
       }
-    } else if (ENTITY_TYPES[firstSegment]) {
-      // Legacy global entity route: #/faction/123 → redirect to #/dashboard/faction/123
-      result.isLegacyRoute = true;
-      result.context = 'dashboard';
-      this._parseEntitySegments(segments, result);
     } else {
-      // Unknown route - treat as top-level
-      result.topLevelRoute = firstSegment;
+      // No context prefix - treat as COP-scoped
+      result.contextType = 'cop';
+      // Parse all segments as entity chain
+      this._parseEntityChain(segments, result);
     }
 
     return result;
   }
 
   /**
-   * Helper to parse entity segments from a route
-   * @param {string[]} segments - Array of path segments starting with entityType
+   * Helper to parse entity chain from route segments
+   * @param {string[]} segments - Array of entity IDs
    * @param {Object} result - Result object to populate
    */
-  _parseEntitySegments(segments, result) {
+  _parseEntityChain(segments, result) {
     if (segments.length === 0) return;
     
-    const entityType = segments[0];
-    result.entityType = entityType;
-    result.isListView = entityType.endsWith('s') && entityType !== 'status';
-    
-    if (segments.length >= 2 && segments[1] !== 'documents') {
-      result.entityId = segments[1];
-      result.isListView = false;
+    // Check for /documents sub-route at the end
+    const lastSegment = segments[segments.length - 1];
+    if (lastSegment === 'documents') {
+      result.subRoute = 'documents';
+      segments = segments.slice(0, -1);
     }
     
-    // Check for /documents sub-route
-    const lastSegment = segments[segments.length - 1];
-    if (lastSegment === 'documents' && segments.length > 1) {
-      result.subRoute = 'documents';
+    // Store full entity chain
+    result.entityChain = segments.filter(s => s && s !== 'documents');
+    
+    // Primary entity is the last one in the chain
+    if (result.entityChain.length > 0) {
+      result.entityId = result.entityChain[result.entityChain.length - 1];
+      result.entityType = getEntityTypeFromId(result.entityId);
     }
   }
 
   /**
    * Resolve context to a scope object with document IDs
-   * @param {string} context - Context type ('workspace', 'monitor', 'dashboard')
-   * @param {string} contextId - ID of the context (null for dashboard)
+   * Now accepts a context ID directly and derives type from prefix
+   * @param {string} contextId - Context ID (e.g., 'monitor-001') or null for COP
    * @returns {Object} Scope object with type, id, and documentIds
    */
-  resolveContextScope(context, contextId) {
-    if (!context || context === 'dashboard') {
+  resolveContextScope(contextId) {
+    if (!contextId) {
       return { 
-        type: 'dashboard', 
+        type: 'cop', 
         id: null, 
         documentIds: null,
-        getName: () => 'Dashboard'
+        getName: () => 'Common Operating Picture'
       };
     }
     
-    if (context === 'workspace') {
+    const contextType = getEntityTypeFromId(contextId);
+    
+    if (contextType === 'workspace') {
       const workspace = DataService.getWorkspace(contextId);
       if (!workspace) {
         console.warn(`Router: Workspace ${contextId} not found`);
@@ -526,7 +529,7 @@ export class Router {
       };
     }
     
-    if (context === 'monitor') {
+    if (contextType === 'monitor') {
       const monitor = DataService.getMonitor(contextId);
       if (!monitor) {
         console.warn(`Router: Monitor ${contextId} not found`);
@@ -542,7 +545,7 @@ export class Router {
       };
     }
     
-    if (context === 'project') {
+    if (contextType === 'project') {
       const project = DataService.getProject(contextId);
       if (!project) {
         console.warn(`Router: Project ${contextId} not found`);
@@ -560,60 +563,55 @@ export class Router {
   }
 
   /**
-   * Build a context-aware route URL
-   * @param {string} entityType - Entity type (e.g., 'faction', 'narrative')
-   * @param {string} entityId - Entity ID (optional for list views)
-   * @param {Object} context - Context object from resolveContextScope
-   * @param {string} subRoute - Optional sub-route (e.g., 'documents')
+   * Build an ID-based route URL
+   * @param {string} contextId - Context ID (e.g., 'monitor-001') or null for COP
+   * @param {...string} entityIds - Entity IDs to include in the route
    * @returns {string} Full hash URL
    */
-  buildContextRoute(entityType, entityId = null, context = null, subRoute = null) {
-    let path;
+  buildIdRoute(contextId, ...entityIds) {
+    const parts = [];
     
-    if (!context || context.type === 'dashboard') {
-      path = `#/dashboard/${entityType}`;
-    } else {
-      path = `#/${context.type}/${context.id}/${entityType}`;
+    if (contextId) {
+      parts.push(contextId);
     }
     
-    if (entityId) {
-      path += `/${entityId}`;
+    parts.push(...entityIds.filter(Boolean));
+    
+    if (parts.length === 0) {
+      return '#/cop/';
     }
     
-    if (subRoute) {
-      path += `/${subRoute}`;
-    }
-    
-    return path;
+    return `#/${parts.join('/')}/`;
   }
 
   /**
    * Parse current hash and route to appropriate view
-   * Supports both legacy flat routes and new nested context routes
+   * Uses ID-based routing where types are derived from ID prefixes
    */
   handleRoute() {
-    const fullHash = window.location.hash.slice(2) || 'dashboard'; // Remove #/
+    const fullHash = window.location.hash.slice(2) || 'cop'; // Remove #/
     
     // Separate path from query string
     const queryIndex = fullHash.indexOf('?');
     const hash = queryIndex === -1 ? fullHash : fullHash.slice(0, queryIndex);
     const queryParams = this.parseQueryParams(fullHash);
     
-    // Parse the route using new nested route parser
-    const parsed = this.parseNestedRoute(hash);
+    // Parse the route using ID-based parser
+    const parsed = this.parseIdBasedRoute(hash);
 
-    // Handle legacy routes by redirecting to dashboard context
-    if (parsed.isLegacyRoute) {
-      let newRoute = `#/dashboard/${parsed.entityType}`;
-      if (parsed.entityId) newRoute += `/${parsed.entityId}`;
-      if (parsed.subRoute) newRoute += `/${parsed.subRoute}`;
-      window.location.hash = newRoute;
+    // Get settings
+    const settings = dataStore.getSettings();
+
+    // Check for COP disabled with COP-scoped route
+    if (parsed.contextType === 'cop' && !parsed.topLevelRoute && !settings.copEnabled) {
+      // COP is disabled and route requires COP - show 404 or redirect
+      window.location.hash = '#/monitors';
       return;
     }
 
     // Determine the primary route for nav link highlighting
-    this.currentRoute = parsed.topLevelRoute || parsed.context || 'dashboard';
-    this.currentContext = parsed.context ? this.resolveContextScope(parsed.context, parsed.contextId) : null;
+    this.currentRoute = parsed.topLevelRoute || parsed.contextType || 'cop';
+    this.currentContext = this.resolveContextScope(parsed.contextId);
 
     // Destroy current view and clean up sticky header
     try {
@@ -622,7 +620,7 @@ export class Router {
       console.error('Router: Error destroying sticky header:', e);
     }
     
-    // Clean up dashboard filters if navigating away from dashboard
+    // Clean up COP filters if navigating away from COP
     this.cleanupDashboardFilters();
     
     if (this.currentView && this.currentView.destroy) {
@@ -640,9 +638,6 @@ export class Router {
     } catch (e) {
       console.error('Router: Error updating nav links:', e);
     }
-
-    // Get settings for default tab
-    const settings = dataStore.getSettings();
     
     // Determine tab based on sub-route or query params
     let tab = 'dashboard';
@@ -662,21 +657,21 @@ export class Router {
       context: this.currentContext // Pass context scope to views
     };
 
-    // Track if this is the dashboard home for filter initialization
-    let isDashboardHome = false;
+    // Track if this is the COP home for filter initialization
+    let isCopHome = false;
 
     // Route based on parsed structure
     if (parsed.topLevelRoute) {
       // Handle top-level routes (workspaces, monitors, search, etc.)
       this._handleTopLevelRoute(parsed.topLevelRoute, filterOptions, settings);
-    } else if (parsed.context) {
-      // Handle context-scoped routes
-      this._handleContextRoute(parsed, filterOptions, settings);
-      isDashboardHome = parsed.context === 'dashboard' && parsed.isContextHome;
+    } else if (parsed.isCopHome || parsed.isContextHome || parsed.entityId) {
+      // Handle ID-based routes
+      this._handleIdBasedRoute(parsed, filterOptions, settings);
+      isCopHome = parsed.isCopHome;
     } else {
       // No recognized route - redirect to default
       let defaultPage = settings.defaultStartPage || 'monitors';
-      if (!settings.dashboardEnabled && defaultPage === 'dashboard') {
+      if (!settings.copEnabled && defaultPage === 'cop') {
         defaultPage = 'monitors';
       }
       window.location.hash = `#/${defaultPage}`;
@@ -688,8 +683,8 @@ export class Router {
       try {
         this.currentView.render();
         
-        // Initialize dashboard filters after render (only for dashboard home)
-        if (isDashboardHome) {
+        // Initialize COP filters after render (only for COP home)
+        if (isCopHome) {
           this.initDashboardFilters();
         }
       } catch (e) {
@@ -748,14 +743,14 @@ export class Router {
         return;
         
       case 'status':
-        // Redirect to dashboard
-        window.location.hash = '#/dashboard';
+        // Redirect to COP
+        window.location.hash = '#/cop/';
         return;
         
       default:
         // Unknown top-level route - redirect to default
         let defaultPage = settings.defaultStartPage || 'monitors';
-        if (!settings.dashboardEnabled && defaultPage === 'dashboard') {
+        if (!settings.copEnabled && defaultPage === 'cop') {
           defaultPage = 'monitors';
         }
         window.location.hash = `#/${defaultPage}`;
@@ -763,14 +758,15 @@ export class Router {
   }
 
   /**
-   * Handle context-scoped routes (workspace/monitor/dashboard with optional entity)
+   * Handle ID-based routes (context homes and entity detail views)
+   * Routes are determined by ID prefixes, not explicit type segments
    */
-  _handleContextRoute(parsed, filterOptions, settings) {
-    const { context, contextId, entityType, entityId, isContextHome, isListView } = parsed;
+  _handleIdBasedRoute(parsed, filterOptions, settings) {
+    const { contextId, contextType, entityId, entityType, isCopHome, isContextHome } = parsed;
     
-    // Dashboard context home
-    if (context === 'dashboard' && isContextHome) {
-      if (!settings.dashboardEnabled) {
+    // COP home
+    if (isCopHome) {
+      if (!settings.copEnabled) {
         window.location.hash = '#/monitors';
         return;
       }
@@ -778,74 +774,28 @@ export class Router {
       return;
     }
     
-    // Workspace context home
-    if (context === 'workspace' && isContextHome) {
-      this.currentView = new WorkspaceView(this.container, contextId, filterOptions);
-      return;
-    }
-    
-    // Monitor context home
-    if (context === 'monitor' && isContextHome) {
-      this.currentView = new MonitorView(this.container, contextId, filterOptions);
-      return;
-    }
-    
-    // Project context home
-    if (context === 'project' && isContextHome) {
-      this.currentView = new ProjectView(this.container, contextId, filterOptions);
-      return;
-    }
-    
-    // Entity view within context
-    if (entityType) {
-      this._handleEntityView(entityType, entityId, isListView, filterOptions);
-    }
-  }
-
-  /**
-   * Handle entity views (both list and detail)
-   */
-  _handleEntityView(entityType, entityId, isListView, filterOptions) {
-    const entityConfig = ENTITY_TYPES[entityType];
-    
-    if (!entityConfig) {
-      console.warn(`Router: Unknown entity type '${entityType}'`);
-      this.showErrorPage('Not Found', `Unknown entity type: ${entityType}`);
-      return;
-    }
-    
-    const ViewClass = entityConfig.view;
-    
-    if (isListView) {
-      // List views: ListView or specialized list view (DocumentsView, TagsView)
-      if (ViewClass === ListView) {
-        this.currentView = new ListView(this.container, entityConfig.listType, filterOptions);
-      } else if (ViewClass === DocumentsView) {
-        this.currentView = new DocumentsView(this.container, filterOptions);
-      } else if (ViewClass === TagsView) {
-        this.currentView = new TagsView(this.container, filterOptions);
+    // Context home (monitor-001, workspace-001, project-001 without further entity)
+    if (isContextHome && contextId) {
+      const viewConfig = ENTITY_VIEW_MAP[contextType];
+      if (viewConfig) {
+        this.currentView = new viewConfig.view(this.container, contextId, filterOptions);
       } else {
-        // Fallback to ListView
-        this.currentView = new ListView(this.container, entityConfig.listType, filterOptions);
+        this.showErrorPage('Not Found', `Unknown context type: ${contextType}`);
       }
-    } else {
-      // Detail view
-      if (entityId) {
-        // Special case: themes redirect to narratives list if no ID
-        if (entityType === 'theme' && !entityId) {
-          const ctx = filterOptions.context;
-          const basePath = ctx && ctx.type !== 'dashboard' ? `#/${ctx.type}/${ctx.id}` : '#/dashboard';
-          window.location.hash = `${basePath}/narratives`;
-          return;
-        }
-        
-        this.currentView = new ViewClass(this.container, entityId, filterOptions);
-      } else {
-        // No ID provided for detail view - show list instead
-        if (entityConfig.listType) {
-          this.currentView = new ListView(this.container, entityConfig.listType, filterOptions);
-        }
+      return;
+    }
+    
+    // Entity detail view
+    if (entityId && entityType) {
+      const viewConfig = ENTITY_VIEW_MAP[entityType];
+      
+      if (!viewConfig) {
+        console.warn(`Router: Unknown entity type '${entityType}' from ID '${entityId}'`);
+        this.showErrorPage('Not Found', `Unknown entity type: ${entityType}`);
+        return;
       }
+      
+      this.currentView = new viewConfig.view(this.container, entityId, filterOptions);
     }
   }
 
@@ -862,7 +812,8 @@ export class Router {
       // Check if this link matches the current route/context
       const matches = 
         linkRoute === route ||
-        linkRoute === 'dashboard' && route === 'dashboard' ||
+        linkRoute === 'cop' && route === 'cop' ||
+        linkRoute === 'cop/' && route === 'cop' ||
         linkRoute === 'monitors' && (route === 'monitors' || route === 'monitor') ||
         linkRoute === 'workspaces' && (route === 'workspaces' || route === 'workspace') ||
         linkRoute === 'projects' && (route === 'projects' || route === 'project');
@@ -874,26 +825,19 @@ export class Router {
   }
 
   /**
-   * Navigate programmatically
-   * @param {string} route - Route path or entity type
-   * @param {string} id - Optional entity ID
-   * @param {Object} context - Optional context object (if navigating within a context)
+   * Navigate programmatically using ID-based routing
+   * @param {string} entityId - Entity ID to navigate to
+   * @param {Object} context - Optional context object (contains context ID)
    */
-  navigate(route, id = null, context = null) {
+  navigate(entityId, context = null) {
     let hash;
     
-    if (context && context.type && context.type !== 'dashboard') {
+    if (context && context.id) {
       // Context-scoped navigation
-      hash = `#/${context.type}/${context.id}/${route}`;
-      if (id) hash += `/${id}`;
-    } else if (context && context.type === 'dashboard') {
-      // Dashboard context
-      hash = `#/dashboard/${route}`;
-      if (id) hash += `/${id}`;
+      hash = `#/${context.id}/${entityId}/`;
     } else {
-      // Top-level or legacy navigation
-      hash = `#/${route}`;
-      if (id) hash += `/${id}`;
+      // COP-scoped navigation
+      hash = `#/${entityId}/`;
     }
     
     window.location.hash = hash;
@@ -904,17 +848,17 @@ export class Router {
    * @returns {Object} Parsed route with context, entityType, entityId, etc.
    */
   getCurrentRoute() {
-    const fullHash = window.location.hash.slice(2) || 'dashboard';
+    const fullHash = window.location.hash.slice(2) || 'cop';
     const queryIndex = fullHash.indexOf('?');
     const hash = queryIndex === -1 ? fullHash : fullHash.slice(0, queryIndex);
     const queryParams = this.parseQueryParams(fullHash);
-    const parsed = this.parseNestedRoute(hash);
+    const parsed = this.parseIdBasedRoute(hash);
     
     return {
       ...parsed,
       queryParams,
       // Legacy compatibility
-      route: parsed.topLevelRoute || parsed.context || parsed.entityType,
+      route: parsed.topLevelRoute || parsed.contextType || parsed.entityType,
       id: parsed.contextId || parsed.entityId
     };
   }
@@ -933,7 +877,7 @@ export class Router {
    * @returns {string} The full hash URL
    */
   buildUrl(params = {}) {
-    const fullHash = window.location.hash.slice(2) || 'dashboard';
+    const fullHash = window.location.hash.slice(2) || 'cop';
     const queryIndex = fullHash.indexOf('?');
     const basePath = queryIndex === -1 ? `#/${fullHash}` : `#/${fullHash.slice(0, queryIndex)}`;
     

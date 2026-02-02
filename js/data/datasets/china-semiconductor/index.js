@@ -17,6 +17,7 @@ import { documents } from './documents.js';
 import { monitors, alerts } from './monitors.js';
 import { topics } from './topics.js';
 import { searchFilters } from './searchFilters.js';
+import { tagGroups } from './tagGroups.js';
 import { tags } from './tags.js';
 
 // Workspaces - saved search results with document collections
@@ -81,6 +82,14 @@ export const projects = [
 export const datasetId = 'china-semiconductor';
 export const datasetName = 'China Semiconductor';
 
+// Default settings for this dataset
+export const defaultSettings = {
+  copEnabled: false,
+  defaultStartPage: 'search',
+  defaultViewTab: 'documents',
+  showClassification: true
+};
+
 export const mockData = {
   publishers,
   publisherCategories,
@@ -102,6 +111,7 @@ export const mockData = {
   workspaces,
   projects,
   searchFilters,
+  tagGroups,
   tags
 };
 

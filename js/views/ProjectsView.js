@@ -119,7 +119,7 @@ export class ProjectsView extends BaseView {
       card.style.cursor = 'pointer';
       this.addListener(card, 'click', () => {
         const projectId = card.dataset.projectId;
-        window.location.hash = `#/project/${projectId}`;
+        window.location.hash = `#/${projectId}/`;
       });
     });
 

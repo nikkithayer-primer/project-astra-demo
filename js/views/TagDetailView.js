@@ -107,14 +107,14 @@ export class TagDetailView extends BaseView {
     if (entities.monitors.length > 0) {
       sections.push(this.renderSection('Monitors', entities.monitors, 'monitor', (m) => ({
         title: m.name,
-        href: `#/monitor/${m.id}`,
+        href: `#/${m.id}/`,
         subtitle: m.description
       })));
     }
 
     const headerHtml = PageHeader.render({
       breadcrumbs: [
-        { label: 'Dashboard', href: '#/dashboard' },
+        { label: 'COP', href: '#/cop/' },
         { label: 'Tags', href: '#/tags' },
         tag.name
       ],

@@ -355,7 +355,7 @@ export class NetworkGraph extends BaseComponent {
     ).join('');
     
     const moreText = narrativeCount > 3 
-      ? `<div style="color: var(--text-muted); font-size: 11px; margin-top: 4px;">+${narrativeCount - 3} more narratives</div>` 
+      ? `<div style="color: var(--text-muted); font-size: 12px; margin-top: 4px;">+${narrativeCount - 3} more narratives</div>` 
       : '';
 
     this.tooltip
@@ -365,7 +365,7 @@ export class NetworkGraph extends BaseComponent {
         </div>
         ${narrativeList}
         ${moreText}
-        <div style="color: var(--accent-primary); font-size: 11px; margin-top: 8px;">Click to view details</div>
+        <div style="color: var(--accent-primary); font-size: 12px; margin-top: 8px;">Click to view details</div>
       `)
       .style('visibility', 'visible')
       .style('left', (event.pageX + 10) + 'px')

@@ -51,8 +51,8 @@ export class ThemeView extends BaseView {
       this.setupDashboardCards(theme, data);
     }
     
-    // Generate tabs config - use context-aware routing
-    const baseHref = this.buildContextRoute('theme', this.themeId);
+    // Generate tabs config - use ID-based routing
+    const baseHref = this.buildContextRoute(this.themeId);
     const tabsConfig = hasDocuments ? this.getTabsConfig(baseHref, true) : null;
     
     // Build context-aware breadcrumbs with optional parent narrative
@@ -60,7 +60,7 @@ export class ThemeView extends BaseView {
       { label: 'Narratives', route: 'narratives' }
     ];
     if (data.parentNarrative) {
-      breadcrumbItems.push({ label: 'Parent', href: this.buildContextRoute('narrative', data.parentNarrative.id) });
+      breadcrumbItems.push({ label: 'Parent', href: this.buildContextRoute(data.parentNarrative.id) });
     }
     breadcrumbItems.push('Theme');
     const breadcrumbs = this.buildBreadcrumbs(breadcrumbItems);
@@ -79,8 +79,8 @@ export class ThemeView extends BaseView {
       activeTab: activeTab
     });
 
-    // Build parent link HTML if applicable (only on dashboard tab) - context-aware
-    const parentRoute = data.parentNarrative ? this.buildContextRoute('narrative', data.parentNarrative.id) : '';
+    // Build parent link HTML if applicable (only on dashboard tab) - ID-based
+    const parentRoute = data.parentNarrative ? this.buildContextRoute(data.parentNarrative.id) : '';
     const parentLinkHtml = data.parentNarrative && this.isDashboardTab() ? `
       <div class="parent-link" onclick="window.location.hash='${parentRoute}'">
         <span class="parent-link-icon">↑</span>

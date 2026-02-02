@@ -52,8 +52,8 @@ export class FactionView extends BaseView {
       this.setupDashboardCards(faction, data);
     }
     
-    // Generate tabs config - use context-aware routing
-    const baseHref = this.buildContextRoute('faction', this.factionId);
+    // Generate tabs config - use ID-based routing
+    const baseHref = this.buildContextRoute(this.factionId);
     const tabsConfig = hasDocuments ? this.getTabsConfig(baseHref, true) : null;
 
     // Build context-aware breadcrumbs

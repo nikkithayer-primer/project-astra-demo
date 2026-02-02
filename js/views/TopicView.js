@@ -52,8 +52,8 @@ export class TopicView extends BaseView {
       this.setupDashboardCards(topic, data);
     }
     
-    // Generate tabs config - use context-aware routing
-    const baseHref = this.buildContextRoute('topic', this.topicId);
+    // Generate tabs config - use ID-based routing
+    const baseHref = this.buildContextRoute(this.topicId);
     const tabsConfig = hasDocuments ? this.getTabsConfig(baseHref, true) : null;
 
     // Format date range for subtitle

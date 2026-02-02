@@ -104,7 +104,7 @@
 }
 
 .radio-desc {
-  font-size: 11px;
+  font-size: 12px;
   color: var(--text-muted);
 }
 
@@ -280,12 +280,12 @@
 }
 
 .scope-group-count {
-  font-size: 11px;
+  font-size: 12px;
   color: var(--text-muted);
 }
 
 .scope-add-all {
-  font-size: 11px;
+  font-size: 12px;
   font-weight: 500;
   color: var(--accent-primary);
   padding: 2px 8px;
@@ -387,7 +387,7 @@
   align-items: center;
   justify-content: center;
   padding: 1px 6px;
-  font-size: 10px;
+  font-size: 12px;
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.5px;
@@ -507,14 +507,14 @@
 }
 
 .scope-filter-count {
-  font-size: 11px;
+  font-size: 12px;
   color: var(--text-muted);
   margin-left: auto;
   padding-right: var(--space-sm);
 }
 
 .scope-filter-apply {
-  font-size: 11px;
+  font-size: 12px;
   font-weight: 500;
   color: var(--accent-primary);
   padding: 2px 8px;
@@ -576,7 +576,7 @@
 }
 
 .filter-tooltip-label {
-  font-size: 10px;
+  font-size: 12px;
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.5px;
@@ -924,7 +924,7 @@
   padding: var(--space-xs) var(--space-sm);
   background: var(--bg-tertiary);
   border-bottom: 1px solid var(--border-subtle);
-  font-size: 10px;
+  font-size: 12px;
   color: var(--text-muted);
 }
 
@@ -947,7 +947,7 @@
 
 .typeahead-section-label {
   padding: var(--space-xs) var(--space-sm);
-  font-size: 10px;
+  font-size: 12px;
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.5px;
@@ -988,7 +988,7 @@
   flex-wrap: wrap;
   gap: var(--space-md);
   padding: var(--space-sm);
-  font-size: 10px;
+  font-size: 12px;
   color: var(--text-muted);
   border-top: 1px solid var(--border-subtle);
   margin-top: var(--space-sm);
@@ -1006,7 +1006,7 @@
   border: 1px solid var(--border-subtle);
   border-radius: 3px;
   font-family: var(--font-mono);
-  font-size: 9px;
+  font-size: 12px;
   font-weight: 600;
 }
 
@@ -1210,7 +1210,7 @@
   display: inline-block;
   padding: 2px 6px;
   border-radius: 3px;
-  font-size: 10px;
+  font-size: 12px;
   font-weight: 600;
   text-transform: uppercase;
   margin-bottom: var(--space-xs);
@@ -1269,7 +1269,7 @@
 }
 
 .scope-filter-badge {
-  font-size: 9px;
+  font-size: 12px;
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.5px;

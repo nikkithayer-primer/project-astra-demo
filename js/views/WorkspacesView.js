@@ -121,7 +121,7 @@ export class WorkspacesView extends BaseView {
       card.style.cursor = 'pointer';
       this.addListener(card, 'click', () => {
         const workspaceId = card.dataset.workspaceId;
-        window.location.hash = `#/workspace/${workspaceId}`;
+        window.location.hash = `#/${workspaceId}/`;
       });
     });
 
@@ -149,7 +149,7 @@ export class WorkspacesView extends BaseView {
     const editor = getWorkspaceEditor();
     editor.openCreate((newWorkspace) => {
       // Navigate to the new workspace
-      window.location.hash = `#/workspace/${newWorkspace.id}`;
+      window.location.hash = `#/${newWorkspace.id}/`;
     });
   }
 

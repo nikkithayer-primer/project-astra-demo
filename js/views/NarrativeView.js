@@ -52,8 +52,8 @@ export class NarrativeView extends BaseView {
       this.setupDashboardCards(narrative, data);
     }
     
-    // Generate tabs config - use context-aware routing
-    const baseHref = this.buildContextRoute('narrative', this.narrativeId);
+    // Generate tabs config - use ID-based routing
+    const baseHref = this.buildContextRoute(this.narrativeId);
     const tabsConfig = hasDocuments ? this.getTabsConfig(baseHref, true) : null;
 
     // Build page header with tabs

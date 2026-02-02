@@ -8,6 +8,7 @@ import { BaseView } from './BaseView.js';
 import { DataService } from '../data/DataService.js';
 import { initAllCardToggles } from '../utils/cardWidthToggle.js';
 import { formatDateWithYear } from '../utils/formatters.js';
+import { StatCards } from '../components/StatCards.js';
 import {
   CardManager,
   NarrativeListCard,
@@ -51,73 +52,17 @@ export class DashboardView extends BaseView {
     // Set up card components
     this.setupDashboardCards(dashboardData, stats);
 
+    // Build stats array for StatCards
+    const statsData = StatCards.buildDashboardStats(stats, topics.length);
+
     this.container.innerHTML = `
-      <div class="page-header page-header-with-tabs">
+      <div class="page-header page-header-with-tabs page-header-with-stats">
         <div class="page-header-top-row">
           <div class="page-header-content">
             <h1>${datasetName}</h1>
             <p class="subtitle">${subtitle}</p>
           </div>
-          <div class="stats-grid">
-          <div class="stat-card clickable" data-href="#/narratives">
-            <svg class="stat-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.25">
-              <path d="M2 2h12v12H2z" rx="1"/>
-              <path d="M4 5h8M4 8h8M4 11h5"/>
-            </svg>
-            <div class="stat-value">${stats.totalNarratives}</div>
-            <div class="stat-label">Narratives</div>
-          </div>
-          <div class="stat-card clickable" data-href="#/themes">
-            <svg class="stat-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.25">
-              <path d="M3 3h10v10H3z" rx="1"/>
-              <path d="M5 6h6M5 9h4"/>
-            </svg>
-            <div class="stat-value">${stats.totalThemes}</div>
-            <div class="stat-label">Themes</div>
-          </div>
-          <div class="stat-card clickable" data-href="#/topics">
-            <svg class="stat-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.25">
-              <path d="M2 4h12M2 8h8M2 12h10"/>
-              <circle cx="13" cy="8" r="2"/>
-            </svg>
-            <div class="stat-value">${topics.length}</div>
-            <div class="stat-label">Topics</div>
-          </div>
-          <div class="stat-card clickable" data-href="#/factions">
-            <svg class="stat-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.25">
-              <circle cx="8" cy="5" r="2.5"/>
-              <circle cx="4" cy="11" r="2"/>
-              <circle cx="12" cy="11" r="2"/>
-              <path d="M6 6.5L4.5 9M10 6.5l1.5 2.5"/>
-            </svg>
-            <div class="stat-value">${stats.totalFactions}</div>
-            <div class="stat-label">Factions</div>
-          </div>
-          <div class="stat-card clickable" data-href="#/locations">
-            <svg class="stat-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.25">
-              <path d="M8 1C5.2 1 3 3.2 3 6c0 4 5 9 5 9s5-5 5-9c0-2.8-2.2-5-5-5z"/>
-              <circle cx="8" cy="6" r="2"/>
-            </svg>
-            <div class="stat-value">${stats.totalLocations}</div>
-            <div class="stat-label">Locations</div>
-          </div>
-          <div class="stat-card clickable" data-href="#/events">
-            <svg class="stat-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.25">
-              <rect x="2" y="3" width="12" height="11" rx="1"/>
-              <path d="M2 6h12M5 1v3M11 1v3"/>
-            </svg>
-            <div class="stat-value">${stats.totalEvents}</div>
-            <div class="stat-label">Events</div>
-          </div>
-          <div class="stat-card clickable" data-href="#/entities">
-            <svg class="stat-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.25">
-              <circle cx="8" cy="4" r="2.5"/>
-              <path d="M3 14c0-3 2.2-5 5-5s5 2 5 5"/>
-            </svg>
-            <div class="stat-value">${stats.totalPersons + stats.totalOrganizations}</div>
-            <div class="stat-label">Entities</div>
-          </div>
-        </div>
+          ${StatCards.render(statsData, { clickable: true, wrapInGrid: true })}
         </div>
         <div class="page-header-tabs page-header-filters">
           <div class="filter-group mission-filter-group">
@@ -163,14 +108,7 @@ export class DashboardView extends BaseView {
     });
 
     // Add click handlers for stat cards (navigate to list views)
-    this.container.querySelectorAll('.stat-card.clickable').forEach(card => {
-      this.addListener(card, 'click', () => {
-        const href = card.dataset.href;
-        if (href) {
-          window.location.hash = href;
-        }
-      });
-    });
+    StatCards.attachClickHandlers(this.container);
 
     // Initialize all card components
     const components = this.cardManager.initializeAll();
@@ -304,9 +242,10 @@ export class DashboardView extends BaseView {
   }
 
   /**
-   * Render the tag filter dropdown
+   * Render the tag filter dropdown with grouped tags
    */
   renderTagFilterDropdown() {
+    const { groups, ungrouped } = DataService.getTagsByGroup();
     const tags = DataService.getTags();
     const selectedCount = this.selectedTags.size;
     const buttonLabel = selectedCount === 0 
@@ -314,6 +253,29 @@ export class DashboardView extends BaseView {
       : selectedCount === 1 
         ? `1 Tag` 
         : `${selectedCount} Tags`;
+
+    // Render a tag option row
+    const renderTagOption = (tag, group = null) => {
+      const displayColor = tag.color || (group?.color) || '#6b7280';
+      return `
+        <label class="tag-filter-option" data-tag-id="${tag.id}">
+          <input type="checkbox" ${this.selectedTags.has(tag.id) ? 'checked' : ''} />
+          <span class="tag-filter-color" style="background-color: ${displayColor}"></span>
+          <span class="tag-filter-name">${this.escapeHtml(tag.name)}</span>
+        </label>
+      `;
+    };
+
+    // Render a tag group section
+    const renderTagGroup = (group, tags) => `
+      <div class="tag-filter-group">
+        <div class="tag-filter-group-header">
+          <span class="tag-filter-group-name">${this.escapeHtml(group.name)}</span>
+          ${group.exclusive ? '<span class="tag-filter-group-badge">one only</span>' : ''}
+        </div>
+        ${tags.map(tag => renderTagOption(tag, group)).join('')}
+      </div>
+    `;
 
     return `
       <div class="tag-filter-dropdown ${this.tagDropdownOpen ? 'open' : ''}" id="tag-filter-dropdown">
@@ -328,13 +290,15 @@ export class DashboardView extends BaseView {
             <div class="tag-filter-empty">No tags defined</div>
           ` : `
             <div class="tag-filter-options">
-              ${tags.map(tag => `
-                <label class="tag-filter-option" data-tag-id="${tag.id}">
-                  <input type="checkbox" ${this.selectedTags.has(tag.id) ? 'checked' : ''} />
-                  <span class="tag-filter-color" style="background-color: ${tag.color || '#6b7280'}"></span>
-                  <span class="tag-filter-name">${this.escapeHtml(tag.name)}</span>
-                </label>
-              `).join('')}
+              ${groups.map(({ group, tags }) => tags.length > 0 ? renderTagGroup(group, tags) : '').join('')}
+              ${ungrouped.length > 0 ? `
+                <div class="tag-filter-group">
+                  <div class="tag-filter-group-header">
+                    <span class="tag-filter-group-name">Other</span>
+                  </div>
+                  ${ungrouped.map(tag => renderTagOption(tag)).join('')}
+                </div>
+              ` : ''}
             </div>
             ${selectedCount > 0 ? `
               <div class="tag-filter-footer">

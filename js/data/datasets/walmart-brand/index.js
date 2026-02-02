@@ -17,6 +17,7 @@ import { documents } from './documents.js';
 import { monitors, alerts } from './monitors.js';
 import { topics } from './topics.js';
 import { searchFilters } from './searchFilters.js';
+import { tagGroups } from './tagGroups.js';
 import { tags } from './tags.js';
 
 // Workspaces - saved search results with document collections
@@ -81,6 +82,14 @@ export const projects = [
 export const datasetId = 'walmart-brand';
 export const datasetName = 'Walmart Brand';
 
+// Default settings for this dataset
+export const defaultSettings = {
+  copEnabled: true,
+  defaultStartPage: 'monitors',
+  defaultViewTab: 'dashboard',
+  showClassification: false
+};
+
 export const mockData = {
   publishers,
   publisherCategories,
@@ -102,6 +111,7 @@ export const mockData = {
   workspaces,
   projects,
   searchFilters,
+  tagGroups,
   tags
 };
 

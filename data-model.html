@@ -28,12 +28,12 @@
 <body>
   <nav class="top-navbar">
     <div class="navbar-left">
-      <a href="index.html#/dashboard" class="logo">
+      <a href="index.html#/cop/" class="logo">
         <img src="img/logo.png" alt="Primer" class="logo-img">
       </a>
       
       <div class="navbar-links">
-        <a href="index.html#/dashboard" class="nav-link">
+        <a href="index.html#/cop/" class="nav-link">
           <svg class="nav-icon" viewBox="0 0 16 16" fill="none" stroke="var(--text-secondary)" stroke-width="1">
             <rect x="1" y="1" width="6" height="6" rx="1"/>
             <rect x="9" y="1" width="6" height="6" rx="1"/>
@@ -70,55 +70,6 @@
     
     <!-- User Avatar with Tools Dropdown -->
     <div class="navbar-right">
-      <!-- Data Dropdown -->
-      <div class="nav-dropdown data-dropdown">
-        <button class="nav-dropdown-trigger">
-          <span>Data</span>
-          <svg class="dropdown-arrow" viewBox="0 0 16 16" fill="none" stroke="var(--text-secondary)" stroke-width="1">
-            <path d="M4 6l4 4 4-4"/>
-          </svg>
-        </button>
-        <div class="nav-dropdown-menu">
-          <a href="index.html#/narratives" class="nav-link">
-            <svg class="nav-icon" viewBox="0 0 16 16" fill="none" stroke="var(--text-secondary)" stroke-width="1">
-              <path d="M2 2h12v12H2z" rx="1"/>
-              <path d="M4 5h8M4 8h8M4 11h5"/>
-            </svg>
-            <span>Narratives</span>
-          </a>
-          <a href="index.html#/factions" class="nav-link">
-            <svg class="nav-icon" viewBox="0 0 16 16" fill="none" stroke="var(--text-secondary)" stroke-width="1">
-              <circle cx="8" cy="5" r="2.5"/>
-              <circle cx="4" cy="11" r="2"/>
-              <circle cx="12" cy="11" r="2"/>
-              <path d="M6 6.5L4.5 9M10 6.5l1.5 2.5"/>
-            </svg>
-            <span>Factions</span>
-          </a>
-          <a href="index.html#/locations" class="nav-link">
-            <svg class="nav-icon" viewBox="0 0 16 16" fill="none" stroke="var(--text-secondary)" stroke-width="1">
-              <path d="M8 1C5.2 1 3 3.2 3 6c0 4 5 9 5 9s5-5 5-9c0-2.8-2.2-5-5-5z"/>
-              <circle cx="8" cy="6" r="2"/>
-            </svg>
-            <span>Locations</span>
-          </a>
-          <a href="index.html#/events" class="nav-link">
-            <svg class="nav-icon" viewBox="0 0 16 16" fill="none" stroke="var(--text-secondary)" stroke-width="1">
-              <rect x="2" y="3" width="12" height="11" rx="1"/>
-              <path d="M2 6h12M5 1v3M11 1v3"/>
-            </svg>
-            <span>Events</span>
-          </a>
-          <a href="index.html#/entities" class="nav-link">
-            <svg class="nav-icon" viewBox="0 0 16 16" fill="none" stroke="var(--text-secondary)" stroke-width="1">
-              <circle cx="8" cy="4" r="2.5"/>
-              <path d="M3 14c0-3 2.2-5 5-5s5 2 5 5"/>
-            </svg>
-            <span>People & Orgs</span>
-          </a>
-        </div>
-      </div>
-      
       <div class="nav-dropdown avatar-dropdown">
         <button class="avatar-trigger">
           <span class="avatar-initials">JD</span>
@@ -2490,23 +2441,23 @@
             <h4 style="margin: 0 0 var(--space-md); color: var(--text-secondary); font-size: var(--text-sm); font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px;">Classification Levels</h4>
             <div class="classification-reference" style="display: grid; gap: var(--space-sm); margin-bottom: var(--space-lg);">
               <div style="display: flex; align-items: center; gap: var(--space-md); padding: var(--space-sm); border-radius: var(--border-radius); background: rgba(34, 197, 94, 0.1);">
-                <span style="background: #22c55e; color: white; padding: 2px 8px; border-radius: 3px; font-weight: 600; font-size: 11px;">U</span>
+                <span style="background: #22c55e; color: white; padding: 2px 8px; border-radius: 3px; font-weight: 600; font-size: 12px;">U</span>
                 <span><strong>Unclassified</strong> — Public or uncontrolled information</span>
               </div>
               <div style="display: flex; align-items: center; gap: var(--space-md); padding: var(--space-sm); border-radius: var(--border-radius); background: rgba(124, 58, 237, 0.1);">
-                <span style="background: #7c3aed; color: white; padding: 2px 8px; border-radius: 3px; font-weight: 600; font-size: 11px;">CUI</span>
+                <span style="background: #7c3aed; color: white; padding: 2px 8px; border-radius: 3px; font-weight: 600; font-size: 12px;">CUI</span>
                 <span><strong>Controlled Unclassified Information</strong> — Requires safeguarding but not classified</span>
               </div>
               <div style="display: flex; align-items: center; gap: var(--space-md); padding: var(--space-sm); border-radius: var(--border-radius); background: rgba(59, 130, 246, 0.1);">
-                <span style="background: #3b82f6; color: white; padding: 2px 8px; border-radius: 3px; font-weight: 600; font-size: 11px;">C</span>
+                <span style="background: #3b82f6; color: white; padding: 2px 8px; border-radius: 3px; font-weight: 600; font-size: 12px;">C</span>
                 <span><strong>Confidential</strong> — Unauthorized disclosure could cause damage</span>
               </div>
               <div style="display: flex; align-items: center; gap: var(--space-md); padding: var(--space-sm); border-radius: var(--border-radius); background: rgba(239, 68, 68, 0.1);">
-                <span style="background: #ef4444; color: white; padding: 2px 8px; border-radius: 3px; font-weight: 600; font-size: 11px;">S</span>
+                <span style="background: #ef4444; color: white; padding: 2px 8px; border-radius: 3px; font-weight: 600; font-size: 12px;">S</span>
                 <span><strong>Secret</strong> — Unauthorized disclosure could cause serious damage</span>
               </div>
               <div style="display: flex; align-items: center; gap: var(--space-md); padding: var(--space-sm); border-radius: var(--border-radius); background: rgba(249, 115, 22, 0.1);">
-                <span style="background: #f97316; color: white; padding: 2px 8px; border-radius: 3px; font-weight: 600; font-size: 11px;">TS</span>
+                <span style="background: #f97316; color: white; padding: 2px 8px; border-radius: 3px; font-weight: 600; font-size: 12px;">TS</span>
                 <span><strong>Top Secret</strong> — Unauthorized disclosure could cause exceptionally grave damage</span>
               </div>
             </div>

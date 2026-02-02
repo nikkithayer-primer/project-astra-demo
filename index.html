@@ -49,20 +49,20 @@
 <body>
   <nav class="top-navbar">
     <div class="navbar-left">
-      <a href="#/dashboard" class="logo">
+      <a href="#/cop/" class="logo">
         <img src="img/logo.png" alt="Primer" class="logo-img">
       </a>
       
       <div class="navbar-links">
         <!-- Direct Links -->
-        <a href="#/dashboard" class="nav-link" data-view="dashboard">
+        <a href="#/cop/" class="nav-link" data-view="cop">
           <svg class="nav-icon" viewBox="0 0 16 16" fill="none" stroke="var(--text-secondary)" stroke-width="1">
             <rect x="1" y="1" width="6" height="6" rx="1"/>
             <rect x="9" y="1" width="6" height="6" rx="1"/>
             <rect x="1" y="9" width="6" height="6" rx="1"/>
             <rect x="9" y="9" width="6" height="6" rx="1"/>
           </svg>
-          <span>Dashboard</span>
+          <span>COP</span>
         </a>
         <a href="#/search" class="nav-link" data-view="search">
           <svg class="nav-icon" viewBox="0 0 16 16" fill="none" stroke="var(--text-secondary)" stroke-width="1">
@@ -111,82 +111,6 @@
         <div class="nav-dropdown-menu" id="filters-dropdown-menu">
           <!-- Populated dynamically by app.js -->
           <div class="dropdown-empty-state">No saved filters</div>
-        </div>
-      </div>
-      
-      <!-- Data Dropdown -->
-      <div class="nav-dropdown data-dropdown">
-        <button class="nav-dropdown-trigger">
-          <span>Data</span>
-          <svg class="dropdown-arrow" viewBox="0 0 16 16" fill="none" stroke="var(--text-secondary)" stroke-width="1">
-            <path d="M4 6l4 4 4-4"/>
-          </svg>
-        </button>
-        <div class="nav-dropdown-menu">
-          <a href="#/narratives" class="nav-link" data-view="narratives">
-            <svg class="nav-icon" viewBox="0 0 16 16" fill="none" stroke="var(--text-secondary)" stroke-width="1">
-              <path d="M2 2h12v12H2z" rx="1"/>
-              <path d="M4 5h8M4 8h8M4 11h5"/>
-            </svg>
-            <span>Narratives</span>
-          </a>
-          <a href="#/topics" class="nav-link" data-view="topics">
-            <svg class="nav-icon" viewBox="0 0 16 16" fill="none" stroke="var(--text-secondary)" stroke-width="1">
-              <path d="M6 1v14M10 1v14M1 6h14M1 10h14"/>
-            </svg>
-            <span>Topics</span>
-          </a>
-          <a href="#/factions" class="nav-link" data-view="factions">
-            <svg class="nav-icon" viewBox="0 0 16 16" fill="none" stroke="var(--text-secondary)" stroke-width="1">
-              <circle cx="8" cy="5" r="2.5"/>
-              <circle cx="4" cy="11" r="2"/>
-              <circle cx="12" cy="11" r="2"/>
-              <path d="M6 6.5L4.5 9M10 6.5l1.5 2.5"/>
-            </svg>
-            <span>Factions</span>
-          </a>
-          <a href="#/locations" class="nav-link" data-view="locations">
-            <svg class="nav-icon" viewBox="0 0 16 16" fill="none" stroke="var(--text-secondary)" stroke-width="1">
-              <path d="M8 1C5.2 1 3 3.2 3 6c0 4 5 9 5 9s5-5 5-9c0-2.8-2.2-5-5-5z"/>
-              <circle cx="8" cy="6" r="2"/>
-            </svg>
-            <span>Locations</span>
-          </a>
-          <a href="#/events" class="nav-link" data-view="events">
-            <svg class="nav-icon" viewBox="0 0 16 16" fill="none" stroke="var(--text-secondary)" stroke-width="1">
-              <rect x="2" y="3" width="12" height="11" rx="1"/>
-              <path d="M2 6h12M5 1v3M11 1v3"/>
-            </svg>
-            <span>Events</span>
-          </a>
-          <a href="#/entities" class="nav-link" data-view="entities">
-            <svg class="nav-icon" viewBox="0 0 16 16" fill="none" stroke="var(--text-secondary)" stroke-width="1">
-              <circle cx="8" cy="4" r="2.5"/>
-              <path d="M3 14c0-3 2.2-5 5-5s5 2 5 5"/>
-            </svg>
-            <span>People & Orgs</span>
-          </a>
-          <a href="#/documents" class="nav-link" data-view="documents">
-            <svg class="nav-icon" viewBox="0 0 16 16" fill="none" stroke="var(--text-secondary)" stroke-width="1">
-              <rect x="2" y="1" width="12" height="14" rx="1"/>
-              <path d="M5 4h6M5 7h6M5 10h4"/>
-            </svg>
-            <span>Documents</span>
-          </a>
-          <a href="#/tags" class="nav-link" data-view="tags">
-            <svg class="nav-icon" viewBox="0 0 16 16" fill="none" stroke="var(--text-secondary)" stroke-width="1">
-              <path d="M14 8.5l-5.5 5.5a2 2 0 01-2.8 0L2 10.3V2h8.3L14 5.7a2 2 0 010 2.8z"/>
-              <circle cx="5.5" cy="5.5" r="1.5"/>
-            </svg>
-            <span>Tags</span>
-          </a>
-          <a href="#/activity" class="nav-link" data-view="activity">
-            <svg class="nav-icon" viewBox="0 0 16 16" fill="none" stroke="var(--text-secondary)" stroke-width="1">
-              <path d="M14 10a2 2 0 01-2 2H5l-3 3V4a2 2 0 012-2h8a2 2 0 012 2v6z"/>
-              <path d="M5 6h6M5 9h4"/>
-            </svg>
-            <span>Activity</span>
-          </a>
         </div>
       </div>
       

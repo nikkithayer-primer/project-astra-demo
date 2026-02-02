@@ -216,7 +216,7 @@ export class DocumentTable extends BaseComponent {
     this.viewerMode = false;
     this.selectedDocument = null;
     this.contentRenderer = null;
-    this.viewerTab = 'content'; // 'content' or 'details'
+    this.detailsPanelOpen = false; // Sliding details panel state
     this._keydownHandler = null;
     
     // Selection state
@@ -229,24 +229,25 @@ export class DocumentTable extends BaseComponent {
    * @param {string} entityId - Entity ID
    * @returns {string} Hash route
    */
-  buildRoute(entityType, entityId) {
+  /**
+   * Build an ID-based route for an entity
+   * @param {string} entityId - Entity ID (type is inferred from prefix)
+   * @returns {string} Hash route
+   */
+  buildRoute(entityId) {
     const ctx = this.options.context;
-    if (ctx && ctx.type && ctx.type !== 'dashboard') {
-      return `#/${ctx.type}/${ctx.id}/${entityType}/${entityId}`;
+    if (ctx && ctx.id) {
+      return `#/${ctx.id}/${entityId}/`;
     }
-    if (ctx && ctx.type === 'dashboard') {
-      return `#/dashboard/${entityType}/${entityId}`;
-    }
-    return `#/${entityType}/${entityId}`;
+    return `#/${entityId}/`;
   }
 
   /**
-   * Navigate to an entity using context-aware routing
-   * @param {string} entityType - Entity type
+   * Navigate to an entity using ID-based routing
    * @param {string} entityId - Entity ID
    */
-  navigateTo(entityType, entityId) {
-    window.location.hash = this.buildRoute(entityType, entityId);
+  navigateTo(entityId) {
+    window.location.hash = this.buildRoute(entityId);
   }
 
   /**
@@ -717,10 +718,8 @@ export class DocumentTable extends BaseComponent {
           if (this.options.onEntityClick) {
             this.options.onEntityClick(entityType, entityId);
           } else {
-            const config = COLUMN_CONFIG[entityType];
-            if (config && config.route) {
-              this.navigateTo(config.route, entityId);
-            }
+            // ID-based routing - type is inferred from ID prefix
+            this.navigateTo(entityId);
           }
         });
       });
@@ -1055,82 +1054,59 @@ export class DocumentTable extends BaseComponent {
     const mainContent = document.createElement('div');
     mainContent.className = 'document-viewer-main';
 
-    // Create tab header
-    const tabHeader = document.createElement('div');
-    tabHeader.className = 'document-viewer-tab-header';
-    tabHeader.innerHTML = `
-      <div class="document-viewer-tabs">
-        <button class="document-viewer-tab ${this.viewerTab === 'content' ? 'active' : ''}" data-tab="content">
-          <svg viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.5">
-            <rect x="2" y="1" width="12" height="14" rx="1"/>
-            <path d="M5 4h6M5 7h6M5 10h4"/>
-          </svg>
-          Document
-        </button>
-        <button class="document-viewer-tab ${this.viewerTab === 'details' ? 'active' : ''}" data-tab="details">
-          <svg viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.5">
-            <circle cx="8" cy="8" r="6"/>
-            <path d="M8 5v3M8 10v1"/>
-          </svg>
-          Details
-        </button>
-      </div>
-      <div class="document-viewer-tab-title">
-        ${this.truncateText(this.selectedDocument.title || 'Untitled', 60)}
-      </div>
-      <div class="document-viewer-actions">
-        <button class="btn btn-small" id="viewer-add-to-project" title="Add to Project">
-          <svg viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.5">
-            <path d="M3 7h7l2 2h4v7H3V7z"/>
-            <path d="M3 7V5a2 2 0 012-2h5l2 2"/>
-          </svg>
-          Add to Project
-        </button>
-      </div>
-    `;
-    mainContent.appendChild(tabHeader);
-
-    // Create content area with type-specific class
+    // Create content area with type-specific class (always show document content)
     const contentArea = document.createElement('div');
-    contentArea.className = `document-viewer-content ${docTypeClass} ${this.viewerTab === 'details' ? 'document-viewer-content-fullwidth' : ''}`;
+    contentArea.className = `document-viewer-content ${docTypeClass}`;
     contentArea.tabIndex = 0; // Make focusable for keyboard navigation (Page Up/Down)
 
-    if (this.viewerTab === 'content') {
-      // Document header - type-specific
-      const docHeader = document.createElement('div');
-      docHeader.className = 'document-viewer-content-header';
-      docHeader.innerHTML = this.renderViewerHeader(this.selectedDocument);
-      contentArea.appendChild(docHeader);
+    // Document header - type-specific
+    const docHeader = document.createElement('div');
+    docHeader.className = 'document-viewer-content-header';
+    docHeader.innerHTML = this.renderViewerHeader(this.selectedDocument);
+    contentArea.appendChild(docHeader);
 
-      // Document body (rendered content)
-      const docBody = document.createElement('div');
-      docBody.className = 'document-viewer-content-body';
-      docBody.id = 'document-viewer-content-body';
-      contentArea.appendChild(docBody);
-    } else {
-      // Details view - show related entities
-      contentArea.innerHTML = this.renderDetailsView(this.selectedDocument);
-    }
+    // Document body (rendered content)
+    const docBody = document.createElement('div');
+    docBody.className = 'document-viewer-content-body';
+    docBody.id = 'document-viewer-content-body';
+    contentArea.appendChild(docBody);
 
     mainContent.appendChild(contentArea);
+
+    // Create sliding details panel
+    const detailsPanel = document.createElement('div');
+    detailsPanel.className = `document-viewer-details-panel ${this.detailsPanelOpen ? 'open' : ''}`;
+    detailsPanel.innerHTML = `
+      <div class="details-panel-header">
+        <span class="details-panel-title">Document Details</span>
+        <button class="btn-icon details-panel-close" title="Close details">
+          <svg viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.5">
+            <path d="M4 4l8 8M12 4l-8 8"/>
+          </svg>
+        </button>
+      </div>
+      <div class="details-panel-content">
+        ${this.renderDetailsView(this.selectedDocument)}
+      </div>
+    `;
+    mainContent.appendChild(detailsPanel);
+
     viewerContainer.appendChild(mainContent);
     this.container.appendChild(viewerContainer);
 
-    // Initialize components based on active tab
-    if (this.viewerTab === 'content') {
-      // Render document content using DocumentContentRenderer
-      // Fetch highlights and comments with resolved user data
-      const highlights = DataService.getHighlightsForDocument(this.selectedDocument.id);
-      const comments = DataService.getCommentsForDocument(this.selectedDocument.id);
-      
-      this.contentRenderer = new DocumentContentRenderer('document-viewer-content-body');
-      this.contentRenderer.update({ 
-        document: this.selectedDocument,
-        highlights: highlights || [],
-        comments: comments || []
-      });
-    } else {
-      // Initialize details view components
+    // Always render document content using DocumentContentRenderer
+    const highlights = DataService.getHighlightsForDocument(this.selectedDocument.id);
+    const comments = DataService.getCommentsForDocument(this.selectedDocument.id);
+    
+    this.contentRenderer = new DocumentContentRenderer('document-viewer-content-body');
+    this.contentRenderer.update({ 
+      document: this.selectedDocument,
+      highlights: highlights || [],
+      comments: comments || []
+    });
+
+    // Initialize details components if panel is open
+    if (this.detailsPanelOpen) {
       this.initializeDetailsComponents(this.selectedDocument);
     }
 
@@ -1147,20 +1123,20 @@ export class DocumentTable extends BaseComponent {
       });
     }
 
-    // Add tab click handlers
-    const tabs = tabHeader.querySelectorAll('.document-viewer-tab');
-    tabs.forEach(tab => {
-      tab.addEventListener('click', () => {
-        const tabName = tab.dataset.tab;
-        if (tabName !== this.viewerTab) {
-          this.viewerTab = tabName;
-          this.render();
-        }
-      });
-    });
+    // Add details panel toggle handler (from header buttons)
+    const detailsToggleBtn = contentArea.querySelector('#viewer-toggle-details');
+    if (detailsToggleBtn) {
+      detailsToggleBtn.addEventListener('click', () => this.toggleDetailsPanel());
+    }
 
-    // Add to Project button handler (viewer mode)
-    const addToProjectBtn = tabHeader.querySelector('#viewer-add-to-project');
+    // Add details panel close handler
+    const detailsCloseBtn = detailsPanel.querySelector('.details-panel-close');
+    if (detailsCloseBtn) {
+      detailsCloseBtn.addEventListener('click', () => this.closeDetailsPanel());
+    }
+
+    // Add to Project button handler (from header)
+    const addToProjectBtn = contentArea.querySelector('#viewer-add-to-project');
     if (addToProjectBtn) {
       addToProjectBtn.addEventListener('click', () => {
         this.openAddToProjectModalForDocument(this.selectedDocument.id);
@@ -1169,6 +1145,43 @@ export class DocumentTable extends BaseComponent {
 
     // Focus content area for keyboard navigation (Page Up/Down)
     contentArea.focus();
+  }
+
+  /**
+   * Toggle the details panel open/closed
+   */
+  toggleDetailsPanel() {
+    this.detailsPanelOpen = !this.detailsPanelOpen;
+    const panel = this.container.querySelector('.document-viewer-details-panel');
+    const toggleBtn = this.container.querySelector('#viewer-toggle-details');
+    
+    if (panel) {
+      panel.classList.toggle('open', this.detailsPanelOpen);
+    }
+    if (toggleBtn) {
+      toggleBtn.classList.toggle('active', this.detailsPanelOpen);
+    }
+    
+    // Initialize details components when first opened
+    if (this.detailsPanelOpen && this.selectedDocument) {
+      this.initializeDetailsComponents(this.selectedDocument);
+    }
+  }
+
+  /**
+   * Close the details panel
+   */
+  closeDetailsPanel() {
+    this.detailsPanelOpen = false;
+    const panel = this.container.querySelector('.document-viewer-details-panel');
+    const toggleBtn = this.container.querySelector('#viewer-toggle-details');
+    
+    if (panel) {
+      panel.classList.remove('open');
+    }
+    if (toggleBtn) {
+      toggleBtn.classList.remove('active');
+    }
   }
 
   /**
@@ -1196,43 +1209,8 @@ export class DocumentTable extends BaseComponent {
     const events = DataService.getEventsForDocument(doc.id);
     const hasNetwork = persons.length > 0 || organizations.length > 0;
 
-    // Build view toggle for map (if events exist)
-    const mapViewToggleHtml = events.length > 0 ? `
-      <div class="view-toggle map-view-toggle" data-container="doc-details-map">
-        <button class="view-toggle-btn active" data-view="map" title="Map View">
-          <svg viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.5">
-            <path d="M8 1C5.2 1 3 3.2 3 6c0 4 5 9 5 9s5-5 5-9c0-2.8-2.2-5-5-5z"/>
-            <circle cx="8" cy="6" r="2"/>
-          </svg>
-        </button>
-        <button class="view-toggle-btn" data-view="list" title="List View">
-          <svg viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.5">
-            <path d="M2 4h12M2 8h12M2 12h12"/>
-          </svg>
-        </button>
-      </div>
-    ` : '';
-
-    // Build view toggle for network
-    const networkViewToggleHtml = hasNetwork ? `
-      <div class="view-toggle network-view-toggle" data-container="doc-details-network">
-        <button class="view-toggle-btn active" data-view="graph" title="Network Graph">
-          <svg viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.5">
-            <circle cx="8" cy="4" r="2"/>
-            <circle cx="4" cy="12" r="2"/>
-            <circle cx="12" cy="12" r="2"/>
-            <path d="M8 6v2M6 10l-1 1M10 10l1 1"/>
-          </svg>
-        </button>
-        <button class="view-toggle-btn" data-view="list" title="List View">
-          <svg viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.5">
-            <path d="M2 4h12M2 8h12M2 12h12"/>
-          </svg>
-        </button>
-      </div>
-    ` : '';
-
-    // Build cards using CardBuilder with standard layout (half/full width)
+    // Build cards using CardBuilder with full width for sliding panel
+    // Note: This panel uses list-only views (no map/graph toggles) due to narrow width
     const cards = CardBuilder.createMultiple([
       {
         condition: narratives.length > 0,
@@ -1240,7 +1218,6 @@ export class DocumentTable extends BaseComponent {
         id: 'doc-details-narratives',
         options: { 
           count: narratives.length, 
-          halfWidth: true, 
           noPadding: true,
           actions: CardBuilder.descriptionToggle('doc-narrative-desc-toggle')
         }
@@ -1251,7 +1228,6 @@ export class DocumentTable extends BaseComponent {
         id: 'doc-details-themes',
         options: { 
           count: themes.length, 
-          halfWidth: true, 
           noPadding: true,
           actions: CardBuilder.descriptionToggle('doc-theme-desc-toggle')
         }
@@ -1261,9 +1237,8 @@ export class DocumentTable extends BaseComponent {
         title: 'People & Organizations',
         id: 'doc-details-network',
         options: { 
-          count: persons.length + organizations.length, 
-          halfWidth: true,
-          actions: networkViewToggleHtml
+          count: persons.length + organizations.length,
+          noPadding: true
         }
       },
       {
@@ -1271,9 +1246,7 @@ export class DocumentTable extends BaseComponent {
         title: 'Locations & Events',
         id: 'doc-details-map',
         options: { 
-          halfWidth: true, 
-          noPadding: true,
-          actions: mapViewToggleHtml
+          noPadding: true
         }
       }
     ]);
@@ -1309,7 +1282,7 @@ export class DocumentTable extends BaseComponent {
     const events = DataService.getEventsForDocument(doc.id);
     const hasNetwork = persons.length > 0 || organizations.length > 0;
 
-    // Store data for view toggling
+    // Store data for list rendering
     this._detailsData = {
       persons,
       organizations,
@@ -1318,8 +1291,6 @@ export class DocumentTable extends BaseComponent {
       personIds: persons.map(p => p.id),
       orgIds: organizations.map(o => o.id)
     };
-    this._detailsMapViewMode = 'map';
-    this._detailsNetworkViewMode = 'graph';
 
     // Initialize Narrative List
     if (narratives.length > 0 && document.getElementById('doc-details-narratives')) {
@@ -1328,7 +1299,7 @@ export class DocumentTable extends BaseComponent {
         showSparkline: false,
         showVolume: false,
         onItemClick: (n) => {
-          this.navigateTo('narrative', n.id);
+          this.navigateTo(n.id);
         }
       });
       this.detailsNarrativeList.update({ narratives });
@@ -1339,28 +1310,20 @@ export class DocumentTable extends BaseComponent {
       this.detailsThemeList = new ThemeList('doc-details-themes', {
         maxItems: 10,
         onItemClick: (s) => {
-          this.navigateTo('theme', s.id);
+          this.navigateTo(s.id);
         }
       });
       this.detailsThemeList.update({ themes });
     }
 
-    // Initialize Network Graph (people & organizations)
+    // Initialize People & Organizations list
     if (hasNetwork && document.getElementById('doc-details-network')) {
-      this._detailsData.networkData = DataService.buildNetworkGraph(
-        this._detailsData.personIds, 
-        this._detailsData.orgIds
-      );
-      this.renderDetailsNetworkView();
-      this.setupDetailsNetworkToggle();
+      this.renderDetailsEntityList();
     }
 
-    // Initialize Map with locations and events
+    // Initialize Locations & Events list
     if ((locations.length > 0 || events.length > 0) && document.getElementById('doc-details-map')) {
-      this.renderDetailsMapView();
-      if (events.length > 0) {
-        this.setupDetailsMapToggle();
-      }
+      this.renderDetailsLocationEventList();
     }
 
     // Initialize card width toggles (resize buttons)
@@ -1389,48 +1352,30 @@ export class DocumentTable extends BaseComponent {
   }
 
   /**
-   * Render the network view (graph or list) for details panel
+   * Render entity list for details panel (people & organizations)
    */
-  renderDetailsNetworkView() {
+  renderDetailsEntityList() {
     const container = document.getElementById('doc-details-network');
     if (!container || !this._detailsData) return;
 
-    // Destroy existing network component
-    if (this.detailsNetwork && this.detailsNetwork.destroy) {
-      this.detailsNetwork.destroy();
-      this.detailsNetwork = null;
-    }
+    const allEntities = [
+      ...this._detailsData.persons.map(p => ({ ...p, _type: 'person' })),
+      ...this._detailsData.organizations.map(o => ({ ...o, _type: 'organization' }))
+    ].sort((a, b) => (a.name || '').localeCompare(b.name || ''));
 
-    if (this._detailsNetworkViewMode === 'graph') {
-      this.detailsNetwork = new NetworkGraph('doc-details-network', {
-        height: 280,
-        onNodeClick: (node) => {
-          this.navigateTo(node.type, node.id);
-        }
+    container.innerHTML = `
+      <ul class="entity-list network-entity-list">
+        ${allEntities.map(e => this.renderNetworkEntityItem(e)).join('')}
+      </ul>
+    `;
+
+    // Add click handlers - ID-based routing
+    container.querySelectorAll('.entity-list-item').forEach(item => {
+      item.addEventListener('click', () => {
+        const id = item.dataset.id;
+        this.navigateTo(id);
       });
-      this.detailsNetwork.update(this._detailsData.networkData);
-    } else {
-      // Render list view
-      const allEntities = [
-        ...this._detailsData.persons.map(p => ({ ...p, _type: 'person' })),
-        ...this._detailsData.organizations.map(o => ({ ...o, _type: 'organization' }))
-      ].sort((a, b) => (a.name || '').localeCompare(b.name || ''));
-
-      container.innerHTML = `
-        <ul class="entity-list network-entity-list">
-          ${allEntities.map(e => this.renderNetworkEntityItem(e)).join('')}
-        </ul>
-      `;
-
-      // Add click handlers
-      container.querySelectorAll('.entity-list-item').forEach(item => {
-        item.addEventListener('click', () => {
-          const id = item.dataset.id;
-          const type = item.dataset.type;
-          this.navigateTo(type, id);
-        });
-      });
-    }
+    });
   }
 
   /**
@@ -1462,124 +1407,81 @@ export class DocumentTable extends BaseComponent {
   }
 
   /**
-   * Setup network view toggle for details panel
+   * Render location and event list for details panel
    */
-  setupDetailsNetworkToggle() {
-    const toggleContainer = document.querySelector('.network-view-toggle[data-container="doc-details-network"]');
-    if (!toggleContainer) return;
-
-    toggleContainer.querySelectorAll('.view-toggle-btn').forEach(btn => {
-      btn.addEventListener('click', () => {
-        const newView = btn.dataset.view;
-        if (newView !== this._detailsNetworkViewMode) {
-          this._detailsNetworkViewMode = newView;
-          toggleContainer.querySelectorAll('.view-toggle-btn').forEach(b => {
-            b.classList.toggle('active', b.dataset.view === newView);
-          });
-          this.renderDetailsNetworkView();
-        }
-      });
-    });
-  }
-
-  /**
-   * Render the map view (map or list) for details panel
-   */
-  renderDetailsMapView() {
+  renderDetailsLocationEventList() {
     const container = document.getElementById('doc-details-map');
     if (!container || !this._detailsData) return;
 
-    // Destroy existing map component
-    if (this.detailsMap && this.detailsMap.destroy) {
-      this.detailsMap.destroy();
-      this.detailsMap = null;
-    }
+    const locations = this._detailsData.locations || [];
+    const events = this._detailsData.events || [];
 
-    if (this._detailsMapViewMode === 'map') {
-      container.classList.remove('card-body-scrollable');
-      this.detailsMap = new MapView('doc-details-map', {
-        height: 250,
-        onEventClick: (e) => {
-          this.navigateTo('event', e.id);
-        }
-      });
-      this.detailsMap.update({ 
-        locations: this._detailsData.locations,
-        events: this._detailsData.events
-      });
-    } else {
-      // Render event list view
-      container.classList.add('card-body-scrollable');
-      const events = this._detailsData.events;
-      
-      if (events.length === 0) {
-        container.innerHTML = `
-          <div class="vertical-timeline-empty">
-            <div class="vertical-timeline-empty-icon">📅</div>
-            <p class="vertical-timeline-empty-text">No events to display</p>
+    // Build combined list - locations first, then events sorted by date
+    const sortedEvents = [...events].sort((a, b) => new Date(b.date) - new Date(a.date));
+
+    let listHtml = '<ul class="entity-list details-location-event-list">';
+
+    // Add locations
+    locations.forEach(loc => {
+      listHtml += `
+        <li class="entity-list-item" data-id="${loc.id}" data-type="location">
+          <div class="entity-avatar location">
+            <svg class="entity-icon" viewBox="0 0 16 16" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.25">
+              <path d="M8 1C5.2 1 3 3.2 3 6c0 4 5 9 5 9s5-5 5-9c0-2.8-2.2-5-5-5z"/>
+              <circle cx="8" cy="6" r="2"/>
+            </svg>
           </div>
-        `;
-        return;
-      }
-
-      // Sort events by date (newest first)
-      const sortedEvents = [...events].sort((a, b) => new Date(b.date) - new Date(a.date));
-
-      container.innerHTML = `
-        <ul class="vertical-timeline">
-          ${sortedEvents.map(e => this.renderEventListItem(e)).join('')}
-        </ul>
+          <div class="entity-info">
+            <div class="entity-name">${loc.name || 'Unknown Location'}</div>
+            <div class="entity-type">${loc.type || 'Location'}</div>
+          </div>
+        </li>
       `;
-
-      // Add click handlers
-      container.querySelectorAll('.vertical-timeline-item').forEach(item => {
-        item.addEventListener('click', () => {
-          const eventId = item.dataset.eventId;
-          this.navigateTo('event', eventId);
-        });
-      });
-    }
-  }
-
-  /**
-   * Render a single event item for list view
-   */
-  renderEventListItem(event) {
-    const date = new Date(event.date);
-    const formattedDate = date.toLocaleDateString('en-US', { 
-      month: 'short', 
-      day: 'numeric',
-      year: 'numeric'
     });
 
-    return `
-      <li class="vertical-timeline-item" data-event-id="${event.id}">
-        <div class="vertical-timeline-marker"></div>
-        <div class="vertical-timeline-content">
-          <div class="vertical-timeline-date">${formattedDate}</div>
-          <div class="vertical-timeline-text">${event.text}</div>
+    // Add events
+    sortedEvents.forEach(event => {
+      const date = new Date(event.date);
+      const formattedDate = date.toLocaleDateString('en-US', { 
+        month: 'short', 
+        day: 'numeric',
+        year: 'numeric'
+      });
+
+      listHtml += `
+        <li class="entity-list-item" data-id="${event.id}" data-type="event">
+          <div class="entity-avatar event">
+            <svg class="entity-icon" viewBox="0 0 16 16" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.25">
+              <rect x="2" y="3" width="12" height="11" rx="1"/>
+              <path d="M5 1v3M11 1v3M2 7h12"/>
+            </svg>
+          </div>
+          <div class="entity-info">
+            <div class="entity-name">${event.text || 'Unknown Event'}</div>
+            <div class="entity-type">${formattedDate}</div>
+          </div>
+        </li>
+      `;
+    });
+
+    listHtml += '</ul>';
+
+    if (locations.length === 0 && events.length === 0) {
+      container.innerHTML = `
+        <div class="empty-state-small">
+          <p>No locations or events</p>
         </div>
-      </li>
-    `;
-  }
+      `;
+      return;
+    }
 
-  /**
-   * Setup map view toggle for details panel
-   */
-  setupDetailsMapToggle() {
-    const toggleContainer = document.querySelector('.map-view-toggle[data-container="doc-details-map"]');
-    if (!toggleContainer) return;
+    container.innerHTML = listHtml;
 
-    toggleContainer.querySelectorAll('.view-toggle-btn').forEach(btn => {
-      btn.addEventListener('click', () => {
-        const newView = btn.dataset.view;
-        if (newView !== this._detailsMapViewMode) {
-          this._detailsMapViewMode = newView;
-          toggleContainer.querySelectorAll('.view-toggle-btn').forEach(b => {
-            b.classList.toggle('active', b.dataset.view === newView);
-          });
-          this.renderDetailsMapView();
-        }
+    // Add click handlers - ID-based routing
+    container.querySelectorAll('.entity-list-item').forEach(item => {
+      item.addEventListener('click', () => {
+        const id = item.dataset.id;
+        this.navigateTo(id);
       });
     });
   }
@@ -1659,14 +1561,30 @@ export class DocumentTable extends BaseComponent {
           </div>
         </div>
 
-        ${doc.url ? `
-          <a href="${doc.url}" target="_blank" rel="noopener noreferrer" class="document-viewer-source-link">
-            View on ${publisherName}
-            <svg viewBox="0 0 16 16" width="12" height="12" fill="none" stroke="currentColor" stroke-width="1.5">
-              <path d="M6 2h8v8M14 2L6 10"/>
+        <div class="viewer-header-actions">
+          ${doc.url ? `
+            <a href="${doc.url}" target="_blank" rel="noopener noreferrer" class="btn btn-small btn-secondary">
+              View on ${publisherName}
+              <svg viewBox="0 0 16 16" width="12" height="12" fill="none" stroke="currentColor" stroke-width="1.5">
+                <path d="M6 2h8v8M14 2L6 10"/>
+              </svg>
+            </a>
+          ` : ''}
+          <button class="btn btn-small btn-secondary" id="viewer-add-to-project" title="Add to Project">
+            <svg viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.5">
+              <path d="M3 7h7l2 2h4v7H3V7z"/>
+              <path d="M3 7V5a2 2 0 012-2h5l2 2"/>
             </svg>
-          </a>
-        ` : ''}
+            Project
+          </button>
+          <button class="btn btn-small btn-secondary ${this.detailsPanelOpen ? 'active' : ''}" id="viewer-toggle-details" title="Toggle Details">
+            <svg viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.5">
+              <circle cx="8" cy="8" r="6"/>
+              <path d="M8 5v3M8 10v1"/>
+            </svg>
+            Details
+          </button>
+        </div>
       </div>
     `;
   }
@@ -1739,14 +1657,30 @@ export class DocumentTable extends BaseComponent {
           </div>
         </div>
 
-        ${doc.url ? `
-          <a href="${doc.url}" target="_blank" rel="noopener noreferrer" class="document-viewer-source-link">
-            View on TikTok
-            <svg viewBox="0 0 16 16" width="12" height="12" fill="none" stroke="currentColor" stroke-width="1.5">
-              <path d="M6 2h8v8M14 2L6 10"/>
+        <div class="viewer-header-actions">
+          ${doc.url ? `
+            <a href="${doc.url}" target="_blank" rel="noopener noreferrer" class="btn btn-small btn-secondary">
+              View on TikTok
+              <svg viewBox="0 0 16 16" width="12" height="12" fill="none" stroke="currentColor" stroke-width="1.5">
+                <path d="M6 2h8v8M14 2L6 10"/>
+              </svg>
+            </a>
+          ` : ''}
+          <button class="btn btn-small btn-secondary" id="viewer-add-to-project" title="Add to Project">
+            <svg viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.5">
+              <path d="M3 7h7l2 2h4v7H3V7z"/>
+              <path d="M3 7V5a2 2 0 012-2h5l2 2"/>
             </svg>
-          </a>
-        ` : ''}
+            Project
+          </button>
+          <button class="btn btn-small btn-secondary ${this.detailsPanelOpen ? 'active' : ''}" id="viewer-toggle-details" title="Toggle Details">
+            <svg viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.5">
+              <circle cx="8" cy="8" r="6"/>
+              <path d="M8 5v3M8 10v1"/>
+            </svg>
+            Details
+          </button>
+        </div>
       </div>
     `;
   }
@@ -1777,14 +1711,30 @@ export class DocumentTable extends BaseComponent {
           <span class="viewer-news-date">${formatted.date} ${formatted.time}</span>
         </div>
 
-        ${doc.url ? `
-          <a href="${doc.url}" target="_blank" rel="noopener noreferrer" class="document-viewer-source-link">
-            View original article
-            <svg viewBox="0 0 16 16" width="12" height="12" fill="none" stroke="currentColor" stroke-width="1.5">
-              <path d="M6 2h8v8M14 2L6 10"/>
+        <div class="viewer-header-actions">
+          ${doc.url ? `
+            <a href="${doc.url}" target="_blank" rel="noopener noreferrer" class="btn btn-small btn-secondary">
+              View original
+              <svg viewBox="0 0 16 16" width="12" height="12" fill="none" stroke="currentColor" stroke-width="1.5">
+                <path d="M6 2h8v8M14 2L6 10"/>
+              </svg>
+            </a>
+          ` : ''}
+          <button class="btn btn-small btn-secondary" id="viewer-add-to-project" title="Add to Project">
+            <svg viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.5">
+              <path d="M3 7h7l2 2h4v7H3V7z"/>
+              <path d="M3 7V5a2 2 0 012-2h5l2 2"/>
             </svg>
-          </a>
-        ` : ''}
+            Project
+          </button>
+          <button class="btn btn-small btn-secondary ${this.detailsPanelOpen ? 'active' : ''}" id="viewer-toggle-details" title="Toggle Details">
+            <svg viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.5">
+              <circle cx="8" cy="8" r="6"/>
+              <path d="M8 5v3M8 10v1"/>
+            </svg>
+            Details
+          </button>
+        </div>
       </div>
     `;
   }
@@ -1817,6 +1767,23 @@ export class DocumentTable extends BaseComponent {
           <span class="viewer-internal-publisher">${publisherName}</span>
           ${doc.author ? `<span class="viewer-internal-author">Author: ${doc.author}</span>` : ''}
           <span class="viewer-internal-date">${formatted.date} ${formatted.time}</span>
+        </div>
+
+        <div class="viewer-header-actions">
+          <button class="btn btn-small btn-secondary" id="viewer-add-to-project" title="Add to Project">
+            <svg viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.5">
+              <path d="M3 7h7l2 2h4v7H3V7z"/>
+              <path d="M3 7V5a2 2 0 012-2h5l2 2"/>
+            </svg>
+            Project
+          </button>
+          <button class="btn btn-small btn-secondary ${this.detailsPanelOpen ? 'active' : ''}" id="viewer-toggle-details" title="Toggle Details">
+            <svg viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.5">
+              <circle cx="8" cy="8" r="6"/>
+              <path d="M8 5v3M8 10v1"/>
+            </svg>
+            Details
+          </button>
         </div>
       </div>
     `;

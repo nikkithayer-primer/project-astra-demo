@@ -878,7 +878,7 @@ export class SearchView extends BaseView {
     });
 
     // Navigate to the new workspace
-    window.location.hash = `#/workspace/${workspaceId}`;
+    window.location.hash = `#/${workspaceId}/`;
   }
 
   /**

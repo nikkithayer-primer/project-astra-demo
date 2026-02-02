@@ -14,6 +14,7 @@ import {
 import { PageHeader } from '../utils/PageHeader.js';
 import { DragDropManager } from '../utils/DragDropManager.js';
 import { escapeHtml } from '../utils/htmlUtils.js';
+import { dataStore } from '../data/DataStore.js';
 
 export class BaseView {
   /**
@@ -79,38 +80,34 @@ export class BaseView {
   }
 
   /**
-   * Build a route URL within the current context
-   * @param {string} entityType - Entity type (e.g., 'faction', 'narrative')
-   * @param {string} entityId - Entity ID (optional for list views)
-   * @param {string} subRoute - Sub-route (e.g., 'documents')
+   * Build an ID-based route URL within the current context
+   * @param {...string} entityIds - Entity IDs to include in the route
    * @returns {string} Full hash URL
    */
-  buildContextRoute(entityType, entityId = null, subRoute = null) {
+  buildContextRoute(...entityIds) {
     const ctx = this.context;
-    let path;
+    const parts = [];
     
-    if (!ctx || ctx.type === 'dashboard') {
-      path = `#/dashboard/${entityType}`;
-    } else {
-      path = `#/${ctx.type}/${ctx.id}/${entityType}`;
+    // Add context ID if we have one (for scoped navigation)
+    if (ctx && ctx.id) {
+      parts.push(ctx.id);
     }
     
-    if (entityId) {
-      path += `/${entityId}`;
+    // Add entity IDs
+    parts.push(...entityIds.filter(Boolean));
+    
+    if (parts.length === 0) {
+      return '#/cop/';
     }
     
-    if (subRoute) {
-      path += `/${subRoute}`;
-    }
-    
-    return path;
+    return `#/${parts.join('/')}/`;
   }
 
   /**
-   * Build context-aware breadcrumbs
+   * Build context-aware breadcrumbs using ID-based routing
    * @param {Array} items - Array of breadcrumb items. Each can be:
    *   - string: Label only (no link, typically the last item)
-   *   - { label: string, route?: string, href?: string }: Object with optional route/href
+   *   - { label: string, id?: string, href?: string }: Object with optional id/href
    * @returns {Array} Array of breadcrumb objects for PageHeader
    */
   buildBreadcrumbs(items) {
@@ -121,15 +118,18 @@ export class BaseView {
     if (ctx) {
       if (ctx.type === 'workspace') {
         breadcrumbs.push({ label: 'Workspaces', href: '#/workspaces' });
-        breadcrumbs.push({ label: ctx.getName(), href: `#/workspace/${ctx.id}` });
+        breadcrumbs.push({ label: ctx.getName(), href: `#/${ctx.id}/` });
       } else if (ctx.type === 'monitor') {
         breadcrumbs.push({ label: 'Monitors', href: '#/monitors' });
-        breadcrumbs.push({ label: ctx.getName(), href: `#/monitor/${ctx.id}` });
+        breadcrumbs.push({ label: ctx.getName(), href: `#/${ctx.id}/` });
+      } else if (ctx.type === 'project') {
+        breadcrumbs.push({ label: 'Projects', href: '#/projects' });
+        breadcrumbs.push({ label: ctx.getName(), href: `#/${ctx.id}/` });
       } else {
-        breadcrumbs.push({ label: 'Dashboard', href: '#/dashboard' });
+        breadcrumbs.push({ label: 'COP', href: '#/cop/' });
       }
     } else {
-      breadcrumbs.push({ label: 'Dashboard', href: '#/dashboard' });
+      breadcrumbs.push({ label: 'COP', href: '#/cop/' });
     }
     
     // Add remaining items
@@ -138,7 +138,11 @@ export class BaseView {
         breadcrumbs.push(item);
       } else if (item.href) {
         breadcrumbs.push({ label: item.label, href: item.href });
+      } else if (item.id) {
+        // ID-based routing
+        breadcrumbs.push({ label: item.label, href: this.buildContextRoute(item.id) });
       } else if (item.route) {
+        // Legacy support: route is now treated as an ID
         breadcrumbs.push({ label: item.label, href: this.buildContextRoute(item.route) });
       } else {
         breadcrumbs.push(item.label || item);
@@ -429,10 +433,15 @@ export class BaseView {
   getTabsConfig(baseHref, hasDocuments = true) {
     if (!hasDocuments) return null;
     
-    return [
-      { id: 'dashboard', label: 'Dashboard', href: `${baseHref}?tab=dashboard` },
-      { id: 'documents', label: 'Documents', href: `${baseHref}?tab=documents` }
-    ];
+    const settings = dataStore.getSettings();
+    const dashboardTab = { id: 'dashboard', label: 'Dashboard', href: `${baseHref}?tab=dashboard` };
+    const documentsTab = { id: 'documents', label: 'Documents', href: `${baseHref}?tab=documents` };
+    
+    // Order tabs with default tab first (leftmost)
+    if (settings.defaultViewTab === 'documents') {
+      return [documentsTab, dashboardTab];
+    }
+    return [dashboardTab, documentsTab];
   }
 
   /**

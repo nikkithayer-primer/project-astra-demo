@@ -17,6 +17,7 @@ import { documents } from './documents.js';
 import { topics } from './topics.js';
 import { monitors, alerts } from './monitors.js';
 import { searchFilters } from './searchFilters.js';
+import { tagGroups } from './tagGroups.js';
 import { tags } from './tags.js';
 
 // Workspaces - saved search results with document collections
@@ -90,6 +91,14 @@ export const projects = [
 export const datasetId = 'american-politics';
 export const datasetName = 'American Politics';
 
+// Default settings for this dataset
+export const defaultSettings = {
+  copEnabled: true,
+  defaultStartPage: 'cop',
+  defaultViewTab: 'dashboard',
+  showClassification: true
+};
+
 export const mockData = {
   publishers,
   publisherCategories,
@@ -111,6 +120,7 @@ export const mockData = {
   workspaces,
   projects,
   searchFilters,
+  tagGroups,
   tags
 };
 

@@ -165,7 +165,7 @@ export class MonitorView extends BaseView {
     }
     
     // Generate tabs config - always show tabs for monitors
-    const baseHref = `#/monitor/${this.monitorId}`;
+    const baseHref = `#/${this.monitorId}/`;
     const tabsConfig = this.getMonitorTabsConfig(baseHref, hasAlerts, hasDocuments);
 
     // Build subtitle with scope info

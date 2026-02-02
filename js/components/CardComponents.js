@@ -69,27 +69,25 @@ class BaseCardComponent {
   }
 
   /**
-   * Build a context-aware route for an entity
+   * Build an ID-based route for an entity
    * Uses the view's context if available
-   * @param {string} entityType - Entity type (e.g., 'faction', 'narrative')
-   * @param {string} entityId - Entity ID
+   * @param {string} entityId - Entity ID (type is inferred from prefix)
    * @returns {string} Hash route
    */
-  buildRoute(entityType, entityId) {
+  buildRoute(entityId) {
     if (this.view && this.view.buildContextRoute) {
-      return this.view.buildContextRoute(entityType, entityId);
+      return this.view.buildContextRoute(entityId);
     }
     // Fallback to global route if view doesn't have context method
-    return `#/${entityType}/${entityId}`;
+    return `#/${entityId}/`;
   }
 
   /**
-   * Navigate to an entity using context-aware routing
-   * @param {string} entityType - Entity type
+   * Navigate to an entity using ID-based routing
    * @param {string} entityId - Entity ID
    */
-  navigateTo(entityType, entityId) {
-    window.location.hash = this.buildRoute(entityType, entityId);
+  navigateTo(entityId) {
+    window.location.hash = this.buildRoute(entityId);
   }
 
   /**
@@ -200,8 +198,8 @@ export class NetworkGraphCard extends BaseCardComponent {
       height: this.height,
       onNodeClick: (node) => {
         if (this.excludeId && node.id === this.excludeId) return;
-        // Navigate to entity detail page on click (context-aware)
-        this.navigateTo(node.type, node.id);
+        // Navigate to entity detail page on click (ID-based routing)
+        this.navigateTo(node.id);
       },
       onNodeHover: (node, element) => {
         if (this.excludeId && node.id === this.excludeId) return;
@@ -251,13 +249,12 @@ export class NetworkGraphCard extends BaseCardComponent {
         getEntityCardModal().scheduleHide();
       });
       
-      // Click navigates to entity detail page
+      // Click navigates to entity detail page (ID-based routing)
       item.addEventListener('click', () => {
         const id = item.dataset.id;
-        const type = item.dataset.type;
         if (this.excludeId && id === this.excludeId) return;
         getEntityCardModal().hide();
-        this.navigateTo(type, id);
+        this.navigateTo(id);
       });
     });
   }
@@ -385,7 +382,7 @@ export class NarrativeListCard extends BaseCardComponent {
       maxItems: this.maxItems,
       defaultShowDescription: this.defaultShowDescription,
       onItemClick: (n) => {
-        this.navigateTo('narrative', n.id);
+        this.navigateTo(n.id);
       }
     });
     this.component.update({ narratives: this.narratives });
@@ -701,7 +698,7 @@ export class MapCard extends BaseCardComponent {
       height: this.height,
       showLocations: this.showLocations,
       onEventClick: (e) => {
-        this.navigateTo('event', e.id);
+        this.navigateTo(e.id);
       }
     };
     if (this.defaultZoom) mapOptions.defaultZoom = this.defaultZoom;
@@ -744,11 +741,11 @@ export class MapCard extends BaseCardComponent {
       emptyText: 'No events to display'
     });
 
-    // Attach click listeners for timeline items (context-aware)
+    // Attach click listeners for timeline items (ID-based routing)
     container.querySelectorAll('.vertical-timeline-item').forEach(item => {
       item.addEventListener('click', () => {
         const eventId = item.dataset.eventId;
-        this.navigateTo('event', eventId);
+        this.navigateTo(eventId);
       });
     });
   }
@@ -813,7 +810,7 @@ export class SentimentChartCard extends BaseCardComponent {
     this.component = new SentimentChart(this.containerId, {
       height: Math.max(150, this.factions.length * 50),
       onFactionClick: (f) => {
-        this.navigateTo(this.clickRoute, f.id);
+        this.navigateTo(f.id);
       }
     });
     this.component.update({ factions: this.factions });
@@ -860,7 +857,7 @@ export class VennDiagramCard extends BaseCardComponent {
       height: this.height,
       onFactionClick: (f) => {
         if (this.excludeId && f.id === this.excludeId) return;
-        this.navigateTo('faction', f.id);
+        this.navigateTo(f.id);
       }
     });
     
@@ -933,7 +930,7 @@ export class ThemeListCard extends BaseCardComponent {
       maxItems: this.maxItems,
       defaultShowDescription: this.defaultShowDescription,
       onItemClick: (t) => {
-        this.navigateTo('theme', t.id);
+        this.navigateTo(t.id);
       }
     });
     this.component.update({ themes: this.themes });
@@ -1017,7 +1014,7 @@ export class TopicListCard extends BaseCardComponent {
       showDuration: this.showDuration,
       showBulletPoints: this.defaultShowBulletPoints,
       onItemClick: (t) => {
-        this.navigateTo('topic', t.id);
+        this.navigateTo(t.id);
       }
     });
     this.component.update({ topics: this.topics });
@@ -1107,13 +1104,13 @@ export class TimelineVolumeCompositeCard extends BaseCardComponent {
       showDisplayToggle: false, // Toggle is in card header
       defaultDisplayMode: this.displayMode,
       onEventClick: (e) => {
-        this.navigateTo('event', e.id);
+        this.navigateTo(e.id);
       },
       onFactionClick: (f) => {
-        this.navigateTo('faction', f.id);
+        this.navigateTo(f.id);
       },
       onNarrativeClick: (n) => {
-        this.navigateTo('narrative', n.id);
+        this.navigateTo(n.id);
       }
     });
     this.component.update({
@@ -1201,7 +1198,7 @@ export class StackedAreaChartCard extends BaseCardComponent {
       height: this.height,
       showLegend: this.showLegend,
       onFactionClick: (f) => {
-        this.navigateTo('faction', f.id);
+        this.navigateTo(f.id);
       }
     });
     this.component.update(this.chartData);

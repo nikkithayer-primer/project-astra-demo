@@ -413,7 +413,7 @@ export class MonitorsView extends BaseView {
       // Wrap the title with tooltip container
       cardHtml = cardHtml.replace(
         `<h2 class="card-title">${monitor.name}</h2>`,
-        `<h2 class="card-title"><span class="card-title-with-tooltip"><a href="#/monitor/${monitor.id}" class="card-title-link">${monitor.name}</a>${tooltipHtml}</span></h2>`
+        `<h2 class="card-title"><span class="card-title-with-tooltip"><a href="#/${monitor.id}/" class="card-title-link">${monitor.name}</a>${tooltipHtml}</span></h2>`
       );
       
       // Insert the card body content into the generated card
@@ -489,7 +489,7 @@ export class MonitorsView extends BaseView {
                 <span class="alert-type-badge ${this.getAlertTypeClass(alert.type)}">${this.getAlertTypeLabel(alert.type)}</span>
               </td>
               <td class="alert-col-monitor">
-                <a href="#/monitor/${alert.monitorId}" class="text-link">${this.escapeHtml(monitorName)}</a>
+                <a href="#/${alert.monitorId}/" class="text-link">${this.escapeHtml(monitorName)}</a>
               </td>
               <td class="alert-col-description">
                 <div class="alert-content">

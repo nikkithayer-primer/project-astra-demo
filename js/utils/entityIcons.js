@@ -167,46 +167,33 @@ export function getEntityTitle(entity, entityType) {
  * @param {Object} entity - The entity object  
  * @param {string} entityType - The entity type
  * @param {Object} context - Optional context object with type and id
- * @returns {string} The hash route (e.g., '#/workspace/ws-123/narrative/narr-123')
+ * @returns {string} The hash route (e.g., '#/workspace-001/narr-123/')
  */
 export function getEntityRoute(entity, entityType, context = null) {
   const config = ENTITY_TYPE_CONFIG[entityType];
   const route = config?.route || entityType;
   
-  // If context provided, build scoped route
-  if (context && context.type && context.type !== 'dashboard') {
-    return `#/${context.type}/${context.id}/${route}/${entity.id}`;
+  // ID-based routing: context ID + entity ID
+  if (context && context.id) {
+    return `#/${context.id}/${entity.id}/`;
   }
   
-  // Dashboard context or no context - use dashboard path
-  if (context && context.type === 'dashboard') {
-    return `#/dashboard/${route}/${entity.id}`;
-  }
-  
-  // Legacy: no context provided, use global route
-  return `#/${route}/${entity.id}`;
+  // No context - use entity ID only
+  return `#/${entity.id}/`;
 }
 
 /**
- * Build a context-aware entity route (functional helper)
- * @param {string} entityType - Entity type 
- * @param {string} entityId - Entity ID
+ * Build an ID-based entity route (functional helper)
+ * @param {string} entityId - Entity ID (type is inferred from prefix)
  * @param {Object} context - Context object from router/view
  * @returns {string} Hash route
  */
-export function buildEntityRoute(entityType, entityId, context = null) {
-  const config = ENTITY_TYPE_CONFIG[entityType];
-  const route = config?.route || entityType;
-  
-  if (context && context.type && context.type !== 'dashboard') {
-    return `#/${context.type}/${context.id}/${route}/${entityId}`;
+export function buildEntityRoute(entityId, context = null) {
+  if (context && context.id) {
+    return `#/${context.id}/${entityId}/`;
   }
   
-  if (context && context.type === 'dashboard') {
-    return `#/dashboard/${route}/${entityId}`;
-  }
-  
-  return `#/${route}/${entityId}`;
+  return `#/${entityId}/`;
 }
 
 export default {

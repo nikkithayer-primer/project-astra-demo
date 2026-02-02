@@ -20,14 +20,21 @@ export class TagsView extends BaseView {
   async render() {
     const tags = DataService.getTags();
     const tagCounts = DataService.getTagCounts();
+    const { groups, ungrouped } = DataService.getTagsByGroup();
     
-    // Filter tags by search query
-    const filteredTags = this.searchQuery
-      ? tags.filter(t => t.name.toLowerCase().includes(this.searchQuery.toLowerCase()))
-      : tags;
-
-    // Sort tags by name
-    filteredTags.sort((a, b) => a.name.localeCompare(b.name));
+    // Filter by search query
+    const filterTags = (tagList) => {
+      if (!this.searchQuery) return tagList;
+      return tagList.filter(t => t.name.toLowerCase().includes(this.searchQuery.toLowerCase()));
+    };
+    
+    const filteredGroups = groups.map(g => ({
+      group: g.group,
+      tags: filterTags(g.tags)
+    })).filter(g => g.tags.length > 0);
+    
+    const filteredUngrouped = filterTags(ungrouped);
+    const totalFilteredTags = filteredGroups.reduce((sum, g) => sum + g.tags.length, 0) + filteredUngrouped.length;
 
     const headerHtml = PageHeader.render({
       breadcrumbs: [
@@ -35,7 +42,7 @@ export class TagsView extends BaseView {
         'Tags'
       ],
       title: 'Tags',
-      subtitle: `${tags.length} tag${tags.length !== 1 ? 's' : ''}`
+      subtitle: `${tags.length} tag${tags.length !== 1 ? 's' : ''} in ${groups.length} group${groups.length !== 1 ? 's' : ''}`
     });
 
     this.container.innerHTML = `
@@ -62,7 +69,7 @@ export class TagsView extends BaseView {
             <button class="btn btn-small btn-primary" id="create-tag-btn">+ New Tag</button>
           </div>
           <div class="card-body no-padding">
-            ${filteredTags.length === 0 ? this.renderEmptyState() : this.renderTagList(filteredTags, tagCounts)}
+            ${totalFilteredTags === 0 ? this.renderEmptyState() : this.renderGroupedTagList(filteredGroups, filteredUngrouped, tagCounts)}
           </div>
         </div>
       </div>
@@ -102,7 +109,57 @@ export class TagsView extends BaseView {
   }
 
   /**
-   * Render the list of tags
+   * Render the grouped list of tags
+   */
+  renderGroupedTagList(groups, ungrouped, tagCounts) {
+    let html = '<div class="tags-list">';
+    
+    // Render each group
+    groups.forEach(({ group, tags }) => {
+      html += this.renderTagGroupSection(group, tags, tagCounts);
+    });
+    
+    // Render ungrouped tags
+    if (ungrouped.length > 0) {
+      html += `
+        <div class="tag-group-section">
+          <div class="tag-group-header">
+            <span class="tag-group-name">Other Tags</span>
+            <span class="tag-group-count">${ungrouped.length}</span>
+          </div>
+          <div class="tag-group-content">
+            ${ungrouped.map(tag => this.renderTagRow(tag, tagCounts[tag.id] || 0)).join('')}
+          </div>
+        </div>
+      `;
+    }
+    
+    html += '</div>';
+    return html;
+  }
+
+  /**
+   * Render a tag group section with its tags
+   */
+  renderTagGroupSection(group, tags, tagCounts) {
+    return `
+      <div class="tag-group-section" data-group-id="${group.id}">
+        <div class="tag-group-header">
+          <span class="tag-group-color" style="background-color: ${group.color || '#6b7280'}"></span>
+          <span class="tag-group-name">${this.escapeHtml(group.name)}</span>
+          ${group.exclusive ? '<span class="tag-group-badge">exclusive</span>' : ''}
+          <span class="tag-group-count">${tags.length}</span>
+          ${group.description ? `<span class="tag-group-description text-muted">${this.escapeHtml(group.description)}</span>` : ''}
+        </div>
+        <div class="tag-group-content">
+          ${tags.map(tag => this.renderTagRow(tag, tagCounts[tag.id] || 0, group)).join('')}
+        </div>
+      </div>
+    `;
+  }
+
+  /**
+   * Render the list of tags (legacy - kept for compatibility)
    */
   renderTagList(tags, tagCounts) {
     return `
@@ -114,10 +171,15 @@ export class TagsView extends BaseView {
 
   /**
    * Render a single tag row as an accordion
+   * @param {Object} tag - Tag object
+   * @param {number} count - Number of entities with this tag
+   * @param {Object} group - Optional tag group
    */
-  renderTagRow(tag, count) {
+  renderTagRow(tag, count, group = null) {
     const isExpanded = this.expandedTags.has(tag.id);
     const entities = isExpanded ? DataService.getEntitiesByTag(tag.id) : null;
+    // Use tag color, or inherit from group
+    const displayColor = tag.color || (group?.color) || '#6b7280';
     
     return `
       <div class="tag-accordion ${isExpanded ? 'expanded' : ''}" data-tag-id="${tag.id}">
@@ -127,8 +189,8 @@ export class TagsView extends BaseView {
               <path d="M6 4l4 4-4 4"/>
             </svg>
           </button>
-          <span class="tag-accordion-chip" style="--tag-color: ${tag.color || '#6b7280'}">
-            <span class="tag-list-color" style="background-color: ${tag.color || '#6b7280'}"></span>
+          <span class="tag-accordion-chip" style="--tag-color: ${displayColor}">
+            <span class="tag-list-color" style="background-color: ${displayColor}"></span>
             <span class="tag-accordion-name">${this.escapeHtml(tag.name)}</span>
           </span>
           ${tag.description ? `<span class="tag-list-description text-muted">${this.escapeHtml(tag.description)}</span>` : ''}

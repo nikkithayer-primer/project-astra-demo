@@ -60,9 +60,9 @@ Each entity type uses a specific ID prefix. IDs are generated as `{prefix}-{time
 
 ## Core Intelligence Model
 
-### Mission
+### Mission (DEPRECATED)
 
-Top-level organizational unit grouping related narratives.
+> **Note:** Mission is being replaced by the TagGroup system. Missions are now represented as tags in the "Mission" tag group. The `narrative.missionId` field is deprecated in favor of `narrative.tagIds` containing mission tags.
 
 ```javascript
 {
@@ -82,11 +82,11 @@ Disinformation or propaganda narrative being tracked. Faction engagement data is
 ```javascript
 {
   id: string,              // Required. Prefix: 'narr-'
-  missionId: string,       // Required. FK to Mission
+  missionId: string,       // DEPRECATED. Use tagIds with Mission group tags instead
   text: string,            // Required. Short title identifying the narrative
   description: string,     // Optional. Detailed description
   sentiment: number,       // Optional. -1.0 to 1.0 (editorial/manual assessment)
-  tagIds: string[],        // Optional. FKs to Tag
+  tagIds: string[],        // Optional. FKs to Tag (includes Mission tags)
   themeIds: string[],      // Auto-managed. FKs to Theme
   personIds: string[],         // Optional. FKs to Person
   organizationIds: string[],   // Optional. FKs to Organization
@@ -579,16 +579,40 @@ Reusable entity/keyword selections that can be applied across monitors and other
 
 **Usage:** SearchFilters are created from the ScopeSelector component and can be applied to monitors or other scope-based features. When applied, the filter's entities and keywords are merged into the current selection.
 
+### TagGroup
+
+Organizational categories for tags. Groups can enforce exclusivity (only one tag from the group can be applied) and provide visual organization.
+
+```javascript
+{
+  id: string,              // Required. Prefix: 'tag-group-'
+  name: string,            // Required. Group display name (e.g., 'Status', 'Risk', 'Mission')
+  description: string,     // Optional. Group description
+  exclusive: boolean,      // Optional. If true, only one tag from group can be applied. Default: false
+  color: string,           // Optional. Default color for tags in this group
+  sortOrder: number,       // Optional. Display order (lower = first). Default: 0
+  createdAt: datetime,
+  updatedAt: datetime
+}
+```
+
+**Built-in Groups:**
+- **Status** (exclusive): Workflow states like 'Needs Review', 'In Review', 'Completed'
+- **Risk** (non-exclusive): Risk levels like 'High Risk', 'Medium Risk', 'Low Risk'
+- **Mission** (exclusive): Analysis missions (replaces the legacy Mission entity)
+
 ### Tag
 
-User-defined labels for organizing and filtering entities. Tags can be applied to any entity type.
+User-defined labels for organizing and filtering entities. Tags can be organized into groups for better management.
 
 ```javascript
 {
   id: string,              // Required. Prefix: 'tag-'
+  groupId: string,         // Optional. FK to TagGroup (null for ungrouped tags)
   name: string,            // Required. Tag display name
-  color: string,           // Optional. Hex color for UI (auto-generated if not provided)
+  color: string,           // Optional. Hex color (inherits from group if not set)
   description: string,     // Optional. Tag description
+  sortOrder: number,       // Optional. Display order within group. Default: 0
   createdAt: datetime,
   updatedAt: datetime
 }
@@ -600,13 +624,14 @@ User-defined labels for organizing and filtering entities. Tags can be applied t
 - Tags are managed via the Tags list view (`#/tags`)
 - Tags can be added/removed from entities via the tag picker modal
 - View all entities with a specific tag via `#/tag/{tagId}`
+- Filter by tag group in views that support it (e.g., Dashboard filters by Mission group)
 
 ---
 
 ## Relationship Map
 
 ### One-to-Many (FK on child)
-- Mission → Narratives (`narrative.missionId`)
+- TagGroup → Tags (`tag.groupId`)
 - Narrative → Themes (`theme.parentNarrativeId`)
 - Event → SubEvents (`subEvent.parentEventId`)
 - Event → Location (`event.locationId`)

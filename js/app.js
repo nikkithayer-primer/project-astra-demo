@@ -8,9 +8,9 @@ import { DataService } from './data/DataService.js';
 import { validateDataset } from './data/SchemaValidator.js';
 import { getMonitorEditor } from './components/MonitorEditorModal.js';
 import { getSearchFilterEditor } from './components/SearchFilterEditorModal.js';
-import { mockData as americanPoliticsData, datasetId as americanPoliticsId, datasetName as americanPoliticsName } from './data/datasets/american-politics/index.js';
-import { mockData as chinaSemiconductorData, datasetId as chinaSemiconductorId, datasetName as chinaSemiconductorName } from './data/datasets/china-semiconductor/index.js';
-import { mockData as walmartBrandData, datasetId as walmartBrandId, datasetName as walmartBrandName } from './data/datasets/walmart-brand/index.js';
+import { mockData as americanPoliticsData, datasetId as americanPoliticsId, datasetName as americanPoliticsName, defaultSettings as americanPoliticsSettings } from './data/datasets/american-politics/index.js';
+import { mockData as chinaSemiconductorData, datasetId as chinaSemiconductorId, datasetName as chinaSemiconductorName, defaultSettings as chinaSemiconductorSettings } from './data/datasets/china-semiconductor/index.js';
+import { mockData as walmartBrandData, datasetId as walmartBrandId, datasetName as walmartBrandName, defaultSettings as walmartBrandSettings } from './data/datasets/walmart-brand/index.js';
 import { Router } from './router.js';
 import { getSourceViewer } from './components/SourceViewerModal.js';
 import { getEntityCardModal } from './components/EntityCardModal.js';
@@ -21,17 +21,20 @@ const DATASETS = {
   [americanPoliticsId]: { 
     id: americanPoliticsId,
     name: americanPoliticsName, 
-    data: americanPoliticsData 
+    data: americanPoliticsData,
+    defaultSettings: americanPoliticsSettings
   },
   [chinaSemiconductorId]: { 
     id: chinaSemiconductorId,
     name: chinaSemiconductorName, 
-    data: chinaSemiconductorData 
+    data: chinaSemiconductorData,
+    defaultSettings: chinaSemiconductorSettings
   },
   [walmartBrandId]: { 
     id: walmartBrandId,
     name: walmartBrandName, 
-    data: walmartBrandData 
+    data: walmartBrandData,
+    defaultSettings: walmartBrandSettings
   }
 };
 
@@ -109,10 +112,8 @@ class App {
     const currentDatasetId = this.dataStore.getCurrentDataset();
     const dataset = DATASETS[currentDatasetId] || DATASETS['american-politics'];
     
-    // Load the dataset
-    this.dataStore.data = { ...dataset.data };
-    this.dataStore.setCurrentDatasetName(dataset.name);
-    this.dataStore.save();
+    // Load the dataset with its default settings
+    this.dataStore.switchDataset(dataset.id, dataset.data, dataset.name, dataset.defaultSettings);
     
     // Validate dataset in development mode
     if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
@@ -142,8 +143,8 @@ class App {
       return;
     }
 
-    // Switch the dataset in the store (including the name)
-    this.dataStore.switchDataset(datasetId, dataset.data, dataset.name);
+    // Switch the dataset in the store (including the name and default settings)
+    this.dataStore.switchDataset(datasetId, dataset.data, dataset.name, dataset.defaultSettings);
     
     // Validate dataset in development mode
     if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
@@ -338,11 +339,11 @@ class App {
           
           <div class="settings-row">
             <div class="settings-label">
-              <span class="settings-label-text">Enable Dashboard Page</span>
-              <span class="settings-label-description">Show Dashboard in navigation and enable it as a start page option.</span>
+              <span class="settings-label-text">Enable Common Operating Picture</span>
+              <span class="settings-label-description">Show COP in navigation and enable it as a start page option.</span>
             </div>
             <label class="toggle-switch">
-              <input type="checkbox" id="setting-dashboard-enabled" ${settings.dashboardEnabled ? 'checked' : ''}>
+              <input type="checkbox" id="setting-cop-enabled" ${settings.copEnabled ? 'checked' : ''}>
               <span class="toggle-slider"></span>
             </label>
           </div>
@@ -353,7 +354,7 @@ class App {
               <span class="settings-label-description">Page to show when opening the app</span>
             </div>
             <select id="setting-start-page" class="settings-select">
-              <option value="dashboard" ${settings.defaultStartPage === 'dashboard' ? 'selected' : ''} ${!settings.dashboardEnabled ? 'disabled' : ''}>Dashboard</option>
+              <option value="cop" ${settings.defaultStartPage === 'cop' ? 'selected' : ''} ${!settings.copEnabled ? 'disabled' : ''}>Common Operating Picture</option>
               <option value="monitors" ${settings.defaultStartPage === 'monitors' ? 'selected' : ''}>Monitors</option>
               <option value="search" ${settings.defaultStartPage === 'search' ? 'selected' : ''}>Search</option>
             </select>
@@ -392,17 +393,17 @@ class App {
       </div>
     `);
     
-    // Handle dashboard toggle enabling/disabling dashboard as start page option
-    const dashboardToggle = document.getElementById('setting-dashboard-enabled');
+    // Handle COP toggle enabling/disabling COP as start page option
+    const copToggle = document.getElementById('setting-cop-enabled');
     const startPageSelect = document.getElementById('setting-start-page');
-    const dashboardOption = startPageSelect?.querySelector('option[value="dashboard"]');
+    const copOption = startPageSelect?.querySelector('option[value="cop"]');
     
-    dashboardToggle?.addEventListener('change', () => {
-      if (dashboardOption) {
-        dashboardOption.disabled = !dashboardToggle.checked;
+    copToggle?.addEventListener('change', () => {
+      if (copOption) {
+        copOption.disabled = !copToggle.checked;
       }
-      // If dashboard was selected but is now disabled, switch to monitors
-      if (!dashboardToggle.checked && startPageSelect?.value === 'dashboard') {
+      // If COP was selected but is now disabled, switch to monitors
+      if (!copToggle.checked && startPageSelect?.value === 'cop') {
         startPageSelect.value = 'monitors';
       }
     });
@@ -417,18 +418,18 @@ class App {
    * Save settings from the modal
    */
   saveSettings() {
-    const dashboardEnabled = document.getElementById('setting-dashboard-enabled')?.checked ?? true;
-    let defaultStartPage = document.getElementById('setting-start-page')?.value || 'dashboard';
+    const copEnabled = document.getElementById('setting-cop-enabled')?.checked ?? true;
+    let defaultStartPage = document.getElementById('setting-start-page')?.value || 'cop';
     const defaultViewTab = document.getElementById('setting-default-tab')?.value || 'dashboard';
     const showClassification = document.getElementById('setting-show-classification')?.checked ?? true;
     
-    // If dashboard is disabled and was selected as start page, fall back to monitors
-    if (!dashboardEnabled && defaultStartPage === 'dashboard') {
+    // If COP is disabled and was selected as start page, fall back to monitors
+    if (!copEnabled && defaultStartPage === 'cop') {
       defaultStartPage = 'monitors';
     }
     
     this.dataStore.updateSettings({
-      dashboardEnabled,
+      copEnabled,
       defaultStartPage,
       defaultViewTab,
       showClassification
@@ -443,13 +444,13 @@ class App {
    */
   updateNavigationForSettings() {
     const settings = this.dataStore.getSettings();
-    const dashboardLink = document.querySelector('.nav-link[href="#/dashboard"]');
+    const copLink = document.querySelector('.nav-link[href="#/cop/"]');
     
-    if (dashboardLink) {
-      if (settings.dashboardEnabled) {
-        dashboardLink.classList.remove('hidden');
+    if (copLink) {
+      if (settings.copEnabled) {
+        copLink.classList.remove('hidden');
       } else {
-        dashboardLink.classList.add('hidden');
+        copLink.classList.add('hidden');
       }
     }
   }

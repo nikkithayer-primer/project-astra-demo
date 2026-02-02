@@ -20,7 +20,6 @@ export class MapView extends BaseComponent {
     this.markers = [];
     this.markerLayer = null; // For locations without events
     this.eventMarkerLayer = null; // For events
-    this.showLocations = this.options.showLocations;
   }
 
   render() {
@@ -108,12 +107,7 @@ export class MapView extends BaseComponent {
       !locationIdsWithEvents.has(loc.id)
     );
 
-    // Add checkbox toggle if there are locations without events
-    if (locationsWithoutEvents.length > 0) {
-      this.addLocationsCheckbox(locationsWithoutEvents.length);
-    }
-
-    // Add location markers (only for locations without events)
+    // Add location markers (for locations without events) - always visible
     const bounds = [];
 
     locationsWithoutEvents.forEach(loc => {
@@ -252,8 +246,10 @@ export class MapView extends BaseComponent {
       this.renderEventMarkers(bounds);
     }
 
-    // Update locations layer visibility based on checkbox state
-    this.updateLocationsLayerVisibility();
+    // Add location markers to map (always visible now)
+    if (this.markerLayer) {
+      this.markerLayer.addTo(this.map);
+    }
 
     // Store bounds for reset functionality
     this.initialBounds = bounds.length > 0 ? bounds : null;
@@ -315,41 +311,6 @@ export class MapView extends BaseComponent {
     }
   }
 
-  /**
-   * Add checkbox for showing locations without events
-   */
-  addLocationsCheckbox(locationCount) {
-    const checkboxDiv = document.createElement('div');
-    checkboxDiv.className = 'map-locations-checkbox';
-    checkboxDiv.innerHTML = `
-      <label class="map-checkbox-label">
-        <input type="checkbox" class="map-checkbox" ${this.showLocations ? 'checked' : ''} />
-        <span class="map-checkbox-text">Show locations (${locationCount})</span>
-      </label>
-    `;
-    this.container.appendChild(checkboxDiv);
-
-    // Add change handler
-    const checkbox = checkboxDiv.querySelector('.map-checkbox');
-    checkbox.addEventListener('change', (e) => {
-      e.stopPropagation();
-      this.showLocations = checkbox.checked;
-      this.updateLocationsLayerVisibility();
-    });
-  }
-
-  /**
-   * Update locations layer visibility based on checkbox state
-   */
-  updateLocationsLayerVisibility() {
-    if (!this.markerLayer) return;
-    
-    if (this.showLocations) {
-      this.map.addLayer(this.markerLayer);
-    } else {
-      this.map.removeLayer(this.markerLayer);
-    }
-  }
 
   /**
    * Render event markers on the map - grouped by coordinates

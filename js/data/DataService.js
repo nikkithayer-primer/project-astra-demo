@@ -3393,6 +3393,110 @@ export const DataService = {
   },
 
   // ============================================
+  // TagGroup Methods
+  // ============================================
+
+  /**
+   * Get all tag groups
+   * @returns {Array} All tag groups sorted by sortOrder
+   */
+  getTagGroups: () => {
+    const groups = dataStore.data?.tagGroups || [];
+    return [...groups].sort((a, b) => (a.sortOrder ?? 0) - (b.sortOrder ?? 0));
+  },
+
+  /**
+   * Get a single tag group by ID
+   * @param {string} groupId - TagGroup ID
+   * @returns {Object|undefined} TagGroup object
+   */
+  getTagGroup: (groupId) => {
+    return (dataStore.data?.tagGroups || []).find(g => g.id === groupId);
+  },
+
+  /**
+   * Get all tags in a specific group
+   * @param {string} groupId - TagGroup ID
+   * @returns {Array} Tags in the group sorted by sortOrder
+   */
+  getTagsInGroup: (groupId) => {
+    const tags = (dataStore.data?.tags || []).filter(t => t.groupId === groupId);
+    return tags.sort((a, b) => (a.sortOrder ?? 0) - (b.sortOrder ?? 0));
+  },
+
+  /**
+   * Get all ungrouped tags (tags without a groupId)
+   * @returns {Array} Ungrouped tags sorted by sortOrder
+   */
+  getUngroupedTags: () => {
+    const tags = (dataStore.data?.tags || []).filter(t => !t.groupId);
+    return tags.sort((a, b) => (a.sortOrder ?? 0) - (b.sortOrder ?? 0));
+  },
+
+  /**
+   * Get tags organized by group for UI display
+   * @returns {Object} { groups: [{group, tags}], ungrouped: [tags] }
+   */
+  getTagsByGroup: () => {
+    const groups = DataService.getTagGroups();
+    const result = {
+      groups: groups.map(group => ({
+        group,
+        tags: DataService.getTagsInGroup(group.id)
+      })),
+      ungrouped: DataService.getUngroupedTags()
+    };
+    return result;
+  },
+
+  /**
+   * Check if adding a tag would violate exclusivity constraints
+   * @param {string} entityType - Entity type
+   * @param {string} entityId - Entity ID  
+   * @param {string} tagId - Tag to add
+   * @returns {Object|null} { conflictingTag, group } if conflict exists, null otherwise
+   */
+  checkTagExclusivity: (entityType, entityId, tagId) => {
+    const tag = DataService.getTag(tagId);
+    if (!tag || !tag.groupId) return null;
+    
+    const group = DataService.getTagGroup(tag.groupId);
+    if (!group || !group.exclusive) return null;
+    
+    // Get existing tags on the entity
+    const existingTags = DataService.getTagsForEntity(entityType, entityId);
+    
+    // Check if any existing tag is in the same exclusive group
+    const conflictingTag = existingTags.find(t => 
+      t.groupId === tag.groupId && t.id !== tagId
+    );
+    
+    if (conflictingTag) {
+      return { conflictingTag, group };
+    }
+    
+    return null;
+  },
+
+  /**
+   * Get the "Mission" tag group (for backward compatibility with missionId)
+   * @returns {Object|undefined} The Mission tag group
+   */
+  getMissionTagGroup: () => {
+    return (dataStore.data?.tagGroups || []).find(g => g.name === 'Mission');
+  },
+
+  /**
+   * Get all mission tags (tags in the Mission group)
+   * @returns {Array} Mission tags
+   */
+  getMissionTags: () => {
+    const missionGroup = DataService.getMissionTagGroup();
+    if (!missionGroup) return [];
+    return DataService.getTagsInGroup(missionGroup.id);
+  },
+
+  // ============================================
   // Tag Methods
   // ============================================
 

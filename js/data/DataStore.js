@@ -52,9 +52,9 @@ class DataStore {
    */
   getDefaultSettings() {
     return {
-      dashboardEnabled: true,
-      defaultStartPage: 'dashboard', // 'dashboard' or 'monitors'
-      defaultViewTab: 'dashboard',   // 'dashboard' or 'documents'
+      copEnabled: true,              // Enable Common Operating Picture (global view)
+      defaultStartPage: 'cop',       // 'cop' or 'monitors'
+      defaultViewTab: 'dashboard',   // 'dashboard' or 'documents' (view tab, not COP)
       showClassification: true       // Show portion marks and classification
     };
   }
@@ -119,8 +119,9 @@ class DataStore {
    * @param {string} datasetId - Identifier for the new dataset
    * @param {Object} mockDataModule - The mock data object to load
    * @param {string} datasetName - Optional display name for the dataset
+   * @param {Object} defaultSettings - Optional default settings for the dataset
    */
-  switchDataset(datasetId, mockDataModule, datasetName = null) {
+  switchDataset(datasetId, mockDataModule, datasetName = null, defaultSettings = null) {
     if (!datasetId || !mockDataModule) {
       console.error('DataStore: switchDataset requires datasetId and mockDataModule');
       return;
@@ -138,6 +139,17 @@ class DataStore {
     }
     this.data = { ...mockDataModule };
     this.save();
+    
+    // Apply dataset-specific default settings if provided
+    if (defaultSettings) {
+      this.settings = { ...this.getDefaultSettings(), ...defaultSettings };
+      try {
+        localStorage.setItem(this.settingsKey, JSON.stringify(this.settings));
+      } catch (e) {
+        console.error('DataStore: Failed to save settings:', e);
+      }
+      this.notifyListeners();
+    }
   }
 
   // ============================================
@@ -901,14 +913,48 @@ class DataStore {
   }
 
   // ============================================
+  // TagGroup CRUD
+  // ============================================
+
+  createTagGroup(tagGroup) {
+    return this.createEntity('tagGroups', 'tag-group', {
+      name: tagGroup.name,
+      description: tagGroup.description || '',
+      exclusive: tagGroup.exclusive || false,
+      color: tagGroup.color || this.generateColor(),
+      sortOrder: tagGroup.sortOrder ?? 0
+    });
+  }
+
+  updateTagGroup(id, updates) {
+    return this.updateEntity('tagGroups', id, updates);
+  }
+
+  deleteTagGroup(id) {
+    return this.deleteEntity('tagGroups', id, () => {
+      // Remove groupId from all tags in this group (make them ungrouped)
+      if (this.data.tags) {
+        this.data.tags.forEach(tag => {
+          if (tag.groupId === id) {
+            tag.groupId = null;
+            tag.updatedAt = new Date().toISOString();
+          }
+        });
+      }
+    });
+  }
+
+  // ============================================
   // Tag CRUD
   // ============================================
 
   createTag(tag) {
     return this.createEntity('tags', 'tag', {
       name: tag.name,
+      groupId: tag.groupId || null,
       color: tag.color || this.generateColor(),
-      description: tag.description || ''
+      description: tag.description || '',
+      sortOrder: tag.sortOrder ?? 0
     });
   }
 
@@ -1127,7 +1173,9 @@ class DataStore {
       alerts: [],
       users: [],
       workspaces: [],
+      projects: [],
       searchFilters: [],
+      tagGroups: [],
       tags: []
     };
   }

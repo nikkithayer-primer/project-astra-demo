@@ -83,7 +83,7 @@
 }
 
 .monitor-section-title {
-  font-size: 11px;
+  font-size: 12px;
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.5px;
@@ -91,7 +91,7 @@
 }
 
 .alert-count {
-  font-size: 11px;
+  font-size: 12px;
   padding: 2px 6px;
   background: var(--bg-tertiary);
   border-radius: var(--radius-2xl);
@@ -122,7 +122,7 @@
 
 .monitor-alert-item .alert-time {
   flex-shrink: 0;
-  font-size: 11px;
+  font-size: 12px;
   color: var(--text-muted);
 }
 
@@ -274,7 +274,7 @@
 .viz-dropdown-option.active::before {
   content: '✓';
   margin-right: 8px;
-  font-size: 10px;
+  font-size: 12px;
   font-weight: 600;
 }
 
@@ -316,7 +316,7 @@
 }
 
 .trigger-tag {
-  font-size: 11px;
+  font-size: 12px;
   padding: 3px 8px;
   background: var(--bg-secondary);
   border: 1px solid var(--border-subtle);
@@ -325,7 +325,7 @@
 }
 
 .monitor-meta {
-  font-size: 11px;
+  font-size: 12px;
   color: var(--text-muted);
 }
 
@@ -369,7 +369,7 @@
 }
 
 .alert-type-badge {
-  font-size: 11px;
+  font-size: 12px;
   padding: 3px 8px;
   border-radius: var(--radius-md);
   font-weight: 500;
@@ -401,11 +401,17 @@
 }
 
 .alert-description {
-  color: var(--text-secondary);
+  color: var(--accent-primary);
+  text-decoration: none;
+}
+
+.alert-description a:visited {
+  color: var(--accent-primary);
+  text-decoration: none;
 }
 
 .severity-badge {
-  font-size: 11px;
+  font-size: 12px;
   padding: 3px 8px;
   border-radius: var(--radius-md);
   font-weight: 500;

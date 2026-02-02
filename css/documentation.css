@@ -294,7 +294,7 @@
 .field-type {
   display: inline-block;
   font-family: var(--font-mono);
-  font-size: 11px;
+  font-size: 12px;
   padding: 2px 6px;
   background: var(--bg-tertiary);
   border-radius: var(--radius-sm);
@@ -316,7 +316,7 @@
 
 .field-enum {
   margin-top: var(--space-sm);
-  font-size: 11px;
+  font-size: 12px;
   color: var(--text-muted);
 }
 
@@ -352,7 +352,7 @@
 .relationship-table th {
   background: var(--bg-tertiary);
   font-weight: 500;
-  font-size: 11px;
+  font-size: 12px;
   text-transform: uppercase;
   letter-spacing: 0.5px;
   color: var(--text-muted);
@@ -384,7 +384,7 @@
 
 .relationship-type {
   font-family: var(--font-mono);
-  font-size: 11px;
+  font-size: 12px;
   color: var(--text-secondary);
 }
 
