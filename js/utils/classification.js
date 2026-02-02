@@ -57,7 +57,12 @@ export const DOCUMENT_TYPES = {
   SOCIAL_POST: 'social_post',
   TIKTOK: 'tiktok',
   NEWS_ARTICLE: 'news_article',
-  INTERNAL: 'internal'
+  INTERNAL: 'internal',
+  // Structured data types
+  CORPORATE_RECORD: 'corporate_record',
+  WATCHLIST_MATCH: 'watchlist_match',
+  POLITICAL_FINANCE: 'political_finance',
+  EVENT_ATTENDANCE: 'event_attendance'
 };
 
 // Document type display info
@@ -81,6 +86,27 @@ export const DOCUMENT_TYPE_INFO = {
     label: 'Internal',
     icon: 'document',
     description: 'Internal documents and reports'
+  },
+  // Structured data types
+  corporate_record: {
+    label: 'Corporate Record',
+    icon: 'building',
+    description: 'Corporate filings, ownership records, and registry data'
+  },
+  watchlist_match: {
+    label: 'Watchlist Match',
+    icon: 'alert',
+    description: 'Sanctions list and watchlist screening matches'
+  },
+  political_finance: {
+    label: 'Political Finance',
+    icon: 'finance',
+    description: 'Campaign finance, lobbying disclosures, and FARA filings'
+  },
+  event_attendance: {
+    label: 'Event Attendance',
+    icon: 'calendar',
+    description: 'Event participation and attendance records'
   }
 };
 
@@ -196,7 +222,11 @@ export function isSocialMedia(documentType) {
  */
 export function hasTitle(documentType) {
   return documentType === DOCUMENT_TYPES.NEWS_ARTICLE || 
-         documentType === DOCUMENT_TYPES.INTERNAL;
+         documentType === DOCUMENT_TYPES.INTERNAL ||
+         documentType === DOCUMENT_TYPES.CORPORATE_RECORD ||
+         documentType === DOCUMENT_TYPES.WATCHLIST_MATCH ||
+         documentType === DOCUMENT_TYPES.POLITICAL_FINANCE ||
+         documentType === DOCUMENT_TYPES.EVENT_ATTENDANCE;
 }
 
 /**

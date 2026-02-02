@@ -24,5 +24,12 @@ export const repositories = [
     name: 'EDL',
     description: 'Internal reports and intelligence documents',
     color: '#59A14F'
+  },
+  {
+    id: 'repo-struct',
+    code: 'STRUCT',
+    name: 'Structured Data',
+    description: 'Corporate records, watchlists, political finance, and event attendance',
+    color: '#8B5CF6'
   }
 ];

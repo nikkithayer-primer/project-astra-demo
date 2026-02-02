@@ -167,14 +167,17 @@ const SCHEMAS = {
     optional: ['classification', 'url', 'author', 'excerpt', 'headerImage',
                'contentBlocks', 'narrativeIds', 'themeIds', 'topicIds',
                'personIds', 'organizationIds', 'locationIds', 'eventIds',
-               'metrics', 'highlights', 'comments', 'tagIds', 'createdAt'],
+               'metrics', 'highlights', 'comments', 'tagIds', 'createdAt',
+               'structuredData'],
     types: {
       title: 'string',
-      documentType: ['news_article', 'social_media', 'internal_report',
-                     'intelligence_report', 'memo', 'transcript'],
-      classification: ['U', 'C', 'S', 'TS'],
+      documentType: ['news_article', 'social_media', 'social_post', 'tiktok', 'internal_report',
+                     'intelligence_report', 'memo', 'transcript', 'internal',
+                     'corporate_record', 'watchlist_match', 'political_finance', 'event_attendance'],
+      classification: ['U', 'CUI', 'C', 'S', 'TS'],
       publishedDate: 'datetime',
-      factionMentions: { type: 'factionMentionsMap' }
+      factionMentions: { type: 'factionMentionsMap' },
+      structuredData: 'object'
     },
     references: {
       repositoryId: 'repositories',

@@ -1,38 +1,36 @@
-/* Primer - Component Styles
+/* Primer - Component Styles (Legacy)
    Compact, information-dense UI components
    
-   NOTE: This file is large (~8300 lines) and could be split into focused modules.
+   NOTE: Many styles have been extracted to dedicated files. The styles below are
+   DUPLICATED in the extracted files and will be removed in a future cleanup pass.
+   The extracted files take precedence (loaded after this file in index.html).
    
-   Already extracted:
-   - dropdown.css - Unified dropdown component (DONE)
+   Already extracted to separate files:
+   - buttons.css - Button variants and states
+   - badges.css - Tags/badges and status badges
+   - tables.css - Tables and document table styles
+   - entity-list.css - Entity list patterns
+   - search.css - Search view and filter components
+   - charts.css - Chart containers and legends
+   - maps.css - Map containers, markers, and popups
+   - timeline.css - Vertical timeline
+   - tags.css - Tag chips and tag picker
+   - annotations.css - Highlights and comments
+   - document-viewer.css - Document viewer split layout
+   - dropdown.css - Unified dropdown component
    
-   Recommended CSS file structure for future refactoring:
-   - buttons.css (lines ~35-132) - Button variants and states
-   - cards.css (lines ~133-335) - Card containers and tooltips
-   - stat-cards.css (lines ~336-543) - Stat grid and stat card dropdowns
-   - tables.css (lines ~544-920) - Tables and document table styles
-   - classification.css (lines ~921-1306) - Classification banners and badges
-   - badges.css (lines ~1307-1373) - Tags/badges and status badges
-   - entity-list.css (lines ~1374-1490) - Entity list patterns
-   - forms.css (lines ~1491-1761) - Form inputs and controls
-   - search.css (lines ~1762-2517) - Search view and filter components
-   - charts.css (lines ~2518-2620) - Chart containers and legends
-   - maps.css (lines ~2621-3027) - Map containers, markers, and popups
-   - composite-charts.css (lines ~3306-4457) - Timeline volume composite
-   - network-graph.css (lines ~5137-5285) - Network graph styles
-   - document-viewer.css (lines ~5337-5805) - Document viewer split layout
-   - social-posts.css (lines ~5806-6110) - Social media post headers
-   - annotations.css (lines ~6111-6483) - Highlights and comments
-   - drag-drop.css (lines ~6484-6574) - Drag-drop card functionality
-   - timeline.css (lines ~6575-6765) - Vertical timeline
-   - modals.css (lines ~6766-6947) - Modal and toggle components
-   - scope-selector.css (lines ~6948-7193) - Scope selector component
-   - tags.css (lines ~7194-7838) - Tag chips and tag picker
-   - activity-feed.css (lines ~7839-8018) - Activity feed styles
-   - entity-card.css (lines ~8019-8184) - Entity card popover
-   - add-to-project.css (lines ~8185-8336) - Add to project modal
-   
-   When splitting, ensure @import order in main stylesheet preserves CSS specificity.
+   Still to extract:
+   - stat-cards.css - Stat grid and stat card dropdowns
+   - classification.css - Classification banners and badges
+   - composite-charts.css - Timeline volume composite
+   - network-graph.css - Network graph styles
+   - social-posts.css - Social media post headers (in document-viewer.css)
+   - drag-drop.css - Drag-drop card functionality
+   - modals.css - Modal and toggle components
+   - scope-selector.css - Scope selector component
+   - activity-feed.css - Activity feed styles
+   - entity-card.css - Entity card popover
+   - add-to-project.css - Add to project modal
 */
 
 /* Buttons */
@@ -6828,6 +6826,54 @@ body.dragging-active * {
 .settings-select:focus {
   outline: none;
   border-color: var(--accent-primary);
+}
+
+/* Settings Input */
+.settings-input {
+  min-width: 200px;
+  padding: var(--space-sm) var(--space-md);
+  background: var(--bg-tertiary);
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius);
+  font-size: var(--text-sm);
+  color: var(--text-primary);
+  transition: border-color 0.15s ease;
+}
+
+.settings-input:hover {
+  border-color: var(--border-medium);
+}
+
+.settings-input:focus {
+  outline: none;
+  border-color: var(--accent-primary);
+}
+
+.settings-input::placeholder {
+  color: var(--text-muted);
+}
+
+/* Settings Input Group (input + button) */
+.settings-input-group {
+  display: flex;
+  gap: var(--space-sm);
+  align-items: center;
+}
+
+.settings-input-group .settings-input {
+  flex: 1;
+}
+
+/* Danger button variant for settings */
+.btn-danger {
+  background: var(--sentiment-negative, #E57373);
+  border-color: var(--sentiment-negative, #E57373);
+  color: white;
+}
+
+.btn-danger:hover {
+  background: #d32f2f;
+  border-color: #d32f2f;
 }
 
 /* Toggle Switch */

@@ -15,6 +15,7 @@ import { Router } from './router.js';
 import { getSourceViewer } from './components/SourceViewerModal.js';
 import { getEntityCardModal } from './components/EntityCardModal.js';
 import { escapeHtml } from './utils/htmlUtils.js';
+import { ChatService } from './services/ChatService.js';
 
 // Dataset registry
 const DATASETS = {
@@ -43,6 +44,7 @@ class App {
     this.router = null;
     this.dataStore = dataStore;
     this.chatOpen = false;
+    this.chatService = null;
   }
 
   /**
@@ -61,6 +63,9 @@ class App {
     // Initialize router
     this.router = new Router('app');
     this.router.init();
+
+    // Initialize chat service (requires router for context)
+    this.chatService = new ChatService(this.router);
 
     // Initialize chat
     this.initChat();
@@ -386,6 +391,32 @@ class App {
             </label>
           </div>
         </div>
+        
+        <div class="settings-section">
+          <h3 class="settings-section-title">AI Assistant</h3>
+          
+          <div class="settings-row">
+            <div class="settings-label">
+              <span class="settings-label-text">OpenAI API Key</span>
+              <span class="settings-label-description">Required for AI-powered chat. Your key is stored locally and never sent to our servers.</span>
+            </div>
+            <div class="settings-input-group">
+              <input type="password" id="setting-openai-key" class="settings-input" 
+                placeholder="${ChatService.hasApiKey() ? '••••••••••••••••' : 'sk-...'}"
+                value="">
+              <button type="button" class="btn btn-small btn-secondary" id="toggle-key-visibility">Show</button>
+            </div>
+          </div>
+          ${ChatService.hasApiKey() ? `
+          <div class="settings-row">
+            <div class="settings-label">
+              <span class="settings-label-text">Clear API Key</span>
+              <span class="settings-label-description">Remove the stored API key from this browser</span>
+            </div>
+            <button type="button" class="btn btn-small btn-danger" id="clear-api-key">Clear Key</button>
+          </div>
+          ` : ''}
+        </div>
       </div>
       <div class="modal-footer">
         <button class="btn btn-secondary" onclick="window.app.closeModal()">Cancel</button>
@@ -406,6 +437,26 @@ class App {
       if (!copToggle.checked && startPageSelect?.value === 'cop') {
         startPageSelect.value = 'monitors';
       }
+    });
+    
+    // Handle API key visibility toggle
+    const apiKeyInput = document.getElementById('setting-openai-key');
+    const toggleKeyBtn = document.getElementById('toggle-key-visibility');
+    toggleKeyBtn?.addEventListener('click', () => {
+      if (apiKeyInput.type === 'password') {
+        apiKeyInput.type = 'text';
+        toggleKeyBtn.textContent = 'Hide';
+      } else {
+        apiKeyInput.type = 'password';
+        toggleKeyBtn.textContent = 'Show';
+      }
+    });
+    
+    // Handle clear API key
+    document.getElementById('clear-api-key')?.addEventListener('click', () => {
+      ChatService.setApiKey(null);
+      this.showToast('API key cleared', 'success');
+      this.showSettingsModal(); // Refresh modal
     });
     
     // Handle save
@@ -434,6 +485,13 @@ class App {
       defaultViewTab,
       showClassification
     });
+    
+    // Save API key if provided (stored separately in localStorage, not in dataStore)
+    const apiKeyInput = document.getElementById('setting-openai-key');
+    const newApiKey = apiKeyInput?.value?.trim();
+    if (newApiKey && newApiKey.startsWith('sk-')) {
+      ChatService.setApiKey(newApiKey);
+    }
     
     this.closeModal();
     this.showToast('Settings saved', 'success');
@@ -1296,7 +1354,7 @@ class App {
   /**
    * Send a chat message
    */
-  sendChatMessage() {
+  async sendChatMessage() {
     const chatInput = document.getElementById('chat-input');
     const chatMessages = document.getElementById('chat-messages');
     
@@ -1331,11 +1389,92 @@ class App {
     chatMessages.appendChild(typingIndicator);
     chatMessages.scrollTop = chatMessages.scrollHeight;
 
-    // Simulate response delay
-    setTimeout(() => {
-      typingIndicator.remove();
-      this.addAssistantMessage(this.getPlaceholderResponse(message));
-    }, 1000 + Math.random() * 1000);
+    // Check if we have an API key for real AI responses
+    if (ChatService.hasApiKey() && this.chatService) {
+      try {
+        // Update typing indicator to show function calls
+        const onToolCall = (fnName, args) => {
+          const toolIndicator = typingIndicator.querySelector('.chat-typing');
+          if (toolIndicator) {
+            const friendlyName = this.getFriendlyToolName(fnName);
+            toolIndicator.innerHTML = `
+              <span class="chat-tool-indicator">${friendlyName}...</span>
+            `;
+          }
+        };
+        
+        const response = await this.chatService.sendMessage(message, onToolCall);
+        typingIndicator.remove();
+        this.addAssistantMessage(this.formatAIResponse(response));
+      } catch (error) {
+        console.error('Chat error:', error);
+        typingIndicator.remove();
+        this.addAssistantMessage(`<span class="chat-error">Error: ${this.escapeHtml(error.message)}</span>`);
+      }
+    } else {
+      // Fall back to placeholder responses
+      setTimeout(() => {
+        typingIndicator.remove();
+        this.addAssistantMessage(this.getPlaceholderResponse(message));
+      }, 1000 + Math.random() * 1000);
+    }
+  }
+
+  /**
+   * Get a friendly name for a tool/function
+   */
+  getFriendlyToolName(fnName) {
+    const nameMap = {
+      'get_current_page_context': 'Reading page context',
+      'search_documents': 'Searching documents',
+      'get_narrative_details': 'Loading narrative',
+      'get_theme_details': 'Loading theme',
+      'get_narratives_for_entity': 'Finding narratives',
+      'get_faction_details': 'Loading faction',
+      'get_person_details': 'Loading person',
+      'get_organization_details': 'Loading organization',
+      'get_related_entities': 'Finding connections',
+      'compare_factions': 'Comparing factions',
+      'get_volume_trends': 'Analyzing trends',
+      'list_all_narratives': 'Listing narratives',
+      'list_all_factions': 'Listing factions'
+    };
+    return nameMap[fnName] || 'Thinking';
+  }
+
+  /**
+   * Format AI response with markdown-like parsing
+   */
+  formatAIResponse(text) {
+    if (!text) return '';
+    
+    // Escape HTML first
+    let formatted = this.escapeHtml(text);
+    
+    // Convert markdown-style formatting
+    // Bold: **text** or __text__
+    formatted = formatted.replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>');
+    formatted = formatted.replace(/__([^_]+)__/g, '<strong>$1</strong>');
+    
+    // Italic: *text* or _text_
+    formatted = formatted.replace(/\*([^*]+)\*/g, '<em>$1</em>');
+    formatted = formatted.replace(/_([^_]+)_/g, '<em>$1</em>');
+    
+    // Convert newlines to <br>
+    formatted = formatted.replace(/\n/g, '<br>');
+    
+    // Convert bullet points
+    formatted = formatted.replace(/^- (.+)$/gm, '• $1');
+    
+    // Convert entity IDs to links (narr-xxx, person-xxx, etc.)
+    formatted = formatted.replace(/\b(narr-\d+)\b/g, '<a href="#/$1" class="chat-entity-link">$1</a>');
+    formatted = formatted.replace(/\b(sub-\d+)\b/g, '<a href="#/$1" class="chat-entity-link">$1</a>');
+    formatted = formatted.replace(/\b(person-\d+)\b/g, '<a href="#/$1" class="chat-entity-link">$1</a>');
+    formatted = formatted.replace(/\b(org-\d+)\b/g, '<a href="#/$1" class="chat-entity-link">$1</a>');
+    formatted = formatted.replace(/\b(faction-\d+)\b/g, '<a href="#/$1" class="chat-entity-link">$1</a>');
+    formatted = formatted.replace(/\b(doc-\d+)\b/g, '<a href="#/$1" class="chat-entity-link">$1</a>');
+    
+    return formatted;
   }
 
   /**

@@ -2971,5 +2971,759 @@ export const documents = [
     metrics: { likes: 3420, comments: 1850, shares: 920, platform: 'facebook' },
     highlights: [],
     comments: []
+  },
+
+  // ============================================
+  // Structured Data - Corporate Records
+  // ============================================
+  {
+    id: 'doc-071',
+    documentType: 'corporate_record',
+    repositoryId: 'repo-struct',
+    classification: 'U',
+    title: 'Heritage Foundation - 501(c)(3) Filing',
+    publishedDate: '2025-11-15T00:00:00Z',
+    publisherId: 'pub-sec-edgar',
+    excerpt: 'Annual filing for Heritage Foundation showing funding sources and policy program expenditures.',
+    personIds: [],
+    organizationIds: ['org-031'],
+    locationIds: ['loc-009'],
+    narrativeIds: [],
+    eventIds: [],
+    factionMentions: {
+      'faction-010': { sentiment: 0.7 }
+    },
+    structuredData: {
+      recordType: 'corporate_record',
+      source: 'IRS Form 990',
+      companyName: 'The Heritage Foundation',
+      jurisdiction: 'District of Columbia',
+      registrationNumber: '23-7327730',
+      incorporationDate: '1973-02-16',
+      status: 'active',
+      entityType: 'nonprofit',
+      registeredAddress: '214 Massachusetts Avenue NE, Washington, DC 20002',
+      beneficialOwners: [],
+      directors: ['Kevin Roberts', 'Bridget Ziegler'],
+      flags: ['policy_think_tank', 'conservative']
+    },
+    contentBlocks: [
+      { type: 'paragraph', content: 'Heritage Foundation Form 990 filing shows $85M in annual revenue. The organization has been influential in shaping administration policy on immigration and federal workforce reduction.' }
+    ],
+    highlights: [],
+    comments: []
+  },
+  {
+    id: 'doc-072',
+    documentType: 'corporate_record',
+    repositoryId: 'repo-struct',
+    classification: 'U',
+    title: 'ACLU Foundation - Nonprofit Filing',
+    publishedDate: '2025-10-30T00:00:00Z',
+    publisherId: 'pub-sec-edgar',
+    excerpt: 'ACLU Foundation annual filing showing litigation funding and civil liberties program activities.',
+    personIds: [],
+    organizationIds: ['org-030'],
+    locationIds: ['loc-009'],
+    narrativeIds: ['narr-006', 'narr-009'],
+    eventIds: [],
+    factionMentions: {
+      'faction-008': { sentiment: 0.8 }
+    },
+    structuredData: {
+      recordType: 'corporate_record',
+      source: 'IRS Form 990',
+      companyName: 'American Civil Liberties Union Foundation',
+      jurisdiction: 'New York',
+      registrationNumber: '13-6213516',
+      incorporationDate: '1920-01-20',
+      status: 'active',
+      entityType: 'nonprofit',
+      registeredAddress: '125 Broad Street, New York, NY 10004',
+      beneficialOwners: [],
+      directors: ['Anthony Romero', 'Deborah Archer'],
+      flags: ['civil_liberties', 'litigation']
+    },
+    contentBlocks: [
+      { type: 'paragraph', content: 'ACLU Foundation Form 990 shows $300M in annual revenue with significant increase in immigration-related litigation funding. The organization is lead counsel in multiple cases challenging federal immigration enforcement.' }
+    ],
+    highlights: [],
+    comments: []
+  },
+  {
+    id: 'doc-073',
+    documentType: 'corporate_record',
+    repositoryId: 'repo-struct',
+    classification: 'U',
+    title: 'TikTok Inc. - CFIUS Review Entity',
+    publishedDate: '2025-12-01T00:00:00Z',
+    publisherId: 'pub-opencorp',
+    excerpt: 'Corporate structure documentation for TikTok Inc., subject of ongoing CFIUS national security review.',
+    personIds: [],
+    organizationIds: ['org-004'],
+    locationIds: ['loc-009'],
+    narrativeIds: [],
+    eventIds: [],
+    factionMentions: {
+      'faction-009': { sentiment: -0.3 }
+    },
+    structuredData: {
+      recordType: 'corporate_record',
+      source: 'Delaware Division of Corporations',
+      companyName: 'TikTok Inc.',
+      jurisdiction: 'Delaware',
+      registrationNumber: 'DE-7892341',
+      incorporationDate: '2017-09-01',
+      status: 'active',
+      entityType: 'corporation',
+      registeredAddress: '5800 Bristol Parkway, Culver City, CA 90230',
+      beneficialOwners: ['ByteDance Ltd. (China) - 100%'],
+      directors: ['Shou Zi Chew'],
+      flags: ['foreign_owned', 'cfius_review', 'national_security']
+    },
+    contentBlocks: [
+      { type: 'paragraph', content: 'TikTok Inc. is a wholly-owned subsidiary of ByteDance Ltd., a Chinese company. The entity remains under CFIUS national security review regarding data handling practices and potential foreign influence.' }
+    ],
+    highlights: [],
+    comments: []
+  },
+  {
+    id: 'doc-074',
+    documentType: 'corporate_record',
+    repositoryId: 'repo-struct',
+    classification: 'U',
+    title: 'World Economic Forum - Swiss Foundation Filing',
+    publishedDate: '2025-08-15T00:00:00Z',
+    publisherId: 'pub-opencorp',
+    excerpt: 'Foundation registration for World Economic Forum, host of Davos annual meeting.',
+    personIds: [],
+    organizationIds: ['org-009'],
+    locationIds: ['loc-005'],
+    narrativeIds: ['narr-005'],
+    eventIds: ['event-006'],
+    factionMentions: {},
+    structuredData: {
+      recordType: 'corporate_record',
+      source: 'Swiss Commercial Registry',
+      companyName: 'World Economic Forum',
+      jurisdiction: 'Switzerland',
+      registrationNumber: 'CHE-109.537.849',
+      incorporationDate: '1971-01-01',
+      status: 'active',
+      entityType: 'foundation',
+      registeredAddress: '91-93 Route de la Capite, CH-1223 Cologny, Switzerland',
+      beneficialOwners: [],
+      directors: ['Klaus Schwab', 'Børge Brende'],
+      flags: ['international_organization']
+    },
+    contentBlocks: [
+      { type: 'paragraph', content: 'The World Economic Forum is registered as a Swiss foundation. The organization hosts the annual Davos meeting where global leaders discuss economic and political issues, including recent discussions on US-European relations.' }
+    ],
+    highlights: [],
+    comments: []
+  },
+  {
+    id: 'doc-075',
+    documentType: 'corporate_record',
+    repositoryId: 'repo-struct',
+    classification: 'U',
+    title: 'Minneapolis NAACP - Chapter Registration',
+    publishedDate: '2025-09-20T00:00:00Z',
+    publisherId: 'pub-opencorp',
+    excerpt: 'Organizational registration for Minneapolis NAACP chapter, active in local civil rights advocacy.',
+    personIds: ['person-015'],
+    organizationIds: ['org-018'],
+    locationIds: ['loc-002', 'loc-008'],
+    narrativeIds: ['narr-006'],
+    eventIds: [],
+    factionMentions: {
+      'faction-003': { sentiment: 0.8 }
+    },
+    structuredData: {
+      recordType: 'corporate_record',
+      source: 'Minnesota Secretary of State',
+      companyName: 'NAACP Minneapolis Branch',
+      jurisdiction: 'Minnesota',
+      registrationNumber: 'MN-NP-582146',
+      incorporationDate: '1912-06-15',
+      status: 'active',
+      entityType: 'nonprofit',
+      registeredAddress: '2300 Park Avenue, Minneapolis, MN 55404',
+      beneficialOwners: [],
+      directors: ['Nekima Levy Armstrong'],
+      flags: ['civil_rights']
+    },
+    contentBlocks: [
+      { type: 'paragraph', content: 'Minneapolis NAACP branch registration shows active status under leadership of Nekima Levy Armstrong. The chapter has been vocal in opposing federal immigration enforcement actions in Minnesota communities.' }
+    ],
+    highlights: [],
+    comments: []
+  },
+
+  // ============================================
+  // Structured Data - Watchlist Matches
+  // ============================================
+  {
+    id: 'doc-076',
+    documentType: 'watchlist_match',
+    repositoryId: 'repo-struct',
+    classification: 'S',
+    title: 'OFAC Match Review - Russian Oligarch Associate',
+    publishedDate: '2026-01-08T14:30:00Z',
+    publisherId: 'pub-ofac',
+    excerpt: 'Confirmed OFAC SDN match for individual with connections to sanctioned Russian entities, relevant to Greenland discussions.',
+    personIds: [],
+    organizationIds: [],
+    locationIds: ['loc-006'],
+    narrativeIds: ['narr-005'],
+    eventIds: [],
+    factionMentions: {},
+    structuredData: {
+      recordType: 'watchlist_match',
+      source: 'OFAC SDN',
+      listName: 'OFAC SDN',
+      listingId: 'RUSSIA-EO14024-2024-1247',
+      program: 'RUSSIA-EO14024',
+      matchedName: 'Viktor PETROV',
+      matchedAliases: ['V. Petrov', 'Viktor P.'],
+      matchType: 'exact',
+      matchStatus: 'confirmed',
+      dateAdded: '2024-03-15',
+      listingReason: 'Associate of sanctioned Russian state enterprise with Arctic interests',
+      sanctionTypes: ['asset_freeze', 'transaction_prohibition'],
+      reviewedBy: 'user-002',
+      reviewDate: '2026-01-08'
+    },
+    contentBlocks: [
+      { type: 'paragraph', content: 'Confirmed match for Viktor Petrov on OFAC SDN list. Individual is associated with Russian Arctic development interests and has appeared in discussions related to Greenland strategic assets.', portionMark: { classification: 'S', handling: '' } }
+    ],
+    highlights: [],
+    comments: []
+  },
+  {
+    id: 'doc-077',
+    documentType: 'watchlist_match',
+    repositoryId: 'repo-struct',
+    classification: 'C',
+    title: 'Internal Watchlist - Immigration Activist Screening',
+    publishedDate: '2026-01-12T10:00:00Z',
+    publisherId: 'pub-analyst',
+    excerpt: 'Internal screening result for individual involved in immigration enforcement protests.',
+    personIds: [],
+    organizationIds: [],
+    locationIds: ['loc-008'],
+    narrativeIds: ['narr-006'],
+    eventIds: ['event-013'],
+    factionMentions: {
+      'faction-003': { sentiment: 0.2 }
+    },
+    structuredData: {
+      recordType: 'watchlist_match',
+      source: 'Internal Watchlist',
+      listName: 'Domestic Persons of Interest',
+      listingId: 'DPOI-2026-0142',
+      program: 'Domestic Monitoring',
+      matchedName: 'Sarah MARTINEZ',
+      matchedAliases: [],
+      matchType: 'exact',
+      matchStatus: 'confirmed',
+      dateAdded: '2026-01-10',
+      listingReason: 'Organizer of immigration enforcement protests in Minneapolis area',
+      sanctionTypes: [],
+      reviewedBy: 'user-001',
+      reviewDate: '2026-01-12'
+    },
+    contentBlocks: [
+      { type: 'paragraph', content: 'Individual identified as organizer of protests against ICE operations in Minneapolis. No criminal record. Listed for monitoring purposes only following increased protest activity.', portionMark: { classification: 'C', handling: '' } }
+    ],
+    highlights: [],
+    comments: []
+  },
+  {
+    id: 'doc-078',
+    documentType: 'watchlist_match',
+    repositoryId: 'repo-struct',
+    classification: 'U',
+    title: 'False Positive Review - Political Donor Screening',
+    publishedDate: '2026-01-05T09:00:00Z',
+    publisherId: 'pub-ofac',
+    excerpt: 'OFAC screening false positive cleared for major political donor.',
+    personIds: [],
+    organizationIds: ['org-001'],
+    locationIds: [],
+    narrativeIds: [],
+    eventIds: [],
+    factionMentions: {},
+    structuredData: {
+      recordType: 'watchlist_match',
+      source: 'OFAC SDN',
+      listName: 'OFAC SDN',
+      listingId: 'N/A',
+      program: 'Multiple',
+      matchedName: 'Robert JOHNSON',
+      matchedAliases: [],
+      matchType: 'partial',
+      matchStatus: 'false_positive',
+      dateAdded: null,
+      listingReason: 'Name similarity to multiple SDN entries',
+      sanctionTypes: [],
+      reviewedBy: 'user-003',
+      reviewDate: '2026-01-05'
+    },
+    contentBlocks: [
+      { type: 'paragraph', content: 'OFAC screening returned potential match for major political donor Robert Johnson. After review of identifying information (DOB, address, citizenship), determined to be false positive due to common name.' }
+    ],
+    highlights: [],
+    comments: []
+  },
+  {
+    id: 'doc-079',
+    documentType: 'watchlist_match',
+    repositoryId: 'repo-struct',
+    classification: 'S',
+    title: 'EU Sanctions Match - Chinese Tech Executive',
+    publishedDate: '2026-01-15T11:00:00Z',
+    publisherId: 'pub-ofac',
+    excerpt: 'EU sanctions list match for executive connected to surveillance technology exports.',
+    personIds: [],
+    organizationIds: [],
+    locationIds: [],
+    narrativeIds: [],
+    eventIds: [],
+    factionMentions: {},
+    structuredData: {
+      recordType: 'watchlist_match',
+      source: 'EU Consolidated List',
+      listName: 'EU Sanctions',
+      listingId: 'EU-CYBER-2024-0089',
+      program: 'EU Cyber Sanctions',
+      matchedName: 'WANG Xiaoming',
+      matchedAliases: ['David Wang', 'Wang X.'],
+      matchType: 'exact',
+      matchStatus: 'confirmed',
+      dateAdded: '2024-09-01',
+      listingReason: 'Executive of company providing surveillance technology for human rights abuses',
+      sanctionTypes: ['asset_freeze', 'travel_ban'],
+      reviewedBy: 'user-002',
+      reviewDate: '2026-01-15'
+    },
+    contentBlocks: [
+      { type: 'paragraph', content: 'Confirmed match on EU sanctions list for Wang Xiaoming. Individual is executive at Chinese surveillance technology company sanctioned for providing equipment used in human rights violations.', portionMark: { classification: 'S', handling: '' } }
+    ],
+    highlights: [],
+    comments: []
+  },
+  {
+    id: 'doc-080',
+    documentType: 'watchlist_match',
+    repositoryId: 'repo-struct',
+    classification: 'C',
+    title: 'Interpol Notice Review - Transnational Smuggling',
+    publishedDate: '2025-12-20T16:00:00Z',
+    publisherId: 'pub-ofac',
+    excerpt: 'Interpol Red Notice match relevant to border security operations.',
+    personIds: [],
+    organizationIds: [],
+    locationIds: ['loc-011'],
+    narrativeIds: ['narr-014'],
+    eventIds: [],
+    factionMentions: {},
+    structuredData: {
+      recordType: 'watchlist_match',
+      source: 'Interpol',
+      listName: 'Interpol Red Notice',
+      listingId: 'A-4521/12-2024',
+      program: 'Interpol',
+      matchedName: 'Carlos MENDEZ-RIVERA',
+      matchedAliases: ['El Coyote', 'Carlos Rivera'],
+      matchType: 'exact',
+      matchStatus: 'confirmed',
+      dateAdded: '2024-12-01',
+      listingReason: 'Wanted for human smuggling operations across US-Mexico border',
+      sanctionTypes: [],
+      reviewedBy: 'user-004',
+      reviewDate: '2025-12-20'
+    },
+    contentBlocks: [
+      { type: 'paragraph', content: 'Interpol Red Notice match for individual wanted in connection with human smuggling operations. Subject believed to operate in Texas border region and is relevant to ongoing border security discussions.', portionMark: { classification: 'C', handling: '' } }
+    ],
+    highlights: [],
+    comments: []
+  },
+
+  // ============================================
+  // Structured Data - Political Finance
+  // ============================================
+  {
+    id: 'doc-081',
+    documentType: 'political_finance',
+    repositoryId: 'repo-struct',
+    classification: 'U',
+    title: 'Trump Victory Fund - Q4 2025 FEC Filing',
+    publishedDate: '2026-01-10T00:00:00Z',
+    publisherId: 'pub-fec',
+    excerpt: 'Joint fundraising committee filing showing campaign finance activity for Trump political operation.',
+    personIds: ['person-003'],
+    organizationIds: ['org-005'],
+    locationIds: ['loc-009'],
+    narrativeIds: [],
+    eventIds: [],
+    factionMentions: {
+      'faction-009': { sentiment: 0.8 }
+    },
+    structuredData: {
+      recordType: 'political_finance',
+      source: 'FEC',
+      filingId: 'FEC-2025-Q4-TVF',
+      filingType: 'pac_quarterly',
+      reportingPeriod: '2025-Q4',
+      filer: 'Trump Victory Fund',
+      amount: 48500000,
+      currency: 'USD',
+      recipients: ['RNC', 'State Republican Parties'],
+      issuesLobbied: [],
+      flags: ['joint_fundraising']
+    },
+    contentBlocks: [
+      { type: 'paragraph', content: 'Trump Victory Fund Q4 2025 filing shows $48.5M raised. The joint fundraising committee distributes funds between national and state Republican party organizations for ongoing political operations.' }
+    ],
+    highlights: [],
+    comments: []
+  },
+  {
+    id: 'doc-082',
+    documentType: 'political_finance',
+    repositoryId: 'repo-struct',
+    classification: 'U',
+    title: 'DNC Services Corp - Q4 2025 Filing',
+    publishedDate: '2026-01-08T00:00:00Z',
+    publisherId: 'pub-fec',
+    excerpt: 'Democratic National Committee quarterly filing showing fundraising and expenditure activity.',
+    personIds: [],
+    organizationIds: ['org-001'],
+    locationIds: ['loc-009'],
+    narrativeIds: [],
+    eventIds: [],
+    factionMentions: {
+      'faction-008': { sentiment: 0.7 }
+    },
+    structuredData: {
+      recordType: 'political_finance',
+      source: 'FEC',
+      filingId: 'FEC-2025-Q4-DNC',
+      filingType: 'pac_quarterly',
+      reportingPeriod: '2025-Q4',
+      filer: 'DNC Services Corp',
+      amount: 35200000,
+      currency: 'USD',
+      recipients: ['State Democratic Parties', 'Coordinated Campaigns'],
+      issuesLobbied: [],
+      flags: []
+    },
+    contentBlocks: [
+      { type: 'paragraph', content: 'DNC Q4 2025 filing shows $35.2M in receipts. Expenditures focused on state party support and voter registration programs. Notable increase in legal defense fund spending related to election challenges.' }
+    ],
+    highlights: [],
+    comments: []
+  },
+  {
+    id: 'doc-083',
+    documentType: 'political_finance',
+    repositoryId: 'repo-struct',
+    classification: 'U',
+    title: 'Federation for American Immigration Reform - Lobbying Disclosure',
+    publishedDate: '2026-01-12T00:00:00Z',
+    publisherId: 'pub-lda',
+    excerpt: 'FAIR lobbying disclosure on immigration policy, supporting administration enforcement priorities.',
+    personIds: [],
+    organizationIds: [],
+    locationIds: ['loc-009'],
+    narrativeIds: ['narr-006', 'narr-014'],
+    eventIds: [],
+    factionMentions: {
+      'faction-009': { sentiment: 0.6 },
+      'faction-013': { sentiment: 0.5 }
+    },
+    structuredData: {
+      recordType: 'political_finance',
+      source: 'Senate LDA',
+      filingId: 'LDA-2025-Q4-FAIR',
+      filingType: 'lobbying_report',
+      reportingPeriod: '2025-Q4',
+      filer: 'Federation for American Immigration Reform',
+      client: 'FAIR (self)',
+      amount: 520000,
+      currency: 'USD',
+      issuesLobbied: ['Immigration Enforcement', 'Border Security', 'Visa Policy'],
+      agenciesLobbied: ['DHS', 'DOJ', 'Senate Judiciary'],
+      lobbyists: ['Dan Stein', 'RJ Hauman'],
+      flags: ['immigration']
+    },
+    contentBlocks: [
+      { type: 'paragraph', content: 'FAIR Q4 2025 lobbying disclosure shows $520K spent on immigration policy advocacy. Key issues include support for increased enforcement, border wall funding, and visa program restrictions.' }
+    ],
+    highlights: [],
+    comments: []
+  },
+  {
+    id: 'doc-084',
+    documentType: 'political_finance',
+    repositoryId: 'repo-struct',
+    classification: 'U',
+    title: 'American Immigration Lawyers Association - Lobbying Disclosure',
+    publishedDate: '2026-01-11T00:00:00Z',
+    publisherId: 'pub-lda',
+    excerpt: 'AILA lobbying disclosure opposing administration immigration enforcement policies.',
+    personIds: [],
+    organizationIds: [],
+    locationIds: ['loc-009'],
+    narrativeIds: ['narr-006'],
+    eventIds: [],
+    factionMentions: {
+      'faction-008': { sentiment: 0.6 },
+      'faction-013': { sentiment: 0.4 }
+    },
+    structuredData: {
+      recordType: 'political_finance',
+      source: 'Senate LDA',
+      filingId: 'LDA-2025-Q4-AILA',
+      filingType: 'lobbying_report',
+      reportingPeriod: '2025-Q4',
+      filer: 'American Immigration Lawyers Association',
+      client: 'AILA (self)',
+      amount: 380000,
+      currency: 'USD',
+      issuesLobbied: ['Immigration Reform', 'Due Process', 'Asylum Policy'],
+      agenciesLobbied: ['DHS', 'DOJ', 'EOIR', 'Senate Judiciary'],
+      lobbyists: ['Benjamin Johnson', 'Greg Chen'],
+      flags: ['immigration']
+    },
+    contentBlocks: [
+      { type: 'paragraph', content: 'AILA Q4 2025 lobbying shows $380K spent advocating for immigration reform and due process protections. Key issues include asylum access, detention conditions, and immigration court backlogs.' }
+    ],
+    highlights: [],
+    comments: []
+  },
+  {
+    id: 'doc-085',
+    documentType: 'political_finance',
+    repositoryId: 'repo-struct',
+    classification: 'U',
+    title: 'Texas Border Coalition - State Lobbying Disclosure',
+    publishedDate: '2025-12-30T00:00:00Z',
+    publisherId: 'pub-analyst',
+    excerpt: 'Lobbying disclosure for coalition of Texas border county governments on federal funding.',
+    personIds: ['person-027'],
+    organizationIds: ['org-024'],
+    locationIds: ['loc-010', 'loc-011'],
+    narrativeIds: ['narr-014'],
+    eventIds: ['event-031'],
+    factionMentions: {
+      'faction-010': { sentiment: 0.5 }
+    },
+    structuredData: {
+      recordType: 'political_finance',
+      source: 'Texas Ethics Commission',
+      filingId: 'TEC-2025-Q4-TBC',
+      filingType: 'lobbying_report',
+      reportingPeriod: '2025-Q4',
+      filer: 'Texas Border Coalition',
+      client: 'Texas Border Counties',
+      amount: 280000,
+      currency: 'USD',
+      issuesLobbied: ['Border Infrastructure', 'Federal Reimbursement', 'National Guard Support'],
+      agenciesLobbied: ['Texas Legislature', 'Governor Office', 'DHS'],
+      lobbyists: ['Maria Santos', 'James Webb'],
+      flags: ['state_lobbying', 'border']
+    },
+    contentBlocks: [
+      { type: 'paragraph', content: 'Texas Border Coalition Q4 lobbying focused on securing federal reimbursement for state border operations and infrastructure investments. The coalition represents county governments along the Texas-Mexico border.' }
+    ],
+    highlights: [],
+    comments: []
+  },
+
+  // ============================================
+  // Structured Data - Event Attendance
+  // ============================================
+  {
+    id: 'doc-086',
+    documentType: 'event_attendance',
+    repositoryId: 'repo-struct',
+    classification: 'U',
+    title: 'Davos 2026 - Trump Administration Delegation',
+    publishedDate: '2026-01-22T00:00:00Z',
+    publisherId: 'pub-analyst',
+    excerpt: 'Event attendance record for US delegation at World Economic Forum Davos 2026.',
+    personIds: ['person-003', 'person-018', 'person-026'],
+    organizationIds: ['org-009', 'org-017', 'org-022'],
+    locationIds: ['loc-005'],
+    eventIds: ['event-006'],
+    narrativeIds: ['narr-005'],
+    factionMentions: {
+      'faction-009': { sentiment: 0.5 }
+    },
+    structuredData: {
+      recordType: 'event_attendance',
+      source: 'official_program',
+      confidence: 'confirmed',
+      eventName: 'World Economic Forum Annual Meeting 2026',
+      eventDate: '2026-01-20',
+      venue: 'Congress Centre, Davos',
+      attendee: 'US Delegation',
+      role: 'delegate',
+      representingOrg: 'United States Government',
+      observedWith: ['Emmanuel Macron - bilateral tensions', 'Ursula von der Leyen - trade discussions'],
+      topics: ['US-Europe Relations', 'Trade Policy', 'Greenland']
+    },
+    contentBlocks: [
+      { type: 'paragraph', content: 'US delegation attended WEF Davos 2026 amid tensions over Greenland. Key administration officials present included DHS Secretary Noem and HHS Secretary Kennedy. Bilateral meetings with European leaders were notably tense.' }
+    ],
+    highlights: [],
+    comments: []
+  },
+  {
+    id: 'doc-087',
+    documentType: 'event_attendance',
+    repositoryId: 'repo-struct',
+    classification: 'U',
+    title: 'Border Governors Summit - Austin 2025',
+    publishedDate: '2025-12-15T00:00:00Z',
+    publisherId: 'pub-analyst',
+    excerpt: 'Attendance record for border state governors coalition meeting in Austin.',
+    personIds: ['person-027', 'person-028'],
+    organizationIds: ['org-024', 'org-025'],
+    locationIds: ['loc-010'],
+    eventIds: ['event-031'],
+    narrativeIds: ['narr-014'],
+    factionMentions: {
+      'faction-009': { sentiment: 0.7 },
+      'faction-010': { sentiment: 0.6 }
+    },
+    structuredData: {
+      recordType: 'event_attendance',
+      source: 'media_report',
+      confidence: 'confirmed',
+      eventName: 'Border State Governors Summit',
+      eventDate: '2025-12-12',
+      venue: 'Texas State Capitol, Austin',
+      attendee: 'Governor Greg Abbott',
+      role: 'organizer',
+      representingOrg: 'State of Texas',
+      observedWith: ['Ron DeSantis - joint statement', 'Doug Ducey (video) - policy coordination'],
+      topics: ['Border Security', 'State Coordination', 'Federal Relations']
+    },
+    contentBlocks: [
+      { type: 'paragraph', content: 'Border governors summit in Austin brought together Republican governors to coordinate state-level border security measures. The meeting resulted in a joint statement calling for federal support and announcing coordinated enforcement efforts.' }
+    ],
+    highlights: [],
+    comments: []
+  },
+  {
+    id: 'doc-088',
+    documentType: 'event_attendance',
+    repositoryId: 'repo-struct',
+    classification: 'C',
+    title: 'Minneapolis Protest - ICE Enforcement Response',
+    publishedDate: '2026-01-10T00:00:00Z',
+    publisherId: 'pub-analyst',
+    excerpt: 'Attendance documentation for protest event where fatal shooting occurred.',
+    personIds: ['person-008', 'person-015'],
+    organizationIds: ['org-018'],
+    locationIds: ['loc-002'],
+    eventIds: ['event-013'],
+    narrativeIds: ['narr-006'],
+    factionMentions: {
+      'faction-003': { sentiment: 0.8 }
+    },
+    structuredData: {
+      recordType: 'event_attendance',
+      source: 'analyst_observation',
+      confidence: 'confirmed',
+      eventName: 'Minneapolis ICE Enforcement Protest',
+      eventDate: '2026-01-08',
+      venue: '9th and Hennepin, Minneapolis',
+      attendee: 'Renee Good',
+      role: 'organizer',
+      representingOrg: 'Community Coalition',
+      observedWith: ['Nekima Levy Armstrong - co-organizer', 'Approximately 200 protesters'],
+      topics: ['Immigration Enforcement', 'Civil Rights']
+    },
+    contentBlocks: [
+      { type: 'paragraph', content: 'Protest event at 9th and Hennepin in Minneapolis on January 8th. Approximately 200 participants gathered to protest ICE enforcement operations. Event ended in fatal shooting of organizer Renee Good by ICE agent.', portionMark: { classification: 'C', handling: '' } }
+    ],
+    highlights: [],
+    comments: []
+  },
+  {
+    id: 'doc-089',
+    documentType: 'event_attendance',
+    repositoryId: 'repo-struct',
+    classification: 'U',
+    title: 'Supreme Court Oral Arguments - Election Cases',
+    publishedDate: '2026-01-18T00:00:00Z',
+    publisherId: 'pub-analyst',
+    excerpt: 'Attendance record for Supreme Court oral arguments on election certification challenges.',
+    personIds: ['person-031', 'person-013'],
+    organizationIds: ['org-027', 'org-010'],
+    locationIds: ['loc-009'],
+    eventIds: ['event-037'],
+    narrativeIds: ['narr-011'],
+    factionMentions: {},
+    structuredData: {
+      recordType: 'event_attendance',
+      source: 'official_program',
+      confidence: 'confirmed',
+      eventName: 'SCOTUS Oral Arguments - Election Certification Cases',
+      eventDate: '2026-01-15',
+      venue: 'Supreme Court of the United States',
+      attendee: 'Attorney General Pam Bondi',
+      role: 'speaker',
+      representingOrg: 'Department of Justice',
+      observedWith: ['Chief Justice Roberts - presiding', 'State AG representatives'],
+      topics: ['Election Certification', 'Federalism', 'Constitutional Law']
+    },
+    contentBlocks: [
+      { type: 'paragraph', content: 'Supreme Court heard oral arguments in consolidated election certification cases. AG Bondi presented DOJ position supporting state authority over election processes. Multiple state AGs filed amicus briefs.' }
+    ],
+    highlights: [],
+    comments: []
+  },
+  {
+    id: 'doc-090',
+    documentType: 'event_attendance',
+    repositoryId: 'repo-struct',
+    classification: 'U',
+    title: 'Congressional Budget Hearing - Shutdown Crisis',
+    publishedDate: '2026-01-20T00:00:00Z',
+    publisherId: 'pub-analyst',
+    excerpt: 'Attendance record for Congressional hearing on budget negotiations during shutdown.',
+    personIds: ['person-032', 'person-033'],
+    organizationIds: ['org-020'],
+    locationIds: ['loc-004'],
+    eventIds: ['event-034'],
+    narrativeIds: ['narr-012'],
+    factionMentions: {
+      'faction-001': { sentiment: -0.3 },
+      'faction-008': { sentiment: -0.3 }
+    },
+    structuredData: {
+      recordType: 'event_attendance',
+      source: 'official_program',
+      confidence: 'confirmed',
+      eventName: 'House Appropriations Committee Emergency Hearing',
+      eventDate: '2026-01-18',
+      venue: 'Rayburn House Office Building',
+      attendee: 'Speaker Mike Johnson',
+      role: 'speaker',
+      representingOrg: 'US House of Representatives',
+      observedWith: ['Chuck Schumer - opposing testimony', 'OMB Director - administration position'],
+      topics: ['Federal Budget', 'Government Shutdown', 'Border Funding']
+    },
+    contentBlocks: [
+      { type: 'paragraph', content: 'Emergency appropriations hearing convened during government shutdown. Speaker Johnson and Senate Minority Leader Schumer presented opposing positions on border security funding requirements. Hearing lasted 6 hours without resolution.' }
+    ],
+    highlights: [],
+    comments: []
   }
 ];

@@ -28,12 +28,21 @@ export const publishers = [
   { id: 'pub-dept-ops', name: 'Operations Division', type: 'internal', color: null },
   { id: 'pub-dept-intel', name: 'Intelligence Analysis', type: 'internal', color: null },
   { id: 'pub-dept-cyber', name: 'Cyber Operations', type: 'internal', color: null },
-  { id: 'pub-dept-legal', name: 'Legal Affairs', type: 'internal', color: null }
+  { id: 'pub-dept-legal', name: 'Legal Affairs', type: 'internal', color: null },
+  
+  // Structured Data Sources
+  { id: 'pub-sec-edgar', name: 'SEC EDGAR', type: 'regulatory', color: '#1E40AF' },
+  { id: 'pub-opencorp', name: 'OpenCorporates', type: 'regulatory', color: '#7C3AED' },
+  { id: 'pub-fec', name: 'FEC', type: 'regulatory', color: '#DC2626' },
+  { id: 'pub-lda', name: 'Senate LDA', type: 'regulatory', color: '#0891B2' },
+  { id: 'pub-ofac', name: 'OFAC', type: 'regulatory', color: '#B91C1C' },
+  { id: 'pub-analyst', name: 'Analyst Input', type: 'internal', color: null }
 ];
 
 export const publisherCategories = [
   { id: 'social', name: 'Social Media', color: '#B07AA1' },
   { id: 'national_news', name: 'National News', color: '#4E79A7' },
   { id: 'international_news', name: 'International News', color: '#59A14F' },
-  { id: 'internal', name: 'Internal', color: '#6b7280' }
+  { id: 'internal', name: 'Internal', color: '#6b7280' },
+  { id: 'regulatory', name: 'Regulatory Filings', color: '#8B5CF6' }
 ];

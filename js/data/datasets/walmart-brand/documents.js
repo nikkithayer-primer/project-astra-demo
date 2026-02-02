@@ -2645,5 +2645,729 @@ export const documents = [
     metrics: { likes: 8920, comments: 2450, platform: 'reddit' },
     highlights: [],
     comments: []
+  },
+
+  // ============================================
+  // Structured Data - Corporate Records
+  // ============================================
+  {
+    id: 'doc-071',
+    documentType: 'corporate_record',
+    repositoryId: 'repo-struct',
+    classification: 'U',
+    title: 'Walmart Inc. - SEC 10-K Annual Filing 2025',
+    publishedDate: '2026-01-15T00:00:00Z',
+    publisherId: 'pub-sec-edgar',
+    excerpt: 'Annual report filing showing Walmart Inc. corporate structure, major subsidiaries, and beneficial ownership.',
+    personIds: ['person-001', 'person-002', 'person-024'],
+    organizationIds: ['org-001', 'org-019'],
+    locationIds: ['loc-001'],
+    narrativeIds: [],
+    eventIds: [],
+    factionMentions: {},
+    structuredData: {
+      recordType: 'corporate_record',
+      source: 'SEC EDGAR',
+      companyName: 'Walmart Inc.',
+      jurisdiction: 'Delaware',
+      registrationNumber: '0000104169',
+      incorporationDate: '1969-10-31',
+      status: 'active',
+      entityType: 'corporation',
+      registeredAddress: '702 SW 8th Street, Bentonville, AR 72716',
+      beneficialOwners: ['Walton Family Holdings (48%)', 'Public Float (52%)'],
+      directors: ['Doug McMillon', 'John Furner', 'John Rainey'],
+      flags: []
+    },
+    contentBlocks: [
+      { type: 'paragraph', content: 'Walmart Inc. annual SEC filing for fiscal year 2025. The company operates approximately 10,500 stores globally with revenues of $648 billion. Major subsidiaries include Walmart Health, Sam\'s Club, and Flipkart (India operations).' }
+    ],
+    highlights: [],
+    comments: []
+  },
+  {
+    id: 'doc-072',
+    documentType: 'corporate_record',
+    repositoryId: 'repo-struct',
+    classification: 'U',
+    title: 'Great Value Foods LLC - Delaware Registry',
+    publishedDate: '2025-08-20T00:00:00Z',
+    publisherId: 'pub-opencorp',
+    excerpt: 'Corporate registry record for Great Value Foods LLC, the private label manufacturing subsidiary.',
+    personIds: [],
+    organizationIds: ['org-001'],
+    locationIds: ['loc-001'],
+    narrativeIds: ['narr-004', 'narr-008'],
+    eventIds: [],
+    factionMentions: {},
+    structuredData: {
+      recordType: 'corporate_record',
+      source: 'Delaware Division of Corporations',
+      companyName: 'Great Value Foods LLC',
+      jurisdiction: 'Delaware',
+      registrationNumber: 'DE-LLC-4521879',
+      incorporationDate: '2008-03-15',
+      status: 'active',
+      entityType: 'llc',
+      registeredAddress: '702 SW 8th Street, Bentonville, AR 72716',
+      beneficialOwners: ['Walmart Inc. (100%)'],
+      directors: [],
+      flags: ['subsidiary']
+    },
+    contentBlocks: [
+      { type: 'paragraph', content: 'Great Value Foods LLC is a wholly-owned subsidiary of Walmart Inc. responsible for coordinating private label food manufacturing. The entity serves as the contracting party for third-party food suppliers.' }
+    ],
+    highlights: [],
+    comments: []
+  },
+  {
+    id: 'doc-073',
+    documentType: 'corporate_record',
+    repositoryId: 'repo-struct',
+    classification: 'U',
+    title: 'Greenfield Produce Co. - Supplier Investigation',
+    publishedDate: '2025-11-10T00:00:00Z',
+    publisherId: 'pub-opencorp',
+    excerpt: 'Corporate records for Greenfield Produce Co., a Great Value supplier under investigation for labor practices.',
+    personIds: [],
+    organizationIds: ['org-001'],
+    locationIds: [],
+    narrativeIds: ['narr-008'],
+    eventIds: ['event-015', 'event-016'],
+    factionMentions: {
+      'faction-002': { sentiment: -0.6 }
+    },
+    structuredData: {
+      recordType: 'corporate_record',
+      source: 'OpenCorporates',
+      companyName: 'Greenfield Produce Co.',
+      jurisdiction: 'California',
+      registrationNumber: 'CA-C4892156',
+      incorporationDate: '2015-06-22',
+      status: 'active',
+      entityType: 'corporation',
+      registeredAddress: '1200 Agricultural Way, Salinas, CA 93901',
+      beneficialOwners: ['Rodriguez Family Trust (60%)', 'AgriVest Partners (40%)'],
+      directors: ['Maria Rodriguez', 'James Chen'],
+      flags: ['under_investigation']
+    },
+    contentBlocks: [
+      { type: 'paragraph', content: 'Greenfield Produce Co. supplies frozen vegetables to Walmart\'s Great Value brand. The company is currently under FTC investigation following reports of labor violations at processing facilities.' }
+    ],
+    highlights: [],
+    comments: []
+  },
+  {
+    id: 'doc-074',
+    documentType: 'corporate_record',
+    repositoryId: 'repo-struct',
+    classification: 'U',
+    title: 'Walmart Health LLC - Healthcare Subsidiary Filing',
+    publishedDate: '2025-12-01T00:00:00Z',
+    publisherId: 'pub-sec-edgar',
+    excerpt: 'Corporate filing for Walmart Health LLC showing expansion into rural healthcare markets.',
+    personIds: ['person-001'],
+    organizationIds: ['org-001', 'org-019'],
+    locationIds: ['loc-009', 'loc-010'],
+    narrativeIds: ['narr-010'],
+    eventIds: ['event-018', 'event-021'],
+    factionMentions: {
+      'faction-001': { sentiment: 0.5 }
+    },
+    structuredData: {
+      recordType: 'corporate_record',
+      source: 'SEC EDGAR',
+      companyName: 'Walmart Health LLC',
+      jurisdiction: 'Delaware',
+      registrationNumber: 'DE-LLC-7892341',
+      incorporationDate: '2019-09-01',
+      status: 'active',
+      entityType: 'llc',
+      registeredAddress: '702 SW 8th Street, Bentonville, AR 72716',
+      beneficialOwners: ['Walmart Inc. (100%)'],
+      directors: [],
+      flags: ['healthcare', 'expansion']
+    },
+    contentBlocks: [
+      { type: 'paragraph', content: 'Walmart Health LLC operates healthcare clinics within Walmart stores. Filing shows planned expansion to 75 additional rural locations in 2026, targeting communities that have lost local hospital access.' }
+    ],
+    highlights: [],
+    comments: []
+  },
+  {
+    id: 'doc-075',
+    documentType: 'corporate_record',
+    repositoryId: 'repo-struct',
+    classification: 'U',
+    title: 'Target Corporation - Competitor Analysis Record',
+    publishedDate: '2026-01-10T00:00:00Z',
+    publisherId: 'pub-sec-edgar',
+    excerpt: 'SEC filing for Target Corporation, primary Walmart competitor in general merchandise.',
+    personIds: [],
+    organizationIds: ['org-003'],
+    locationIds: [],
+    narrativeIds: [],
+    eventIds: [],
+    factionMentions: {},
+    structuredData: {
+      recordType: 'corporate_record',
+      source: 'SEC EDGAR',
+      companyName: 'Target Corporation',
+      jurisdiction: 'Minnesota',
+      registrationNumber: '0000027419',
+      incorporationDate: '1902-01-01',
+      status: 'active',
+      entityType: 'corporation',
+      registeredAddress: '1000 Nicollet Mall, Minneapolis, MN 55403',
+      beneficialOwners: ['Public Float (100%)'],
+      directors: ['Brian Cornell', 'Monica Lozano'],
+      flags: ['competitor']
+    },
+    contentBlocks: [
+      { type: 'paragraph', content: 'Target Corporation SEC filing showing FY2025 performance. Revenue of $109 billion with emphasis on urban and suburban markets. Company maintains different strategy than Walmart with focus on higher-margin merchandise.' }
+    ],
+    highlights: [],
+    comments: []
+  },
+  {
+    id: 'doc-076',
+    documentType: 'corporate_record',
+    repositoryId: 'repo-struct',
+    classification: 'U',
+    title: 'Dollar General Corporation - Competitor Filing',
+    publishedDate: '2025-11-15T00:00:00Z',
+    publisherId: 'pub-sec-edgar',
+    excerpt: 'Corporate filing for Dollar General, competitor in rural discount retail markets.',
+    personIds: [],
+    organizationIds: ['org-020'],
+    locationIds: ['loc-009'],
+    narrativeIds: ['narr-010'],
+    eventIds: [],
+    factionMentions: {},
+    structuredData: {
+      recordType: 'corporate_record',
+      source: 'SEC EDGAR',
+      companyName: 'Dollar General Corporation',
+      jurisdiction: 'Tennessee',
+      registrationNumber: '0000029534',
+      incorporationDate: '1939-01-01',
+      status: 'active',
+      entityType: 'corporation',
+      registeredAddress: '100 Mission Ridge, Goodlettsville, TN 37072',
+      beneficialOwners: ['Public Float (100%)'],
+      directors: ['Todd Vasos', 'Michael Calbert'],
+      flags: ['competitor', 'rural_retail']
+    },
+    contentBlocks: [
+      { type: 'paragraph', content: 'Dollar General operates 19,000+ stores primarily in rural areas. The company directly competes with Walmart in underserved markets and has faced similar scrutiny over impact on rural communities and small businesses.' }
+    ],
+    highlights: [],
+    comments: []
+  },
+  {
+    id: 'doc-077',
+    documentType: 'corporate_record',
+    repositoryId: 'repo-struct',
+    classification: 'U',
+    title: 'Merton & Associates - Law Firm Registry',
+    publishedDate: '2025-06-01T00:00:00Z',
+    publisherId: 'pub-opencorp',
+    excerpt: 'Corporate registry for Merton & Associates, the law firm representing plaintiffs in Walmart class action.',
+    personIds: ['person-008'],
+    organizationIds: ['org-002'],
+    locationIds: ['loc-002'],
+    narrativeIds: ['narr-001'],
+    eventIds: ['event-002'],
+    factionMentions: {},
+    structuredData: {
+      recordType: 'corporate_record',
+      source: 'Texas Secretary of State',
+      companyName: 'Merton & Associates PLLC',
+      jurisdiction: 'Texas',
+      registrationNumber: 'TX-PLLC-0812456',
+      incorporationDate: '2012-04-15',
+      status: 'active',
+      entityType: 'partnership',
+      registeredAddress: '1100 Louisiana Street, Houston, TX 77002',
+      beneficialOwners: ['Thomas Merton (Managing Partner)'],
+      directors: ['Thomas Merton', 'Sarah Klein', 'David Park'],
+      flags: ['law_firm', 'class_action']
+    },
+    contentBlocks: [
+      { type: 'paragraph', content: 'Merton & Associates is the lead counsel for the class action lawsuit against Walmart regarding self-checkout theft accusations. The firm specializes in consumer protection and class action litigation.' }
+    ],
+    highlights: [],
+    comments: []
+  },
+  {
+    id: 'doc-078',
+    documentType: 'corporate_record',
+    repositoryId: 'repo-struct',
+    classification: 'U',
+    title: 'United Food Commercial Workers - Union Registration',
+    publishedDate: '2025-10-20T00:00:00Z',
+    publisherId: 'pub-opencorp',
+    excerpt: 'Organizational registration for UFCW Local 1996, the union organizing Walmart workers.',
+    personIds: [],
+    organizationIds: ['org-016'],
+    locationIds: ['loc-003'],
+    narrativeIds: ['narr-009'],
+    eventIds: ['event-020'],
+    factionMentions: {
+      'faction-002': { sentiment: 0.8 },
+      'faction-003': { sentiment: 0.7 }
+    },
+    structuredData: {
+      recordType: 'corporate_record',
+      source: 'Department of Labor',
+      companyName: 'UFCW Local 1996',
+      jurisdiction: 'Georgia',
+      registrationNumber: 'DOL-LM2-521896',
+      incorporationDate: '1979-01-01',
+      status: 'active',
+      entityType: 'labor_organization',
+      registeredAddress: '1850 Howell Mill Road NW, Atlanta, GA 30318',
+      beneficialOwners: [],
+      directors: ['Steve Lomax', 'Maria Gonzalez'],
+      flags: ['labor_union']
+    },
+    contentBlocks: [
+      { type: 'paragraph', content: 'UFCW Local 1996 successfully organized workers at Walmart\'s Atlanta fulfillment center, the first successful union certification at a Walmart facility. The local represents approximately 250 Walmart workers.' }
+    ],
+    highlights: [],
+    comments: []
+  },
+  {
+    id: 'doc-079',
+    documentType: 'corporate_record',
+    repositoryId: 'repo-struct',
+    classification: 'U',
+    title: 'CVS Health Corporation - Competitor Healthcare Filing',
+    publishedDate: '2025-12-15T00:00:00Z',
+    publisherId: 'pub-sec-edgar',
+    excerpt: 'SEC filing for CVS Health, competitor in pharmacy and retail healthcare services.',
+    personIds: [],
+    organizationIds: ['org-021'],
+    locationIds: [],
+    narrativeIds: ['narr-010'],
+    eventIds: [],
+    factionMentions: {},
+    structuredData: {
+      recordType: 'corporate_record',
+      source: 'SEC EDGAR',
+      companyName: 'CVS Health Corporation',
+      jurisdiction: 'Delaware',
+      registrationNumber: '0000064803',
+      incorporationDate: '1963-01-01',
+      status: 'active',
+      entityType: 'corporation',
+      registeredAddress: '1 CVS Drive, Woonsocket, RI 02895',
+      beneficialOwners: ['Public Float (100%)'],
+      directors: ['Karen Lynch', 'Roger Farah'],
+      flags: ['competitor', 'healthcare']
+    },
+    contentBlocks: [
+      { type: 'paragraph', content: 'CVS Health operates MinuteClinic locations that compete with Walmart Health. The company has significant overlap in rural pharmacy services and is a key competitor in the retail healthcare expansion space.' }
+    ],
+    highlights: [],
+    comments: []
+  },
+  {
+    id: 'doc-080',
+    documentType: 'corporate_record',
+    repositoryId: 'repo-struct',
+    classification: 'U',
+    title: 'Instacart Holdings - Delivery Partner Filing',
+    publishedDate: '2025-09-01T00:00:00Z',
+    publisherId: 'pub-sec-edgar',
+    excerpt: 'Corporate filing for Instacart, Walmart delivery services partner and competitor.',
+    personIds: [],
+    organizationIds: ['org-022'],
+    locationIds: [],
+    narrativeIds: ['narr-011'],
+    eventIds: [],
+    factionMentions: {},
+    structuredData: {
+      recordType: 'corporate_record',
+      source: 'SEC EDGAR',
+      companyName: 'Maplebear Inc. (d/b/a Instacart)',
+      jurisdiction: 'Delaware',
+      registrationNumber: '0001579091',
+      incorporationDate: '2012-06-01',
+      status: 'active',
+      entityType: 'corporation',
+      registeredAddress: '50 Beale Street, San Francisco, CA 94105',
+      beneficialOwners: ['Public Float (100%)'],
+      directors: ['Fidji Simo', 'Frank Slootman'],
+      flags: ['delivery_partner']
+    },
+    contentBlocks: [
+      { type: 'paragraph', content: 'Instacart provides grocery delivery services for multiple retailers including Walmart competitors. The company\'s network of gig workers has been cited in discussions about Walmart\'s own delivery workforce challenges.' }
+    ],
+    highlights: [],
+    comments: []
+  },
+
+  // ============================================
+  // Structured Data - Political Finance
+  // ============================================
+  {
+    id: 'doc-081',
+    documentType: 'political_finance',
+    repositoryId: 'repo-struct',
+    classification: 'U',
+    title: 'Walmart Inc. PAC - Q4 2025 FEC Filing',
+    publishedDate: '2026-01-05T00:00:00Z',
+    publisherId: 'pub-fec',
+    excerpt: 'FEC quarterly filing for Walmart Inc. Political Action Committee showing $2.3M in contributions.',
+    personIds: [],
+    organizationIds: ['org-001'],
+    locationIds: ['loc-006'],
+    narrativeIds: [],
+    eventIds: [],
+    factionMentions: {},
+    structuredData: {
+      recordType: 'political_finance',
+      source: 'FEC',
+      filingId: 'FEC-2025-Q4-WMT-PAC',
+      filingType: 'pac_quarterly',
+      reportingPeriod: '2025-Q4',
+      filer: 'Walmart Inc. Political Action Committee',
+      amount: 2300000,
+      currency: 'USD',
+      recipients: ['Various Congressional candidates'],
+      issuesLobbied: [],
+      flags: []
+    },
+    contentBlocks: [
+      { type: 'paragraph', content: 'Walmart Inc. PAC Q4 2025 filing shows $2.3M in disbursements to congressional candidates. Contributions were split approximately 55% Republican, 45% Democrat, focusing on members of Commerce and Labor committees.' }
+    ],
+    highlights: [],
+    comments: []
+  },
+  {
+    id: 'doc-082',
+    documentType: 'political_finance',
+    repositoryId: 'repo-struct',
+    classification: 'U',
+    title: 'Retail Industry Leaders Association - Lobbying Disclosure',
+    publishedDate: '2026-01-10T00:00:00Z',
+    publisherId: 'pub-lda',
+    excerpt: 'Senate LDA filing for RILA lobbying on labor and supply chain issues, with Walmart as major member.',
+    personIds: [],
+    organizationIds: ['org-001'],
+    locationIds: ['loc-006'],
+    narrativeIds: ['narr-009'],
+    eventIds: [],
+    factionMentions: {
+      'faction-001': { sentiment: 0.3 }
+    },
+    structuredData: {
+      recordType: 'political_finance',
+      source: 'Senate LDA',
+      filingId: 'LDA-2025-Q4-RILA',
+      filingType: 'lobbying_report',
+      reportingPeriod: '2025-Q4',
+      filer: 'Retail Industry Leaders Association',
+      client: 'Retail Industry Leaders Association (self)',
+      amount: 850000,
+      currency: 'USD',
+      issuesLobbied: ['Labor Law', 'PRO Act Opposition', 'Supply Chain'],
+      agenciesLobbied: ['Senate', 'House', 'DOL'],
+      lobbyists: ['Michael Hanson', 'Jennifer Walsh'],
+      flags: []
+    },
+    contentBlocks: [
+      { type: 'paragraph', content: 'RILA Q4 2025 lobbying disclosure shows $850K spent on lobbying activities. Key issues include opposition to PRO Act provisions and advocacy for supply chain flexibility. Walmart is RILA\'s largest member company.' }
+    ],
+    highlights: [],
+    comments: []
+  },
+  {
+    id: 'doc-083',
+    documentType: 'political_finance',
+    repositoryId: 'repo-struct',
+    classification: 'U',
+    title: 'Walmart Government Relations - FDA Lobbying Q4',
+    publishedDate: '2026-01-08T00:00:00Z',
+    publisherId: 'pub-lda',
+    excerpt: 'Lobbying disclosure for Walmart\'s direct engagement with FDA on food safety regulations.',
+    personIds: ['person-006'],
+    organizationIds: ['org-001', 'org-007'],
+    locationIds: ['loc-006', 'loc-007'],
+    narrativeIds: ['narr-004'],
+    eventIds: ['event-008', 'event-009'],
+    factionMentions: {},
+    structuredData: {
+      recordType: 'political_finance',
+      source: 'Senate LDA',
+      filingId: 'LDA-2025-Q4-WMT-FDA',
+      filingType: 'lobbying_report',
+      reportingPeriod: '2025-Q4',
+      filer: 'Walmart Inc.',
+      client: 'Walmart Inc. (self)',
+      amount: 420000,
+      currency: 'USD',
+      issuesLobbied: ['Food Safety', 'FDA Regulations', 'Product Recall Procedures'],
+      agenciesLobbied: ['FDA', 'House Energy and Commerce'],
+      lobbyists: ['Robert Chen', 'Amanda Foster'],
+      flags: ['food_safety']
+    },
+    contentBlocks: [
+      { type: 'paragraph', content: 'Walmart\'s Q4 lobbying on FDA issues totaled $420K, focusing on food safety regulations and recall procedures following the Great Value product recalls. Lobbying included direct engagement with FDA leadership and Congressional oversight committees.' }
+    ],
+    highlights: [],
+    comments: []
+  },
+  {
+    id: 'doc-084',
+    documentType: 'political_finance',
+    repositoryId: 'repo-struct',
+    classification: 'U',
+    title: 'FTC Commissioner Campaign Contributions Analysis',
+    publishedDate: '2025-12-20T00:00:00Z',
+    publisherId: 'pub-fec',
+    excerpt: 'Analysis of campaign contributions to legislators involved in FTC oversight, relevant to Walmart FTC inquiry.',
+    personIds: ['person-022'],
+    organizationIds: ['org-001', 'org-018'],
+    locationIds: ['loc-006'],
+    narrativeIds: ['narr-008'],
+    eventIds: ['event-016'],
+    factionMentions: {},
+    structuredData: {
+      recordType: 'political_finance',
+      source: 'FEC',
+      filingId: 'FEC-ANALYSIS-2025-FTC',
+      filingType: 'contribution',
+      reportingPeriod: '2024-2025',
+      filer: 'Walmart Inc. PAC',
+      amount: 175000,
+      currency: 'USD',
+      recipients: ['Senate Commerce Committee Members', 'House Judiciary Committee Members'],
+      issuesLobbied: [],
+      flags: ['ftc_oversight']
+    },
+    contentBlocks: [
+      { type: 'paragraph', content: 'Walmart PAC contributed $175K to members of Congressional committees with FTC oversight during the period when FTC opened inquiry into supplier practices. Contributions were distributed to both parties.' }
+    ],
+    highlights: [],
+    comments: []
+  },
+  {
+    id: 'doc-085',
+    documentType: 'political_finance',
+    repositoryId: 'repo-struct',
+    classification: 'U',
+    title: 'UFCW COPE - Pro-Labor PAC Filing',
+    publishedDate: '2026-01-12T00:00:00Z',
+    publisherId: 'pub-fec',
+    excerpt: 'FEC filing for UFCW political action committee supporting pro-labor candidates.',
+    personIds: [],
+    organizationIds: ['org-016'],
+    locationIds: ['loc-006'],
+    narrativeIds: ['narr-009'],
+    eventIds: [],
+    factionMentions: {
+      'faction-002': { sentiment: 0.8 },
+      'faction-003': { sentiment: 0.7 }
+    },
+    structuredData: {
+      recordType: 'political_finance',
+      source: 'FEC',
+      filingId: 'FEC-2025-Q4-UFCW-COPE',
+      filingType: 'pac_quarterly',
+      reportingPeriod: '2025-Q4',
+      filer: 'UFCW Active Ballot Club',
+      amount: 1850000,
+      currency: 'USD',
+      recipients: ['Pro-labor Congressional candidates'],
+      issuesLobbied: [],
+      flags: ['labor_pac']
+    },
+    contentBlocks: [
+      { type: 'paragraph', content: 'UFCW\'s political action committee reported $1.85M in Q4 2025 disbursements, primarily to candidates supporting labor rights legislation. The PAC has increased spending following the successful Walmart Atlanta unionization.' }
+    ],
+    highlights: [],
+    comments: []
+  },
+  {
+    id: 'doc-086',
+    documentType: 'political_finance',
+    repositoryId: 'repo-struct',
+    classification: 'U',
+    title: 'Rural Healthcare Advocacy Coalition - Lobbying Filing',
+    publishedDate: '2025-12-15T00:00:00Z',
+    publisherId: 'pub-lda',
+    excerpt: 'Lobbying disclosure for coalition including Walmart Health advocating for rural healthcare policy.',
+    personIds: [],
+    organizationIds: ['org-001', 'org-019'],
+    locationIds: ['loc-006', 'loc-009'],
+    narrativeIds: ['narr-010'],
+    eventIds: ['event-018'],
+    factionMentions: {
+      'faction-001': { sentiment: 0.4 }
+    },
+    structuredData: {
+      recordType: 'political_finance',
+      source: 'Senate LDA',
+      filingId: 'LDA-2025-Q4-RHAC',
+      filingType: 'lobbying_report',
+      reportingPeriod: '2025-Q4',
+      filer: 'Rural Healthcare Advocacy Coalition',
+      client: 'Rural Healthcare Advocacy Coalition',
+      amount: 320000,
+      currency: 'USD',
+      issuesLobbied: ['Rural Healthcare Access', 'Telehealth', 'Medicare Reimbursement'],
+      agenciesLobbied: ['Senate HELP Committee', 'HHS', 'CMS'],
+      lobbyists: ['Patricia Moore', 'James Wilson'],
+      flags: ['healthcare']
+    },
+    contentBlocks: [
+      { type: 'paragraph', content: 'The Rural Healthcare Advocacy Coalition, which includes Walmart Health among its members, spent $320K lobbying for policies supporting rural healthcare access. Key issues include telehealth reimbursement and support for retail clinic models.' }
+    ],
+    highlights: [],
+    comments: []
+  },
+  {
+    id: 'doc-087',
+    documentType: 'political_finance',
+    repositoryId: 'repo-struct',
+    classification: 'U',
+    title: 'National Retail Federation - Trade Policy Lobbying',
+    publishedDate: '2025-11-30T00:00:00Z',
+    publisherId: 'pub-lda',
+    excerpt: 'NRF lobbying disclosure on tariffs and trade policy affecting retail supply chains.',
+    personIds: [],
+    organizationIds: ['org-001', 'org-003', 'org-004'],
+    locationIds: ['loc-006'],
+    narrativeIds: [],
+    eventIds: [],
+    factionMentions: {},
+    structuredData: {
+      recordType: 'political_finance',
+      source: 'Senate LDA',
+      filingId: 'LDA-2025-Q3-NRF',
+      filingType: 'lobbying_report',
+      reportingPeriod: '2025-Q3',
+      filer: 'National Retail Federation',
+      client: 'National Retail Federation',
+      amount: 1200000,
+      currency: 'USD',
+      issuesLobbied: ['Tariffs', 'Trade Policy', 'Supply Chain', 'Import Regulations'],
+      agenciesLobbied: ['USTR', 'Commerce', 'Senate Finance', 'House Ways and Means'],
+      lobbyists: ['David French', 'Stephanie Martz'],
+      flags: ['trade']
+    },
+    contentBlocks: [
+      { type: 'paragraph', content: 'NRF\'s Q3 2025 lobbying focused heavily on trade policy with $1.2M spent. Walmart, Target, and Amazon are major NRF members. Key issues included tariff policy on consumer goods and supply chain regulatory relief.' }
+    ],
+    highlights: [],
+    comments: []
+  },
+  {
+    id: 'doc-088',
+    documentType: 'political_finance',
+    repositoryId: 'repo-struct',
+    classification: 'U',
+    title: 'Consumer Safety Coalition - Product Safety Lobbying',
+    publishedDate: '2025-12-05T00:00:00Z',
+    publisherId: 'pub-lda',
+    excerpt: 'Consumer advocacy coalition lobbying on product safety regulations following retail recalls.',
+    personIds: [],
+    organizationIds: ['org-007'],
+    locationIds: ['loc-006'],
+    narrativeIds: ['narr-004'],
+    eventIds: ['event-008'],
+    factionMentions: {
+      'faction-002': { sentiment: 0.5 }
+    },
+    structuredData: {
+      recordType: 'political_finance',
+      source: 'Senate LDA',
+      filingId: 'LDA-2025-Q4-CSC',
+      filingType: 'lobbying_report',
+      reportingPeriod: '2025-Q4',
+      filer: 'Consumer Safety Coalition',
+      client: 'Consumer Safety Coalition',
+      amount: 180000,
+      currency: 'USD',
+      issuesLobbied: ['Product Safety', 'FDA Authority', 'Recall Procedures'],
+      agenciesLobbied: ['FDA', 'CPSC', 'Senate HELP Committee'],
+      lobbyists: ['Elizabeth Warren campaign alum', 'Nancy Chen'],
+      flags: ['consumer_protection']
+    },
+    contentBlocks: [
+      { type: 'paragraph', content: 'Consumer advocacy groups spent $180K lobbying for stronger product safety regulations following the Great Value recalls. Lobbying focused on expanding FDA authority and improving recall notification procedures.' }
+    ],
+    highlights: [],
+    comments: []
+  },
+  {
+    id: 'doc-089',
+    documentType: 'political_finance',
+    repositoryId: 'repo-struct',
+    classification: 'U',
+    title: 'Walmart Executives - Individual Political Contributions',
+    publishedDate: '2025-12-31T00:00:00Z',
+    publisherId: 'pub-fec',
+    excerpt: 'FEC records of individual contributions from Walmart executives to political campaigns.',
+    personIds: ['person-001', 'person-002', 'person-024'],
+    organizationIds: ['org-001'],
+    locationIds: [],
+    narrativeIds: [],
+    eventIds: [],
+    factionMentions: {},
+    structuredData: {
+      recordType: 'political_finance',
+      source: 'FEC',
+      filingId: 'FEC-INDIV-2025-WMT-EXEC',
+      filingType: 'contribution',
+      reportingPeriod: '2025',
+      filer: 'Individual Contributors (Walmart Executives)',
+      amount: 425000,
+      currency: 'USD',
+      recipients: ['Various candidates and PACs'],
+      issuesLobbied: [],
+      flags: ['executive_contributions']
+    },
+    contentBlocks: [
+      { type: 'paragraph', content: 'Walmart executives made $425K in individual political contributions during 2025. CEO Doug McMillon, President John Furner, and CFO John Rainey were among the largest contributors. Contributions showed bipartisan distribution.' }
+    ],
+    highlights: [],
+    comments: []
+  },
+  {
+    id: 'doc-090',
+    documentType: 'political_finance',
+    repositoryId: 'repo-struct',
+    classification: 'U',
+    title: 'Arkansas Congressional Delegation - Walmart District Contributions',
+    publishedDate: '2026-01-02T00:00:00Z',
+    publisherId: 'pub-fec',
+    excerpt: 'Analysis of Walmart PAC contributions to Arkansas delegation, company\'s home state representatives.',
+    personIds: [],
+    organizationIds: ['org-001'],
+    locationIds: ['loc-001'],
+    narrativeIds: [],
+    eventIds: [],
+    factionMentions: {},
+    structuredData: {
+      recordType: 'political_finance',
+      source: 'FEC',
+      filingId: 'FEC-AR-DELEGATION-2025',
+      filingType: 'contribution',
+      reportingPeriod: '2024-2025',
+      filer: 'Walmart Inc. PAC',
+      amount: 285000,
+      currency: 'USD',
+      recipients: ['Sen. John Boozman', 'Sen. Tom Cotton', 'Rep. Steve Womack', 'Rep. Rick Crawford'],
+      issuesLobbied: [],
+      flags: ['home_state']
+    },
+    contentBlocks: [
+      { type: 'paragraph', content: 'Walmart PAC contributed $285K to Arkansas Congressional delegation over the 2024-2025 cycle. As the state\'s largest employer, Walmart maintains strong relationships with Arkansas representatives on both sides of the aisle.' }
+    ],
+    highlights: [],
+    comments: []
   }
 ];

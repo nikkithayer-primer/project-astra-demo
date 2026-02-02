@@ -350,6 +350,55 @@
 }
 
 /* ============================================
+   AI Chat - Tool Indicators & Response Formatting
+   ============================================ */
+
+.chat-tool-indicator {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  color: var(--text-muted);
+  font-style: italic;
+}
+
+.chat-tool-indicator::before {
+  content: '';
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  background: var(--accent-primary);
+  border-radius: 50%;
+  animation: pulse 1s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 0.4; }
+  50% { opacity: 1; }
+}
+
+.chat-error {
+  color: var(--sentiment-negative, #E57373);
+  font-size: 13px;
+}
+
+.chat-entity-link {
+  color: var(--accent-primary);
+  text-decoration: none;
+  font-family: var(--font-mono, monospace);
+  font-size: 0.9em;
+  padding: 1px 4px;
+  background: var(--bg-tertiary);
+  border-radius: 3px;
+  transition: background 0.15s ease;
+}
+
+.chat-entity-link:hover {
+  background: var(--accent-muted);
+  text-decoration: underline;
+}
+
+/* ============================================
    Adjust content wrapper when chat is open
    ============================================ */
 

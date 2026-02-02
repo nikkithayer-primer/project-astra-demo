@@ -27,12 +27,21 @@ export const publishers = [
   { id: 'pub-tiktok', name: 'TikTok', type: 'social', color: '#00F2EA' },
   { id: 'pub-reddit', name: 'Reddit', type: 'social', color: '#FF4500' },
   { id: 'pub-facebook', name: 'Facebook', type: 'social', color: '#1877F2' },
-  { id: 'pub-instagram', name: 'Instagram', type: 'social', color: '#E4405F' }
+  { id: 'pub-instagram', name: 'Instagram', type: 'social', color: '#E4405F' },
+  
+  // Structured Data Sources
+  { id: 'pub-sec-edgar', name: 'SEC EDGAR', type: 'regulatory', color: '#1E40AF' },
+  { id: 'pub-opencorp', name: 'OpenCorporates', type: 'regulatory', color: '#7C3AED' },
+  { id: 'pub-fec', name: 'FEC', type: 'regulatory', color: '#DC2626' },
+  { id: 'pub-lda', name: 'Senate LDA', type: 'regulatory', color: '#0891B2' },
+  { id: 'pub-analyst', name: 'Analyst Input', type: 'internal', color: null }
 ];
 
 export const publisherCategories = [
   { id: 'consumer_review', name: 'Consumer Reviews', color: '#59A14F' },
   { id: 'news', name: 'News', color: '#E15759' },
   { id: 'business_news', name: 'Business News', color: '#76B7B2' },
-  { id: 'social', name: 'Social Media', color: '#B07AA1' }
+  { id: 'social', name: 'Social Media', color: '#B07AA1' },
+  { id: 'regulatory', name: 'Regulatory Filings', color: '#8B5CF6' },
+  { id: 'internal', name: 'Internal', color: '#6B7280' }
 ];
