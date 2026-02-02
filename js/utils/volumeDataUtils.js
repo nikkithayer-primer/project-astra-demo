@@ -1,12 +1,15 @@
 /**
  * volumeDataUtils.js
  * Shared utilities for aggregating document volume data by publisher and faction
- * Used across multiple detail views to build chart data
+ * 
+ * NOTE: Most views now use DataService.getVolumeDataForDocuments() instead of these utilities.
+ * aggregateFactionSentiment is still used for sentiment calculations.
  */
 
 import { DataService } from '../data/DataService.js';
 
 /**
+ * @deprecated Use DataService.getVolumeDataForDocuments(docIds).byPublisher instead
  * Aggregate documents by publisher to build volume chart data
  * @param {Array} documents - Array of document objects with publishedDate and publisherId
  * @returns {Object|null} - { dates, series, publishers } or null if no data
@@ -46,6 +49,7 @@ export function aggregatePublisherVolumeData(documents) {
 }
 
 /**
+ * @deprecated Use DataService.getVolumeDataForDocuments(docIds).byFaction instead
  * Aggregate documents by faction to build volume chart data
  * @param {Array} documents - Array of document objects with publishedDate and factionMentions
  * @returns {Object|null} - { dates, series, factions } or null if no data

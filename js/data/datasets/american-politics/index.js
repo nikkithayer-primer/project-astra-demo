@@ -56,6 +56,37 @@ export const workspaces = [
   }
 ];
 
+// Projects - manually curated document collections for research and reporting
+export const projects = [
+  {
+    id: 'project-001',
+    name: 'Q1 Immigration Policy Brief',
+    description: 'Curated documents for the quarterly immigration policy analysis report',
+    documentIds: ['doc-006', 'doc-007', 'doc-008', 'doc-020', 'doc-021', 'doc-022'],
+    status: 'active',
+    createdAt: '2026-01-10T09:00:00Z',
+    updatedAt: '2026-01-25T14:30:00Z'
+  },
+  {
+    id: 'project-002',
+    name: 'Trump Administration Actions',
+    description: 'Evidence collection for ongoing coverage of administration policy moves',
+    documentIds: ['doc-001', 'doc-002', 'doc-003', 'doc-009', 'doc-010', 'doc-011', 'doc-012'],
+    status: 'active',
+    createdAt: '2026-01-05T08:00:00Z',
+    updatedAt: '2026-01-28T11:00:00Z'
+  },
+  {
+    id: 'project-003',
+    name: 'Judicial Safety Research',
+    description: 'Background research on threats to judiciary - archived after report completion',
+    documentIds: ['doc-030', 'doc-031', 'doc-032'],
+    status: 'archived',
+    createdAt: '2025-12-15T10:00:00Z',
+    updatedAt: '2026-01-08T16:00:00Z'
+  }
+];
+
 export const datasetId = 'american-politics';
 export const datasetName = 'American Politics';
 
@@ -78,6 +109,7 @@ export const mockData = {
   monitors,
   alerts,
   workspaces,
+  projects,
   searchFilters,
   tags
 };

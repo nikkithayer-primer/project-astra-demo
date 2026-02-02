@@ -18,11 +18,19 @@ export class WorkspaceEditorModal extends BaseModal {
       name: '',
       query: '',
       description: '',
-      documentIds: []
+      documentIds: [],
+      tagIds: []
     };
     
     // Callback for when save completes
     this.onSaveCallback = null;
+  }
+
+  /**
+   * Get all available tags from the data store
+   */
+  getAvailableTags() {
+    return dataStore.data.tags || [];
   }
 
   /**
@@ -37,7 +45,8 @@ export class WorkspaceEditorModal extends BaseModal {
       name: initialData.name || '',
       query: initialData.query || '',
       description: initialData.description || '',
-      documentIds: initialData.documentIds || []
+      documentIds: initialData.documentIds || [],
+      tagIds: initialData.tagIds || []
     };
     this.render('Create Workspace');
     this.setupFormListeners();
@@ -63,7 +72,8 @@ export class WorkspaceEditorModal extends BaseModal {
       name: workspace.name || '',
       query: workspace.query || '',
       description: workspace.description || '',
-      documentIds: [...(workspace.documentIds || [])]
+      documentIds: [...(workspace.documentIds || [])],
+      tagIds: [...(workspace.tagIds || [])]
     };
     
     this.render('Edit Workspace');
@@ -102,6 +112,32 @@ export class WorkspaceEditorModal extends BaseModal {
       </div>
     ` : '';
 
+    // Tags selector
+    const tags = this.getAvailableTags();
+    const tagsHtml = tags.length > 0 ? `
+      <div class="form-group">
+        <label class="form-label">Tags</label>
+        <div class="tag-selector" id="workspace-tags">
+          ${tags.map(tag => {
+            const isSelected = this.formState.tagIds.includes(tag.id);
+            return `
+              <label class="tag-selector-item ${isSelected ? 'selected' : ''}" data-tag-id="${tag.id}">
+                <input 
+                  type="checkbox" 
+                  class="tag-selector-checkbox"
+                  value="${tag.id}"
+                  ${isSelected ? 'checked' : ''}
+                />
+                <span class="tag-selector-color" style="background-color: ${tag.color || '#6b7280'}"></span>
+                <span class="tag-selector-name">${this.escapeHtml(tag.name)}</span>
+              </label>
+            `;
+          }).join('')}
+        </div>
+        <p class="form-hint">Select tags to organize this workspace</p>
+      </div>
+    ` : '';
+
     this.modalContent.innerHTML = `
       ${this.renderHeader(title)}
       <div class="modal-body workspace-editor-body">
@@ -130,6 +166,8 @@ export class WorkspaceEditorModal extends BaseModal {
               rows="3"
             >${this.escapeHtml(this.formState.description)}</textarea>
           </div>
+          
+          ${tagsHtml}
           
           ${docCountText ? `
             <div class="form-group">
@@ -185,6 +223,27 @@ export class WorkspaceEditorModal extends BaseModal {
       this.formState.description = e.target.value;
     });
 
+    // Tag selector
+    const tagsContainer = document.getElementById('workspace-tags');
+    if (tagsContainer) {
+      tagsContainer.addEventListener('change', (e) => {
+        if (e.target.classList.contains('tag-selector-checkbox')) {
+          const tagId = e.target.value;
+          const item = e.target.closest('.tag-selector-item');
+          
+          if (e.target.checked) {
+            if (!this.formState.tagIds.includes(tagId)) {
+              this.formState.tagIds.push(tagId);
+            }
+            item?.classList.add('selected');
+          } else {
+            this.formState.tagIds = this.formState.tagIds.filter(id => id !== tagId);
+            item?.classList.remove('selected');
+          }
+        }
+      });
+    }
+
     // Enter key to submit (in single-line inputs)
     nameInput?.addEventListener('keydown', (e) => {
       if (e.key === 'Enter') {
@@ -223,7 +282,8 @@ export class WorkspaceEditorModal extends BaseModal {
           name: name,
           query: this.formState.query.trim(),
           description: this.formState.description.trim(),
-          documentIds: this.formState.documentIds
+          documentIds: this.formState.documentIds,
+          tagIds: this.formState.tagIds
         });
         workspaceId = this.editingWorkspace.id;
       } else {
@@ -233,6 +293,7 @@ export class WorkspaceEditorModal extends BaseModal {
           query: this.formState.query.trim(),
           description: this.formState.description.trim(),
           documentIds: this.formState.documentIds,
+          tagIds: this.formState.tagIds,
           status: 'active'
         });
       }

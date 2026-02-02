@@ -25,6 +25,7 @@ import {
   isSocialMedia
 } from '../utils/classification.js';
 import { dataStore } from '../data/DataStore.js';
+import { getAddToProjectModal } from './AddToProjectModal.js';
 
 // Column configuration
 const COLUMN_CONFIG = {
@@ -201,6 +202,10 @@ export class DocumentTable extends BaseComponent {
       showReadIndicator: true,
       // Context for scoped routing (from view)
       context: null,
+      // Enable document selection (checkboxes)
+      enableSelection: false,
+      // Callback when selection changes
+      onSelectionChange: null,
       ...options
     });
     
@@ -213,6 +218,9 @@ export class DocumentTable extends BaseComponent {
     this.contentRenderer = null;
     this.viewerTab = 'content'; // 'content' or 'details'
     this._keydownHandler = null;
+    
+    // Selection state
+    this.selectedDocIds = new Set();
   }
 
   /**
@@ -634,6 +642,12 @@ export class DocumentTable extends BaseComponent {
     const sortedDocs = this.sortDocuments(this.data.documents);
     const documents = sortedDocs.slice(0, this.options.maxItems);
 
+    // Create selection toolbar if selection is enabled
+    if (this.options.enableSelection) {
+      const toolbar = this.renderSelectionToolbar(documents);
+      this.container.appendChild(toolbar);
+    }
+
     // Create table container
     const tableContainer = document.createElement('div');
     tableContainer.className = 'table-container document-table-container';
@@ -642,9 +656,14 @@ export class DocumentTable extends BaseComponent {
     const table = document.createElement('table');
     table.className = 'table document-table';
 
-    // Build header
+    // Build header with optional checkbox column
     const thead = document.createElement('thead');
-    thead.innerHTML = `<tr>${columns.map(col => this.renderHeaderCell(col)).join('')}</tr>`;
+    const selectHeaderCell = this.options.enableSelection 
+      ? `<th class="doc-col-select">
+           <input type="checkbox" class="doc-select-header" title="Select all" />
+         </th>` 
+      : '';
+    thead.innerHTML = `<tr>${selectHeaderCell}${columns.map(col => this.renderHeaderCell(col)).join('')}</tr>`;
     table.appendChild(thead);
 
     // Build body
@@ -654,7 +673,25 @@ export class DocumentTable extends BaseComponent {
       const row = document.createElement('tr');
       row.className = 'document-row';
       row.dataset.id = doc.id;
-      row.innerHTML = columns.map(col => this.renderCell(doc, col)).join('');
+      
+      const selectCell = this.options.enableSelection 
+        ? `<td class="doc-col-select">
+             <input type="checkbox" class="doc-select-checkbox" data-doc-id="${doc.id}" 
+                    ${this.selectedDocIds.has(doc.id) ? 'checked' : ''} />
+           </td>` 
+        : '';
+      row.innerHTML = selectCell + columns.map(col => this.renderCell(doc, col)).join('');
+
+      // Handle checkbox changes
+      if (this.options.enableSelection) {
+        const checkbox = row.querySelector('.doc-select-checkbox');
+        if (checkbox) {
+          checkbox.addEventListener('change', (e) => {
+            e.stopPropagation();
+            this.toggleDocumentSelection(doc.id, e.target.checked);
+          });
+        }
+      }
 
       // Handle title button clicks for viewer mode
       if (this.options.enableViewerMode) {
@@ -694,6 +731,18 @@ export class DocumentTable extends BaseComponent {
     table.appendChild(tbody);
     tableContainer.appendChild(table);
     this.container.appendChild(tableContainer);
+
+    // Add select-all checkbox handler
+    if (this.options.enableSelection) {
+      const selectAllCheckbox = thead.querySelector('.doc-select-header');
+      if (selectAllCheckbox) {
+        selectAllCheckbox.addEventListener('change', (e) => {
+          this.toggleSelectAll(documents, e.target.checked);
+        });
+        // Update select-all state based on current selection
+        this.updateSelectAllState(documents, selectAllCheckbox);
+      }
+    }
 
     // Add sort click handlers
     if (this.options.sortable) {
@@ -1029,6 +1078,15 @@ export class DocumentTable extends BaseComponent {
       <div class="document-viewer-tab-title">
         ${this.truncateText(this.selectedDocument.title || 'Untitled', 60)}
       </div>
+      <div class="document-viewer-actions">
+        <button class="btn btn-small" id="viewer-add-to-project" title="Add to Project">
+          <svg viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.5">
+            <path d="M3 7h7l2 2h4v7H3V7z"/>
+            <path d="M3 7V5a2 2 0 012-2h5l2 2"/>
+          </svg>
+          Add to Project
+        </button>
+      </div>
     `;
     mainContent.appendChild(tabHeader);
 
@@ -1101,8 +1159,27 @@ export class DocumentTable extends BaseComponent {
       });
     });
 
+    // Add to Project button handler (viewer mode)
+    const addToProjectBtn = tabHeader.querySelector('#viewer-add-to-project');
+    if (addToProjectBtn) {
+      addToProjectBtn.addEventListener('click', () => {
+        this.openAddToProjectModalForDocument(this.selectedDocument.id);
+      });
+    }
+
     // Focus content area for keyboard navigation (Page Up/Down)
     contentArea.focus();
+  }
+
+  /**
+   * Open Add to Project modal for a single document (viewer mode)
+   * @param {string} docId - Document ID
+   */
+  openAddToProjectModalForDocument(docId) {
+    const modal = getAddToProjectModal();
+    modal.open([docId], (result) => {
+      this.showAddToProjectFeedback(result);
+    });
   }
 
   /**
@@ -1807,6 +1884,233 @@ export class DocumentTable extends BaseComponent {
    */
   static getAvailableColumns() {
     return Object.keys(COLUMN_CONFIG);
+  }
+
+  // ============================================
+  // Selection Methods
+  // ============================================
+
+  /**
+   * Render the selection toolbar
+   * @param {Array} documents - Current document list
+   * @returns {HTMLElement}
+   */
+  renderSelectionToolbar(documents) {
+    const toolbar = document.createElement('div');
+    toolbar.className = 'document-selection-toolbar';
+    toolbar.id = 'doc-selection-toolbar';
+    
+    const selectedCount = this.selectedDocIds.size;
+    const hasSelection = selectedCount > 0;
+    
+    if (!hasSelection) {
+      toolbar.classList.add('hidden');
+    }
+    
+    toolbar.innerHTML = `
+      <div class="document-selection-info">
+        <span class="document-selection-count">${selectedCount} selected</span>
+        <button class="document-selection-clear">Clear selection</button>
+      </div>
+      <div class="document-selection-actions">
+        <button class="btn btn-small btn-primary" id="add-to-project-btn">
+          <svg viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.5">
+            <path d="M3 7h7l2 2h4v7H3V7z"/>
+            <path d="M3 7V5a2 2 0 012-2h5l2 2"/>
+          </svg>
+          Add to Project
+        </button>
+      </div>
+    `;
+    
+    // Clear selection handler
+    const clearBtn = toolbar.querySelector('.document-selection-clear');
+    clearBtn?.addEventListener('click', () => this.clearSelection());
+    
+    // Add to Project handler
+    const addBtn = toolbar.querySelector('#add-to-project-btn');
+    addBtn?.addEventListener('click', () => this.openAddToProjectModal());
+    
+    return toolbar;
+  }
+
+  /**
+   * Toggle selection for a single document
+   * @param {string} docId - Document ID
+   * @param {boolean} selected - Whether to select or deselect
+   */
+  toggleDocumentSelection(docId, selected) {
+    if (selected) {
+      this.selectedDocIds.add(docId);
+    } else {
+      this.selectedDocIds.delete(docId);
+    }
+    
+    this.updateSelectionUI();
+    
+    // Notify callback
+    if (this.options.onSelectionChange) {
+      this.options.onSelectionChange([...this.selectedDocIds]);
+    }
+  }
+
+  /**
+   * Toggle select all documents
+   * @param {Array} documents - Current document list
+   * @param {boolean} selected - Whether to select or deselect all
+   */
+  toggleSelectAll(documents, selected) {
+    if (selected) {
+      documents.forEach(doc => this.selectedDocIds.add(doc.id));
+    } else {
+      this.selectedDocIds.clear();
+    }
+    
+    // Update all checkboxes
+    const checkboxes = this.container.querySelectorAll('.doc-select-checkbox');
+    checkboxes.forEach(cb => {
+      cb.checked = selected;
+    });
+    
+    this.updateSelectionUI();
+    
+    // Notify callback
+    if (this.options.onSelectionChange) {
+      this.options.onSelectionChange([...this.selectedDocIds]);
+    }
+  }
+
+  /**
+   * Update the select-all checkbox state
+   * @param {Array} documents - Current document list
+   * @param {HTMLInputElement} checkbox - Select all checkbox element
+   */
+  updateSelectAllState(documents, checkbox) {
+    const allSelected = documents.length > 0 && documents.every(doc => this.selectedDocIds.has(doc.id));
+    const someSelected = documents.some(doc => this.selectedDocIds.has(doc.id));
+    
+    checkbox.checked = allSelected;
+    checkbox.indeterminate = someSelected && !allSelected;
+  }
+
+  /**
+   * Update selection UI (toolbar visibility and count)
+   */
+  updateSelectionUI() {
+    const toolbar = this.container.querySelector('#doc-selection-toolbar');
+    if (!toolbar) return;
+    
+    const selectedCount = this.selectedDocIds.size;
+    const hasSelection = selectedCount > 0;
+    
+    toolbar.classList.toggle('hidden', !hasSelection);
+    
+    const countEl = toolbar.querySelector('.document-selection-count');
+    if (countEl) {
+      countEl.textContent = `${selectedCount} selected`;
+    }
+    
+    // Update select-all checkbox
+    const selectAllCheckbox = this.container.querySelector('.doc-select-header');
+    if (selectAllCheckbox && this.data?.documents) {
+      const documents = this.data.documents.slice(0, this.options.maxItems);
+      this.updateSelectAllState(documents, selectAllCheckbox);
+    }
+  }
+
+  /**
+   * Clear all selections
+   */
+  clearSelection() {
+    this.selectedDocIds.clear();
+    
+    // Uncheck all checkboxes
+    const checkboxes = this.container.querySelectorAll('.doc-select-checkbox');
+    checkboxes.forEach(cb => {
+      cb.checked = false;
+    });
+    
+    // Update select-all checkbox
+    const selectAllCheckbox = this.container.querySelector('.doc-select-header');
+    if (selectAllCheckbox) {
+      selectAllCheckbox.checked = false;
+      selectAllCheckbox.indeterminate = false;
+    }
+    
+    this.updateSelectionUI();
+    
+    // Notify callback
+    if (this.options.onSelectionChange) {
+      this.options.onSelectionChange([]);
+    }
+  }
+
+  /**
+   * Get currently selected document IDs
+   * @returns {string[]}
+   */
+  getSelectedDocumentIds() {
+    return [...this.selectedDocIds];
+  }
+
+  /**
+   * Open the Add to Project modal
+   */
+  openAddToProjectModal() {
+    const selectedIds = this.getSelectedDocumentIds();
+    if (selectedIds.length === 0) return;
+    
+    const modal = getAddToProjectModal();
+    modal.open(selectedIds, (result) => {
+      // Show success feedback (could be a toast)
+      console.log(`Added ${result.added} documents to "${result.projectName}"`);
+      
+      // Clear selection after adding
+      this.clearSelection();
+      
+      // Could show a toast notification here
+      this.showAddToProjectFeedback(result);
+    });
+  }
+
+  /**
+   * Show feedback after adding to project
+   * @param {Object} result - Result from modal
+   */
+  showAddToProjectFeedback(result) {
+    // Create a temporary toast notification
+    const toast = document.createElement('div');
+    toast.className = 'toast toast-success';
+    toast.style.cssText = `
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      padding: 12px 20px;
+      background: var(--accent-success, #22c55e);
+      color: white;
+      border-radius: var(--radius-sm);
+      font-size: var(--text-sm);
+      z-index: 10000;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+      animation: slideIn 0.2s ease-out;
+    `;
+    
+    if (result.isNew) {
+      toast.textContent = `Created "${result.projectName}" with ${result.added} documents`;
+    } else if (result.alreadyExisted > 0) {
+      toast.textContent = `Added ${result.added} new documents to "${result.projectName}" (${result.alreadyExisted} already existed)`;
+    } else {
+      toast.textContent = `Added ${result.added} documents to "${result.projectName}"`;
+    }
+    
+    document.body.appendChild(toast);
+    
+    // Remove after 3 seconds
+    setTimeout(() => {
+      toast.style.opacity = '0';
+      toast.style.transition = 'opacity 0.2s';
+      setTimeout(() => toast.remove(), 200);
+    }, 3000);
   }
 
   /**

@@ -259,7 +259,7 @@ const SCHEMAS = {
     idPrefix: 'workspace-',
     required: ['id', 'name'],
     optional: ['query', 'description', 'documentIds', 'scope', 'includedDocIds',
-               'excludedDocIds', 'filters', 'status', 'createdAt', 'updatedAt'],
+               'excludedDocIds', 'filters', 'tagIds', 'status', 'createdAt', 'updatedAt'],
     types: {
       name: 'string',
       status: ['active', 'archived'],
@@ -268,7 +268,21 @@ const SCHEMAS = {
     references: {
       documentIds: 'documents',
       includedDocIds: 'documents',
-      excludedDocIds: 'documents'
+      excludedDocIds: 'documents',
+      tagIds: 'tags'
+    }
+  },
+
+  projects: {
+    idPrefix: 'project-',
+    required: ['id', 'name', 'documentIds'],
+    optional: ['description', 'status', 'createdAt', 'updatedAt'],
+    types: {
+      name: 'string',
+      status: ['active', 'archived']
+    },
+    references: {
+      documentIds: 'documents'
     }
   },
 

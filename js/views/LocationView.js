@@ -9,7 +9,6 @@ import { PageHeader } from '../utils/PageHeader.js';
 import { initAllCardToggles } from '../utils/cardWidthToggle.js';
 import { TagChips } from '../components/TagChips.js';
 import { getTagPicker } from '../components/TagPickerModal.js';
-import { aggregatePublisherVolumeData } from '../utils/volumeDataUtils.js';
 import {
   CardManager,
   NetworkGraphCard,
@@ -142,8 +141,10 @@ export class LocationView extends BaseView {
     const personIds = persons.map(p => p.id);
     const orgIds = organizations.map(o => o.id);
 
-    // Prepare publisher volume data for the composite chart (by source)
-    const publisherData = aggregatePublisherVolumeData(documents);
+    // Prepare volume data for the composite chart (scoped to location's documents)
+    const docIds = documents.map(d => d.id);
+    const volumeResult = DataService.getVolumeDataForDocuments(docIds);
+    const publisherData = volumeResult.byPublisher;
     const hasPublisherData = publisherData && publisherData.dates.length > 0;
     const hasVolumeTimeline = hasPublisherData || allEvents.length > 0;
 

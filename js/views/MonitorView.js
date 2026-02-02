@@ -9,6 +9,8 @@ import { PageHeader } from '../utils/PageHeader.js';
 import { CardBuilder } from '../utils/CardBuilder.js';
 import { initAllCardToggles } from '../utils/cardWidthToggle.js';
 import { getMonitorEditor } from '../components/MonitorEditorModal.js';
+import { TagChips } from '../components/TagChips.js';
+import { getTagPicker } from '../components/TagPickerModal.js';
 import {
   CardManager,
   NetworkGraphCard,
@@ -200,6 +202,7 @@ export class MonitorView extends BaseView {
       subtitle: subtitleParts,
       description: monitor.description,
       actions: editBtnHtml,
+      tagsContainerId: 'monitor-tags-container',
       tabs: tabsConfig,
       activeTab: activeTab
     });
@@ -238,6 +241,30 @@ export class MonitorView extends BaseView {
           descToggle.classList.toggle('active', isShowing);
         });
       }
+    }
+
+    // Initialize tag chips
+    this.initTagChips(monitor);
+  }
+
+  /**
+   * Initialize tag chips component
+   */
+  initTagChips(monitor) {
+    const tagsContainer = this.container.querySelector('#monitor-tags-container');
+    if (tagsContainer) {
+      this.tagChips = new TagChips({
+        entityType: 'monitor',
+        entityId: monitor.id,
+        editable: true,
+        onAddClick: () => {
+          const picker = getTagPicker();
+          picker.open('monitor', monitor.id, () => {
+            this.tagChips.refresh();
+          });
+        }
+      });
+      this.tagChips.render(tagsContainer);
     }
   }
 

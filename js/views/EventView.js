@@ -7,7 +7,7 @@ import { BaseView } from './BaseView.js';
 import { DataService } from '../data/DataService.js';
 import { PageHeader } from '../utils/PageHeader.js';
 import { initAllCardToggles } from '../utils/cardWidthToggle.js';
-import { aggregatePublisherVolumeData, aggregateFactionSentiment } from '../utils/volumeDataUtils.js';
+import { aggregateFactionSentiment } from '../utils/volumeDataUtils.js';
 import { TagChips } from '../components/TagChips.js';
 import { getTagPicker } from '../components/TagPickerModal.js';
 import {
@@ -172,8 +172,10 @@ export class EventView extends BaseView {
     // All events including this one and sub-events for timeline
     const allEvents = [event, ...subEvents];
 
-    // Prepare publisher volume data for the composite chart (by source)
-    const publisherData = aggregatePublisherVolumeData(documents);
+    // Prepare volume data for the composite chart (scoped to event's documents)
+    const docIds = documents.map(d => d.id);
+    const volumeResult = DataService.getVolumeDataForDocuments(docIds);
+    const publisherData = volumeResult.byPublisher;
     const hasPublisherData = publisherData && publisherData.dates.length > 0;
     const hasVolumeTimeline = hasPublisherData || allEvents.length > 0;
 

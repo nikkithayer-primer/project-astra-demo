@@ -7,7 +7,8 @@ import { BaseView } from './BaseView.js';
 import { DataService } from '../data/DataService.js';
 import { PageHeader } from '../utils/PageHeader.js';
 import { initAllCardToggles } from '../utils/cardWidthToggle.js';
-import { aggregatePublisherVolumeData } from '../utils/volumeDataUtils.js';
+import { TagChips } from '../components/TagChips.js';
+import { getTagPicker } from '../components/TagPickerModal.js';
 import {
   CardManager,
   BulletPointsCard,
@@ -78,6 +79,7 @@ export class TopicView extends BaseView {
       descriptionLink: topic.description 
         ? `<a href="#" class="btn btn-small btn-secondary source-link" data-source-type="topic" data-source-id="${topic.id}">View source</a>` 
         : '',
+      tagsContainerId: 'topic-tags-container',
       tabs: tabsConfig,
       activeTab: activeTab
     });
@@ -102,6 +104,30 @@ export class TopicView extends BaseView {
     // Initialize all card components
     const components = this.cardManager.initializeAll();
     Object.assign(this.components, components);
+
+    // Initialize tag chips
+    this.initTagChips(topic);
+  }
+
+  /**
+   * Initialize tag chips component
+   */
+  initTagChips(topic) {
+    const tagsContainer = this.container.querySelector('#topic-tags-container');
+    if (tagsContainer) {
+      this.tagChips = new TagChips({
+        entityType: 'topic',
+        entityId: topic.id,
+        editable: true,
+        onAddClick: () => {
+          const picker = getTagPicker();
+          picker.open('topic', topic.id, () => {
+            this.tagChips.refresh();
+          });
+        }
+      });
+      this.tagChips.render(tagsContainer);
+    }
   }
 
   /**
@@ -112,8 +138,10 @@ export class TopicView extends BaseView {
     const scopeDocIds = this.getDocumentScope();
     const documents = DataService.getDocumentsForTopic(this.topicId, scopeDocIds);
 
-    // Prepare publisher volume data for the composite chart (by source)
-    const publisherData = aggregatePublisherVolumeData(documents);
+    // Prepare volume data for the composite chart (scoped to topic's documents)
+    const docIds = documents.map(d => d.id);
+    const volumeResult = DataService.getVolumeDataForDocuments(docIds);
+    const publisherData = volumeResult.byPublisher;
     const hasPublisherData = publisherData && publisherData.dates.length > 0;
 
     // Get related narratives (narratives that share documents with this topic) - scoped

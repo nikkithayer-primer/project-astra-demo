@@ -7,6 +7,7 @@ import { BaseView } from './BaseView.js';
 import { DataService } from '../data/DataService.js';
 import { dataStore } from '../data/DataStore.js';
 import { getEntityIcon, ENTITY_TYPE_CONFIG, getEntityTitle, getEntityRoute } from '../utils/entityIcons.js';
+import { PageHeader } from '../utils/PageHeader.js';
 
 export class TagsView extends BaseView {
   constructor(container, options = {}) {
@@ -28,16 +29,17 @@ export class TagsView extends BaseView {
     // Sort tags by name
     filteredTags.sort((a, b) => a.name.localeCompare(b.name));
 
+    const headerHtml = PageHeader.render({
+      breadcrumbs: [
+        { label: 'Dashboard', href: '#/dashboard' },
+        'Tags'
+      ],
+      title: 'Tags',
+      subtitle: `${tags.length} tag${tags.length !== 1 ? 's' : ''}`
+    });
+
     this.container.innerHTML = `
-      <div class="page-header">
-        <div class="breadcrumb">
-          <a href="#/dashboard">Dashboard</a>
-          <span>/</span>
-          Tags
-        </div>
-        <h1>Tags</h1>
-        <p class="subtitle">${tags.length} tag${tags.length !== 1 ? 's' : ''}</p>
-      </div>
+      ${headerHtml}
       
       <div class="content-area">
         <div class="card">
@@ -166,7 +168,8 @@ export class TagsView extends BaseView {
       { key: 'factions', type: 'faction' },
       { key: 'documents', type: 'document' },
       { key: 'topics', type: 'topic' },
-      { key: 'monitors', type: 'monitor' }
+      { key: 'monitors', type: 'monitor' },
+      { key: 'workspaces', type: 'workspace' }
     ];
 
     entityTypes.forEach(({ key, type }) => {

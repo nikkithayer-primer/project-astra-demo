@@ -56,6 +56,28 @@ export const workspaces = [
   }
 ];
 
+// Projects - manually curated document collections for research and reporting
+export const projects = [
+  {
+    id: 'project-001',
+    name: 'Self-Checkout Crisis Response',
+    description: 'Key documents for responding to self-checkout detention viral story',
+    documentIds: ['doc-001', 'doc-002', 'doc-003', 'doc-004', 'doc-007'],
+    status: 'active',
+    createdAt: '2026-01-16T08:00:00Z',
+    updatedAt: '2026-01-26T15:00:00Z'
+  },
+  {
+    id: 'project-002',
+    name: 'Legal Exposure Analysis',
+    description: 'Documents related to class action lawsuit and legal risk assessment',
+    documentIds: ['doc-003', 'doc-010', 'doc-011'],
+    status: 'active',
+    createdAt: '2026-01-20T10:00:00Z',
+    updatedAt: '2026-01-25T09:30:00Z'
+  }
+];
+
 export const datasetId = 'walmart-brand';
 export const datasetName = 'Walmart Brand';
 
@@ -78,6 +100,7 @@ export const mockData = {
   alerts,
   topics,
   workspaces,
+  projects,
   searchFilters,
   tags
 };

@@ -11,6 +11,7 @@ import { MapView } from '../components/MapView.js';
 import { renderVerticalTimeline } from '../utils/verticalTimeline.js';
 import { getEntityIcon } from '../utils/entityIcons.js';
 import { getEntityCardModal } from '../components/EntityCardModal.js';
+import { PageHeader } from '../utils/PageHeader.js';
 
 // Entity types with labels (used for people/orgs filter - mirrors DocumentsView pattern)
 const ENTITY_TYPES = {
@@ -37,27 +38,28 @@ export class ListView extends BaseView {
     const items = this.getItems();
     const filteredItems = this.filterItems(items);
 
-    // Build breadcrumb based on whether this is a status-filtered view
-    const breadcrumbHtml = this.options.statusFilter
-      ? `<a href="#/dashboard">Dashboard</a>
-         <span>/</span>
-         <a href="#/narratives">Narratives</a>
-         <span>/</span>
-         ${config.title}`
-      : `<a href="#/dashboard">Dashboard</a>
-         <span>/</span>
-         ${config.title}`;
-
     // Use NarrativeList component for narratives
     if (this.entityType === 'narratives') {
+      // Build breadcrumbs array
+      const breadcrumbs = this.options.statusFilter
+        ? [
+            { label: 'Dashboard', href: '#/dashboard' },
+            { label: 'Narratives', href: '#/narratives' },
+            config.title
+          ]
+        : [
+            { label: 'Dashboard', href: '#/dashboard' },
+            config.title
+          ];
+
+      const headerHtml = PageHeader.render({
+        breadcrumbs,
+        title: config.title,
+        subtitle: `${filteredItems.length} ${config.itemName}${filteredItems.length !== 1 ? 's' : ''}`
+      });
+
       this.container.innerHTML = `
-        <div class="page-header">
-          <div class="breadcrumb">
-            ${breadcrumbHtml}
-          </div>
-          <h1>${config.title}</h1>
-          <p class="subtitle">${filteredItems.length} ${config.itemName}${filteredItems.length !== 1 ? 's' : ''}</p>
-        </div>
+        ${headerHtml}
 
         <div class="content-area">
           <div class="card">
@@ -106,14 +108,26 @@ export class ListView extends BaseView {
       // Get locations for the map
       const locations = DataService.getAllLocationsWithCounts(this.timeRange);
       
+      // Build breadcrumbs array
+      const breadcrumbs = this.options.statusFilter
+        ? [
+            { label: 'Dashboard', href: '#/dashboard' },
+            { label: 'Events', href: '#/events' },
+            config.title
+          ]
+        : [
+            { label: 'Dashboard', href: '#/dashboard' },
+            config.title
+          ];
+
+      const headerHtml = PageHeader.render({
+        breadcrumbs,
+        title: config.title,
+        subtitle: `${filteredItems.length} ${config.itemName}${filteredItems.length !== 1 ? 's' : ''}`
+      });
+
       this.container.innerHTML = `
-        <div class="page-header">
-          <div class="breadcrumb">
-            ${breadcrumbHtml}
-          </div>
-          <h1>${config.title}</h1>
-          <p class="subtitle">${filteredItems.length} ${config.itemName}${filteredItems.length !== 1 ? 's' : ''}</p>
-        </div>
+        ${headerHtml}
 
         <div class="content-area">
           <div class="card">
@@ -172,15 +186,27 @@ export class ListView extends BaseView {
         </div>`
       : '';
 
+    // Build breadcrumbs array
+    const breadcrumbs = this.options.statusFilter
+      ? [
+          { label: 'Dashboard', href: '#/dashboard' },
+          { label: config.title, href: `#/${this.entityType}` },
+          config.title
+        ]
+      : [
+          { label: 'Dashboard', href: '#/dashboard' },
+          config.title
+        ];
+
+    const headerHtml = PageHeader.render({
+      breadcrumbs,
+      title: config.title,
+      subtitle: `${filteredItems.length} ${filteredItems.length !== 1 ? (config.itemNamePlural || config.itemName + 's') : config.itemName}`
+    });
+
     // Default rendering for other entity types
     this.container.innerHTML = `
-      <div class="page-header">
-        <div class="breadcrumb">
-          ${breadcrumbHtml}
-        </div>
-        <h1>${config.title}</h1>
-        <p class="subtitle">${filteredItems.length} ${filteredItems.length !== 1 ? (config.itemNamePlural || config.itemName + 's') : config.itemName}</p>
-      </div>
+      ${headerHtml}
 
       <div class="content-area">
         <div class="card">

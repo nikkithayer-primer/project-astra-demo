@@ -7,7 +7,6 @@ import { BaseView } from './BaseView.js';
 import { DataService } from '../data/DataService.js';
 import { PageHeader } from '../utils/PageHeader.js';
 import { initAllCardToggles } from '../utils/cardWidthToggle.js';
-import { aggregatePublisherVolumeData } from '../utils/volumeDataUtils.js';
 import { TagChips } from '../components/TagChips.js';
 import { getTagPicker } from '../components/TagPickerModal.js';
 import {
@@ -164,8 +163,10 @@ export class FactionView extends BaseView {
     const personIds = affiliatedPersons.map(p => p.id);
     const orgIds = affiliatedOrgs.map(o => o.id);
 
-    // Prepare publisher volume data for the composite chart (by source)
-    const publisherData = aggregatePublisherVolumeData(documents);
+    // Prepare volume data for the composite chart (scoped to faction's documents)
+    const docIds = documents.map(d => d.id);
+    const volumeResult = DataService.getVolumeDataForDocuments(docIds);
+    const publisherData = volumeResult.byPublisher;
     const hasPublisherData = publisherData && publisherData.dates.length > 0;
 
     // Get events from narratives related to this faction

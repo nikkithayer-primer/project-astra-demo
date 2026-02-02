@@ -299,6 +299,7 @@
 .card-body-scrollable {
   max-height: 500px;
   overflow-y: auto;
+  overflow-x: hidden;
 }
 
 /* Stats Grid */
@@ -2434,9 +2435,16 @@
 /* Map Container */
 .map-container {
   width: 100%;
-  height: 300px;
+  min-height: 200px;
   background: var(--bg-tertiary);
-  border-radius: var(--border-radius);
+  border-radius: 0; /* No radius when filling card body */
+  overflow: hidden;
+}
+
+/* When map-container is used, disable scrollable behavior */
+.card-body.map-container,
+.card-body.map-container.card-body-scrollable {
+  max-height: none;
   overflow: hidden;
 }
 
@@ -4349,6 +4357,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  z-index: 500; /* Above map controls (z-index: 450) */
 }
 
 .card {
@@ -5357,6 +5366,7 @@ body.has-fullscreen-card {
 }
 
 .document-viewer-tab-title {
+  flex: 1;
   font-size: var(--text-sm);
   font-weight: 500;
   color: var(--text-secondary);
@@ -5364,6 +5374,7 @@ body.has-fullscreen-card {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+  text-align: center;
 }
 
 /* Main content area */
@@ -7089,6 +7100,61 @@ body.dragging-active * {
   border-top: 1px solid var(--border-subtle);
 }
 
+/* Tag Selector (inline form component) */
+.tag-selector {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-xs);
+  padding: var(--space-sm);
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  max-height: 120px;
+  overflow-y: auto;
+}
+
+.tag-selector-item {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-xs);
+  padding: var(--space-xs) var(--space-sm);
+  background: var(--bg-primary);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  font-size: var(--text-sm);
+  transition: all 0.15s ease;
+}
+
+.tag-selector-item:hover {
+  border-color: var(--border-default);
+  background: var(--bg-hover);
+}
+
+.tag-selector-item.selected {
+  background: var(--accent-light);
+  border-color: var(--accent);
+}
+
+.tag-selector-checkbox {
+  display: none;
+}
+
+.tag-selector-color {
+  width: 10px;
+  height: 10px;
+  border-radius: 2px;
+  flex-shrink: 0;
+}
+
+.tag-selector-name {
+  color: var(--text-primary);
+}
+
+.tag-selector-item.selected .tag-selector-name {
+  color: var(--accent-dark);
+}
+
 /* ============================================
    Tags List View (Accordion)
    ============================================ */
@@ -7757,4 +7823,169 @@ body.dragging-active * {
 
 .entity-card-link:hover {
   text-decoration: underline;
+}
+
+/* =================================
+   Add to Project Modal
+   ================================= */
+
+.project-select-list {
+  max-height: 240px;
+  overflow-y: auto;
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-sm);
+  margin-bottom: var(--space-md);
+}
+
+.project-select-option {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--space-sm) var(--space-md);
+  cursor: pointer;
+  border-bottom: 1px solid var(--border-subtle);
+  transition: background 0.1s;
+}
+
+.project-select-option:last-child {
+  border-bottom: none;
+}
+
+.project-select-option:hover {
+  background: var(--bg-hover);
+}
+
+.project-select-option.selected {
+  background: var(--accent-bg);
+}
+
+.project-select-option-info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.project-select-option-name {
+  font-size: var(--text-sm);
+  font-weight: 500;
+  color: var(--text-primary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.project-select-option-count {
+  font-size: var(--text-xs);
+  color: var(--text-muted);
+}
+
+.project-select-option-check {
+  opacity: 0;
+  color: var(--accent-primary);
+  transition: opacity 0.1s;
+}
+
+.project-select-option.selected .project-select-option-check {
+  opacity: 1;
+}
+
+.project-create-new {
+  margin-top: var(--space-sm);
+}
+
+.project-create-new {
+  margin-top: var(--space-md);
+}
+
+.project-create-form {
+  margin-top: var(--space-md);
+}
+
+.project-create-form.hidden {
+  display: none;
+}
+
+.project-create-form .form-group {
+  margin-bottom: var(--space-md);
+}
+
+.project-create-form .form-group:last-child {
+  margin-bottom: 0;
+}
+
+/* =================================
+   Document Selection Toolbar
+   ================================= */
+
+.document-selection-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--space-sm) var(--space-md);
+  background: var(--accent-bg);
+  border: 1px solid var(--accent-primary);
+  border-radius: var(--radius-sm);
+  margin-bottom: var(--space-md);
+}
+
+.document-selection-toolbar.hidden {
+  display: none;
+}
+
+.document-selection-info {
+  display: flex;
+  align-items: center;
+  gap: var(--space-md);
+}
+
+.document-selection-count {
+  font-size: var(--text-sm);
+  font-weight: 500;
+  color: var(--text-primary);
+}
+
+.document-selection-clear {
+  font-size: var(--text-xs);
+  color: var(--text-secondary);
+  background: none;
+  border: none;
+  cursor: pointer;
+  text-decoration: underline;
+}
+
+.document-selection-clear:hover {
+  color: var(--text-primary);
+}
+
+.document-selection-actions {
+  display: flex;
+  gap: var(--space-sm);
+}
+
+/* Document Table Selection Checkbox */
+.doc-col-select {
+  width: 32px;
+  text-align: center;
+}
+
+.doc-select-checkbox {
+  width: 16px;
+  height: 16px;
+  cursor: pointer;
+  accent-color: var(--accent-primary);
+}
+
+.doc-select-header {
+  width: 16px;
+  height: 16px;
+  cursor: pointer;
+  accent-color: var(--accent-primary);
+}
+
+/* Viewer Mode Actions */
+.document-viewer-actions {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
 }

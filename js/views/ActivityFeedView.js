@@ -5,6 +5,7 @@
 
 import { BaseView } from './BaseView.js';
 import { DataService } from '../data/DataService.js';
+import { PageHeader } from '../utils/PageHeader.js';
 import { formatRelativeTime, formatDate } from '../utils/formatters.js';
 
 export class ActivityFeedView extends BaseView {
@@ -23,16 +24,17 @@ export class ActivityFeedView extends BaseView {
     const commentCount = allActivity.filter(a => a.type === 'comment').length;
     const replyCount = allActivity.filter(a => a.type === 'reply').length;
 
+    const headerHtml = PageHeader.render({
+      breadcrumbs: [
+        { label: 'Dashboard', href: '#/dashboard' },
+        'Activity'
+      ],
+      title: 'Activity Feed',
+      subtitle: `${highlightCount} highlight${highlightCount !== 1 ? 's' : ''}, ${commentCount} comment${commentCount !== 1 ? 's' : ''}, ${replyCount} ${replyCount === 1 ? 'reply' : 'replies'}`
+    });
+
     this.container.innerHTML = `
-      <div class="page-header">
-        <div class="breadcrumb">
-          <a href="#/dashboard">Dashboard</a>
-          <span>/</span>
-          Activity
-        </div>
-        <h1>Activity Feed</h1>
-        <p class="subtitle">${highlightCount} highlight${highlightCount !== 1 ? 's' : ''}, ${commentCount} comment${commentCount !== 1 ? 's' : ''}, ${replyCount} ${replyCount === 1 ? 'reply' : 'replies'}</p>
-      </div>
+      ${headerHtml}
       
       <div class="content-area">
         <div class="card">

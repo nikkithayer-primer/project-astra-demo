@@ -9,6 +9,7 @@ import { BaseView } from './BaseView.js';
 import { DataService } from '../data/DataService.js';
 import { DocumentTable } from '../components/DocumentTable.js';
 import { ColumnFilter } from '../components/ColumnFilter.js';
+import { PageHeader } from '../utils/PageHeader.js';
 import { dataStore } from '../data/DataStore.js';
 
 // All available columns with labels
@@ -94,16 +95,18 @@ export class DocumentsView extends BaseView {
       return `<option value="${key}" ${selected}>${label}</option>`;
     }).join('');
 
+    // Build page header using shared utility
+    const headerHtml = PageHeader.render({
+      breadcrumbs: [
+        { label: 'Dashboard', href: '#/dashboard' },
+        'Documents'
+      ],
+      title: 'Documents',
+      subtitle: `${documents.length} document${documents.length !== 1 ? 's' : ''}`
+    });
+
     this.container.innerHTML = `
-      <div class="page-header">
-        <div class="breadcrumb">
-          <a href="#/dashboard">Dashboard</a>
-          <span>/</span>
-          Documents
-        </div>
-        <h1>Documents</h1>
-        <p class="subtitle">${documents.length} document${documents.length !== 1 ? 's' : ''}</p>
-      </div>
+      ${headerHtml}
 
       <div class="content-area">
         <div class="card">

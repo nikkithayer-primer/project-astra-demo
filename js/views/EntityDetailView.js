@@ -8,7 +8,7 @@ import { BaseView } from './BaseView.js';
 import { DataService } from '../data/DataService.js';
 import { PageHeader } from '../utils/PageHeader.js';
 import { initAllCardToggles } from '../utils/cardWidthToggle.js';
-import { aggregatePublisherVolumeData, aggregateFactionVolumeData } from '../utils/volumeDataUtils.js';
+import { aggregateFactionSentiment } from '../utils/volumeDataUtils.js';
 import { TagChips } from '../components/TagChips.js';
 import { getTagPicker } from '../components/TagPickerModal.js';
 import {
@@ -162,13 +162,13 @@ export class EntityDetailView extends BaseView {
     }
     data.hasNetwork = data.relatedPersons.length > 0 || data.relatedOrgs.length > 0;
 
-    // Build publisher volume data for the composite chart (by source)
-    data.publisherData = aggregatePublisherVolumeData(data.documents);
-    data.hasPublisherData = data.publisherData && data.publisherData.dates.length > 0;
-
-    // Build faction volume data for the composite chart (by faction)
-    data.volumeData = aggregateFactionVolumeData(data.documents);
+    // Build volume data for the composite chart (scoped to entity's documents)
+    const docIds = data.documents.map(d => d.id);
+    const volumeResult = DataService.getVolumeDataForDocuments(docIds);
+    data.volumeData = volumeResult.byFaction;
+    data.publisherData = volumeResult.byPublisher;
     data.hasVolumeData = data.volumeData && data.volumeData.dates.length > 0;
+    data.hasPublisherData = data.publisherData && data.publisherData.dates.length > 0;
 
     // Get events from related narratives
     data.allEvents = data.narratives.flatMap(n => {

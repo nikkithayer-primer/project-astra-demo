@@ -763,6 +763,108 @@ class DataStore {
   }
 
   // ============================================
+  // Project CRUD
+  // ============================================
+
+  /**
+   * Create a new project
+   * @param {Object} project - Project data
+   * @param {string} project.name - Project name (required)
+   * @param {string} project.description - Project description
+   * @param {string[]} project.documentIds - Initial document IDs
+   * @returns {string} The new project's ID
+   */
+  createProject(project) {
+    return this.createEntity('projects', 'project', {
+      name: project.name,
+      description: project.description || '',
+      documentIds: project.documentIds || [],
+      status: project.status || 'active'
+    });
+  }
+
+  /**
+   * Update an existing project
+   * @param {string} id - Project ID
+   * @param {Object} updates - Fields to update
+   * @returns {boolean} Success
+   */
+  updateProject(id, updates) {
+    return this.updateEntity('projects', id, updates);
+  }
+
+  /**
+   * Delete a project
+   * @param {string} id - Project ID
+   * @returns {boolean} Success
+   */
+  deleteProject(id) {
+    return this.deleteEntity('projects', id);
+  }
+
+  /**
+   * Add documents to a project (deduplicates)
+   * @param {string} projectId - Project ID
+   * @param {string[]} documentIds - Document IDs to add
+   * @returns {Object} Result with added count and new total
+   */
+  addDocumentsToProject(projectId, documentIds) {
+    const projects = this.data.projects || [];
+    const project = projects.find(p => p.id === projectId);
+    
+    if (!project) {
+      console.error(`DataStore: Project ${projectId} not found`);
+      return { success: false, added: 0, total: 0 };
+    }
+    
+    const existingIds = new Set(project.documentIds || []);
+    const initialCount = existingIds.size;
+    
+    documentIds.forEach(id => existingIds.add(id));
+    
+    project.documentIds = [...existingIds];
+    project.updatedAt = new Date().toISOString();
+    this.save();
+    
+    const addedCount = existingIds.size - initialCount;
+    return { 
+      success: true, 
+      added: addedCount, 
+      total: project.documentIds.length,
+      alreadyExisted: documentIds.length - addedCount
+    };
+  }
+
+  /**
+   * Remove documents from a project
+   * @param {string} projectId - Project ID
+   * @param {string[]} documentIds - Document IDs to remove
+   * @returns {Object} Result with removed count
+   */
+  removeDocumentsFromProject(projectId, documentIds) {
+    const projects = this.data.projects || [];
+    const project = projects.find(p => p.id === projectId);
+    
+    if (!project) {
+      console.error(`DataStore: Project ${projectId} not found`);
+      return { success: false, removed: 0 };
+    }
+    
+    const removeSet = new Set(documentIds);
+    const initialCount = (project.documentIds || []).length;
+    
+    project.documentIds = (project.documentIds || []).filter(id => !removeSet.has(id));
+    project.updatedAt = new Date().toISOString();
+    this.save();
+    
+    return { 
+      success: true, 
+      removed: initialCount - project.documentIds.length,
+      total: project.documentIds.length
+    };
+  }
+
+  // ============================================
   // SearchFilter CRUD
   // ============================================
 

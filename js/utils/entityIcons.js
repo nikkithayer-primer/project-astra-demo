@@ -106,6 +106,16 @@ export function getEntityIcon(type, size = 16) {
     tag: `<svg class="entity-icon" viewBox="0 0 16 16" width="${size}" height="${size}" fill="none" stroke="currentColor" stroke-width="1.25">
       <path d="M14 8.5l-5.5 5.5a2 2 0 01-2.8 0L2 10.3V2h8.3L14 5.7a2 2 0 010 2.8z"/>
       <circle cx="5.5" cy="5.5" r="1.5"/>
+    </svg>`,
+    workspaces: `<svg class="entity-icon" viewBox="0 0 16 16" width="${size}" height="${size}" fill="none" stroke="currentColor" stroke-width="1.25">
+      <rect x="1" y="1" width="14" height="14" rx="1"/>
+      <path d="M1 5h14"/>
+      <path d="M5 5v10"/>
+    </svg>`,
+    workspace: `<svg class="entity-icon" viewBox="0 0 16 16" width="${size}" height="${size}" fill="none" stroke="currentColor" stroke-width="1.25">
+      <rect x="1" y="1" width="14" height="14" rx="1"/>
+      <path d="M1 5h14"/>
+      <path d="M5 5v10"/>
     </svg>`
   };
   return icons[type] || icons.narratives;
@@ -135,7 +145,9 @@ export const ENTITY_TYPE_CONFIG = {
   topics: { label: 'Topics', singular: 'Topic', route: 'topic', titleField: 'headline' },
   topic: { label: 'Topics', singular: 'Topic', route: 'topic', titleField: 'headline' },
   monitors: { label: 'Monitors', singular: 'Monitor', route: 'monitor', titleField: 'name' },
-  monitor: { label: 'Monitors', singular: 'Monitor', route: 'monitor', titleField: 'name' }
+  monitor: { label: 'Monitors', singular: 'Monitor', route: 'monitor', titleField: 'name' },
+  workspaces: { label: 'Workspaces', singular: 'Workspace', route: 'workspace', titleField: 'name' },
+  workspace: { label: 'Workspaces', singular: 'Workspace', route: 'workspace', titleField: 'name' }
 };
 
 /**

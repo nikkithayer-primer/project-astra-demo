@@ -10,6 +10,8 @@
   <script src="https://cdn.jsdelivr.net/npm/venn.js@0.2.20/build/venn.min.js"></script>
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.4.1/dist/MarkerCluster.css" />
+  <script src="https://unpkg.com/leaflet.markercluster@1.4.1/dist/leaflet.markercluster.js"></script>
   
   <!-- CSS Reset & Variables -->
   <link rel="stylesheet" href="css/variables.css">
@@ -49,6 +51,13 @@
           </svg>
           <span>Dashboard</span>
         </a>
+        <a href="index.html#/search" class="nav-link">
+          <svg class="nav-icon" viewBox="0 0 16 16" fill="none" stroke="var(--text-secondary)" stroke-width="1">
+            <circle cx="7" cy="7" r="4.5"/>
+            <path d="M10.5 10.5L14 14"/>
+          </svg>
+          <span>Search</span>
+        </a>
         <a href="index.html#/monitors" class="nav-link">
           <svg class="nav-icon" viewBox="0 0 16 16" fill="none" stroke="var(--text-secondary)" stroke-width="1">
             <rect x="1" y="2" width="14" height="10" rx="1"/>
@@ -57,6 +66,13 @@
           </svg>
           <span>Monitors</span>
         </a>
+        <a href="index.html#/projects" class="nav-link">
+          <svg class="nav-icon" viewBox="0 0 16 16" fill="none" stroke="var(--text-secondary)" stroke-width="1">
+            <path d="M2 4h5l2 2h5v8H2V4z" rx="1"/>
+            <path d="M2 4V3a1 1 0 011-1h4l2 2"/>
+          </svg>
+          <span>Projects</span>
+        </a>
         <a href="index.html#/workspaces" class="nav-link">
           <svg class="nav-icon" viewBox="0 0 16 16" fill="none" stroke="var(--text-secondary)" stroke-width="1">
             <rect x="1" y="1" width="14" height="14" rx="1"/>
@@ -64,13 +80,6 @@
             <path d="M5 5v10"/>
           </svg>
           <span>Workspaces</span>
-        </a>
-        <a href="index.html#/search" class="nav-link">
-          <svg class="nav-icon" viewBox="0 0 16 16" fill="none" stroke="var(--text-secondary)" stroke-width="1">
-            <circle cx="7" cy="7" r="4.5"/>
-            <path d="M10.5 10.5L14 14"/>
-          </svg>
-          <span>Search</span>
         </a>
       </div>
     </div>
@@ -92,6 +101,12 @@
               <path d="M4 5h8M4 8h8M4 11h5"/>
             </svg>
             <span>Narratives</span>
+          </a>
+          <a href="index.html#/topics" class="nav-link">
+            <svg class="nav-icon" viewBox="0 0 16 16" fill="none" stroke="var(--text-secondary)" stroke-width="1">
+              <path d="M6 1v14M10 1v14M1 6h14M1 10h14"/>
+            </svg>
+            <span>Topics</span>
           </a>
           <a href="index.html#/factions" class="nav-link">
             <svg class="nav-icon" viewBox="0 0 16 16" fill="none" stroke="var(--text-secondary)" stroke-width="1">
@@ -123,6 +138,27 @@
             </svg>
             <span>People & Orgs</span>
           </a>
+          <a href="index.html#/documents" class="nav-link">
+            <svg class="nav-icon" viewBox="0 0 16 16" fill="none" stroke="var(--text-secondary)" stroke-width="1">
+              <rect x="2" y="1" width="12" height="14" rx="1"/>
+              <path d="M5 4h6M5 7h6M5 10h4"/>
+            </svg>
+            <span>Documents</span>
+          </a>
+          <a href="index.html#/tags" class="nav-link">
+            <svg class="nav-icon" viewBox="0 0 16 16" fill="none" stroke="var(--text-secondary)" stroke-width="1">
+              <path d="M14 8.5l-5.5 5.5a2 2 0 01-2.8 0L2 10.3V2h8.3L14 5.7a2 2 0 010 2.8z"/>
+              <circle cx="5.5" cy="5.5" r="1.5"/>
+            </svg>
+            <span>Tags</span>
+          </a>
+          <a href="index.html#/activity" class="nav-link">
+            <svg class="nav-icon" viewBox="0 0 16 16" fill="none" stroke="var(--text-secondary)" stroke-width="1">
+              <path d="M14 10a2 2 0 01-2 2H5l-3 3V4a2 2 0 012-2h8a2 2 0 012 2v6z"/>
+              <path d="M5 6h6M5 9h4"/>
+            </svg>
+            <span>Activity</span>
+          </a>
         </div>
       </div>
       
@@ -134,6 +170,22 @@
           <div class="avatar-menu-header">
             <span class="avatar-name">Jane Doe</span>
             <span class="avatar-email">jane.doe@primer.ai</span>
+          </div>
+          <div class="avatar-menu-divider"></div>
+          <div class="avatar-menu-section">
+            <span class="avatar-menu-label">Sample Dataset</span>
+            <button class="dataset-option" data-dataset="american-politics">
+              <span class="dataset-indicator"></span>
+              <span>American Politics</span>
+            </button>
+            <button class="dataset-option" data-dataset="china-semiconductor">
+              <span class="dataset-indicator"></span>
+              <span>China Semiconductor</span>
+            </button>
+            <button class="dataset-option" data-dataset="walmart-brand">
+              <span class="dataset-indicator"></span>
+              <span>Walmart Brand</span>
+            </button>
           </div>
           <div class="avatar-menu-divider"></div>
           <a href="data-model.html" class="nav-link">
@@ -160,7 +212,7 @@
             <span>Boolean Parser</span>
           </a>
           <div class="avatar-menu-divider"></div>
-          <a href="index.html" class="nav-link" title="Settings available in main app">
+          <a href="index.html#/settings" class="nav-link" title="Settings available in main app">
             <svg class="nav-icon" viewBox="0 0 16 16" fill="none" stroke="var(--text-secondary)" stroke-width="1">
               <circle cx="8" cy="8" r="2.5"/>
               <path d="M8 1v2M8 13v2M1 8h2M13 8h2M2.9 2.9l1.4 1.4M11.7 11.7l1.4 1.4M2.9 13.1l1.4-1.4M11.7 4.3l1.4-1.4"/>
@@ -207,14 +259,6 @@
       <div class="nav-section">
         <span class="nav-section-title">Timeline</span>
         <ul class="nav-links">
-          <li><a href="#timeline" class="nav-link" data-target="timeline">
-            <svg class="nav-icon" viewBox="0 0 16 16" fill="none" stroke="var(--text-secondary)" stroke-width="1">
-              <line x1="1" y1="8" x2="15" y2="8"/>
-              <circle cx="4" cy="8" r="2"/>
-              <circle cx="9" cy="8" r="2"/>
-              <circle cx="13" cy="8" r="1.5"/>
-            </svg> Timeline
-          </a></li>
           <li><a href="#timeline-volume-composite" class="nav-link" data-target="timeline-volume-composite">
             <svg class="nav-icon" viewBox="0 0 16 16" fill="none" stroke="var(--text-secondary)" stroke-width="1">
               <path d="M1 10V4l4 2 4-3 6 4v6H1z"/>
@@ -444,27 +488,6 @@ venn.update({
     { id: <span class="string">'b'</span>, name: <span class="string">'Group B'</span>, size: <span class="number">800</span>, color: <span class="string">'#3b82f6'</span> }
   ],
   overlaps: [{ factionIds: [<span class="string">'a'</span>, <span class="string">'b'</span>], overlapSize: <span class="number">200</span> }]
-});</pre>
-        </div>
-      </div>
-    </section>
-
-    <!-- Timeline -->
-    <section id="timeline" class="component-section">
-      <h2 class="section-title">Timeline</h2>
-      <p class="section-description">Event timeline visualization showing chronological progression of activities.</p>
-      <div class="demo-container">
-        <div id="timeline-chart"></div>
-        <div class="code-block">
-          <pre><span class="key">const</span> timeline = <span class="key">new</span> Timeline(<span class="string">'container'</span>, {
-  height: <span class="number">280</span>,
-  onEventClick: (event) => console.log(event)
-});
-timeline.update({
-  events: [
-    { id: <span class="string">'1'</span>, text: <span class="string">'Campaign Launch'</span>, date: <span class="string">'2025-01-15T10:00:00Z'</span> },
-    { id: <span class="string">'2'</span>, text: <span class="string">'Viral Spread'</span>, date: <span class="string">'2025-01-18T14:30:00Z'</span> }
-  ]
 });</pre>
         </div>
       </div>
@@ -801,7 +824,6 @@ list.update({
     import { StackedAreaChart } from './js/components/StackedAreaChart.js';
     import { SentimentChart } from './js/components/SentimentChart.js';
     import { VennDiagram } from './js/components/VennDiagram.js';
-    import { Timeline } from './js/components/Timeline.js';
     import { TimelineVolumeComposite } from './js/components/TimelineVolumeComposite.js';
     import { MapView } from './js/components/MapView.js';
     import { NarrativeList } from './js/components/NarrativeList.js';
@@ -924,22 +946,6 @@ list.update({
         { factionIds: ['f2', 'f3'], overlapSize: 250 },
         { factionIds: ['f1', 'f3'], overlapSize: 150 },
         { factionIds: ['f1', 'f2', 'f3'], overlapSize: 75 }
-      ]
-    });
-
-    // Initialize Timeline
-    const timeline = new Timeline(document.getElementById('timeline-chart'), {
-      height: 280,
-      onEventClick: (event) => console.log('Clicked event:', event)
-    });
-    timeline.update({
-      events: [
-        { id: '1', text: 'Initial article published', date: '2025-01-10T08:00:00Z' },
-        { id: '2', text: 'Social media amplification begins', date: '2025-01-12T14:30:00Z' },
-        { id: '3', text: 'Bot network detected', date: '2025-01-13T09:15:00Z', parentEventId: '2' },
-        { id: '4', text: 'Mainstream media coverage', date: '2025-01-15T11:00:00Z' },
-        { id: '5', text: 'Official response issued', date: '2025-01-17T16:45:00Z' },
-        { id: '6', text: 'Counter-narrative emerges', date: '2025-01-19T10:30:00Z' }
       ]
     });
 

@@ -8,6 +8,7 @@ import { DataService } from '../data/DataService.js';
 import { dataStore } from '../data/DataStore.js';
 import { TimeRangeFilter } from '../components/TimeRangeFilter.js';
 import { ScopeSelector } from '../components/ScopeSelector.js';
+import { PageHeader } from '../utils/PageHeader.js';
 import { formatDate } from '../utils/formatters.js';
 
 export class SearchView extends BaseView {
@@ -56,11 +57,17 @@ export class SearchView extends BaseView {
     const canSearch = hasScope || hasQuery;
     const scopeItemCount = hasScope ? this.getScopeItemCount(currentScope) : 0;
 
+    const headerHtml = PageHeader.render({
+      breadcrumbs: [
+        { label: 'Dashboard', href: '#/dashboard' },
+        'Search'
+      ],
+      title: 'Search',
+      description: 'Search documents to create a workspace'
+    });
+
     this.container.innerHTML = `
-      <div class="page-header">
-        <h1>Search</h1>
-        <p class="header-description text-secondary">Search documents to create a workspace</p>
-      </div>
+      ${headerHtml}
       
       <div class="content-area">
         <div class="search-page-container">

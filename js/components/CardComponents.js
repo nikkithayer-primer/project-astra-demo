@@ -431,6 +431,7 @@ export class DocumentTableCard extends BaseCardComponent {
     this.halfWidth = options.halfWidth || false;
     this.fullWidth = options.fullWidth || false;
     this.enableViewerMode = options.enableViewerMode || false;
+    this.enableSelection = options.enableSelection !== false; // Enable by default
     this.showColumnFilter = options.showColumnFilter !== false; // Show filter by default
     this.showTypeFilter = options.showTypeFilter !== false; // Show type filter by default
     this.columns = options.columns || [...DOCUMENT_DEFAULT_COLUMNS];
@@ -555,6 +556,7 @@ export class DocumentTableCard extends BaseCardComponent {
       columns: columns,
       maxItems: this.maxItems,
       enableViewerMode: this.enableViewerMode,
+      enableSelection: this.enableSelection,
       context: this.view?.context || null
     });
     this.component.update({ documents: filteredDocs });

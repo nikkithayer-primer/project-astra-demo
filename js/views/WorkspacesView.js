@@ -5,6 +5,7 @@
 
 import { BaseView } from './BaseView.js';
 import { DataService } from '../data/DataService.js';
+import { PageHeader } from '../utils/PageHeader.js';
 import { getWorkspaceEditor } from '../components/WorkspaceEditorModal.js';
 
 export class WorkspacesView extends BaseView {
@@ -34,14 +35,19 @@ export class WorkspacesView extends BaseView {
       `;
     }
 
+    const headerHtml = PageHeader.render({
+      breadcrumbs: [
+        { label: 'Dashboard', href: '#/dashboard' },
+        'Workspaces'
+      ],
+      title: 'Workspaces',
+      subtitle: `${workspaces.length} workspace${workspaces.length !== 1 ? 's' : ''}`,
+      description: 'Saved search results with document collections',
+      actions: '<button class="btn btn-small btn-primary" id="create-workspace-btn">+ New Workspace</button>'
+    });
+
     this.container.innerHTML = `
-      <div class="view-header">
-        <div>
-          <h1 class="view-title">Workspaces</h1>
-          <p class="view-subtitle">Saved search results with document collections</p>
-        </div>
-        <button class="btn btn-small btn-primary" id="create-workspace-btn">+ New Workspace</button>
-      </div>
+      ${headerHtml}
       
       <div class="content-area">
         ${contentHtml}

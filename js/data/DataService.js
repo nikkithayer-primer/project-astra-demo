@@ -2113,6 +2113,107 @@ export const DataService = {
   },
 
   /**
+   * UNIFIED: Get volume data for a set of documents.
+   * This is the preferred method for getting volume data - works directly from documents.
+   * Returns both faction and publisher breakdowns in the format TimelineVolumeComposite expects.
+   * 
+   * @param {string[]|null} documentIds - Array of document IDs to aggregate. If null, uses all documents.
+   * @param {Object} options - Optional settings
+   * @param {Object} options.timeRange - Optional { start, end } date range filter
+   * @returns {Object} { 
+   *   byFaction: { dates, series, factions } | null,
+   *   byPublisher: { dates, series, publishers } | null 
+   * }
+   */
+  getVolumeDataForDocuments: (documentIds = null, options = {}) => {
+    const { timeRange } = options;
+    
+    // Get documents - either scoped or all
+    let documents;
+    if (documentIds && documentIds.length > 0) {
+      documents = documentIds
+        .map(id => dataStore.data.documents?.find(d => d.id === id))
+        .filter(Boolean);
+    } else {
+      documents = dataStore.data.documents || [];
+    }
+    
+    // Apply time range filter if provided
+    if (timeRange) {
+      documents = documents.filter(doc => 
+        doc.publishedDate && DataService.isDateInRange(doc.publishedDate, timeRange)
+      );
+    }
+    
+    if (documents.length === 0) {
+      return { byFaction: null, byPublisher: null };
+    }
+    
+    // Aggregate by faction
+    const factionDateMap = new Map();
+    const factionIds = new Set();
+    
+    // Aggregate by publisher
+    const publisherDateMap = new Map();
+    const publisherIds = new Set();
+    
+    documents.forEach(doc => {
+      if (!doc.publishedDate) return;
+      const date = doc.publishedDate.split('T')[0];
+      
+      // Faction aggregation
+      if (doc.factionMentions) {
+        if (!factionDateMap.has(date)) {
+          factionDateMap.set(date, {});
+        }
+        const factionDayData = factionDateMap.get(date);
+        Object.keys(doc.factionMentions).forEach(factionId => {
+          factionIds.add(factionId);
+          factionDayData[factionId] = (factionDayData[factionId] || 0) + 1;
+        });
+      }
+      
+      // Publisher aggregation
+      if (doc.publisherId) {
+        publisherIds.add(doc.publisherId);
+        if (!publisherDateMap.has(date)) {
+          publisherDateMap.set(date, {});
+        }
+        const publisherDayData = publisherDateMap.get(date);
+        publisherDayData[doc.publisherId] = (publisherDayData[doc.publisherId] || 0) + 1;
+      }
+    });
+    
+    // Build faction result
+    let byFaction = null;
+    if (factionIds.size > 0) {
+      const factionDates = [...factionDateMap.keys()].sort();
+      const factions = [...factionIds]
+        .map(id => DataService.getFaction(id))
+        .filter(Boolean);
+      const factionSeries = factions.map(f =>
+        factionDates.map(date => (factionDateMap.get(date) || {})[f.id] || 0)
+      );
+      byFaction = { dates: factionDates, series: factionSeries, factions };
+    }
+    
+    // Build publisher result
+    let byPublisher = null;
+    if (publisherIds.size > 0) {
+      const publisherDates = [...publisherDateMap.keys()].sort();
+      const publishers = [...publisherIds]
+        .map(id => (dataStore.data.publishers || []).find(p => p.id === id))
+        .filter(Boolean);
+      const publisherSeries = publishers.map(p =>
+        publisherDates.map(date => (publisherDateMap.get(date) || {})[p.id] || 0)
+      );
+      byPublisher = { dates: publisherDates, series: publisherSeries, publishers };
+    }
+    
+    return { byFaction, byPublisher };
+  },
+
+  /**
    * Get aggregate faction mentions for a theme from its linked documents.
    * @param {string} themeId - The theme ID
    * @param {string[]|null} scopeDocIds - Optional document ID scope
@@ -3023,6 +3124,97 @@ export const DataService = {
     });
   },
 
+  // ============================================
+  // Project Methods
+  // ============================================
+
+  /**
+   * Get all projects
+   * @returns {Array} All projects
+   */
+  getProjects: () => dataStore.data?.projects ?? [],
+
+  /**
+   * Get a single project by ID
+   * @param {string} id - Project ID
+   * @returns {Object|undefined} Project object
+   */
+  getProject: (id) => findById('projects', id),
+
+  /**
+   * Get active (non-archived) projects
+   * @returns {Array} Active projects
+   */
+  getActiveProjects: () => 
+    (dataStore.data?.projects ?? []).filter(p => p.status !== 'archived'),
+
+  /**
+   * Get archived projects
+   * @returns {Array} Archived projects
+   */
+  getArchivedProjects: () => 
+    (dataStore.data?.projects ?? []).filter(p => p.status === 'archived'),
+
+  /**
+   * Get all documents for a project.
+   * Projects are purely manual - no scope matching, just explicit documentIds.
+   * @param {string} projectId - Project ID
+   * @returns {Array} Documents in the project, sorted by publishedDate
+   */
+  getDocumentsForProject: (projectId) => {
+    const project = findById('projects', projectId);
+    if (!project) return [];
+    
+    return (project.documentIds ?? [])
+      .map(id => findById('documents', id))
+      .filter(Boolean)
+      .sort((a, b) => new Date(b.publishedDate) - new Date(a.publishedDate));
+  },
+
+  /**
+   * Get entities derived from a project's documents.
+   * Returns all entities mentioned in the project's document set.
+   * @param {string} projectId - Project ID
+   * @returns {Object} Object with arrays of derived entities
+   */
+  getEntitiesForProject: (projectId) => {
+    const documents = DataService.getDocumentsForProject(projectId);
+    
+    // Collect unique entity IDs from documents
+    const personIds = new Set();
+    const organizationIds = new Set();
+    const narrativeIds = new Set();
+    const themeIds = new Set();
+    const locationIds = new Set();
+    const eventIds = new Set();
+    const factionIds = new Set();
+    const topicIds = new Set();
+
+    documents.forEach(doc => {
+      (doc.personIds || []).forEach(id => personIds.add(id));
+      (doc.organizationIds || []).forEach(id => organizationIds.add(id));
+      (doc.narrativeIds || []).forEach(id => narrativeIds.add(id));
+      (doc.themeIds || []).forEach(id => themeIds.add(id));
+      (doc.locationIds || []).forEach(id => locationIds.add(id));
+      (doc.eventIds || []).forEach(id => eventIds.add(id));
+      (doc.topicIds || []).forEach(id => topicIds.add(id));
+      // Factions from factionMentions keys
+      Object.keys(doc.factionMentions || {}).forEach(id => factionIds.add(id));
+    });
+
+    // Resolve to full entities
+    return {
+      persons: [...personIds].map(id => findById('persons', id)).filter(Boolean),
+      organizations: [...organizationIds].map(id => findById('organizations', id)).filter(Boolean),
+      narratives: [...narrativeIds].map(id => findById('narratives', id)).filter(Boolean),
+      themes: [...themeIds].map(id => findById('themes', id)).filter(Boolean),
+      locations: [...locationIds].map(id => findById('locations', id)).filter(Boolean),
+      events: [...eventIds].map(id => findById('events', id)).filter(Boolean),
+      factions: [...factionIds].map(id => findById('factions', id)).filter(Boolean),
+      topics: [...topicIds].map(id => findById('topics', id)).filter(Boolean)
+    };
+  },
+
   // Search across all entities
   /**
    * Search across all entities
@@ -3238,7 +3430,9 @@ export const DataService = {
       organization: 'organizations',
       document: 'documents',
       topic: 'topics',
-      monitor: 'monitors'
+      monitor: 'monitors',
+      workspace: 'workspaces',
+      project: 'projects'
     };
     
     const collection = collectionMap[entityType];
@@ -3267,7 +3461,9 @@ export const DataService = {
       organizations: [],
       documents: [],
       topics: [],
-      monitors: []
+      monitors: [],
+      workspaces: [],
+      projects: []
     };
     
     Object.keys(result).forEach(collection => {
@@ -3297,7 +3493,8 @@ export const DataService = {
       organizations: [],
       documents: [],
       topics: [],
-      monitors: []
+      monitors: [],
+      workspaces: []
     };
     
     if (!tagIds || tagIds.length === 0) return result;
@@ -3328,7 +3525,7 @@ export const DataService = {
     
     const collectionsWithTags = [
       'narratives', 'themes', 'factions', 'locations', 'events',
-      'persons', 'organizations', 'documents', 'topics', 'monitors'
+      'persons', 'organizations', 'documents', 'topics', 'monitors', 'workspaces'
     ];
     
     collectionsWithTags.forEach(collection => {
@@ -3363,7 +3560,8 @@ export const DataService = {
       organizations: 0,
       documents: 0,
       topics: 0,
-      monitors: 0
+      monitors: 0,
+      workspaces: 0
     };
     
     Object.keys(counts).forEach(collection => {
@@ -3422,7 +3620,9 @@ export const DataService = {
       organization: 'organizations',
       document: 'documents',
       topic: 'topics',
-      monitor: 'monitors'
+      monitor: 'monitors',
+      workspace: 'workspaces',
+      project: 'projects'
     };
     
     const collection = collectionMap[entityType];
@@ -3449,7 +3649,9 @@ export const DataService = {
       organization: 'organizations',
       document: 'documents',
       topic: 'topics',
-      monitor: 'monitors'
+      monitor: 'monitors',
+      workspace: 'workspaces',
+      project: 'projects'
     };
     
     const collection = collectionMap[entityType];

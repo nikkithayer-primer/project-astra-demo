@@ -26,6 +26,7 @@ import { WorkspacesView } from './views/WorkspacesView.js';
 import { WorkspaceView } from './views/WorkspaceView.js';
 import { SearchView } from './views/SearchView.js';
 import { ProjectsView } from './views/ProjectsView.js';
+import { ProjectView } from './views/ProjectView.js';
 import { TopicView } from './views/TopicView.js';
 import { TagsView } from './views/TagsView.js';
 import { TagDetailView } from './views/TagDetailView.js';
@@ -37,7 +38,7 @@ import { dataStore } from './data/DataStore.js';
 import { formatDate } from './utils/formatters.js';
 
 // Context types for scoped routing
-const CONTEXT_TYPES = ['workspace', 'monitor', 'dashboard'];
+const CONTEXT_TYPES = ['workspace', 'monitor', 'dashboard', 'project'];
 
 // Entity types that can be nested under contexts
 const ENTITY_TYPES = {
@@ -541,6 +542,20 @@ export class Router {
       };
     }
     
+    if (context === 'project') {
+      const project = DataService.getProject(contextId);
+      if (!project) {
+        console.warn(`Router: Project ${contextId} not found`);
+        return null;
+      }
+      return { 
+        type: 'project', 
+        id: contextId, 
+        documentIds: project.documentIds || [],
+        getName: () => project.name || 'Project'
+      };
+    }
+
     return null;
   }
 
@@ -775,6 +790,12 @@ export class Router {
       return;
     }
     
+    // Project context home
+    if (context === 'project' && isContextHome) {
+      this.currentView = new ProjectView(this.container, contextId, filterOptions);
+      return;
+    }
+    
     // Entity view within context
     if (entityType) {
       this._handleEntityView(entityType, entityId, isListView, filterOptions);
@@ -843,7 +864,8 @@ export class Router {
         linkRoute === route ||
         linkRoute === 'dashboard' && route === 'dashboard' ||
         linkRoute === 'monitors' && (route === 'monitors' || route === 'monitor') ||
-        linkRoute === 'workspaces' && (route === 'workspaces' || route === 'workspace');
+        linkRoute === 'workspaces' && (route === 'workspaces' || route === 'workspace') ||
+        linkRoute === 'projects' && (route === 'projects' || route === 'project');
       
       if (matches) {
         link.classList.add('active');

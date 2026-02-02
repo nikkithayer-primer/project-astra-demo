@@ -526,6 +526,7 @@ User-defined collections for focused analysis. Workspaces support three document
   includedDocIds: string[], // Optional. FKs to Document. Always include these documents
   excludedDocIds: string[], // Optional. FKs to Document. Always exclude these documents
   filters: object,         // Optional. Saved filter state
+  tagIds: string[],        // Optional. FKs to Tag
   status: enum,            // Optional. 'active' | 'archived'
   createdAt: datetime,
   updatedAt: datetime
@@ -533,6 +534,25 @@ User-defined collections for focused analysis. Workspaces support three document
 ```
 
 **Document Resolution:** If both `scope` and `documentIds` are present, documents are resolved as: (scope matches ∪ documentIds ∪ includedDocIds) − excludedDocIds
+
+### Project
+
+Manually curated document collections for research and reporting. Unlike Monitors (automatic) and Workspaces (search-driven), Projects are purely manual - documents are added explicitly by the user.
+
+```javascript
+{
+  id: string,              // Required. Prefix: 'project-'
+  name: string,            // Required. Project name
+  description: string,     // Optional. Project purpose/notes
+  documentIds: string[],   // Required. FKs to Document (manually curated)
+  tagIds: string[],        // Optional. FKs to Tag
+  status: enum,            // Optional. 'active' | 'archived'. Default: 'active'
+  createdAt: datetime,
+  updatedAt: datetime
+}
+```
+
+**Key Distinction:** Projects have no `scope` or dynamic matching. The `documentIds` array is the complete, manually-managed document set. All entity views within a project are derived from these documents.
 
 ### SearchFilter
 
@@ -574,7 +594,7 @@ User-defined labels for organizing and filtering entities. Tags can be applied t
 }
 ```
 
-**Taggable entities:** Narratives, Themes, Factions, Locations, Events, Persons, Organizations, Documents, Topics, Monitors. Each taggable entity has an optional `tagIds: string[]` field containing FKs to Tags.
+**Taggable entities:** Narratives, Themes, Factions, Locations, Events, Persons, Organizations, Documents, Topics, Monitors, Workspaces, Projects. Each taggable entity has an optional `tagIds: string[]` field containing FKs to Tags.
 
 **Usage:**
 - Tags are managed via the Tags list view (`#/tags`)

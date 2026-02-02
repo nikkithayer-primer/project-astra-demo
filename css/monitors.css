@@ -158,6 +158,8 @@
 
 .monitors-grid .card-header-actions {
   overflow: visible;
+  background: transparent;
+  padding: 0;
 }
 
 .monitor-viz-container {

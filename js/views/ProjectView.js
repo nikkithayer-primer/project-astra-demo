@@ -1,6 +1,6 @@
 /**
- * WorkspaceView.js
- * Detail view for a single workspace using the CardManager pattern
+ * ProjectView.js
+ * Detail view for a single project using the CardManager pattern
  */
 
 import { BaseView } from './BaseView.js';
@@ -8,7 +8,6 @@ import { DataService } from '../data/DataService.js';
 import { dataStore } from '../data/DataStore.js';
 import { PageHeader } from '../utils/PageHeader.js';
 import { initAllCardToggles } from '../utils/cardWidthToggle.js';
-import { getWorkspaceEditor } from '../components/WorkspaceEditorModal.js';
 import { TagChips } from '../components/TagChips.js';
 import { getTagPicker } from '../components/TagPickerModal.js';
 import {
@@ -23,25 +22,25 @@ import {
   TimelineVolumeCompositeCard
 } from '../components/CardComponents.js';
 
-export class WorkspaceView extends BaseView {
-  constructor(container, workspaceId, options = {}) {
+export class ProjectView extends BaseView {
+  constructor(container, projectId, options = {}) {
     super(container, options);
-    this.workspaceId = workspaceId;
+    this.projectId = projectId;
     this.cardManager = new CardManager(this);
   }
 
   async render() {
-    const workspace = DataService.getWorkspace(this.workspaceId);
-    if (!workspace) {
-      this.renderNotFound('Workspace');
+    const project = DataService.getProject(this.projectId);
+    if (!project) {
+      this.renderNotFound('Project');
       return;
     }
 
     // Fetch all data upfront
-    const data = this.fetchWorkspaceData(workspace);
+    const data = this.fetchProjectData(project);
     
     // Store data for card setup
-    this._workspaceData = { workspace, data };
+    this._projectData = { project, data };
     
     // Determine active tab
     const activeTab = this.getCurrentTab();
@@ -49,26 +48,25 @@ export class WorkspaceView extends BaseView {
     
     // Build cards based on active tab
     if (this.isDocumentsTab()) {
-      this.setupDocumentsCard(workspace, data);
+      this.setupDocumentsCard(project, data);
     } else {
-      this.setupDashboardCards(workspace, data);
+      this.setupDashboardCards(project, data);
     }
     
     // Generate tabs config
-    const baseHref = `#/workspace/${this.workspaceId}`;
+    const baseHref = `#/project/${this.projectId}`;
     const tabsConfig = hasDocuments ? this.getTabsConfig(baseHref, true) : null;
 
     // Build subtitle with stats
     const docCount = data.documents.length;
     const entityCount = data.persons.length + data.organizations.length;
     const subtitleParts = [
-      `<span class="text-muted">Query:</span> "${this.escapeHtml(workspace.query)}"`,
       `<span class="badge">${docCount} document${docCount !== 1 ? 's' : ''}</span>`,
       entityCount > 0 ? `<span class="badge">${entityCount} entit${entityCount !== 1 ? 'ies' : 'y'}</span>` : ''
     ].filter(Boolean).join(' ');
 
     // Status badge
-    const isArchived = workspace.status === 'archived';
+    const isArchived = project.status === 'archived';
     const statusBadge = isArchived
       ? '<span class="badge badge-status-paused">Archived</span>'
       : '<span class="badge badge-status-active">Active</span>';
@@ -80,13 +78,7 @@ export class WorkspaceView extends BaseView {
       : '<path d="M3 5h10M4 5v9h8V5M6 8v3M10 8v3"/>';    // Archive icon
     
     const actionsHtml = `
-      <button class="btn btn-small btn-secondary" id="workspace-edit-btn">
-        <svg viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.5">
-          <path d="M11.5 2.5l2 2M2 11l-.5 3.5L5 14l9-9-2-2-10 10z"/>
-        </svg>
-        Edit
-      </button>
-      <button class="btn btn-small btn-secondary" id="workspace-archive-btn">
+      <button class="btn btn-small btn-secondary" id="project-archive-btn">
         <svg viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.5">
           ${archiveBtnIcon}
         </svg>
@@ -97,15 +89,15 @@ export class WorkspaceView extends BaseView {
     const headerHtml = PageHeader.render({
       breadcrumbs: [
         { label: 'Dashboard', href: '#/dashboard' },
-        { label: 'Workspaces', href: '#/workspaces' },
-        workspace.name
+        { label: 'Projects', href: '#/projects' },
+        project.name
       ],
-      title: workspace.name,
+      title: project.name,
       badge: statusBadge,
       subtitle: subtitleParts,
-      description: workspace.description,
+      description: project.description,
       actions: actionsHtml,
-      tagsContainerId: 'workspace-tags-container',
+      tagsContainerId: 'project-tags-container',
       tabs: tabsConfig,
       activeTab: activeTab
     });
@@ -124,7 +116,7 @@ export class WorkspaceView extends BaseView {
     const contentGrid = this.container.querySelector('.content-grid');
     if (contentGrid) {
       const tabSuffix = this.isDocumentsTab() ? '-docs' : '';
-      initAllCardToggles(contentGrid, `workspace-${this.workspaceId}${tabSuffix}`);
+      initAllCardToggles(contentGrid, `project-${this.projectId}${tabSuffix}`);
     }
 
     // Initialize all card components
@@ -132,25 +124,25 @@ export class WorkspaceView extends BaseView {
     Object.assign(this.components, components);
 
     // Set up action button handlers
-    this.setupActionButtons(workspace);
+    this.setupActionButtons(project);
 
     // Initialize tag chips
-    this.initTagChips(workspace);
+    this.initTagChips(project);
   }
 
   /**
    * Initialize tag chips component
    */
-  initTagChips(workspace) {
-    const tagsContainer = this.container.querySelector('#workspace-tags-container');
+  initTagChips(project) {
+    const tagsContainer = this.container.querySelector('#project-tags-container');
     if (tagsContainer) {
       this.tagChips = new TagChips({
-        entityType: 'workspace',
-        entityId: workspace.id,
+        entityType: 'project',
+        entityId: project.id,
         editable: true,
         onAddClick: () => {
           const picker = getTagPicker();
-          picker.open('workspace', workspace.id, () => {
+          picker.open('project', project.id, () => {
             this.tagChips.refresh();
           });
         }
@@ -160,77 +152,50 @@ export class WorkspaceView extends BaseView {
   }
 
   /**
-   * Fetch all data for the workspace
+   * Fetch all data for the project
    */
-  fetchWorkspaceData(workspace) {
-    // Get all documents in the workspace
-    const documents = (workspace.documentIds || [])
-      .map(id => DataService.getDocument(id))
-      .filter(Boolean)
-      .sort((a, b) => new Date(b.publishedDate) - new Date(a.publishedDate));
+  fetchProjectData(project) {
+    // Get all documents in the project
+    const documents = DataService.getDocumentsForProject(this.projectId);
 
-    // Aggregate all entity IDs from documents
-    const personIds = new Set();
-    const organizationIds = new Set();
-    const narrativeIds = new Set();
-    const themeIds = new Set();
-    const locationIds = new Set();
-    const eventIds = new Set();
-    const factionIds = new Set();
-    const topicIds = new Set();
+    // Get derived entities
+    const entities = DataService.getEntitiesForProject(this.projectId);
 
-    documents.forEach(doc => {
-      (doc.personIds || []).forEach(id => personIds.add(id));
-      (doc.organizationIds || []).forEach(id => organizationIds.add(id));
-      (doc.narrativeIds || []).forEach(id => narrativeIds.add(id));
-      (doc.themeIds || []).forEach(id => themeIds.add(id));
-      (doc.locationIds || []).forEach(id => locationIds.add(id));
-      (doc.eventIds || []).forEach(id => eventIds.add(id));
-      (doc.topicIds || []).forEach(id => topicIds.add(id));
-    });
-
-    // Resolve entities from IDs
-    const persons = [...personIds].map(id => DataService.getPerson(id)).filter(Boolean);
-    const organizations = [...organizationIds].map(id => DataService.getOrganization(id)).filter(Boolean);
-    const narratives = [...narrativeIds].map(id => DataService.getNarrative(id)).filter(Boolean);
-    const themes = [...themeIds].map(id => DataService.getTheme(id)).filter(Boolean);
-    const locations = [...locationIds].map(id => DataService.getLocation(id)).filter(Boolean);
-    const events = [...eventIds].map(id => DataService.getEvent(id)).filter(Boolean);
-    const topics = [...topicIds].map(id => DataService.getTopic(id)).filter(Boolean);
-
-    // Get factions from narratives using document-based aggregation
-    narratives.forEach(n => {
-      const factionMentions = DataService.getAggregateFactionMentionsForNarrative(n.id);
-      Object.keys(factionMentions).forEach(fId => factionIds.add(fId));
-    });
-    const factions = this.calculateFactionSentiment(narratives, [...factionIds]);
+    // Calculate factions with sentiment
+    const factionIds = [...new Set(documents.flatMap(doc => 
+      Object.keys(doc.factionMentions || {})
+    ))];
+    const factions = this.calculateFactionSentiment(entities.narratives, factionIds);
 
     // Get faction overlaps for Venn diagram
     const factionOverlaps = DataService.getFactionOverlaps();
 
     // Build network graph data
-    const hasNetwork = persons.length > 0 || organizations.length > 0;
+    const hasNetwork = entities.persons.length > 0 || entities.organizations.length > 0;
 
-    // Get volume data for timeline (scoped to workspace documents)
-    const scopeDocIds = workspace.documentIds || null;
+    // Get volume data for timeline (from project documents)
+    const scopeDocIds = documents.map(d => d.id);
     const volumeResult = DataService.getVolumeDataForDocuments(scopeDocIds);
     const volumeData = volumeResult.byFaction;
-    const publisherData = volumeResult.byPublisher;
     
-    // Get narrative durations for duration view toggle (scoped to workspace documents)
+    // Get narrative durations for duration view toggle (scoped to project documents)
     const narrativeDurations = DataService.getNarrativeDurations(null, null, null, scopeDocIds);
 
     return {
       documents,
-      persons, organizations,
-      narratives, themes, topics,
-      locations, events, factions,
+      persons: entities.persons,
+      organizations: entities.organizations,
+      narratives: entities.narratives,
+      themes: entities.themes,
+      topics: entities.topics,
+      locations: entities.locations,
+      events: entities.events,
+      factions,
       factionOverlaps,
-      personIds: [...personIds],
-      orgIds: [...organizationIds],
+      personIds: entities.persons.map(p => p.id),
+      orgIds: entities.organizations.map(o => o.id),
       hasNetwork,
       volumeData,
-      publisherData,
       narrativeDurations
     };
   }
@@ -282,7 +247,7 @@ export class WorkspaceView extends BaseView {
   /**
    * Set up card components for Dashboard tab
    */
-  setupDashboardCards(workspace, data) {
+  setupDashboardCards(project, data) {
     // Reset card manager for fresh setup
     this.cardManager = new CardManager(this);
 
@@ -295,26 +260,23 @@ export class WorkspaceView extends BaseView {
 
     // 1. Volume Over Time x Events (full width)
     const hasVolumeData = data.volumeData?.dates?.length > 0;
-    const hasPublisherData = data.publisherData?.dates?.length > 0;
     const hasDurationData = data.narrativeDurations?.length > 0;
-    if (hasVolumeData || hasPublisherData || data.events.length > 0 || hasDurationData) {
-      this.cardManager.add(new TimelineVolumeCompositeCard(this, 'workspace-volume-timeline', {
+    if (hasVolumeData || data.events.length > 0 || hasDurationData) {
+      this.cardManager.add(new TimelineVolumeCompositeCard(this, 'project-volume-timeline', {
         title: 'Volume Over Time & Events',
         volumeData: hasVolumeData ? data.volumeData : null,
-        publisherData: hasPublisherData ? data.publisherData : null,
         events: data.events,
         narrativeDurations: hasDurationData ? data.narrativeDurations : null,
         fullWidth: true,
         height: 400,
         volumeHeight: 160,
-        timelineHeight: 160,
-        showViewToggle: hasVolumeData && hasPublisherData
+        timelineHeight: 160
       }));
     }
 
     // 2. People & Organizations Network (half-width)
     if (data.hasNetwork) {
-      this.cardManager.add(new NetworkGraphCard(this, 'workspace-network', {
+      this.cardManager.add(new NetworkGraphCard(this, 'project-network', {
         title: 'People & Organizations',
         personIds: data.personIds,
         orgIds: data.orgIds,
@@ -325,7 +287,7 @@ export class WorkspaceView extends BaseView {
 
     // 3. Narratives (half-width)
     if (data.narratives.length > 0) {
-      this.cardManager.add(new NarrativeListCard(this, 'workspace-narratives', {
+      this.cardManager.add(new NarrativeListCard(this, 'project-narratives', {
         title: 'Narratives',
         narratives: data.narratives,
         showCount: true,
@@ -337,7 +299,7 @@ export class WorkspaceView extends BaseView {
 
     // 4. Topics (half-width)
     if (data.topics.length > 0) {
-      this.cardManager.add(new TopicListCard(this, 'workspace-topics', {
+      this.cardManager.add(new TopicListCard(this, 'project-topics', {
         title: 'Topics',
         topics: data.topics,
         showCount: true,
@@ -349,7 +311,7 @@ export class WorkspaceView extends BaseView {
 
     // 5. Map with Events & Locations (half-width)
     if (data.locations.length > 0 || data.events.length > 0) {
-      this.cardManager.add(new MapCard(this, 'workspace-map', {
+      this.cardManager.add(new MapCard(this, 'project-map', {
         title: 'Events & Locations',
         locations: data.locations,
         events: data.events,
@@ -361,7 +323,7 @@ export class WorkspaceView extends BaseView {
 
     // 6. Faction Sentiment (half-width)
     if (data.factions.length > 0) {
-      this.cardManager.add(new SentimentChartCard(this, 'workspace-factions', {
+      this.cardManager.add(new SentimentChartCard(this, 'project-factions', {
         title: 'Faction Sentiment',
         factions: data.factions,
         halfWidth: true,
@@ -371,7 +333,7 @@ export class WorkspaceView extends BaseView {
 
     // 7. Faction Overlaps (half-width)
     if (data.factions.length > 1 && data.factionOverlaps) {
-      this.cardManager.add(new VennDiagramCard(this, 'workspace-faction-overlaps', {
+      this.cardManager.add(new VennDiagramCard(this, 'project-faction-overlaps', {
         title: 'Faction Overlaps',
         factions: data.factions,
         overlaps: data.factionOverlaps,
@@ -384,12 +346,12 @@ export class WorkspaceView extends BaseView {
   /**
    * Set up card for Documents tab (full-width document table)
    */
-  setupDocumentsCard(workspace, data) {
+  setupDocumentsCard(project, data) {
     // Reset card manager for fresh setup
     this.cardManager = new CardManager(this);
 
     if (data.documents.length > 0) {
-      this.cardManager.add(new DocumentTableCard(this, 'workspace-documents', {
+      this.cardManager.add(new DocumentTableCard(this, 'project-documents', {
         title: 'Documents',
         documents: data.documents,
         showCount: true,
@@ -401,30 +363,27 @@ export class WorkspaceView extends BaseView {
   }
 
   /**
-   * Set up action button handlers (Edit, Archive)
+   * Set up action button handlers (Archive/Restore)
    */
-  setupActionButtons(workspace) {
-    // Edit button
-    const editBtn = this.container.querySelector('#workspace-edit-btn');
-    if (editBtn) {
-      this.addListener(editBtn, 'click', () => {
-        const editor = getWorkspaceEditor();
-        editor.openEdit(workspace, (updatedWorkspace) => {
-          // Re-render the view with updated data
-          this.render();
-        });
-      });
-    }
-
+  setupActionButtons(project) {
     // Archive/Restore button
-    const archiveBtn = this.container.querySelector('#workspace-archive-btn');
+    const archiveBtn = this.container.querySelector('#project-archive-btn');
     if (archiveBtn) {
       this.addListener(archiveBtn, 'click', () => {
-        const isArchived = workspace.status === 'archived';
+        const isArchived = project.status === 'archived';
         const newStatus = isArchived ? 'active' : 'archived';
         
-        // Update workspace status (auto-save)
-        dataStore.updateWorkspace(workspace.id, { status: newStatus });
+        // Update project status
+        const projects = dataStore.data.projects || [];
+        const projectIndex = projects.findIndex(p => p.id === project.id);
+        if (projectIndex !== -1) {
+          projects[projectIndex] = { 
+            ...projects[projectIndex], 
+            status: newStatus,
+            updatedAt: new Date().toISOString()
+          };
+          dataStore.save();
+        }
         
         // Re-render to reflect the change
         this.render();
@@ -438,4 +397,4 @@ export class WorkspaceView extends BaseView {
   }
 }
 
-export default WorkspaceView;
+export default ProjectView;
