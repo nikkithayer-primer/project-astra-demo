@@ -6864,6 +6864,34 @@ body.dragging-active * {
   flex: 1;
 }
 
+/* API Key Status */
+.settings-api-key-status {
+  display: flex;
+  align-items: center;
+}
+
+.api-key-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  border-radius: var(--border-radius);
+  font-size: var(--text-sm);
+  font-weight: 500;
+}
+
+.api-key-configured {
+  background: rgba(102, 187, 106, 0.15);
+  color: var(--sentiment-positive, #66BB6A);
+  border: 1px solid rgba(102, 187, 106, 0.3);
+}
+
+.api-key-missing {
+  background: rgba(255, 193, 7, 0.15);
+  color: #FFA000;
+  border: 1px solid rgba(255, 193, 7, 0.3);
+}
+
 /* Danger button variant for settings */
 .btn-danger {
   background: var(--sentiment-negative, #E57373);

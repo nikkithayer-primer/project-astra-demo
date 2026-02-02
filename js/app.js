@@ -400,9 +400,22 @@ class App {
               <span class="settings-label-text">OpenAI API Key</span>
               <span class="settings-label-description">Required for AI-powered chat. Your key is stored locally and never sent to our servers.</span>
             </div>
+            <div class="settings-api-key-status">
+              ${ChatService.hasApiKey() 
+                ? `<span class="api-key-badge api-key-configured"><svg width="12" height="12" viewBox="0 0 16 16" fill="currentColor"><path d="M13.78 4.22a.75.75 0 010 1.06l-7.25 7.25a.75.75 0 01-1.06 0L2.22 9.28a.75.75 0 011.06-1.06L6 10.94l6.72-6.72a.75.75 0 011.06 0z"/></svg> Key configured</span>`
+                : `<span class="api-key-badge api-key-missing"><svg width="12" height="12" viewBox="0 0 16 16" fill="currentColor"><path d="M8 1.5a6.5 6.5 0 100 13 6.5 6.5 0 000-13zM0 8a8 8 0 1116 0A8 8 0 010 8zm9-3a1 1 0 11-2 0 1 1 0 012 0zM8 7a.75.75 0 01.75.75v4a.75.75 0 01-1.5 0v-4A.75.75 0 018 7z"/></svg> Not configured</span>`
+              }
+            </div>
+          </div>
+          
+          <div class="settings-row">
+            <div class="settings-label">
+              <span class="settings-label-text">${ChatService.hasApiKey() ? 'Update API Key' : 'Enter API Key'}</span>
+              <span class="settings-label-description">${ChatService.hasApiKey() ? 'Enter a new key to replace the existing one' : 'Paste your OpenAI API key (starts with sk-)'}</span>
+            </div>
             <div class="settings-input-group">
               <input type="password" id="setting-openai-key" class="settings-input" 
-                placeholder="${ChatService.hasApiKey() ? '••••••••••••••••' : 'sk-...'}"
+                placeholder="sk-proj-..."
                 value="">
               <button type="button" class="btn btn-small btn-secondary" id="toggle-key-visibility">Show</button>
             </div>
@@ -411,7 +424,7 @@ class App {
           <div class="settings-row">
             <div class="settings-label">
               <span class="settings-label-text">Clear API Key</span>
-              <span class="settings-label-description">Remove the stored API key from this browser</span>
+              <span class="settings-label-description">Remove the stored API key and return to placeholder responses</span>
             </div>
             <button type="button" class="btn btn-small btn-danger" id="clear-api-key">Clear Key</button>
           </div>
@@ -455,6 +468,7 @@ class App {
     // Handle clear API key
     document.getElementById('clear-api-key')?.addEventListener('click', () => {
       ChatService.setApiKey(null);
+      this.updateChatStatus();
       this.showToast('API key cleared', 'success');
       this.showSettingsModal(); // Refresh modal
     });
@@ -489,12 +503,23 @@ class App {
     // Save API key if provided (stored separately in localStorage, not in dataStore)
     const apiKeyInput = document.getElementById('setting-openai-key');
     const newApiKey = apiKeyInput?.value?.trim();
-    if (newApiKey && newApiKey.startsWith('sk-')) {
-      ChatService.setApiKey(newApiKey);
+    let apiKeyMessage = '';
+    
+    if (newApiKey) {
+      if (newApiKey.startsWith('sk-')) {
+        ChatService.setApiKey(newApiKey);
+        apiKeyMessage = ' API key saved.';
+        // Update chat status indicator
+        this.updateChatStatus();
+      } else {
+        this.closeModal();
+        this.showToast('Invalid API key format. Key must start with "sk-"', 'error');
+        return;
+      }
     }
     
     this.closeModal();
-    this.showToast('Settings saved', 'success');
+    this.showToast('Settings saved.' + apiKeyMessage, 'success');
   }
 
   /**
@@ -558,6 +583,36 @@ class App {
     if (savedWidth) {
       document.documentElement.style.setProperty('--chat-width', `${savedWidth}px`);
     }
+    
+    // Update chat status indicator
+    this.updateChatStatus();
+  }
+
+  /**
+   * Update the chat status indicator based on API key configuration
+   */
+  updateChatStatus() {
+    const statusEl = document.getElementById('chat-status');
+    if (!statusEl) return;
+    
+    if (ChatService.hasApiKey()) {
+      statusEl.innerHTML = `
+        <span class="chat-status-badge chat-status-ai">
+          <svg width="10" height="10" viewBox="0 0 16 16" fill="currentColor"><path d="M13.78 4.22a.75.75 0 010 1.06l-7.25 7.25a.75.75 0 01-1.06 0L2.22 9.28a.75.75 0 011.06-1.06L6 10.94l6.72-6.72a.75.75 0 011.06 0z"/></svg>
+          AI enabled
+        </span>
+      `;
+      statusEl.classList.remove('chat-status-warning');
+    } else {
+      statusEl.innerHTML = `
+        <span class="chat-status-badge chat-status-demo">
+          <svg width="10" height="10" viewBox="0 0 16 16" fill="currentColor"><path d="M8 1.5a6.5 6.5 0 100 13 6.5 6.5 0 000-13zM0 8a8 8 0 1116 0A8 8 0 010 8zm9-3a1 1 0 11-2 0 1 1 0 012 0zM8 7a.75.75 0 01.75.75v4a.75.75 0 01-1.5 0v-4A.75.75 0 018 7z"/></svg>
+          Demo mode
+        </span>
+        <a href="#" class="chat-status-link" onclick="window.app.showSettingsModal(); return false;">Add API key for AI responses</a>
+      `;
+      statusEl.classList.add('chat-status-warning');
+    }
   }
 
   /**
@@ -590,8 +645,8 @@ class App {
     document.addEventListener('mousemove', (e) => {
       if (!isResizing) return;
       
-      // Calculate new width (dragging left increases width)
-      const newWidth = startWidth - (e.clientX - startX);
+      // Calculate new width (dragging right increases width for left-side panel)
+      const newWidth = startWidth + (e.clientX - startX);
       const clampedWidth = Math.max(minWidth, Math.min(getMaxWidth(), newWidth));
       
       // Update CSS variable for both panel and content wrapper
@@ -627,7 +682,8 @@ class App {
     document.addEventListener('touchmove', (e) => {
       if (!isResizing) return;
       
-      const newWidth = startWidth - (e.touches[0].clientX - startX);
+      // Calculate new width (dragging right increases width for left-side panel)
+      const newWidth = startWidth + (e.touches[0].clientX - startX);
       const clampedWidth = Math.max(minWidth, Math.min(getMaxWidth(), newWidth));
       
       document.documentElement.style.setProperty('--chat-width', `${clampedWidth}px`);

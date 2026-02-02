@@ -32,24 +32,24 @@
 .chat-panel {
   position: fixed;
   top: 0;
-  right: 0;
+  left: 0;
   width: var(--chat-width, 500px);
   min-width: 350px;
   max-width: 50vw;
   height: 100vh;
   background: var(--bg-secondary);
-  border-left: 1px solid var(--border-color);
+  border-right: 1px solid var(--border-color);
   display: flex;
   flex-direction: column;
   z-index: 900;
-  transform: translateX(100%);
+  transform: translateX(-100%);
   transition: transform 0.25s ease;
 }
 
-/* Resize handle on the left edge of chat panel */
+/* Resize handle on the right edge of chat panel */
 .chat-resize-handle {
   position: absolute;
-  left: 0;
+  right: 0;
   top: 0;
   width: 4px;
   height: 100%;
@@ -398,17 +398,57 @@
   text-decoration: underline;
 }
 
+/* Chat Status Indicator */
+.chat-status {
+  padding: 8px 12px;
+  border-top: 1px solid var(--border-subtle);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 11px;
+}
+
+.chat-status-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 3px 8px;
+  border-radius: 10px;
+  font-weight: 500;
+}
+
+.chat-status-ai {
+  background: rgba(102, 187, 106, 0.15);
+  color: var(--sentiment-positive, #66BB6A);
+}
+
+.chat-status-demo {
+  background: rgba(255, 193, 7, 0.15);
+  color: #FFA000;
+}
+
+.chat-status-link {
+  color: var(--text-muted);
+  text-decoration: none;
+  margin-left: auto;
+}
+
+.chat-status-link:hover {
+  color: var(--accent-primary);
+  text-decoration: underline;
+}
+
 /* ============================================
    Adjust content wrapper when chat is open
    ============================================ */
 
 body.chat-open .content-wrapper {
-  margin-right: var(--chat-width, 500px);
-  transition: margin-right 0.25s ease;
+  margin-left: var(--chat-width, 500px);
+  transition: margin-left 0.25s ease;
 }
 
 body:not(.chat-open) .content-wrapper {
-  transition: margin-right 0.25s ease;
+  transition: margin-left 0.25s ease;
 }
 
 /* Disable ALL transitions during resize - must come after chat-open rules for specificity */

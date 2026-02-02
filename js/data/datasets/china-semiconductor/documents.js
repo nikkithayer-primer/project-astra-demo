@@ -3008,5 +3008,758 @@ export const documents = [
     metrics: { likes: 7850, comments: 1650, shares: 3200, platform: 'x' },
     highlights: [],
     comments: []
+  },
+
+  // ============================================
+  // Structured Data - Corporate Records
+  // ============================================
+  {
+    id: 'doc-071',
+    documentType: 'corporate_record',
+    repositoryId: 'repo-struct',
+    classification: 'U',
+    title: 'SMIC - Hong Kong Stock Exchange Annual Filing',
+    publishedDate: '2025-12-20T00:00:00Z',
+    publisherId: 'pub-china-registry',
+    excerpt: 'Annual corporate filing for Semiconductor Manufacturing International Corporation showing ownership and board composition.',
+    personIds: ['person-001', 'person-002'],
+    organizationIds: ['org-001', 'org-007', 'org-008'],
+    locationIds: ['loc-002'],
+    narrativeIds: ['narr-001'],
+    eventIds: ['event-001'],
+    factionMentions: {
+      'faction-001': { sentiment: 0.7 }
+    },
+    structuredData: {
+      recordType: 'corporate_record',
+      source: 'HKEX',
+      companyName: 'Semiconductor Manufacturing International Corporation',
+      jurisdiction: 'Cayman Islands (HK Listed)',
+      registrationNumber: 'HKEX-0981',
+      incorporationDate: '2000-04-03',
+      status: 'active',
+      entityType: 'corporation',
+      registeredAddress: '18 Zhangjiang Road, Pudong, Shanghai, China 201203',
+      beneficialOwners: ['China National IC Fund (11%)', 'Datang Telecom (17%)', 'Public Float (72%)'],
+      directors: ['Zhao Haijun (Co-CEO)', 'Liang Mong Song (Co-CEO)', 'Gao Yonggang (CFO)'],
+      flags: ['state_affiliated', 'export_controlled']
+    },
+    contentBlocks: [
+      { type: 'paragraph', content: 'SMIC annual filing shows continued state investment through China National IC Fund and Datang Telecom holdings. The company is subject to US export restrictions limiting access to advanced manufacturing equipment.' }
+    ],
+    highlights: [],
+    comments: []
+  },
+  {
+    id: 'doc-072',
+    documentType: 'corporate_record',
+    repositoryId: 'repo-struct',
+    classification: 'U',
+    title: 'ASML Holding N.V. - SEC 20-F Filing',
+    publishedDate: '2026-01-10T00:00:00Z',
+    publisherId: 'pub-sec-edgar',
+    excerpt: 'Annual report for ASML showing revenue breakdown and export control compliance disclosures.',
+    personIds: ['person-004', 'person-028'],
+    organizationIds: ['org-002', 'org-004'],
+    locationIds: ['loc-003', 'loc-005'],
+    narrativeIds: ['narr-002'],
+    eventIds: ['event-003', 'event-004'],
+    factionMentions: {
+      'faction-002': { sentiment: 0.5 }
+    },
+    structuredData: {
+      recordType: 'corporate_record',
+      source: 'SEC EDGAR',
+      companyName: 'ASML Holding N.V.',
+      jurisdiction: 'Netherlands',
+      registrationNumber: '0001164680',
+      incorporationDate: '1984-01-01',
+      status: 'active',
+      entityType: 'corporation',
+      registeredAddress: 'De Run 6501, 5504 DR Veldhoven, Netherlands',
+      beneficialOwners: ['Public Float (100%)'],
+      directors: ['Christophe Fouquet (CEO)', 'Peter Wennink (Former CEO)'],
+      flags: ['export_controlled', 'critical_technology']
+    },
+    contentBlocks: [
+      { type: 'paragraph', content: 'ASML 20-F filing discloses significant revenue impact from China export restrictions. The company has ceased EUV system sales to China and faces restrictions on DUV equipment servicing. China revenue declined 35% year-over-year.' }
+    ],
+    highlights: [],
+    comments: []
+  },
+  {
+    id: 'doc-073',
+    documentType: 'corporate_record',
+    repositoryId: 'repo-struct',
+    classification: 'U',
+    title: 'Huawei Technologies - Corporate Structure Analysis',
+    publishedDate: '2025-11-15T00:00:00Z',
+    publisherId: 'pub-opencorp',
+    excerpt: 'Analysis of Huawei ownership structure through employee shareholding scheme.',
+    personIds: ['person-011', 'person-012'],
+    organizationIds: ['org-010'],
+    locationIds: ['loc-001'],
+    narrativeIds: ['narr-004'],
+    eventIds: ['event-002', 'event-008'],
+    factionMentions: {
+      'faction-001': { sentiment: 0.6 },
+      'faction-004': { sentiment: 0.7 }
+    },
+    structuredData: {
+      recordType: 'corporate_record',
+      source: 'Corporate Intelligence',
+      companyName: 'Huawei Technologies Co., Ltd.',
+      jurisdiction: 'China',
+      registrationNumber: 'CN-91440300708461136T',
+      incorporationDate: '1987-09-15',
+      status: 'active',
+      entityType: 'private_enterprise',
+      registeredAddress: 'Bantian, Longgang District, Shenzhen, Guangdong, China',
+      beneficialOwners: ['Employee Shareholding (99%)', 'Ren Zhengfei (1%)'],
+      directors: ['Ren Zhengfei (Founder)', 'Meng Wanzhou (CFO)', 'Guo Ping (Rotating Chairman)'],
+      flags: ['sanctioned', 'export_controlled', 'entity_list']
+    },
+    contentBlocks: [
+      { type: 'paragraph', content: 'Huawei remains on US Entity List, restricting access to American technology. The company\'s ownership structure through employee shareholding makes beneficial ownership analysis complex. Meng Wanzhou returned to CFO role after Canada detention resolution.' }
+    ],
+    highlights: [],
+    comments: []
+  },
+  {
+    id: 'doc-074',
+    documentType: 'corporate_record',
+    repositoryId: 'repo-struct',
+    classification: 'U',
+    title: 'YMTC - Yangtze Memory Technologies Filing',
+    publishedDate: '2025-10-30T00:00:00Z',
+    publisherId: 'pub-china-registry',
+    excerpt: 'Corporate registration for YMTC showing state ownership and technology development status.',
+    personIds: ['person-013'],
+    organizationIds: ['org-013', 'org-007'],
+    locationIds: ['loc-007'],
+    narrativeIds: ['narr-005'],
+    eventIds: ['event-010'],
+    factionMentions: {
+      'faction-001': { sentiment: 0.65 }
+    },
+    structuredData: {
+      recordType: 'corporate_record',
+      source: 'China State Administration for Market Regulation',
+      companyName: 'Yangtze Memory Technologies Co., Ltd.',
+      jurisdiction: 'China',
+      registrationNumber: 'CN-91420100MA4KNXNG2F',
+      incorporationDate: '2016-07-26',
+      status: 'active',
+      entityType: 'corporation',
+      registeredAddress: 'No. 88 Gaoxin 4th Road, Wuhan, Hubei, China',
+      beneficialOwners: ['Tsinghua Unigroup (24%)', 'China National IC Fund (24%)', 'Hubei Province (38%)'],
+      directors: ['Chen Nanxiang (CEO)'],
+      flags: ['state_owned', 'entity_list', 'memory_chip']
+    },
+    contentBlocks: [
+      { type: 'paragraph', content: 'YMTC filing shows substantial state ownership through IC Fund and provincial government. The company achieved 232-layer NAND production, placing it near parity with global leaders despite export restrictions limiting equipment access.' }
+    ],
+    highlights: [],
+    comments: []
+  },
+  {
+    id: 'doc-075',
+    documentType: 'corporate_record',
+    repositoryId: 'repo-struct',
+    classification: 'U',
+    title: 'Intel Corporation - CHIPS Act Recipient Filing',
+    publishedDate: '2026-01-05T00:00:00Z',
+    publisherId: 'pub-sec-edgar',
+    excerpt: 'SEC filing detailing Intel CHIPS Act funding agreement and manufacturing commitments.',
+    personIds: ['person-020'],
+    organizationIds: ['org-027', 'org-005'],
+    locationIds: ['loc-009', 'loc-012'],
+    narrativeIds: ['narr-008'],
+    eventIds: ['event-015', 'event-026'],
+    factionMentions: {
+      'faction-005': { sentiment: 0.6 }
+    },
+    structuredData: {
+      recordType: 'corporate_record',
+      source: 'SEC EDGAR',
+      companyName: 'Intel Corporation',
+      jurisdiction: 'Delaware',
+      registrationNumber: '0000050863',
+      incorporationDate: '1968-07-18',
+      status: 'active',
+      entityType: 'corporation',
+      registeredAddress: '2200 Mission College Blvd, Santa Clara, CA 95054',
+      beneficialOwners: ['Public Float (100%)'],
+      directors: ['Pat Gelsinger (CEO)', 'Frank Yeary (Chairman)'],
+      flags: ['chips_act_recipient', 'domestic_manufacturing']
+    },
+    contentBlocks: [
+      { type: 'paragraph', content: 'Intel filing discloses $8.5B in CHIPS Act funding for domestic semiconductor manufacturing expansion. Commitments include new fabs in Arizona and Ohio. Filing notes restructuring challenges and competition from TSMC foundry services.' }
+    ],
+    highlights: [],
+    comments: []
+  },
+  {
+    id: 'doc-076',
+    documentType: 'corporate_record',
+    repositoryId: 'repo-struct',
+    classification: 'U',
+    title: 'TSMC - Taiwan Semiconductor Manufacturing Company',
+    publishedDate: '2025-12-15T00:00:00Z',
+    publisherId: 'pub-sec-edgar',
+    excerpt: 'Annual filing for TSMC covering Arizona fab progress and geopolitical risk disclosures.',
+    personIds: ['person-017', 'person-018'],
+    organizationIds: ['org-020', 'org-033'],
+    locationIds: ['loc-010', 'loc-009'],
+    narrativeIds: ['narr-007'],
+    eventIds: ['event-013'],
+    factionMentions: {
+      'faction-005': { sentiment: 0.5 },
+      'faction-006': { sentiment: 0.4 }
+    },
+    structuredData: {
+      recordType: 'corporate_record',
+      source: 'SEC EDGAR',
+      companyName: 'Taiwan Semiconductor Manufacturing Company Limited',
+      jurisdiction: 'Taiwan',
+      registrationNumber: 'ADR 0000-1046179',
+      incorporationDate: '1987-02-21',
+      status: 'active',
+      entityType: 'corporation',
+      registeredAddress: 'No. 8, Li-Hsin Rd. 6, Hsinchu Science Park, Hsinchu, Taiwan',
+      beneficialOwners: ['Public Float (100%)'],
+      directors: ['C.C. Wei (CEO)', 'Mark Liu (Chairman)'],
+      flags: ['critical_supplier', 'geopolitical_risk']
+    },
+    contentBlocks: [
+      { type: 'paragraph', content: 'TSMC filing addresses Arizona fab construction delays and cost overruns. The company discloses geopolitical risks related to Taiwan Strait tensions and discusses customer concentration with Apple and Nvidia accounting for significant revenue share.' }
+    ],
+    highlights: [],
+    comments: []
+  },
+  {
+    id: 'doc-077',
+    documentType: 'corporate_record',
+    repositoryId: 'repo-struct',
+    classification: 'U',
+    title: 'Nvidia Corporation - AI Chip Export Compliance',
+    publishedDate: '2026-01-08T00:00:00Z',
+    publisherId: 'pub-sec-edgar',
+    excerpt: 'Nvidia quarterly filing addressing China export restrictions and AI chip demand.',
+    personIds: ['person-021'],
+    organizationIds: ['org-028', 'org-006'],
+    locationIds: ['loc-012'],
+    narrativeIds: ['narr-011'],
+    eventIds: ['event-021'],
+    factionMentions: {
+      'faction-005': { sentiment: 0.7 },
+      'faction-009': { sentiment: 0.4 }
+    },
+    structuredData: {
+      recordType: 'corporate_record',
+      source: 'SEC EDGAR',
+      companyName: 'Nvidia Corporation',
+      jurisdiction: 'Delaware',
+      registrationNumber: '0001045810',
+      incorporationDate: '1993-01-01',
+      status: 'active',
+      entityType: 'corporation',
+      registeredAddress: '2788 San Tomas Expressway, Santa Clara, CA 95051',
+      beneficialOwners: ['Public Float (100%)'],
+      directors: ['Jensen Huang (CEO)', 'Mark Stevens'],
+      flags: ['export_controlled', 'ai_technology']
+    },
+    contentBlocks: [
+      { type: 'paragraph', content: 'Nvidia filing discloses development of China-specific chips compliant with export controls. The company reports record demand for AI training chips, with data center revenue exceeding gaming. China restrictions estimated to impact 10-15% of potential revenue.' }
+    ],
+    highlights: [],
+    comments: []
+  },
+
+  // ============================================
+  // Structured Data - Political Finance
+  // ============================================
+  {
+    id: 'doc-078',
+    documentType: 'political_finance',
+    repositoryId: 'repo-struct',
+    classification: 'U',
+    title: 'Semiconductor Industry Association - Lobbying Disclosure',
+    publishedDate: '2026-01-10T00:00:00Z',
+    publisherId: 'pub-bis',
+    excerpt: 'SIA lobbying on CHIPS Act implementation and export control policy.',
+    personIds: [],
+    organizationIds: ['org-027', 'org-028', 'org-020'],
+    locationIds: ['loc-004'],
+    narrativeIds: ['narr-008'],
+    eventIds: [],
+    factionMentions: {
+      'faction-005': { sentiment: 0.6 }
+    },
+    structuredData: {
+      recordType: 'political_finance',
+      source: 'Senate LDA',
+      filingId: 'LDA-2025-Q4-SIA',
+      filingType: 'lobbying_report',
+      reportingPeriod: '2025-Q4',
+      filer: 'Semiconductor Industry Association',
+      client: 'SIA (self)',
+      amount: 1850000,
+      currency: 'USD',
+      issuesLobbied: ['CHIPS Act Implementation', 'Export Controls', 'R&D Tax Credits'],
+      agenciesLobbied: ['Commerce', 'BIS', 'Senate Commerce', 'House Science'],
+      lobbyists: ['John Neuffer', 'Jimmy Goodrich'],
+      flags: ['industry_association']
+    },
+    contentBlocks: [
+      { type: 'paragraph', content: 'SIA Q4 2025 lobbying focused on CHIPS Act implementation and export control calibration. The association advocated for clearer guidance on China restrictions while supporting domestic manufacturing incentives. Members include Intel, Nvidia, and other major US chipmakers.' }
+    ],
+    highlights: [],
+    comments: []
+  },
+  {
+    id: 'doc-079',
+    documentType: 'political_finance',
+    repositoryId: 'repo-struct',
+    classification: 'U',
+    title: 'Intel Corporation PAC - Q4 2025 Filing',
+    publishedDate: '2026-01-08T00:00:00Z',
+    publisherId: 'pub-bis',
+    excerpt: 'Intel PAC contributions to legislators involved in semiconductor policy.',
+    personIds: ['person-020'],
+    organizationIds: ['org-027'],
+    locationIds: ['loc-004'],
+    narrativeIds: [],
+    eventIds: [],
+    factionMentions: {},
+    structuredData: {
+      recordType: 'political_finance',
+      source: 'FEC',
+      filingId: 'FEC-2025-Q4-INTC-PAC',
+      filingType: 'pac_quarterly',
+      reportingPeriod: '2025-Q4',
+      filer: 'Intel Corporation PAC',
+      amount: 425000,
+      currency: 'USD',
+      recipients: ['Senate Commerce Committee Members', 'House Science Committee Members'],
+      issuesLobbied: [],
+      flags: []
+    },
+    contentBlocks: [
+      { type: 'paragraph', content: 'Intel PAC contributed $425K to Congressional candidates in Q4 2025, focusing on members with oversight of semiconductor policy. Contributions were bipartisan, targeting legislators supportive of CHIPS Act funding.' }
+    ],
+    highlights: [],
+    comments: []
+  },
+  {
+    id: 'doc-080',
+    documentType: 'political_finance',
+    repositoryId: 'repo-struct',
+    classification: 'U',
+    title: 'China-US Exchange Foundation - FARA Filing',
+    publishedDate: '2025-12-15T00:00:00Z',
+    publisherId: 'pub-mofcom',
+    excerpt: 'FARA registration for organization promoting China-US business relations.',
+    personIds: [],
+    organizationIds: [],
+    locationIds: ['loc-004', 'loc-006'],
+    narrativeIds: [],
+    eventIds: [],
+    factionMentions: {
+      'faction-001': { sentiment: 0.3 }
+    },
+    structuredData: {
+      recordType: 'political_finance',
+      source: 'DOJ FARA',
+      filingId: 'FARA-6825',
+      filingType: 'fara_report',
+      reportingPeriod: '2025-H2',
+      filer: 'China-US Exchange Foundation',
+      client: 'CUSEF (Hong Kong)',
+      amount: 2400000,
+      currency: 'USD',
+      issuesLobbied: ['US-China Relations', 'Trade Policy', 'Technology Cooperation'],
+      agenciesLobbied: ['State Department', 'Commerce', 'Congress'],
+      lobbyists: [],
+      flags: ['fara_registered', 'foreign_principal']
+    },
+    contentBlocks: [
+      { type: 'paragraph', content: 'CUSEF FARA filing shows $2.4M in activities promoting US-China business engagement. The organization funds exchange programs and policy dialogues, though activities have decreased amid bilateral tensions over technology restrictions.' }
+    ],
+    highlights: [],
+    comments: []
+  },
+  {
+    id: 'doc-081',
+    documentType: 'political_finance',
+    repositoryId: 'repo-struct',
+    classification: 'U',
+    title: 'ASML US Government Affairs - Lobbying Disclosure',
+    publishedDate: '2026-01-05T00:00:00Z',
+    publisherId: 'pub-bis',
+    excerpt: 'ASML lobbying on export control implementation affecting equipment sales.',
+    personIds: [],
+    organizationIds: ['org-002', 'org-004', 'org-006'],
+    locationIds: ['loc-004'],
+    narrativeIds: ['narr-002'],
+    eventIds: [],
+    factionMentions: {},
+    structuredData: {
+      recordType: 'political_finance',
+      source: 'Senate LDA',
+      filingId: 'LDA-2025-Q4-ASML',
+      filingType: 'lobbying_report',
+      reportingPeriod: '2025-Q4',
+      filer: 'ASML US Inc.',
+      client: 'ASML Holding N.V.',
+      amount: 680000,
+      currency: 'USD',
+      issuesLobbied: ['Export Controls', 'Technology Transfer', 'Semiconductor Equipment'],
+      agenciesLobbied: ['BIS', 'Commerce', 'State', 'Senate Banking'],
+      lobbyists: ['David Camp', 'Lisa Curtis'],
+      flags: ['foreign_company']
+    },
+    contentBlocks: [
+      { type: 'paragraph', content: 'ASML US lobbying focused on export control implementation and service restrictions. The company seeks clarity on maintenance and support provisions for existing China installations while complying with new EUV and DUV restrictions.' }
+    ],
+    highlights: [],
+    comments: []
+  },
+  {
+    id: 'doc-082',
+    documentType: 'political_finance',
+    repositoryId: 'repo-struct',
+    classification: 'U',
+    title: 'Samsung Electronics America - Lobbying Disclosure',
+    publishedDate: '2025-12-20T00:00:00Z',
+    publisherId: 'pub-bis',
+    excerpt: 'Samsung lobbying on semiconductor subsidies and WTO trade disputes.',
+    personIds: ['person-022'],
+    organizationIds: ['org-014', 'org-032'],
+    locationIds: ['loc-004', 'loc-011'],
+    narrativeIds: ['narr-009'],
+    eventIds: ['event-016', 'event-017'],
+    factionMentions: {
+      'faction-006': { sentiment: 0.4 }
+    },
+    structuredData: {
+      recordType: 'political_finance',
+      source: 'Senate LDA',
+      filingId: 'LDA-2025-Q4-SAMSUNG',
+      filingType: 'lobbying_report',
+      reportingPeriod: '2025-Q4',
+      filer: 'Samsung Electronics America',
+      client: 'Samsung Electronics Co., Ltd.',
+      amount: 920000,
+      currency: 'USD',
+      issuesLobbied: ['Semiconductor Subsidies', 'Trade Policy', 'WTO Compliance'],
+      agenciesLobbied: ['USTR', 'Commerce', 'Senate Finance'],
+      lobbyists: ['Marc Ostfield', 'Jennifer Park'],
+      flags: ['foreign_company', 'us_manufacturing']
+    },
+    contentBlocks: [
+      { type: 'paragraph', content: 'Samsung lobbying addressed US concerns over Korean semiconductor subsidies while advocating for Texas fab investment support. The company operates major manufacturing facilities in Austin and seeks CHIPS Act funding for expansion.' }
+    ],
+    highlights: [],
+    comments: []
+  },
+  {
+    id: 'doc-083',
+    documentType: 'political_finance',
+    repositoryId: 'repo-struct',
+    classification: 'U',
+    title: 'Information Technology Industry Council - China Tech Lobbying',
+    publishedDate: '2026-01-12T00:00:00Z',
+    publisherId: 'pub-bis',
+    excerpt: 'ITI lobbying on technology trade policy and export control calibration.',
+    personIds: [],
+    organizationIds: ['org-027', 'org-028'],
+    locationIds: ['loc-004'],
+    narrativeIds: [],
+    eventIds: [],
+    factionMentions: {
+      'faction-005': { sentiment: 0.5 }
+    },
+    structuredData: {
+      recordType: 'political_finance',
+      source: 'Senate LDA',
+      filingId: 'LDA-2025-Q4-ITI',
+      filingType: 'lobbying_report',
+      reportingPeriod: '2025-Q4',
+      filer: 'Information Technology Industry Council',
+      client: 'ITI (self)',
+      amount: 1200000,
+      currency: 'USD',
+      issuesLobbied: ['Export Controls', 'Technology Trade', 'AI Regulation', 'Data Privacy'],
+      agenciesLobbied: ['BIS', 'Commerce', 'USTR', 'Senate Commerce', 'House Energy'],
+      lobbyists: ['Jason Oxman', 'Courtney Lang'],
+      flags: ['industry_association']
+    },
+    contentBlocks: [
+      { type: 'paragraph', content: 'ITI Q4 lobbying covered broad technology policy issues including export controls, AI regulation, and data privacy. The association represents major tech companies and advocates for calibrated China restrictions that maintain US competitiveness.' }
+    ],
+    highlights: [],
+    comments: []
+  },
+
+  // ============================================
+  // Structured Data - Event Attendance
+  // ============================================
+  {
+    id: 'doc-084',
+    documentType: 'event_attendance',
+    repositoryId: 'repo-struct',
+    classification: 'U',
+    title: 'SMIC 5nm Announcement - Shenzhen Press Conference',
+    publishedDate: '2026-01-16T00:00:00Z',
+    publisherId: 'pub-analyst',
+    excerpt: 'Attendance record for SMIC announcement of 5nm mass production achievement.',
+    personIds: ['person-001', 'person-002'],
+    organizationIds: ['org-001'],
+    locationIds: ['loc-001'],
+    eventIds: ['event-001'],
+    narrativeIds: ['narr-001'],
+    factionMentions: {
+      'faction-001': { sentiment: 0.8 },
+      'faction-004': { sentiment: 0.9 }
+    },
+    structuredData: {
+      recordType: 'event_attendance',
+      source: 'media_report',
+      confidence: 'confirmed',
+      eventName: 'SMIC 5nm Mass Production Announcement',
+      eventDate: '2026-01-15',
+      venue: 'SMIC Headquarters, Shenzhen',
+      attendee: 'Zhao Haijun',
+      role: 'speaker',
+      representingOrg: 'SMIC',
+      observedWith: ['Liang Mong Song - technical presentation', 'Chinese tech media - extensive coverage'],
+      topics: ['5nm Achievement', 'DUV Multi-patterning', 'Technology Independence']
+    },
+    contentBlocks: [
+      { type: 'paragraph', content: 'SMIC Co-CEOs Zhao Haijun and Liang Mong Song jointly announced mass production of 5nm chips using DUV lithography. The press conference was heavily covered by Chinese state media as evidence of technology self-sufficiency despite US export controls.' }
+    ],
+    highlights: [],
+    comments: []
+  },
+  {
+    id: 'doc-085',
+    documentType: 'event_attendance',
+    repositoryId: 'repo-struct',
+    classification: 'U',
+    title: 'ASML Earnings Call - Q4 2025',
+    publishedDate: '2026-01-22T00:00:00Z',
+    publisherId: 'pub-analyst',
+    excerpt: 'Attendance record for ASML quarterly earnings call addressing China impact.',
+    personIds: ['person-004', 'person-028'],
+    organizationIds: ['org-002'],
+    locationIds: ['loc-003'],
+    eventIds: ['event-004'],
+    narrativeIds: ['narr-002'],
+    factionMentions: {
+      'faction-006': { sentiment: 0.3 }
+    },
+    structuredData: {
+      recordType: 'event_attendance',
+      source: 'official_program',
+      confidence: 'confirmed',
+      eventName: 'ASML Q4 2025 Earnings Call',
+      eventDate: '2026-01-20',
+      venue: 'Virtual/Veldhoven Headquarters',
+      attendee: 'Christophe Fouquet',
+      role: 'speaker',
+      representingOrg: 'ASML',
+      observedWith: ['Analysts from major investment banks', 'Peter Wennink - transition remarks'],
+      topics: ['China Revenue Impact', 'Export Control Compliance', 'Future Guidance']
+    },
+    contentBlocks: [
+      { type: 'paragraph', content: 'ASML Q4 earnings call featured new CEO Christophe Fouquet addressing investor concerns about China restrictions. Call included detailed Q&A on DUV service limitations and EUV backlog from non-China customers.' }
+    ],
+    highlights: [],
+    comments: []
+  },
+  {
+    id: 'doc-086',
+    documentType: 'event_attendance',
+    repositoryId: 'repo-struct',
+    classification: 'U',
+    title: 'Big Fund III Launch - Beijing Ceremony',
+    publishedDate: '2025-10-28T00:00:00Z',
+    publisherId: 'pub-analyst',
+    excerpt: 'Attendance record for China\'s announcement of new semiconductor investment fund.',
+    personIds: ['person-008', 'person-009', 'person-010'],
+    organizationIds: ['org-007', 'org-009'],
+    locationIds: ['loc-006'],
+    eventIds: ['event-006', 'event-007'],
+    narrativeIds: ['narr-003'],
+    factionMentions: {
+      'faction-001': { sentiment: 0.9 },
+      'faction-004': { sentiment: 0.85 }
+    },
+    structuredData: {
+      recordType: 'event_attendance',
+      source: 'media_report',
+      confidence: 'confirmed',
+      eventName: 'Big Fund III Launch Ceremony',
+      eventDate: '2025-10-25',
+      venue: 'Great Hall of the People, Beijing',
+      attendee: 'He Lifeng',
+      role: 'keynote_speaker',
+      representingOrg: 'State Council',
+      observedWith: ['Liu He - policy remarks', 'Ding Wenwu - fund management', 'Semiconductor industry executives'],
+      topics: ['$47B Investment', 'Technology Independence', 'Industry Support']
+    },
+    contentBlocks: [
+      { type: 'paragraph', content: 'Big Fund III launch ceremony at Great Hall of the People featured senior State Council officials announcing $47B (340 billion yuan) semiconductor investment program. Event emphasized strategic importance of chip self-sufficiency.' }
+    ],
+    highlights: [],
+    comments: []
+  },
+  {
+    id: 'doc-087',
+    documentType: 'event_attendance',
+    repositoryId: 'repo-struct',
+    classification: 'U',
+    title: 'Huawei Mate 70 Launch - Shanghai',
+    publishedDate: '2025-12-05T00:00:00Z',
+    publisherId: 'pub-analyst',
+    excerpt: 'Attendance record for Huawei smartphone launch featuring SMIC 5nm chip.',
+    personIds: ['person-011', 'person-012'],
+    organizationIds: ['org-010', 'org-001'],
+    locationIds: ['loc-002'],
+    eventIds: ['event-002'],
+    narrativeIds: ['narr-001', 'narr-004'],
+    factionMentions: {
+      'faction-001': { sentiment: 0.85 },
+      'faction-004': { sentiment: 0.9 }
+    },
+    structuredData: {
+      recordType: 'event_attendance',
+      source: 'media_report',
+      confidence: 'confirmed',
+      eventName: 'Huawei Mate 70 Series Global Launch',
+      eventDate: '2025-12-01',
+      venue: 'Shanghai Expo Center',
+      attendee: 'Ren Zhengfei',
+      role: 'keynote_speaker',
+      representingOrg: 'Huawei',
+      observedWith: ['Meng Wanzhou - financial outlook', 'Richard Yu - product presentation', 'Chinese tech press'],
+      topics: ['Kirin 9100 Chip', 'SMIC Partnership', 'Technology Resilience']
+    },
+    contentBlocks: [
+      { type: 'paragraph', content: 'Huawei Mate 70 launch confirmed SMIC-manufactured 5nm Kirin 9100 chip. Ren Zhengfei made rare public appearance emphasizing company\'s survival despite US sanctions. Event received extensive Chinese state media coverage.' }
+    ],
+    highlights: [],
+    comments: []
+  },
+  {
+    id: 'doc-088',
+    documentType: 'event_attendance',
+    repositoryId: 'repo-struct',
+    classification: 'U',
+    title: 'TSMC Arizona Fab Update - Phoenix',
+    publishedDate: '2025-11-20T00:00:00Z',
+    publisherId: 'pub-analyst',
+    excerpt: 'Attendance record for TSMC briefing on Arizona manufacturing facility progress.',
+    personIds: ['person-017', 'person-018', 'person-005'],
+    organizationIds: ['org-020', 'org-005'],
+    locationIds: ['loc-009'],
+    eventIds: ['event-013'],
+    narrativeIds: ['narr-007'],
+    factionMentions: {
+      'faction-005': { sentiment: 0.4 }
+    },
+    structuredData: {
+      recordType: 'event_attendance',
+      source: 'media_report',
+      confidence: 'confirmed',
+      eventName: 'TSMC Arizona Fab Progress Briefing',
+      eventDate: '2025-11-15',
+      venue: 'TSMC Arizona Site, Phoenix',
+      attendee: 'C.C. Wei',
+      role: 'speaker',
+      representingOrg: 'TSMC',
+      observedWith: ['Mark Liu - strategic remarks', 'Gina Raimondo (video) - federal support', 'Arizona officials'],
+      topics: ['Construction Delays', 'Workforce Challenges', 'Production Timeline']
+    },
+    contentBlocks: [
+      { type: 'paragraph', content: 'TSMC leadership briefed media on Arizona fab delays, citing workforce challenges and cost overruns. Commerce Secretary Raimondo joined via video to reaffirm federal support. Production start pushed to 2026.' }
+    ],
+    highlights: [],
+    comments: []
+  },
+  {
+    id: 'doc-089',
+    documentType: 'event_attendance',
+    repositoryId: 'repo-struct',
+    classification: 'U',
+    title: 'Intel Restructuring Announcement - Santa Clara',
+    publishedDate: '2025-09-25T00:00:00Z',
+    publisherId: 'pub-analyst',
+    excerpt: 'Attendance record for Intel announcement of major restructuring and layoffs.',
+    personIds: ['person-020'],
+    organizationIds: ['org-027'],
+    locationIds: ['loc-012'],
+    eventIds: ['event-015', 'event-020'],
+    narrativeIds: ['narr-008'],
+    factionMentions: {
+      'faction-005': { sentiment: -0.3 },
+      'faction-009': { sentiment: -0.2 }
+    },
+    structuredData: {
+      recordType: 'event_attendance',
+      source: 'official_program',
+      confidence: 'confirmed',
+      eventName: 'Intel Strategic Update Announcement',
+      eventDate: '2025-09-20',
+      venue: 'Intel Headquarters, Santa Clara',
+      attendee: 'Pat Gelsinger',
+      role: 'keynote_speaker',
+      representingOrg: 'Intel',
+      observedWith: ['CFO David Zinsner - financial details', 'Board members', 'Analysts and media'],
+      topics: ['Restructuring Plan', 'Layoffs', 'Foundry Strategy', 'CHIPS Act Funding']
+    },
+    contentBlocks: [
+      { type: 'paragraph', content: 'Intel CEO Pat Gelsinger announced major restructuring including 15,000 layoffs and asset sales. The event addressed Intel\'s competitive challenges against TSMC and AMD while reaffirming foundry strategy and CHIPS Act commitments.' }
+    ],
+    highlights: [],
+    comments: []
+  },
+  {
+    id: 'doc-090',
+    documentType: 'event_attendance',
+    repositoryId: 'repo-struct',
+    classification: 'U',
+    title: 'Nvidia AI Chip Demand Briefing - GTC 2025',
+    publishedDate: '2025-11-10T00:00:00Z',
+    publisherId: 'pub-analyst',
+    excerpt: 'Attendance record for Nvidia presentation on AI chip demand and supply constraints.',
+    personIds: ['person-021'],
+    organizationIds: ['org-028'],
+    locationIds: ['loc-012'],
+    eventIds: ['event-021'],
+    narrativeIds: ['narr-011'],
+    factionMentions: {
+      'faction-005': { sentiment: 0.8 },
+      'faction-009': { sentiment: 0.6 }
+    },
+    structuredData: {
+      recordType: 'event_attendance',
+      source: 'official_program',
+      confidence: 'confirmed',
+      eventName: 'Nvidia GTC 2025 Keynote',
+      eventDate: '2025-11-05',
+      venue: 'San Jose Convention Center',
+      attendee: 'Jensen Huang',
+      role: 'keynote_speaker',
+      representingOrg: 'Nvidia',
+      observedWith: ['Major cloud providers - demand presentations', 'AI researchers', 'Investors and analysts'],
+      topics: ['AI Chip Demand', 'Blackwell Architecture', 'China-Compliant Products', 'Supply Constraints']
+    },
+    contentBlocks: [
+      { type: 'paragraph', content: 'Jensen Huang\'s GTC keynote highlighted unprecedented AI chip demand outstripping supply. Presentation included new Blackwell architecture details and discussion of China-compliant products designed to meet export control requirements.' }
+    ],
+    highlights: [],
+    comments: []
   }
 ];

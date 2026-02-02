@@ -584,13 +584,12 @@ const SYSTEM_PROMPT = `You are an intelligence analyst assistant for a disinform
 - Trends and patterns over time
 
 Guidelines:
-1. Always start by getting the current page context to understand what the user is viewing
+1. Start by getting the current page context to understand what the user is viewing
 2. Use the provided functions to retrieve specific data before answering
 3. Cite specific documents, entities, or data points when making claims
 4. Be concise but thorough - provide actionable insights
-5. If you find interesting patterns or connections, proactively share them
-6. When discussing sentiment, explain what it means (negative = critical coverage, positive = favorable)
-7. Suggest relevant follow-up questions or areas to explore
+5. When discussing sentiment, explain what it means (negative = critical coverage, positive = favorable)
+6. Suggest relevant follow-up questions or areas to explore
 
 Remember: You're helping an analyst understand complex information networks. Focus on clarity and actionable intelligence.`;
 
@@ -636,6 +635,125 @@ export class ChatService {
   }
 
   /**
+   * Build rich context for the current page
+   * @returns {string} Formatted context string
+   */
+  buildContextString() {
+    const { route, id } = this.router.getCurrentRoute();
+    const context = buildPageContext(route, id);
+    
+    let contextStr = `## Current Page\n${context.description || `Viewing: ${route}`}\n\n`;
+    
+    // Add detailed context based on route type
+    if (route === 'narrative' && id) {
+      const narrative = DataService.getNarrative(id);
+      if (narrative) {
+        contextStr += `## Narrative Details\n`;
+        contextStr += `- Title: ${narrative.text}\n`;
+        contextStr += `- Sentiment: ${narrative.sentiment} (${narrative.sentiment > 0 ? 'positive/favorable' : narrative.sentiment < 0 ? 'negative/critical' : 'neutral'})\n`;
+        if (narrative.description) contextStr += `- Description: ${narrative.description}\n`;
+        
+        const themes = DataService.getThemesForNarrative(id);
+        if (themes.length > 0) {
+          contextStr += `\n## Themes (${themes.length})\n`;
+          themes.slice(0, 5).forEach(t => {
+            contextStr += `- ${t.text} (sentiment: ${t.sentiment})\n`;
+          });
+        }
+        
+        const docs = DataService.getDocumentsForNarrative(id);
+        if (docs.length > 0) {
+          contextStr += `\n## Recent Documents (${docs.length} total)\n`;
+          docs.slice(0, 5).forEach(d => {
+            contextStr += `- "${d.title}" (${d.publishedDate?.split('T')[0] || 'no date'})\n`;
+            if (d.excerpt) contextStr += `  Excerpt: ${d.excerpt.substring(0, 150)}...\n`;
+          });
+        }
+        
+        const factionMentions = DataService.getAggregateFactionMentionsForNarrative(id);
+        if (Object.keys(factionMentions).length > 0) {
+          contextStr += `\n## Faction Engagement\n`;
+          for (const [factionId, data] of Object.entries(factionMentions)) {
+            const faction = DataService.getFaction(factionId);
+            contextStr += `- ${faction?.name || factionId}: ${data.volume} mentions, sentiment ${data.sentiment}\n`;
+          }
+        }
+      }
+    } else if (route === 'person' && id) {
+      const person = DataService.getPerson(id);
+      if (person) {
+        contextStr += `## Person Details\n`;
+        contextStr += `- Name: ${person.name}\n`;
+        if (person.role) contextStr += `- Role: ${person.role}\n`;
+        if (person.type) contextStr += `- Type: ${person.type}\n`;
+        if (person.description) contextStr += `- Description: ${person.description}\n`;
+        
+        const factions = DataService.getFactionsForPerson(id);
+        if (factions.length > 0) {
+          contextStr += `\n## Affiliated Factions\n`;
+          factions.forEach(f => contextStr += `- ${f.name}\n`);
+        }
+        
+        const narratives = DataService.getNarrativesForPerson(id);
+        if (narratives.length > 0) {
+          contextStr += `\n## Appears in Narratives (${narratives.length})\n`;
+          narratives.slice(0, 5).forEach(n => contextStr += `- ${n.text}\n`);
+        }
+      }
+    } else if (route === 'faction' && id) {
+      const faction = DataService.getFaction(id);
+      if (faction) {
+        contextStr += `## Faction Details\n`;
+        contextStr += `- Name: ${faction.name}\n`;
+        if (faction.description) contextStr += `- Description: ${faction.description}\n`;
+        
+        const narratives = DataService.getNarrativesForFaction(id);
+        if (narratives.length > 0) {
+          contextStr += `\n## Active Narratives (${narratives.length})\n`;
+          narratives.slice(0, 5).forEach(n => {
+            contextStr += `- ${n.text} (sentiment: ${n.sentiment})\n`;
+          });
+        }
+        
+        const people = DataService.getPersonsForFaction(id);
+        if (people.length > 0) {
+          contextStr += `\n## Affiliated People (${people.length})\n`;
+          people.slice(0, 5).forEach(p => contextStr += `- ${p.name}${p.role ? ` (${p.role})` : ''}\n`);
+        }
+      }
+    } else if (route === 'document' && id) {
+      const doc = DataService.getDocumentById(id);
+      if (doc) {
+        contextStr += `## Document Details\n`;
+        contextStr += `- Title: ${doc.title}\n`;
+        contextStr += `- Type: ${doc.documentType}\n`;
+        contextStr += `- Date: ${doc.publishedDate}\n`;
+        if (doc.excerpt) contextStr += `- Excerpt: ${doc.excerpt}\n`;
+        
+        const publisher = DataService.getPublisher(doc.publisherId);
+        if (publisher) contextStr += `- Source: ${publisher.name}\n`;
+      }
+    } else if (route === 'dashboard' || route === 'monitor') {
+      // Provide overview data
+      const narratives = DataService.getNarratives();
+      const factions = DataService.getFactions();
+      
+      contextStr += `## Dashboard Overview\n`;
+      contextStr += `- Total Narratives: ${narratives.length}\n`;
+      contextStr += `- Total Factions: ${factions.length}\n`;
+      
+      if (narratives.length > 0) {
+        contextStr += `\n## Top Narratives\n`;
+        narratives.slice(0, 5).forEach(n => {
+          contextStr += `- ${n.text} (sentiment: ${n.sentiment})\n`;
+        });
+      }
+    }
+    
+    return contextStr;
+  }
+
+  /**
    * Send a message and get a response
    * @param {string} userMessage - The user's message
    * @param {function} onToolCall - Optional callback when a tool is called (for UI feedback)
@@ -665,7 +783,7 @@ export class ChatService {
       // OpenAI may need multiple rounds of function calls
       let response;
       let iterations = 0;
-      const maxIterations = 10; // Safety limit
+      const maxIterations = 3; // Limit to 3 API calls max
 
       while (iterations < maxIterations) {
         iterations++;
@@ -736,7 +854,14 @@ export class ChatService {
         }
       }
 
-      throw new Error('Too many function call iterations');
+      // If we hit max iterations, return whatever we have
+      const lastAssistant = messages.filter(m => m.role === 'assistant').pop();
+      if (lastAssistant?.content) {
+        this.conversationHistory.push({ role: 'assistant', content: lastAssistant.content });
+        return lastAssistant.content;
+      }
+      
+      throw new Error('Could not get a response after max iterations');
     } catch (error) {
       // Remove failed user message from history
       this.conversationHistory.pop();
