@@ -8,6 +8,7 @@ import { DataService } from '../data/DataService.js';
 import { dataStore } from '../data/DataStore.js';
 import { PageHeader } from '../utils/PageHeader.js';
 import { CardBuilder } from '../utils/CardBuilder.js';
+import { Dropdown } from '../components/Dropdown.js';
 
 export class ProjectsView extends BaseView {
   constructor(container, options = {}) {
@@ -23,6 +24,16 @@ export class ProjectsView extends BaseView {
     const activeCardsHtml = activeProjects.map(p => this.renderProjectCard(p)).join('');
     const archivedCardsHtml = archivedProjects.map(p => this.renderProjectCard(p)).join('');
 
+    // Build archived section if there are any
+    const archivedSectionHtml = archivedProjects.length > 0 ? `
+      <div class="content-section">
+        <h3 class="section-title text-muted">Archived</h3>
+        <div class="content-grid">
+          ${archivedCardsHtml}
+        </div>
+      </div>
+    ` : '';
+
     // Build content based on whether we have projects
     let contentHtml;
     if (projects.length === 0) {
@@ -31,8 +42,8 @@ export class ProjectsView extends BaseView {
       contentHtml = `
         <div class="content-grid">
           ${activeCardsHtml}
-          ${archivedCardsHtml}
         </div>
+        ${archivedSectionHtml}
       `;
     }
 
@@ -68,9 +79,6 @@ export class ProjectsView extends BaseView {
     const docCount = project.documentIds?.length || 0;
     const isArchived = project.status === 'archived';
     const updatedAt = this.formatRelativeTime(project.updatedAt);
-    const statusTag = isArchived 
-      ? '<span class="tag tag-neutral">Archived</span>'
-      : '<span class="tag">Active</span>';
 
     // Build actions HTML using CardBuilder
     const actionsHtml = CardBuilder.actionMenu('project', project.id, { 
@@ -83,7 +91,6 @@ export class ProjectsView extends BaseView {
       <div class="card card-half-width project-card" data-project-id="${project.id}">
         <div class="card-header">
           <h2 class="card-title">${this.escapeHtml(project.name)}</h2>
-          ${statusTag}
           <div class="card-header-actions">${actionsHtml}</div>
         </div>
         <div class="card-body">
@@ -150,68 +157,36 @@ export class ProjectsView extends BaseView {
    * Setup action menu dropdown handlers
    */
   setupActionMenus() {
-    const actionMenus = this.container.querySelectorAll('.card-action-menu');
+    // Initialize all dropdowns using the Dropdown component
+    this._actionDropdowns = Dropdown.initAll(this.container);
     
-    actionMenus.forEach(menu => {
-      const trigger = menu.querySelector('.card-action-menu-trigger');
-      const projectId = menu.dataset.projectId;
+    // Listen for dropdown select events using event delegation
+    this.addListener(this.container, 'dropdown:select', (e) => {
+      const { item } = e.detail;
+      const action = item.dataset.action;
+      const projectId = item.dataset.projectId;
       
-      if (trigger) {
-        this.addListener(trigger, 'click', (e) => {
-          e.stopPropagation();
-          
-          // Close other open menus
-          actionMenus.forEach(otherMenu => {
-            if (otherMenu !== menu) {
-              otherMenu.classList.remove('open');
-            }
-          });
-          
-          // Toggle this menu
-          menu.classList.toggle('open');
-        });
-      }
-      
-      // Handle edit button click (currently disabled)
-      const editBtn = menu.querySelector('.project-edit-btn');
-      if (editBtn && !editBtn.disabled) {
-        this.addListener(editBtn, 'click', (e) => {
-          e.stopPropagation();
-          menu.classList.remove('open');
-          // TODO: Open edit modal when implemented
-          console.log('Edit project - coming soon');
-        });
-      }
-      
-      // Handle archive button click
-      const archiveBtn = menu.querySelector('.project-archive-btn');
-      if (archiveBtn) {
-        this.addListener(archiveBtn, 'click', (e) => {
-          e.stopPropagation();
-          menu.classList.remove('open');
-          const project = DataService.getProject(projectId);
-          if (project) {
-            const newStatus = project.status === 'archived' ? 'active' : 'archived';
-            // Update project status
-            const projects = dataStore.data.projects || [];
-            const projectIndex = projects.findIndex(p => p.id === projectId);
-            if (projectIndex !== -1) {
-              projects[projectIndex] = { 
-                ...projects[projectIndex], 
-                status: newStatus,
-                updatedAt: new Date().toISOString()
-              };
-              dataStore.save();
-            }
-            this.render();
+      if (action === 'edit' && !item.disabled) {
+        // TODO: Open edit modal when implemented
+        console.log('Edit project - coming soon');
+      } else if (action === 'archive') {
+        const project = DataService.getProject(projectId);
+        if (project) {
+          const newStatus = project.status === 'archived' ? 'active' : 'archived';
+          // Update project status
+          const projects = dataStore.data.projects || [];
+          const projectIndex = projects.findIndex(p => p.id === projectId);
+          if (projectIndex !== -1) {
+            projects[projectIndex] = { 
+              ...projects[projectIndex], 
+              status: newStatus,
+              updatedAt: new Date().toISOString()
+            };
+            dataStore.save();
           }
-        });
+          this.render();
+        }
       }
-    });
-    
-    // Close menus when clicking outside
-    this.addListener(document, 'click', () => {
-      actionMenus.forEach(menu => menu.classList.remove('open'));
     });
   }
 

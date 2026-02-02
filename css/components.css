@@ -1,28 +1,36 @@
 /* Primer - Component Styles
    Compact, information-dense UI components
    
-   NOTE: This file is large (~8000 lines) and could be split into focused modules:
+   NOTE: This file is large (~8300 lines) and could be split into focused modules.
+   
+   Already extracted:
+   - dropdown.css - Unified dropdown component (DONE)
    
    Recommended CSS file structure for future refactoring:
-   - buttons.css (lines 4-100) - Button variants and states
-   - stat-cards.css (lines 305-512) - Stat grid and stat card dropdowns
-   - tables.css (lines 513-889) - Tables and document table styles
-   - classification.css (lines 890-1275) - Classification banners and badges
-   - badges.css (lines 1276-1342) - Tags/badges and status badges
-   - entity-list.css (lines 1343-1459) - Entity list patterns
-   - search.css (lines 1731-2487) - Search view and filter components
-   - charts.css (lines 2488-2590) - Chart containers and legends
-   - maps.css (lines 2591-2996) - Map containers, markers, and popups
-   - venn.css (lines 3064-3091) - Venn diagram overrides
-   - document-viewer.css (lines 5227-5960) - Document viewer split layout
-   - social-posts.css (lines 5696-5891) - Social media post headers
-   - annotations.css (lines 6001-6373) - Highlights and comments
-   - drag-drop.css (lines 6374-6463) - Drag-drop card functionality
-   - timeline.css (lines 6465-6654) - Vertical timeline
-   - tags.css (lines 7084-7728) - Tag chips and tag picker
-   - scope-selector.css (lines 7729-7908) - Scope selector component
-   - dashboard.css (lines 7909-8074) - Dashboard-specific styles
-   - add-to-project.css (lines 8075-8237) - Add to project modal
+   - buttons.css (lines ~35-132) - Button variants and states
+   - cards.css (lines ~133-335) - Card containers and tooltips
+   - stat-cards.css (lines ~336-543) - Stat grid and stat card dropdowns
+   - tables.css (lines ~544-920) - Tables and document table styles
+   - classification.css (lines ~921-1306) - Classification banners and badges
+   - badges.css (lines ~1307-1373) - Tags/badges and status badges
+   - entity-list.css (lines ~1374-1490) - Entity list patterns
+   - forms.css (lines ~1491-1761) - Form inputs and controls
+   - search.css (lines ~1762-2517) - Search view and filter components
+   - charts.css (lines ~2518-2620) - Chart containers and legends
+   - maps.css (lines ~2621-3027) - Map containers, markers, and popups
+   - composite-charts.css (lines ~3306-4457) - Timeline volume composite
+   - network-graph.css (lines ~5137-5285) - Network graph styles
+   - document-viewer.css (lines ~5337-5805) - Document viewer split layout
+   - social-posts.css (lines ~5806-6110) - Social media post headers
+   - annotations.css (lines ~6111-6483) - Highlights and comments
+   - drag-drop.css (lines ~6484-6574) - Drag-drop card functionality
+   - timeline.css (lines ~6575-6765) - Vertical timeline
+   - modals.css (lines ~6766-6947) - Modal and toggle components
+   - scope-selector.css (lines ~6948-7193) - Scope selector component
+   - tags.css (lines ~7194-7838) - Tag chips and tag picker
+   - activity-feed.css (lines ~7839-8018) - Activity feed styles
+   - entity-card.css (lines ~8019-8184) - Entity card popover
+   - add-to-project.css (lines ~8185-8336) - Add to project modal
    
    When splitting, ensure @import order in main stylesheet preserves CSS specificity.
 */
@@ -3106,18 +3114,6 @@
 
 .dropdown-item svg {
   flex-shrink: 0;
-}
-
-/* Card action menu - positioned right */
-.card-action-menu {
-  position: relative;
-}
-
-.card-action-menu .dropdown-menu {
-  right: 0;
-  left: auto;
-  min-width: 120px;
-  z-index: 100;
 }
 
 /* Venn Diagram overrides */

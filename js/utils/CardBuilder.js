@@ -119,28 +119,28 @@ export const CardBuilder = {
   actionMenu(entityType, entityId, options = {}) {
     const { isArchived = false, editDisabled = false, editTitle } = options;
     const archiveLabel = isArchived ? 'Restore' : 'Archive';
-    const editLabel = editTitle || `Edit ${entityType}`;
+    const editLabel = editTitle || 'Edit';
     const editDisabledClass = editDisabled ? ' disabled' : '';
     const editDisabledAttr = editDisabled ? ' disabled' : '';
     
     return `
-      <div class="dropdown card-action-menu" data-${entityType}-id="${entityId}">
-        <button class="btn-icon card-action-btn card-action-menu-trigger" title="More actions">
+      <div class="dropdown dropdown--icon-trigger" data-dropdown data-dropdown-align="right" data-${entityType}-id="${entityId}">
+        <button class="dropdown-trigger" data-dropdown-trigger title="More actions">
           <svg viewBox="0 0 16 16" width="14" height="14" fill="none">
             <path fill="currentColor" d="M8 12C8.85 12 9.5 12.65 9.5 13.5C9.5 14.35 8.85 15 8 15C7.15 15 6.5 14.35 6.5 13.5C6.5 12.65 7.15 12 8 12Z"/>
             <path fill="currentColor" d="M8 6.5C8.85 6.5 9.5 7.15 9.5 8C9.5 8.85 8.85 9.5 8 9.5C7.15 9.5 6.5 8.85 6.5 8C6.5 7.15 7.15 6.5 8 6.5Z"/>
             <path fill="currentColor" d="M9.5 2.5C9.5 1.65 8.85 1 8 1C7.15 1 6.5 1.65 6.5 2.5C6.5 3.35 7.15 4 8 4C8.85 4 9.5 3.35 9.5 2.5Z"/>
           </svg>
         </button>
-        <div class="dropdown-menu">
+        <div class="dropdown-menu" data-dropdown-menu>
           <button class="dropdown-item ${entityType}-edit-btn${editDisabledClass}" 
-                  data-${entityType}-id="${entityId}"${editDisabledAttr}>
+                  data-${entityType}-id="${entityId}" data-action="edit"${editDisabledAttr}>
             <svg viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.5">
               <path d="M11.5 2.5l2 2M2 11l-.5 3.5L5 14l9-9-2-2-10 10z"/>
             </svg>
             ${editLabel}
           </button>
-          <button class="dropdown-item ${entityType}-archive-btn" data-${entityType}-id="${entityId}">
+          <button class="dropdown-item ${entityType}-archive-btn" data-${entityType}-id="${entityId}" data-action="archive">
             <svg viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.5">
               ${isArchived 
                 ? '<path d="M3 3h10v10H3z"/><path d="M8 10V5M5.5 7L8 4.5 10.5 7"/>' 

@@ -63,6 +63,26 @@
   margin: 0;
 }
 
+/* Archived Section Styling */
+.archived-section {
+  margin-top: var(--space-xl);
+  padding-top: var(--space-lg);
+}
+
+.archived-section .section-divider {
+  height: 1px;
+  background: var(--border-subtle);
+  margin-bottom: var(--space-xl);
+}
+
+.archived-section .section-title {
+  font-size: var(--text-sm);
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: var(--space-lg);
+}
+
 /* Monitors Grid - Extends content-grid with monitor-specific styles */
 .monitors-grid.content-grid {
   /* Inherits content-grid layout */

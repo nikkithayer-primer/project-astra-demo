@@ -9,6 +9,7 @@ import { PageHeader } from '../utils/PageHeader.js';
 import { CardBuilder } from '../utils/CardBuilder.js';
 import { getWorkspaceEditor } from '../components/WorkspaceEditorModal.js';
 import { dataStore } from '../data/DataStore.js';
+import { Dropdown } from '../components/Dropdown.js';
 
 export class WorkspacesView extends BaseView {
   constructor(container, options = {}) {
@@ -24,6 +25,16 @@ export class WorkspacesView extends BaseView {
     const activeCardsHtml = activeWorkspaces.map(w => this.renderWorkspaceCard(w)).join('');
     const archivedCardsHtml = archivedWorkspaces.map(w => this.renderWorkspaceCard(w)).join('');
 
+    // Build archived section if there are any
+    const archivedSectionHtml = archivedWorkspaces.length > 0 ? `
+      <div class="content-section">
+        <h3 class="section-title text-muted">Archived</h3>
+        <div class="content-grid">
+          ${archivedCardsHtml}
+        </div>
+      </div>
+    ` : '';
+
     // Build content based on whether we have workspaces
     let contentHtml;
     if (workspaces.length === 0) {
@@ -32,8 +43,8 @@ export class WorkspacesView extends BaseView {
       contentHtml = `
         <div class="content-grid">
           ${activeCardsHtml}
-          ${archivedCardsHtml}
         </div>
+        ${archivedSectionHtml}
       `;
     }
 
@@ -69,9 +80,6 @@ export class WorkspacesView extends BaseView {
     const docCount = workspace.documentIds?.length || 0;
     const isArchived = workspace.status === 'archived';
     const updatedAt = this.formatRelativeTime(workspace.updatedAt);
-    const statusTag = isArchived 
-      ? '<span class="tag tag-neutral">Archived</span>'
-      : '<span class="tag">Active</span>';
 
     // Build actions HTML using CardBuilder
     const actionsHtml = CardBuilder.actionMenu('workspace', workspace.id, { isArchived });
@@ -80,7 +88,6 @@ export class WorkspacesView extends BaseView {
       <div class="card card-half-width workspace-card" data-workspace-id="${workspace.id}">
         <div class="card-header">
           <h2 class="card-title">${this.escapeHtml(workspace.name)}</h2>
-          ${statusTag}
           <div class="card-header-actions">${actionsHtml}</div>
         </div>
         <div class="card-body">
@@ -155,63 +162,31 @@ export class WorkspacesView extends BaseView {
    * Setup action menu dropdown handlers
    */
   setupActionMenus() {
-    const actionMenus = this.container.querySelectorAll('.card-action-menu');
+    // Initialize all dropdowns using the Dropdown component
+    this._actionDropdowns = Dropdown.initAll(this.container);
     
-    actionMenus.forEach(menu => {
-      const trigger = menu.querySelector('.card-action-menu-trigger');
-      const workspaceId = menu.dataset.workspaceId;
+    // Listen for dropdown select events using event delegation
+    this.addListener(this.container, 'dropdown:select', (e) => {
+      const { item } = e.detail;
+      const action = item.dataset.action;
+      const workspaceId = item.dataset.workspaceId;
       
-      if (trigger) {
-        this.addListener(trigger, 'click', (e) => {
-          e.stopPropagation();
-          
-          // Close other open menus
-          actionMenus.forEach(otherMenu => {
-            if (otherMenu !== menu) {
-              otherMenu.classList.remove('open');
-            }
-          });
-          
-          // Toggle this menu
-          menu.classList.toggle('open');
-        });
-      }
-      
-      // Handle edit button click
-      const editBtn = menu.querySelector('.workspace-edit-btn');
-      if (editBtn && !editBtn.disabled) {
-        this.addListener(editBtn, 'click', (e) => {
-          e.stopPropagation();
-          menu.classList.remove('open');
-          const workspace = DataService.getWorkspace(workspaceId);
-          if (workspace) {
-            const editor = getWorkspaceEditor();
-            editor.openEdit(workspace, () => {
-              this.render();
-            });
-          }
-        });
-      }
-      
-      // Handle archive button click
-      const archiveBtn = menu.querySelector('.workspace-archive-btn');
-      if (archiveBtn) {
-        this.addListener(archiveBtn, 'click', (e) => {
-          e.stopPropagation();
-          menu.classList.remove('open');
-          const workspace = DataService.getWorkspace(workspaceId);
-          if (workspace) {
-            const newStatus = workspace.status === 'archived' ? 'active' : 'archived';
-            dataStore.updateWorkspace(workspaceId, { status: newStatus });
+      if (action === 'edit' && !item.disabled) {
+        const workspace = DataService.getWorkspace(workspaceId);
+        if (workspace) {
+          const editor = getWorkspaceEditor();
+          editor.openEdit(workspace, () => {
             this.render();
-          }
-        });
+          });
+        }
+      } else if (action === 'archive') {
+        const workspace = DataService.getWorkspace(workspaceId);
+        if (workspace) {
+          const newStatus = workspace.status === 'archived' ? 'active' : 'archived';
+          dataStore.updateWorkspace(workspaceId, { status: newStatus });
+          this.render();
+        }
       }
-    });
-    
-    // Close menus when clicking outside
-    this.addListener(document, 'click', () => {
-      actionMenus.forEach(menu => menu.classList.remove('open'));
     });
   }
 

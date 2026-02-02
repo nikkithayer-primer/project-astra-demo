@@ -21,6 +21,7 @@ import { initAllCardToggles } from '../utils/cardWidthToggle.js';
 import { getMonitorEditor } from '../components/MonitorEditorModal.js';
 import { formatAlertDescriptionWithLinks } from './MonitorView.js';
 import { PageHeader } from '../utils/PageHeader.js';
+import { Dropdown } from '../components/Dropdown.js';
 
 // Available visualization types for monitors
 const VISUALIZATION_TYPES = [
@@ -440,7 +441,8 @@ export class MonitorsView extends BaseView {
     
     // Build archived section if there are any
     const archivedSectionHtml = enrichedArchivedMonitors.length > 0 ? `
-      <div class="content-section">
+      <div class="content-section archived-section">
+        <div class="section-divider"></div>
         <h3 class="section-title text-muted">Archived</h3>
         <div class="content-grid monitors-grid monitors-grid-archived">
           ${archivedCardsHtml}
@@ -1118,62 +1120,27 @@ export class MonitorsView extends BaseView {
    * Setup action menu dropdown handlers
    */
   setupActionMenus(enrichedMonitors) {
-    const actionMenus = this.container.querySelectorAll('.card-action-menu');
+    // Initialize all dropdowns using the Dropdown component
+    this._actionDropdowns = Dropdown.initAll(this.container);
     
-    actionMenus.forEach(menu => {
-      const trigger = menu.querySelector('.card-action-menu-trigger');
-      const monitorId = menu.dataset.monitorId;
+    // Listen for dropdown select events using event delegation
+    this.addListener(this.container, 'dropdown:select', (e) => {
+      const { item } = e.detail;
+      const action = item.dataset.action;
+      const monitorId = item.dataset.monitorId;
+      const monitor = enrichedMonitors.find(m => m.id === monitorId);
       
-      if (trigger) {
-        this.addListener(trigger, 'click', (e) => {
-          e.stopPropagation();
-          
-          // Close other open menus
-          actionMenus.forEach(otherMenu => {
-            if (otherMenu !== menu) {
-              otherMenu.classList.remove('open');
-            }
-          });
-          
-          // Toggle this menu
-          menu.classList.toggle('open');
-        });
-      }
+      if (!monitor) return;
       
-      // Handle edit button click
-      const editBtn = menu.querySelector('.monitor-edit-btn');
-      if (editBtn && !editBtn.disabled) {
-        this.addListener(editBtn, 'click', (e) => {
-          e.stopPropagation();
-          menu.classList.remove('open');
-          const monitor = enrichedMonitors.find(m => m.id === monitorId);
-          if (monitor) {
-            this.monitorEditor.openEdit(monitor, () => {
-              this.render();
-            });
-          }
+      if (action === 'edit' && !item.disabled) {
+        this.monitorEditor.openEdit(monitor, () => {
+          this.render();
         });
+      } else if (action === 'archive') {
+        const newEnabled = monitor.enabled === false ? true : false;
+        dataStore.updateMonitor(monitorId, { enabled: newEnabled });
+        this.render();
       }
-      
-      // Handle archive button click
-      const archiveBtn = menu.querySelector('.monitor-archive-btn');
-      if (archiveBtn) {
-        this.addListener(archiveBtn, 'click', (e) => {
-          e.stopPropagation();
-          menu.classList.remove('open');
-          const monitor = enrichedMonitors.find(m => m.id === monitorId);
-          if (monitor) {
-            const newEnabled = monitor.enabled === false ? true : false;
-            dataStore.updateMonitor(monitorId, { enabled: newEnabled });
-            this.render();
-          }
-        });
-      }
-    });
-    
-    // Close menus when clicking outside
-    this.addListener(document, 'click', () => {
-      actionMenus.forEach(menu => menu.classList.remove('open'));
     });
   }
 
@@ -1185,6 +1152,12 @@ export class MonitorsView extends BaseView {
       }
     });
     this.visualizationComponents = [];
+    
+    // Clean up action dropdowns
+    if (this._actionDropdowns) {
+      this._actionDropdowns.forEach(d => d.destroy());
+      this._actionDropdowns = null;
+    }
     
     // Clear description toggles map
     this.descriptionToggles.clear();
