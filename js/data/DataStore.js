@@ -879,6 +879,127 @@ class DataStore {
     };
   }
 
+  /**
+   * Add a snippet to a project
+   * @param {string} projectId - Project ID
+   * @param {Object} snippet - Snippet data
+   * @param {string} snippet.text - The selected text
+   * @param {string} snippet.sourceType - Source type: 'document' | 'chat' | 'narrative' | 'activity' | 'table'
+   * @param {string} snippet.sourceDocumentId - Optional source document ID
+   * @param {string} snippet.sourceId - Optional source entity ID
+   * @param {string} snippet.sourceLabel - Optional display label for non-document sources
+   * @param {Object} snippet.sourceContext - Optional location context
+   * @param {string} snippet.note - Optional user note
+   * @returns {Object} Result with snippet ID
+   */
+  addSnippetToProject(projectId, snippet) {
+    const projects = this.data.projects || [];
+    const project = projects.find(p => p.id === projectId);
+    
+    if (!project) {
+      console.error(`DataStore: Project ${projectId} not found`);
+      return { success: false, snippetId: null };
+    }
+    
+    // Initialize snippets array if not present
+    if (!project.snippets) {
+      project.snippets = [];
+    }
+    
+    // Generate snippet ID
+    const snippetId = `snippet-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
+    
+    const newSnippet = {
+      id: snippetId,
+      text: snippet.text,
+      sourceType: snippet.sourceType || 'document',
+      sourceDocumentId: snippet.sourceDocumentId || null,
+      sourceId: snippet.sourceId || null,
+      sourceLabel: snippet.sourceLabel || null,
+      sourceContext: snippet.sourceContext || null,
+      note: snippet.note || '',
+      createdAt: new Date().toISOString(),
+      createdBy: snippet.createdBy || null
+    };
+    
+    project.snippets.push(newSnippet);
+    project.updatedAt = new Date().toISOString();
+    this.save();
+    
+    return { 
+      success: true, 
+      snippetId: snippetId,
+      total: project.snippets.length
+    };
+  }
+
+  /**
+   * Update a snippet in a project
+   * @param {string} projectId - Project ID
+   * @param {string} snippetId - Snippet ID
+   * @param {Object} updates - Fields to update (note, etc.)
+   * @returns {boolean} Success
+   */
+  updateSnippetInProject(projectId, snippetId, updates) {
+    const projects = this.data.projects || [];
+    const project = projects.find(p => p.id === projectId);
+    
+    if (!project || !project.snippets) {
+      return false;
+    }
+    
+    const snippet = project.snippets.find(s => s.id === snippetId);
+    if (!snippet) {
+      return false;
+    }
+    
+    // Only allow updating note field
+    if (updates.note !== undefined) {
+      snippet.note = updates.note;
+    }
+    
+    project.updatedAt = new Date().toISOString();
+    this.save();
+    return true;
+  }
+
+  /**
+   * Remove a snippet from a project
+   * @param {string} projectId - Project ID
+   * @param {string} snippetId - Snippet ID to remove
+   * @returns {Object} Result
+   */
+  removeSnippetFromProject(projectId, snippetId) {
+    const projects = this.data.projects || [];
+    const project = projects.find(p => p.id === projectId);
+    
+    if (!project || !project.snippets) {
+      return { success: false, removed: 0 };
+    }
+    
+    const initialCount = project.snippets.length;
+    project.snippets = project.snippets.filter(s => s.id !== snippetId);
+    project.updatedAt = new Date().toISOString();
+    this.save();
+    
+    return { 
+      success: true, 
+      removed: initialCount - project.snippets.length,
+      total: project.snippets.length
+    };
+  }
+
+  /**
+   * Get all snippets for a project
+   * @param {string} projectId - Project ID
+   * @returns {Array} Array of snippets
+   */
+  getSnippetsForProject(projectId) {
+    const projects = this.data.projects || [];
+    const project = projects.find(p => p.id === projectId);
+    return project?.snippets || [];
+  }
+
   // ============================================
   // SearchFilter CRUD
   // ============================================

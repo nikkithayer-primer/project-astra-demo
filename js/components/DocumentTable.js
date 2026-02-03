@@ -26,6 +26,7 @@ import {
 } from '../utils/classification.js';
 import { dataStore } from '../data/DataStore.js';
 import { getAddToProjectModal } from './AddToProjectModal.js';
+import { escapeHtml } from '../utils/htmlUtils.js';
 
 // Column configuration
 const COLUMN_CONFIG = {
@@ -949,7 +950,7 @@ export class DocumentTable extends BaseComponent {
 
     // Create sidebar with document list
     const sidebar = document.createElement('div');
-    sidebar.className = 'document-viewer-sidebar';
+    sidebar.className = `document-viewer-sidebar${this.detailsPanelOpen ? ' hidden' : ''}`;
 
     // Sidebar header with close button
     const sidebarHeader = document.createElement('div');
@@ -1069,6 +1070,7 @@ export class DocumentTable extends BaseComponent {
     const docBody = document.createElement('div');
     docBody.className = 'document-viewer-content-body';
     docBody.id = 'document-viewer-content-body';
+    docBody.dataset.documentId = this.selectedDocument.id; // For text selection popover
     contentArea.appendChild(docBody);
 
     mainContent.appendChild(contentArea);
@@ -1154,12 +1156,17 @@ export class DocumentTable extends BaseComponent {
     this.detailsPanelOpen = !this.detailsPanelOpen;
     const panel = this.container.querySelector('.document-viewer-details-panel');
     const toggleBtn = this.container.querySelector('#viewer-toggle-details');
+    const sidebar = this.container.querySelector('.document-viewer-sidebar');
     
     if (panel) {
       panel.classList.toggle('open', this.detailsPanelOpen);
     }
     if (toggleBtn) {
       toggleBtn.classList.toggle('active', this.detailsPanelOpen);
+    }
+    // Hide sidebar when details panel is open
+    if (sidebar) {
+      sidebar.classList.toggle('hidden', this.detailsPanelOpen);
     }
     
     // Initialize details components when first opened
@@ -1175,12 +1182,17 @@ export class DocumentTable extends BaseComponent {
     this.detailsPanelOpen = false;
     const panel = this.container.querySelector('.document-viewer-details-panel');
     const toggleBtn = this.container.querySelector('#viewer-toggle-details');
+    const sidebar = this.container.querySelector('.document-viewer-sidebar');
     
     if (panel) {
       panel.classList.remove('open');
     }
     if (toggleBtn) {
       toggleBtn.classList.remove('active');
+    }
+    // Show sidebar when details panel is closed
+    if (sidebar) {
+      sidebar.classList.remove('hidden');
     }
   }
 
@@ -1201,6 +1213,8 @@ export class DocumentTable extends BaseComponent {
    * @returns {string} HTML string
    */
   renderDetailsView(doc) {
+    const quotes = doc.quotes || [];
+    const activities = doc.activities || [];
     const narratives = DataService.getNarrativesForDocument(doc.id);
     const themes = DataService.getThemesForDocument(doc.id);
     const persons = DataService.getPersonsForDocument(doc.id);
@@ -1212,6 +1226,24 @@ export class DocumentTable extends BaseComponent {
     // Build cards using CardBuilder with full width for sliding panel
     // Note: This panel uses list-only views (no map/graph toggles) due to narrow width
     const cards = CardBuilder.createMultiple([
+      {
+        condition: quotes.length > 0,
+        title: 'Quotes',
+        id: 'doc-details-quotes',
+        options: { 
+          count: quotes.length, 
+          noPadding: true
+        }
+      },
+      {
+        condition: activities.length > 0,
+        title: 'Activities',
+        id: 'doc-details-activities',
+        options: { 
+          count: activities.length, 
+          noPadding: true
+        }
+      },
       {
         condition: narratives.length > 0,
         title: 'Related Narratives',
@@ -1274,6 +1306,8 @@ export class DocumentTable extends BaseComponent {
    * @param {Object} doc - The document
    */
   initializeDetailsComponents(doc) {
+    const quotes = doc.quotes || [];
+    const activities = doc.activities || [];
     const narratives = DataService.getNarrativesForDocument(doc.id);
     const themes = DataService.getThemesForDocument(doc.id);
     const persons = DataService.getPersonsForDocument(doc.id);
@@ -1291,6 +1325,16 @@ export class DocumentTable extends BaseComponent {
       personIds: persons.map(p => p.id),
       orgIds: organizations.map(o => o.id)
     };
+
+    // Initialize Quotes Table
+    if (quotes.length > 0 && document.getElementById('doc-details-quotes')) {
+      this.renderDetailsQuotesTable(quotes);
+    }
+
+    // Initialize Activities Table
+    if (activities.length > 0 && document.getElementById('doc-details-activities')) {
+      this.renderDetailsActivitiesTable(activities);
+    }
 
     // Initialize Narrative List
     if (narratives.length > 0 && document.getElementById('doc-details-narratives')) {
@@ -1484,6 +1528,115 @@ export class DocumentTable extends BaseComponent {
         this.navigateTo(id);
       });
     });
+  }
+
+  /**
+   * Get entity name from ID for quotes/activities tables
+   */
+  getEntityNameForTable(entityId, entityType) {
+    if (!entityId) return 'Unknown';
+    if (entityType === 'person') {
+      const person = DataService.getPerson(entityId);
+      return person ? person.name : entityId;
+    } else if (entityType === 'organization') {
+      const org = DataService.getOrganization(entityId);
+      return org ? org.name : entityId;
+    }
+    return entityId;
+  }
+
+  /**
+   * Render quotes table for details panel
+   */
+  renderDetailsQuotesTable(quotes) {
+    const container = document.getElementById('doc-details-quotes');
+    if (!container || !quotes.length) return;
+
+    const rows = quotes.map(quote => {
+      const speakerName = this.getEntityNameForTable(quote.speakerId, quote.speakerType);
+      const speakerTypeClass = quote.speakerType === 'person' ? 'speaker-person' : 'speaker-org';
+      const truncatedText = quote.text.length > 200 ? quote.text.substring(0, 200) + '...' : quote.text;
+      
+      return `
+        <tr class="quotes-table-row">
+          <td class="quotes-col-speaker">
+            <span class="speaker-name ${speakerTypeClass}">${escapeHtml(speakerName)}</span>
+          </td>
+          <td class="quotes-col-text">
+            <span class="quote-text">"${escapeHtml(truncatedText)}"</span>
+          </td>
+        </tr>
+      `;
+    }).join('');
+
+    container.innerHTML = `
+      <div class="table-container quotes-table-container">
+        <table class="table quotes-table">
+          <thead>
+            <tr>
+              <th class="quotes-col-speaker">Speaker</th>
+              <th class="quotes-col-text">Quote</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${rows}
+          </tbody>
+        </table>
+      </div>
+    `;
+  }
+
+  /**
+   * Render activities table for details panel
+   */
+  renderDetailsActivitiesTable(activities) {
+    const container = document.getElementById('doc-details-activities');
+    if (!container || !activities.length) return;
+
+    const rows = activities.map(activity => {
+      const actorName = this.getEntityNameForTable(activity.actorId, activity.actorType);
+      const actorTypeClass = activity.actorType === 'person' ? 'actor-person' : 'actor-org';
+      
+      // Target can be an entity or text
+      let targetDisplay = activity.targetText || '';
+      if (activity.targetId) {
+        const targetName = this.getEntityNameForTable(activity.targetId, activity.targetType);
+        if (targetName && targetName !== activity.targetId) {
+          targetDisplay = targetName + (activity.targetText ? ` (${activity.targetText})` : '');
+        }
+      }
+      
+      return `
+        <tr class="activities-table-row">
+          <td class="activities-col-actor">
+            <span class="actor-name ${actorTypeClass}">${escapeHtml(actorName)}</span>
+          </td>
+          <td class="activities-col-action">
+            <span class="activity-action">${escapeHtml(activity.action || '')}</span>
+          </td>
+          <td class="activities-col-target">
+            <span class="activity-target">${escapeHtml(targetDisplay)}</span>
+          </td>
+        </tr>
+      `;
+    }).join('');
+
+    container.innerHTML = `
+      <div class="table-container activities-table-container">
+        <table class="table activities-table">
+          <thead>
+            <tr>
+              <th class="activities-col-actor">Actor</th>
+              <th class="activities-col-action">Action</th>
+              <th class="activities-col-target">Target</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${rows}
+          </tbody>
+        </table>
+      </div>
+    `;
   }
 
   /**

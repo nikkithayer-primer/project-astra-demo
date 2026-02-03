@@ -52,13 +52,11 @@ export class ThemeView extends DetailViewBase {
     const tabsConfig = hasDocuments ? this.getTabsConfig(baseHref, true) : null;
     
     // Build context-aware breadcrumbs with optional parent narrative
-    const breadcrumbItems = [
-      { label: 'Narratives', route: 'narratives' }
-    ];
+    const breadcrumbItems = [];
     if (data.parentNarrative) {
-      breadcrumbItems.push({ label: 'Parent', href: this.buildContextRoute(data.parentNarrative.id) });
+      breadcrumbItems.push({ label: this.truncateText(data.parentNarrative.text, 30), href: this.buildContextRoute(data.parentNarrative.id) });
     }
-    breadcrumbItems.push('Theme');
+    breadcrumbItems.push(this.truncateText(theme.text, 50));
     const breadcrumbs = this.buildBreadcrumbs(breadcrumbItems);
 
     // Build page header

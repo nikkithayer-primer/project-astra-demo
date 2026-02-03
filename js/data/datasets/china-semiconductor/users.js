@@ -9,7 +9,7 @@ export const users = [
     displayName: 'Kevin Patel',
     role: 'Senior Technical Analyst',
     department: 'Technical Intelligence',
-    avatarUrl: 'img/placeholders/avatar-default.svg',
+    avatarUrl: null,
     isCurrentUser: true
   },
   {
@@ -18,7 +18,7 @@ export const users = [
     displayName: 'Jennifer Lin',
     role: 'China Economic Analyst',
     department: 'Economic Intelligence',
-    avatarUrl: 'img/placeholders/avatar-default.svg',
+    avatarUrl: null,
     isCurrentUser: false
   },
   {
@@ -27,7 +27,7 @@ export const users = [
     displayName: 'Marcus Watkins',
     role: 'Supply Chain Analyst',
     department: 'Supply Chain Analysis',
-    avatarUrl: 'img/placeholders/avatar-default.svg',
+    avatarUrl: null,
     isCurrentUser: false
   },
   {
@@ -36,7 +36,7 @@ export const users = [
     displayName: 'Angela Kim',
     role: 'Policy Analyst',
     department: 'Policy Analysis',
-    avatarUrl: 'img/placeholders/avatar-default.svg',
+    avatarUrl: null,
     isCurrentUser: false
   },
   {
@@ -45,7 +45,7 @@ export const users = [
     displayName: 'Ryan Morris',
     role: 'Technical Lead',
     department: 'Technical Intelligence',
-    avatarUrl: 'img/placeholders/avatar-default.svg',
+    avatarUrl: null,
     isCurrentUser: false
   },
   {
@@ -54,7 +54,7 @@ export const users = [
     displayName: 'Christine Tanaka',
     role: 'Division Chief',
     department: 'Semiconductor Analysis',
-    avatarUrl: 'img/placeholders/avatar-default.svg',
+    avatarUrl: null,
     isCurrentUser: false
   }
 ];

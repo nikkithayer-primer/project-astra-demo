@@ -6,6 +6,7 @@ export const events = [
   {
     id: 'event-001',
     text: 'SMIC announces mass production of 5nm chips',
+    description: 'SMIC announced it has achieved mass production of 5nm process chips without access to EUV lithography equipment, marking a significant milestone in China\'s semiconductor self-sufficiency efforts despite US export controls.',
     date: '2026-01-15T08:00:00Z',
     parentEventId: null,
     subEventIds: ['event-002'],
@@ -18,6 +19,7 @@ export const events = [
   {
     id: 'event-002',
     text: 'Huawei Mate 70 launch confirms SMIC 5nm chip',
+    description: 'Huawei\'s launch of the Mate 70 smartphone confirmed the use of SMIC-manufactured 5nm chips, demonstrating continued collaboration between the two companies in circumventing US technology restrictions.',
     date: '2026-01-18T10:00:00Z',
     parentEventId: 'event-001',
     subEventIds: [],
@@ -29,6 +31,7 @@ export const events = [
   {
     id: 'event-003',
     text: 'Netherlands announces expanded ASML export restrictions',
+    description: 'The Dutch government announced expanded export restrictions affecting ASML\'s sales to China, including limitations on advanced DUV lithography systems in addition to existing EUV restrictions.',
     date: '2026-01-12T14:00:00Z',
     parentEventId: null,
     subEventIds: ['event-004', 'event-005'],
@@ -41,6 +44,7 @@ export const events = [
   {
     id: 'event-004',
     text: 'ASML Q4 earnings call addresses China revenue impact',
+    description: 'During ASML\'s quarterly earnings call, executives addressed the financial impact of export restrictions to China and provided guidance on expected revenue decline from the Chinese market.',
     date: '2026-01-15T16:00:00Z',
     parentEventId: 'event-003',
     subEventIds: [],
@@ -52,6 +56,7 @@ export const events = [
   {
     id: 'event-005',
     text: 'China announces increased funding for SMEE lithography development',
+    description: 'In response to expanded ASML restrictions, China announced increased state funding for domestic lithography equipment development at SMEE, the country\'s leading lithography tool manufacturer.',
     date: '2026-01-16T09:00:00Z',
     parentEventId: 'event-003',
     subEventIds: [],
@@ -63,6 +68,7 @@ export const events = [
   {
     id: 'event-006',
     text: 'China unveils Big Fund III with 340 billion yuan',
+    description: 'China announced the third phase of its National IC Fund (Big Fund III) with 340 billion yuan in capital, the largest single investment in its semiconductor self-sufficiency initiative.',
     date: '2026-01-17T10:00:00Z',
     parentEventId: null,
     subEventIds: ['event-007'],
@@ -75,6 +81,7 @@ export const events = [
   {
     id: 'event-007',
     text: 'State Council approves Big Fund III investment guidelines',
+    description: 'The State Council approved investment guidelines for Big Fund III, directing capital toward equipment manufacturing, advanced materials, and next-generation chip design capabilities.',
     date: '2026-01-18T15:00:00Z',
     parentEventId: 'event-006',
     subEventIds: [],
@@ -86,6 +93,7 @@ export const events = [
   {
     id: 'event-008',
     text: 'Bloomberg reports Huawei equipment stockpile',
+    description: 'Bloomberg reported that Huawei had accumulated a significant stockpile of semiconductor manufacturing equipment and components ahead of tightening US export controls, raising questions about enforcement.',
     date: '2026-01-15T12:00:00Z',
     parentEventId: null,
     subEventIds: ['event-009'],
@@ -98,6 +106,7 @@ export const events = [
   {
     id: 'event-009',
     text: 'US Commerce Department opens investigation into Huawei equipment purchases',
+    description: 'The US Commerce Department announced an investigation into Huawei\'s acquisition of controlled semiconductor equipment, examining potential violations of export control regulations.',
     date: '2026-01-17T14:00:00Z',
     parentEventId: 'event-008',
     subEventIds: [],
@@ -110,6 +119,7 @@ export const events = [
   {
     id: 'event-010',
     text: 'TechInsights publishes YMTC 232-layer NAND analysis',
+    description: 'TechInsights released a detailed technical analysis of YMTC\'s 232-layer 3D NAND flash memory, revealing competitive performance metrics despite the company\'s limited access to advanced equipment.',
     date: '2026-01-16T11:00:00Z',
     parentEventId: null,
     subEventIds: ['event-011'],
@@ -121,6 +131,7 @@ export const events = [
   {
     id: 'event-011',
     text: 'Researchers find YMTC chips in consumer devices',
+    description: 'Industry researchers discovered YMTC-manufactured memory chips in consumer electronics sold globally, raising questions about supply chain tracking and the effectiveness of export controls.',
     date: '2026-01-18T09:00:00Z',
     parentEventId: 'event-010',
     subEventIds: [],
@@ -132,6 +143,7 @@ export const events = [
   {
     id: 'event-012',
     text: 'Empyrean announces EDA tool supporting 14nm designs',
+    description: 'Chinese EDA company Empyrean announced its chip design software now supports full-flow 14nm designs, marking progress in reducing China\'s dependence on US design tools.',
     date: '2026-01-19T10:00:00Z',
     parentEventId: null,
     subEventIds: [],
@@ -143,6 +155,7 @@ export const events = [
   {
     id: 'event-013',
     text: 'TSMC announces Arizona fab production delay',
+    description: 'TSMC announced further delays to the production timeline for its Arizona fabrication facilities, citing construction challenges and workforce issues in bringing advanced manufacturing to the US.',
     date: '2026-01-14T08:00:00Z',
     parentEventId: null,
     subEventIds: ['event-014'],
@@ -154,6 +167,7 @@ export const events = [
   {
     id: 'event-014',
     text: 'Arizona union files grievance against TSMC management practices',
+    description: 'The Arizona Building and Construction Trades Council filed a formal grievance against TSMC, alleging unfair labor practices and the preferential treatment of foreign workers at the Arizona fab construction site.',
     date: '2026-01-16T14:00:00Z',
     parentEventId: 'event-013',
     subEventIds: [],
@@ -165,6 +179,7 @@ export const events = [
   {
     id: 'event-015',
     text: 'Intel announces major restructuring and layoffs',
+    description: 'Intel announced a significant corporate restructuring including substantial workforce reductions as part of CEO Pat Gelsinger\'s turnaround plan amid competitive pressures and manufacturing challenges.',
     date: '2025-06-20T08:00:00Z',
     parentEventId: null,
     subEventIds: ['event-020'],
@@ -177,6 +192,7 @@ export const events = [
   {
     id: 'event-016',
     text: 'Samsung announces $17B chip investment in South Korea',
+    description: 'Samsung Electronics announced a $17 billion investment plan to expand semiconductor manufacturing capacity in South Korea, bolstering domestic chip production capabilities.',
     date: '2025-07-05T09:00:00Z',
     parentEventId: null,
     subEventIds: ['event-017'],
@@ -188,6 +204,7 @@ export const events = [
   {
     id: 'event-017',
     text: 'US objects to Korean semiconductor subsidies at WTO',
+    description: 'The US Trade Representative raised concerns at the WTO about South Korean semiconductor subsidies, reflecting tensions over industrial policy and chip manufacturing competition among allies.',
     date: '2025-07-25T15:00:00Z',
     parentEventId: 'event-016',
     subEventIds: [],
@@ -199,6 +216,7 @@ export const events = [
   {
     id: 'event-018',
     text: 'China announces rare earth export quotas',
+    description: 'China announced new export quotas on rare earth minerals critical for semiconductor manufacturing, widely seen as a retaliatory measure against US chip export controls.',
     date: '2025-08-10T10:00:00Z',
     parentEventId: null,
     subEventIds: ['event-019', 'event-023'],
@@ -211,6 +229,7 @@ export const events = [
   {
     id: 'event-019',
     text: 'US semiconductor firms warn of supply chain impacts',
+    description: 'Major US semiconductor companies warned Congress about potential supply chain disruptions from China\'s rare earth export restrictions, calling for diversification of critical mineral sources.',
     date: '2025-08-25T14:00:00Z',
     parentEventId: 'event-018',
     subEventIds: [],
@@ -222,6 +241,7 @@ export const events = [
   {
     id: 'event-020',
     text: 'Intel reports quarterly loss, stock plunges',
+    description: 'Intel reported a significant quarterly loss, causing its stock price to drop sharply as investors questioned the viability of its manufacturing turnaround strategy amid competitive headwinds.',
     date: '2025-09-15T16:00:00Z',
     parentEventId: 'event-015',
     subEventIds: [],
@@ -233,6 +253,7 @@ export const events = [
   {
     id: 'event-021',
     text: 'Nvidia reports record AI chip demand',
+    description: 'Nvidia reported record quarterly revenue driven by unprecedented demand for its AI accelerator chips, solidifying its dominant position in the artificial intelligence hardware market.',
     date: '2025-09-20T16:00:00Z',
     parentEventId: null,
     subEventIds: [],
@@ -245,6 +266,7 @@ export const events = [
   {
     id: 'event-022',
     text: 'SK Hynix announces HBM production expansion',
+    description: 'SK Hynix announced plans to significantly expand production of High Bandwidth Memory (HBM) chips to meet surging demand from AI data center customers including Nvidia.',
     date: '2025-10-01T09:00:00Z',
     parentEventId: null,
     subEventIds: [],
@@ -256,6 +278,7 @@ export const events = [
   {
     id: 'event-023',
     text: 'China tightens gallium and germanium export controls',
+    description: 'China implemented stricter export controls on gallium and germanium, critical materials for semiconductor manufacturing, expanding its retaliatory measures against Western technology restrictions.',
     date: '2025-10-15T10:00:00Z',
     parentEventId: 'event-018',
     subEventIds: [],
@@ -267,6 +290,7 @@ export const events = [
   {
     id: 'event-024',
     text: 'ASML CEO warns of prolonged China restrictions',
+    description: 'ASML\'s CEO cautioned investors and stakeholders that export restrictions to China would likely remain in place for an extended period, impacting the company\'s long-term revenue outlook.',
     date: '2025-11-05T10:00:00Z',
     parentEventId: null,
     subEventIds: [],
@@ -278,6 +302,7 @@ export const events = [
   {
     id: 'event-025',
     text: 'AMD unveils new AI accelerator to compete with Nvidia',
+    description: 'AMD unveiled its latest AI accelerator chips designed to compete with Nvidia\'s dominant offerings, intensifying competition in the rapidly growing artificial intelligence chip market.',
     date: '2025-11-20T09:00:00Z',
     parentEventId: null,
     subEventIds: [],
@@ -289,6 +314,7 @@ export const events = [
   {
     id: 'event-026',
     text: 'Intel secures $8.5B in CHIPS Act funding',
+    description: 'Intel announced it secured $8.5 billion in direct funding from the US government under the CHIPS and Science Act to support domestic semiconductor manufacturing expansion.',
     date: '2025-12-10T10:00:00Z',
     parentEventId: null,
     subEventIds: [],

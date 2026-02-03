@@ -478,8 +478,11 @@ export class DocumentTableCard extends BaseCardComponent {
       return `<option value="${key}" ${selected}>${label}</option>`;
     }).join('');
     
-    // Build actions HTML with type filter and column filter
+    // Build actions HTML with expand data button, type filter, and column filter
     let actionsHtml = '';
+    
+    // Expand data button (placeholder)
+    actionsHtml += `<button class="btn btn-secondary btn-small" id="${this.containerId}-expand-data-btn">Expand data</button>`;
     
     // Only show type filter if there are multiple types
     if (this.showTypeFilter && Object.keys(typeOptions).length > 2) {
@@ -504,12 +507,19 @@ export class DocumentTableCard extends BaseCardComponent {
       noPadding: true,
       halfWidth: this.halfWidth,
       fullWidth: this.fullWidth,
-      actions: actionsHtml
+      actions: actionsHtml,
+      noFullscreen: true
     });
   }
 
   initialize() {
     if (!this.hasData()) return null;
+
+    // Add class to identify document table cards (to hide resize handle)
+    const cardElement = document.getElementById(this.containerId)?.closest('.card');
+    if (cardElement) {
+      cardElement.classList.add('card-document-table');
+    }
 
     // Check if classification should be shown
     const settings = dataStore.getSettings();
@@ -560,8 +570,24 @@ export class DocumentTableCard extends BaseCardComponent {
 
     // Attach type filter listener
     this.attachTypeFilterListener();
+    
+    // Attach expand data button listener
+    this.attachExpandDataListener();
 
     return this.component;
+  }
+
+  /**
+   * Attach event listener for expand data button (placeholder)
+   */
+  attachExpandDataListener() {
+    const expandBtn = document.getElementById(`${this.containerId}-expand-data-btn`);
+    if (expandBtn) {
+      expandBtn.addEventListener('click', () => {
+        // TODO: Implement expand data functionality
+        console.log('Expand data clicked');
+      });
+    }
   }
 
   /**
@@ -1366,6 +1392,210 @@ export class CardManager {
   }
 }
 
+/**
+ * Quotes Table Card Component
+ * Displays document quotes in a table format
+ */
+export class QuotesTableCard extends BaseCardComponent {
+  constructor(view, containerId, options = {}) {
+    super(view, containerId);
+    this.options = options;
+    this.quotes = options.quotes || [];
+    this.title = options.title || 'Quotes';
+    this.halfWidth = options.halfWidth !== false;
+    this.fullWidth = options.fullWidth || false;
+  }
+
+  hasData() {
+    return this.quotes.length > 0;
+  }
+
+  getCardHtml() {
+    if (!this.hasData()) return '';
+    
+    return CardBuilder.create(this.title, this.containerId, {
+      count: this.quotes.length,
+      noPadding: true,
+      halfWidth: this.halfWidth,
+      fullWidth: this.fullWidth,
+      bodyClass: 'card-body-scrollable'
+    });
+  }
+
+  /**
+   * Get speaker name from ID
+   */
+  getSpeakerName(speakerId, speakerType) {
+    if (!speakerId) return 'Unknown';
+    if (speakerType === 'person') {
+      const person = DataService.getPerson(speakerId);
+      return person ? person.name : speakerId;
+    } else if (speakerType === 'organization') {
+      const org = DataService.getOrganization(speakerId);
+      return org ? org.name : speakerId;
+    }
+    return speakerId;
+  }
+
+  /**
+   * Render the quotes table HTML
+   */
+  renderTable() {
+    if (!this.quotes.length) return '<p class="empty-state">No quotes available</p>';
+
+    const rows = this.quotes.map(quote => {
+      const speakerName = this.getSpeakerName(quote.speakerId, quote.speakerType);
+      const speakerTypeClass = quote.speakerType === 'person' ? 'speaker-person' : 'speaker-org';
+      const truncatedText = quote.text.length > 200 ? quote.text.substring(0, 200) + '...' : quote.text;
+      
+      return `
+        <tr class="quotes-table-row" data-speaker-id="${quote.speakerId || ''}" data-speaker-type="${quote.speakerType || ''}">
+          <td class="quotes-col-speaker">
+            <span class="speaker-name ${speakerTypeClass}">${escapeHtml(speakerName)}</span>
+          </td>
+          <td class="quotes-col-text">
+            <span class="quote-text">"${escapeHtml(truncatedText)}"</span>
+          </td>
+        </tr>
+      `;
+    }).join('');
+
+    return `
+      <div class="table-container quotes-table-container">
+        <table class="table quotes-table">
+          <thead>
+            <tr>
+              <th class="quotes-col-speaker">Speaker</th>
+              <th class="quotes-col-text">Quote</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${rows}
+          </tbody>
+        </table>
+      </div>
+    `;
+  }
+
+  initialize() {
+    if (!this.hasData()) return null;
+
+    const container = document.getElementById(this.containerId);
+    if (container) {
+      container.innerHTML = this.renderTable();
+    }
+    return null;
+  }
+}
+
+/**
+ * Activities Table Card Component
+ * Displays document activities in a table format
+ */
+export class ActivitiesTableCard extends BaseCardComponent {
+  constructor(view, containerId, options = {}) {
+    super(view, containerId);
+    this.options = options;
+    this.activities = options.activities || [];
+    this.title = options.title || 'Activities';
+    this.halfWidth = options.halfWidth !== false;
+    this.fullWidth = options.fullWidth || false;
+  }
+
+  hasData() {
+    return this.activities.length > 0;
+  }
+
+  getCardHtml() {
+    if (!this.hasData()) return '';
+    
+    return CardBuilder.create(this.title, this.containerId, {
+      count: this.activities.length,
+      noPadding: true,
+      halfWidth: this.halfWidth,
+      fullWidth: this.fullWidth,
+      bodyClass: 'card-body-scrollable'
+    });
+  }
+
+  /**
+   * Get entity name from ID
+   */
+  getEntityName(entityId, entityType) {
+    if (!entityId) return null;
+    if (entityType === 'person') {
+      const person = DataService.getPerson(entityId);
+      return person ? person.name : entityId;
+    } else if (entityType === 'organization') {
+      const org = DataService.getOrganization(entityId);
+      return org ? org.name : entityId;
+    }
+    return entityId;
+  }
+
+  /**
+   * Render the activities table HTML
+   */
+  renderTable() {
+    if (!this.activities.length) return '<p class="empty-state">No activities available</p>';
+
+    const rows = this.activities.map(activity => {
+      const actorName = this.getEntityName(activity.actorId, activity.actorType) || 'Unknown';
+      const actorTypeClass = activity.actorType === 'person' ? 'actor-person' : 'actor-org';
+      
+      // Target can be an entity or text
+      let targetDisplay = activity.targetText || '';
+      if (activity.targetId) {
+        const targetName = this.getEntityName(activity.targetId, activity.targetType);
+        if (targetName) {
+          targetDisplay = targetName + (activity.targetText ? ` (${activity.targetText})` : '');
+        }
+      }
+      
+      return `
+        <tr class="activities-table-row" data-actor-id="${activity.actorId || ''}" data-actor-type="${activity.actorType || ''}">
+          <td class="activities-col-actor">
+            <span class="actor-name ${actorTypeClass}">${escapeHtml(actorName)}</span>
+          </td>
+          <td class="activities-col-action">
+            <span class="activity-action">${escapeHtml(activity.action || '')}</span>
+          </td>
+          <td class="activities-col-target">
+            <span class="activity-target">${escapeHtml(targetDisplay)}</span>
+          </td>
+        </tr>
+      `;
+    }).join('');
+
+    return `
+      <div class="table-container activities-table-container">
+        <table class="table activities-table">
+          <thead>
+            <tr>
+              <th class="activities-col-actor">Actor</th>
+              <th class="activities-col-action">Action</th>
+              <th class="activities-col-target">Target</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${rows}
+          </tbody>
+        </table>
+      </div>
+    `;
+  }
+
+  initialize() {
+    if (!this.hasData()) return null;
+
+    const container = document.getElementById(this.containerId);
+    if (container) {
+      container.innerHTML = this.renderTable();
+    }
+    return null;
+  }
+}
+
 export default {
   NetworkGraphCard,
   NarrativeListCard,
@@ -1378,5 +1608,7 @@ export default {
   SentimentChartCard,
   VennDiagramCard,
   BulletPointsCard,
+  QuotesTableCard,
+  ActivitiesTableCard,
   CardManager
 };

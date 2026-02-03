@@ -16,7 +16,9 @@ import {
   SentimentChartCard,
   VennDiagramCard,
   TimelineVolumeCompositeCard,
-  TopicListCard
+  TopicListCard,
+  QuotesTableCard,
+  ActivitiesTableCard
 } from '../components/CardComponents.js';
 
 export class EntityDetailView extends DetailViewBase {
@@ -210,6 +212,16 @@ export class EntityDetailView extends DetailViewBase {
     const allActivity = DataService.getAllActivity();
     data.activity = allActivity.filter(item => activityDocIds.has(item.documentId));
 
+    // Get quotes and activities for this entity (scoped to document set)
+    const docIdsForQuotes = scopeDocIds || null;
+    if (this.isPerson) {
+      data.quotes = DataService.getQuotesForPerson(this.entityId, docIdsForQuotes);
+      data.entityActivities = DataService.getActivitiesForPerson(this.entityId, docIdsForQuotes);
+    } else {
+      data.quotes = DataService.getQuotesForOrganization(this.entityId, docIdsForQuotes);
+      data.entityActivities = DataService.getActivitiesForOrganization(this.entityId, docIdsForQuotes);
+    }
+
     return data;
   }
 
@@ -222,7 +234,25 @@ export class EntityDetailView extends DetailViewBase {
     
     const prefix = this.isPerson ? 'person' : 'org';
 
-    // 1. People & Organizations Network (half-width)
+    // 1. Quotes Table (half-width) - first card
+    if (data.quotes && data.quotes.length > 0) {
+      this.cardManager.add(new QuotesTableCard(this, `${prefix}-quotes`, {
+        title: 'Quotes',
+        quotes: data.quotes,
+        halfWidth: true
+      }));
+    }
+
+    // 2. Activities Table (half-width) - second card
+    if (data.entityActivities && data.entityActivities.length > 0) {
+      this.cardManager.add(new ActivitiesTableCard(this, `${prefix}-activities`, {
+        title: 'Activities',
+        activities: data.entityActivities,
+        halfWidth: true
+      }));
+    }
+
+    // 3. People & Organizations Network (half-width)
     if (data.hasNetwork) {
       this.cardManager.add(new NetworkGraphCard(this, `${prefix}-network`, {
         title: 'Related People & Organizations',
@@ -367,7 +397,6 @@ export class EntityDetailView extends DetailViewBase {
 
     // Build context-aware breadcrumbs
     const breadcrumbs = this.buildBreadcrumbs([
-      { label: 'People & Orgs', route: 'entities' },
       entity.name
     ]);
 

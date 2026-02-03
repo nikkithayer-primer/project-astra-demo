@@ -48,6 +48,13 @@
   flex-direction: column;
   background: var(--bg-tertiary);
   border-right: 1px solid var(--border-color);
+  transition: transform 0.25s ease, margin 0.25s ease;
+}
+
+/* Slide sidebar out when details panel is open */
+.document-viewer-sidebar.hidden {
+  transform: translateX(-100%);
+  margin-right: -320px;
 }
 
 .document-viewer-sidebar-header {

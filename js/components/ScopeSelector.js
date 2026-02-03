@@ -480,7 +480,7 @@ export class ScopeSelector {
             <!-- Save Button for Advanced Mode -->
             <div class="scope-advanced-actions">
               <button 
-                class="btn btn-secondary btn-sm scope-save-filter-btn-advanced" 
+                class="btn btn-secondary btn-small scope-save-filter-btn-advanced" 
                 ${this.booleanExpression?.trim() ? '' : 'disabled'}
               >
                 <svg viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.5">

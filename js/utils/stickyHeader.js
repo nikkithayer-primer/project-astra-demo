@@ -10,6 +10,7 @@ let scrollHysteresis = 30; // Buffer zone to prevent flickering
 let isInitialized = false;
 let isCollapsed = false; // Track current state to apply hysteresis
 let isTransitioning = false; // Prevent state changes during CSS transitions
+let isForceCollapsed = false; // When true, header stays collapsed regardless of scroll
 const transitionDuration = 300; // Match CSS transition duration (0.3s)
 
 /**
@@ -38,8 +39,13 @@ function getScrollTop() {
 /**
  * Initialize sticky header scroll behavior
  * Call this after rendering a view with a page-header
+ * @param {Object} options - Configuration options
+ * @param {boolean} options.forceCollapsed - If true, header stays collapsed regardless of scroll
  */
-export function initStickyHeader() {
+export function initStickyHeader(options = {}) {
+  // Set force collapsed state
+  isForceCollapsed = options.forceCollapsed || false;
+  
   // Determine the scroll container
   scrollContainer = getScrollContainer();
   
@@ -54,12 +60,19 @@ export function initStickyHeader() {
   
   // Reset scroll state
   lastScrollTop = getScrollTop();
-  isCollapsed = false;
+  isCollapsed = isForceCollapsed; // Start collapsed if forced
   isTransitioning = false;
   isInitialized = true;
   
-  // Initial check
-  updateHeaderState();
+  // Initial check - apply force collapse immediately if needed
+  if (isForceCollapsed) {
+    const pageHeader = document.querySelector('.page-header');
+    if (pageHeader) {
+      pageHeader.classList.add('scrolled');
+    }
+  } else {
+    updateHeaderState();
+  }
 }
 
 /**
@@ -80,6 +93,16 @@ function updateHeaderState() {
   const pageHeader = document.querySelector('.page-header');
   
   if (!pageHeader) return;
+  
+  // If force collapsed, always keep header collapsed
+  if (isForceCollapsed) {
+    if (!pageHeader.classList.contains('scrolled')) {
+      pageHeader.classList.add('scrolled');
+      isCollapsed = true;
+    }
+    lastScrollTop = currentScrollTop;
+    return;
+  }
   
   // Don't change state during CSS transitions to prevent intermediate state flickering
   if (isTransitioning) {

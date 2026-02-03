@@ -15,6 +15,7 @@ import { SentimentChart } from '../components/SentimentChart.js';
 import { NetworkGraph } from '../components/NetworkGraph.js';
 import { getEntityCardModal } from '../components/EntityCardModal.js';
 import { DocumentTable } from '../components/DocumentTable.js';
+import { ColumnFilter } from '../components/ColumnFilter.js';
 import { MapView } from '../components/MapView.js';
 import { CardBuilder } from '../utils/CardBuilder.js';
 import { initAllCardToggles } from '../utils/cardWidthToggle.js';
@@ -915,17 +916,89 @@ export class MonitorsView extends BaseView {
       const showClassification = settings.showClassification;
       
       // Build columns based on classification setting
-      const columns = showClassification
+      const defaultColumns = showClassification
         ? ['classification', 'publisherName', 'title', 'excerpt', 'publishedDate']
         : ['publisherName', 'title', 'excerpt', 'publishedDate'];
       
-      const docTable = new DocumentTable(container, {
-        columns: columns,
+      // Build document type filter options
+      const types = new Set(documents.map(d => d.documentType).filter(Boolean));
+      const typeOptionsHtml = ['<option value="all" selected>All Types</option>']
+        .concat([...types].map(type => {
+          const label = type.replace(/_/g, ' ').replace(/\b\w/g, c => c.toUpperCase());
+          return `<option value="${type}">${label}</option>`;
+        })).join('');
+      
+      // Create header with controls
+      const headerId = `monitor-docs-header-${monitor.id}`;
+      const typeFilterId = `monitor-docs-type-${monitor.id}`;
+      const columnFilterId = `monitor-docs-columns-${monitor.id}`;
+      const tableContainerId = `monitor-docs-table-${monitor.id}`;
+      
+      container.innerHTML = `
+        <div class="document-table-header" id="${headerId}">
+          <button class="btn btn-secondary btn-small" id="${headerId}-expand-btn">Expand data</button>
+          <div class="filter-control">
+            <label class="filter-label">Type</label>
+            <select id="${typeFilterId}" class="filter-select">
+              ${typeOptionsHtml}
+            </select>
+          </div>
+          <div class="filter-control" id="${columnFilterId}"></div>
+        </div>
+        <div id="${tableContainerId}"></div>
+      `;
+      
+      // Initialize column filter
+      const availableColumns = showClassification 
+        ? { classification: 'Classification', publisherName: 'Publisher', title: 'Title', excerpt: 'Excerpt', publishedDate: 'Published' }
+        : { publisherName: 'Publisher', title: 'Title', excerpt: 'Excerpt', publishedDate: 'Published' };
+      
+      let currentColumns = [...defaultColumns];
+      const columnFilter = new ColumnFilter(columnFilterId, {
+        availableColumns: availableColumns,
+        defaultColumns: defaultColumns,
+        requiredColumns: ['title'],
+        onChange: (cols) => {
+          currentColumns = cols;
+          if (docTable) {
+            docTable.setColumns(cols);
+          }
+        }
+      });
+      columnFilter.setSelectedColumns(currentColumns);
+      columnFilter.render();
+      
+      // Initialize document table
+      const docTable = new DocumentTable(tableContainerId, {
+        columns: currentColumns,
         maxItems: 8,
         enableViewerMode: true
       });
-      docTable.update({ documents });
-      this.visualizationComponents.push({ monitorId: monitor.id, component: docTable, type: 'documents' });
+      
+      let filteredDocs = documents;
+      docTable.update({ documents: filteredDocs });
+      this.visualizationComponents.push({ monitorId: monitor.id, component: docTable, type: 'documents', columnFilter });
+      
+      // Attach expand data button handler (placeholder)
+      const expandBtn = document.getElementById(`${headerId}-expand-btn`);
+      if (expandBtn) {
+        expandBtn.addEventListener('click', () => {
+          // TODO: Implement expand data functionality
+          console.log('Expand data clicked');
+        });
+      }
+      
+      // Attach type filter handler
+      const typeSelect = document.getElementById(typeFilterId);
+      if (typeSelect) {
+        typeSelect.addEventListener('change', (e) => {
+          const filterValue = e.target.value;
+          filteredDocs = filterValue === 'all' 
+            ? documents 
+            : documents.filter(doc => (doc.documentType || 'news_article') === filterValue);
+          docTable.update({ documents: filteredDocs });
+        });
+      }
     } else {
       this.showEmptyVisualization(container, 'No documents found');
     }
@@ -978,9 +1051,12 @@ export class MonitorsView extends BaseView {
   destroyMonitorVisualization(monitorId) {
     const index = this.visualizationComponents.findIndex(c => c.monitorId === monitorId);
     if (index !== -1) {
-      const { component } = this.visualizationComponents[index];
+      const { component, columnFilter } = this.visualizationComponents[index];
       if (component && typeof component.destroy === 'function') {
         component.destroy();
+      }
+      if (columnFilter && typeof columnFilter.destroy === 'function') {
+        columnFilter.destroy();
       }
       this.visualizationComponents.splice(index, 1);
     }

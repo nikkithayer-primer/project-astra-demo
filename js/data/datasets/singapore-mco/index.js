@@ -113,6 +113,15 @@ export const projects = [
     status: 'active',
     createdAt: '2025-11-12T09:00:00+08:00',
     updatedAt: '2025-11-29T17:00:00+08:00'
+  },
+  {
+    id: 'project-005',
+    name: 'Unsorted',
+    description: 'Uncategorized documents pending review and classification',
+    documentIds: ['doc-006', 'doc-007', 'doc-025', 'doc-026', 'doc-030', 'doc-031'],
+    status: 'active',
+    createdAt: '2025-12-01T10:00:00+08:00',
+    updatedAt: '2026-01-15T16:00:00+08:00'
   }
 ];
 

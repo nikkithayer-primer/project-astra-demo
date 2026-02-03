@@ -302,14 +302,43 @@ Source documents (news articles, social posts, internal reports). **Documents ar
   },
   contentBlocks: [         // Optional. Structured content
     {
-      type: 'paragraph' | 'heading' | 'quote' | 'image' | 'list',
+      type: 'paragraph' | 'heading' | 'blockquote' | 'image' | 'list',
       content: string,
       imageUrl?: string,
       caption?: string,
       portionMark?: {
         classification: string,
         handling: string
-      }
+      },
+      entityMentions?: [     // Optional. Inline entity links within this block
+        {
+          startOffset: number,   // Character offset where mention starts
+          endOffset: number,     // Character offset where mention ends
+          entityType: string,    // 'person' | 'organization' | 'location' | 'event'
+          entityId: string       // FK to the referenced entity
+        }
+      ]
+    }
+  ],
+  
+  // Extracted quotes and activities
+  quotes: [                  // Optional. Attributed statements from this document
+    {
+      id: string,            // Required. Unique ID within document
+      speakerId: string,     // Required. FK to Person or Organization
+      speakerType: string,   // Required. 'person' | 'organization'
+      text: string           // Required. The quoted text
+    }
+  ],
+  activities: [              // Optional. Actor-action-target relationships
+    {
+      id: string,            // Required. Unique ID within document
+      actorId: string,       // Required. FK to Person or Organization
+      actorType: string,     // Required. 'person' | 'organization'
+      action: string,        // Required. The action verb (e.g., 'criticized', 'praised', 'met with')
+      targetId: string,      // Optional. FK to Person, Organization, Location, or Event
+      targetType: string,    // Optional. 'person' | 'organization' | 'location' | 'event'
+      targetText: string     // Required. Original phrasing of target for display
     }
   ],
   
@@ -546,6 +575,24 @@ Manually curated document collections for research and reporting. Unlike Monitor
   name: string,            // Required. Project name
   description: string,     // Optional. Project purpose/notes
   documentIds: string[],   // Required. FKs to Document (manually curated)
+  snippets: [              // Optional. Saved text selections from various sources
+    {
+      id: string,          // Required. Prefix: 'snippet-'
+      text: string,        // Required. The selected text
+      sourceType: enum,    // Required. 'document' | 'chat' | 'narrative' | 'activity' | 'table'
+      sourceDocumentId: string,  // Optional. FK to Document (for document/table/activity sources)
+      sourceId: string,    // Optional. Source entity ID (narrative ID, etc.)
+      sourceLabel: string, // Optional. Display label when no document link available
+      sourceContext: {     // Optional. Location in source document
+        blockIndex: number,
+        startOffset: number,
+        endOffset: number
+      },
+      note: string,        // Optional. User annotation/note
+      createdAt: datetime,
+      createdBy: string    // Optional. FK to User who created the snippet
+    }
+  ],
   tagIds: string[],        // Optional. FKs to Tag
   status: enum,            // Optional. 'active' | 'archived'. Default: 'active'
   createdAt: datetime,
@@ -554,6 +601,8 @@ Manually curated document collections for research and reporting. Unlike Monitor
 ```
 
 **Key Distinction:** Projects have no `scope` or dynamic matching. The `documentIds` array is the complete, manually-managed document set. All entity views within a project are derived from these documents.
+
+**Snippets:** Text snippets can be saved to projects via text selection in document views. Snippets preserve a reference to the source document and optional context for navigation back to the original location.
 
 ### SearchFilter
 
@@ -732,6 +781,28 @@ const allVolume = DataService.getAggregateVolumeOverTime(); // all missions
 ```javascript
 sentiment = sum(doc.factionMentions[factionId].sentiment) / count
 ```
+
+### Quote and Activity Aggregation
+
+Quotes and activities are aggregated from documents for Person/Organization detail views:
+
+```javascript
+// Get all quotes by a person (optionally filtered to specific documents)
+const quotes = DataService.getQuotesForPerson(personId, documentIds);
+// Returns: [{ id, speakerId, speakerType, text, documentId, documentTitle, publishedDate }, ...]
+
+// Get all quotes by an organization
+const quotes = DataService.getQuotesForOrganization(orgId, documentIds);
+
+// Get all activities involving a person (as actor or target)
+const activities = DataService.getActivitiesForPerson(personId, documentIds);
+// Returns: [{ id, actorId, actorType, action, targetId, targetType, targetText, documentId, role: 'actor'|'target' }, ...]
+
+// Get all activities involving an organization
+const activities = DataService.getActivitiesForOrganization(orgId, documentIds);
+```
+
+When `documentIds` is provided (e.g., from a workspace scope), results are filtered to only those documents.
 
 ---
 

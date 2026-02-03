@@ -63,7 +63,6 @@ export class TopicView extends DetailViewBase {
 
     // Build context-aware breadcrumbs
     const breadcrumbs = this.buildBreadcrumbs([
-      { label: 'Topics', route: 'topics' },
       topic.headline
     ]);
 

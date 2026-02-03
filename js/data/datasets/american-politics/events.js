@@ -19,6 +19,7 @@ export const events = [
   {
     id: 'event-007',
     text: 'Trump shares private diplomatic messages on social media',
+    description: 'President Trump posted private text messages exchanged with French President Macron on social media following the Davos speech, violating diplomatic protocol and further escalating tensions between the two leaders.',
     date: '2026-01-20T11:30:00Z',
     parentEventId: null,
     subEventIds: [],
@@ -30,6 +31,7 @@ export const events = [
   {
     id: 'event-008',
     text: 'Greenland PM calls for respect of world order',
+    description: 'Greenland Prime Minister Múte Egede issued a statement calling for respect of the rules-based international order in response to Trump\'s continued interest in acquiring Greenland, asserting the territory\'s right to self-determination.',
     date: '2026-01-20T12:00:00Z',
     parentEventId: null,
     subEventIds: [],
@@ -41,6 +43,7 @@ export const events = [
   {
     id: 'event-009',
     text: 'Von der Leyen calls for European independence',
+    description: 'European Commission President Ursula von der Leyen delivered remarks at Davos emphasizing the need for European strategic autonomy and independence from American policy shifts, signaling growing transatlantic divisions.',
     date: '2026-01-20T13:00:00Z',
     parentEventId: null,
     subEventIds: [],
@@ -52,6 +55,7 @@ export const events = [
   {
     id: 'event-010',
     text: 'DOJ plans subpoenas for Minnesota officials',
+    description: 'The Department of Justice announced plans to issue subpoenas to Minnesota state officials as part of its escalating confrontation over immigration enforcement, with the state refusing to cooperate with federal deportation operations.',
     date: '2026-01-20T12:00:00Z',
     parentEventId: null,
     subEventIds: [],
@@ -64,6 +68,7 @@ export const events = [
   {
     id: 'event-011',
     text: 'DOJ appeals ruling restricting federal agents in Minnesota',
+    description: 'The Justice Department filed an emergency appeal challenging a federal court ruling that restricted ICE agents\' activities in Minnesota, arguing the injunction unconstitutionally interferes with federal immigration enforcement authority.',
     date: '2026-01-20T10:00:00Z',
     parentEventId: null,
     subEventIds: [],
@@ -75,6 +80,7 @@ export const events = [
   {
     id: 'event-012',
     text: 'DOJ investigates church protest interruption',
+    description: 'The Department of Justice opened an investigation into protesters who disrupted a church service in Minneapolis, examining potential violations of federal law protecting religious gatherings.',
     date: '2026-01-19T11:00:00Z',
     parentEventId: null,
     subEventIds: [],
@@ -99,6 +105,7 @@ export const events = [
   {
     id: 'event-014',
     text: 'FBI investigation pivots from agent to victim and her widow',
+    description: 'In a controversial shift, the FBI investigation into Renee Good\'s death turned its focus from the ICE agent who fired the fatal shot to the victim herself and her widow, prompting accusations of victim-blaming and politicized law enforcement.',
     date: '2026-01-18T00:00:00Z',
     parentEventId: 'event-013',
     subEventIds: [],
@@ -110,6 +117,7 @@ export const events = [
   {
     id: 'event-015',
     text: 'Indiana Judge Steven Meyer and wife shot at home',
+    description: 'Federal Judge Steven Meyer and his wife were shot at their home in Indiana in an apparent targeted attack, sparking national concern about violence against the judiciary and calls for enhanced security measures for judges.',
     date: '2026-01-19T15:00:00Z',
     parentEventId: null,
     subEventIds: ['event-016'],
@@ -122,6 +130,7 @@ export const events = [
   {
     id: 'event-016',
     text: 'Indiana Supreme Court Chief Justice urges judges to remain vigilant',
+    description: 'Following the attack on Judge Meyer, Indiana\'s Chief Justice issued a statement urging all state judges to remain vigilant and review their personal security measures in response to rising threats against the judiciary.',
     date: '2026-01-20T10:00:00Z',
     parentEventId: 'event-015',
     subEventIds: [],
@@ -133,6 +142,7 @@ export const events = [
   {
     id: 'event-017',
     text: 'Protesters disrupt Cities Church service targeting ICE official pastor',
+    description: 'Anti-ICE protesters disrupted a Sunday service at Cities Church in Minneapolis, where the pastor is also an ICE official, leading to a tense confrontation and subsequent federal investigation under the FACE Act.',
     date: '2026-01-19T10:00:00Z',
     parentEventId: null,
     subEventIds: ['event-018', 'event-019', 'event-020'],
@@ -145,6 +155,7 @@ export const events = [
   {
     id: 'event-018',
     text: 'DOJ announces FACE Act investigation into church protest',
+    description: 'The Department of Justice announced it was investigating the Cities Church protest under the Freedom of Access to Clinic Entrances (FACE) Act, which also protects religious gatherings from interference.',
     date: '2026-01-19T18:00:00Z',
     parentEventId: 'event-017',
     subEventIds: [],
@@ -156,6 +167,7 @@ export const events = [
   {
     id: 'event-019',
     text: 'DOJ threatens charges against journalist Don Lemon',
+    description: 'The Department of Justice suggested journalist Don Lemon could face charges for his presence at and coverage of the church protest, raising alarm among press freedom advocates about government intimidation of reporters.',
     date: '2026-01-20T12:00:00Z',
     parentEventId: 'event-017',
     subEventIds: [],
@@ -168,6 +180,7 @@ export const events = [
   {
     id: 'event-020',
     text: 'Trump calls protesters agitators and insurrectionists',
+    description: 'President Trump labeled the church protesters "agitators and insurrectionists" in social media posts, drawing comparisons to January 6th rhetoric and escalating the political conflict over immigration enforcement.',
     date: '2026-01-21T06:00:00Z',
     parentEventId: 'event-017',
     subEventIds: [],
@@ -179,6 +192,7 @@ export const events = [
   {
     id: 'event-021',
     text: 'DHS blocks Minnesota lawmakers from ICE detention facility inspection',
+    description: 'The Department of Homeland Security blocked Minnesota state legislators from conducting an inspection of an ICE detention facility, escalating the confrontation between federal and state authorities over immigration enforcement.',
     date: '2026-01-10T14:00:00Z',
     parentEventId: null,
     subEventIds: ['event-022'],
@@ -190,6 +204,7 @@ export const events = [
   {
     id: 'event-022',
     text: 'Judge Cobb allows DHS to require week notice for facility inspections',
+    description: 'A federal judge ruled that DHS could require one week advance notice for facility inspections by state officials, partially siding with the federal government in its dispute with Minnesota lawmakers.',
     date: '2026-01-20T12:00:00Z',
     parentEventId: 'event-021',
     subEventIds: [],
@@ -201,6 +216,7 @@ export const events = [
   {
     id: 'event-023',
     text: 'DOJ calls Minnesota lawsuit an absurdity',
+    description: 'Department of Justice officials characterized Minnesota\'s lawsuit challenging federal immigration enforcement as "an absurdity" that unconstitutionally interferes with federal law enforcement authority.',
     date: '2026-01-20T15:00:00Z',
     parentEventId: null,
     subEventIds: [],
@@ -212,6 +228,7 @@ export const events = [
   {
     id: 'event-024',
     text: 'DOJ appeals Menendez injunction to Eighth Circuit',
+    description: 'The Justice Department filed an appeal to the Eighth Circuit Court of Appeals seeking to overturn an injunction issued by Judge Menendez restricting federal immigration enforcement activities in Minnesota.',
     date: '2026-01-20T16:00:00Z',
     parentEventId: null,
     subEventIds: [],
@@ -223,6 +240,7 @@ export const events = [
   {
     id: 'event-025',
     text: 'Noem backtracks on pepper spray denial',
+    description: 'DHS Secretary Kristi Noem reversed earlier denials that federal agents had used pepper spray during immigration enforcement operations, acknowledging its use after video evidence surfaced.',
     date: '2026-01-19T18:00:00Z',
     parentEventId: null,
     subEventIds: [],
@@ -234,6 +252,7 @@ export const events = [
   {
     id: 'event-026',
     text: 'RFK Jr releases meat-heavy dietary guidelines',
+    description: 'Health and Human Services Secretary Robert F. Kennedy Jr. released new federal dietary guidelines emphasizing meat consumption, breaking with previous recommendations and sparking controversy among nutrition scientists.',
     date: '2026-01-18T00:00:00Z',
     parentEventId: null,
     subEventIds: [],
@@ -245,6 +264,7 @@ export const events = [
   {
     id: 'event-027',
     text: 'Texas deploys additional National Guard to border',
+    description: 'Texas Governor Greg Abbott ordered additional National Guard troops to the southern border as part of the state\'s ongoing Operation Lone Star, asserting state authority to address immigration independently of federal policy.',
     date: '2025-06-15T10:00:00Z',
     parentEventId: null,
     subEventIds: ['event-031'],
@@ -257,6 +277,7 @@ export const events = [
   {
     id: 'event-028',
     text: 'DeSantis signs Florida border security bill',
+    description: 'Florida Governor Ron DeSantis signed legislation expanding state authority to address immigration issues, including provisions for transporting migrants out of state and restricting benefits access.',
     date: '2025-07-10T14:00:00Z',
     parentEventId: null,
     subEventIds: [],
@@ -268,6 +289,7 @@ export const events = [
   {
     id: 'event-029',
     text: 'California sues federal government over border policy',
+    description: 'California Attorney General filed a lawsuit against the federal government challenging border enforcement policies, arguing they violate constitutional rights and environmental protections.',
     date: '2025-08-05T11:00:00Z',
     parentEventId: null,
     subEventIds: [],
@@ -279,6 +301,7 @@ export const events = [
   {
     id: 'event-030',
     text: 'DOJ announces investigation into state border actions',
+    description: 'The Department of Justice announced it would investigate potential federal law violations by states taking independent border enforcement actions, warning of constitutional conflicts.',
     date: '2025-08-20T15:00:00Z',
     parentEventId: null,
     subEventIds: [],
@@ -290,6 +313,7 @@ export const events = [
   {
     id: 'event-031',
     text: 'Border governors summit in Texas',
+    description: 'Republican governors from border and interior states gathered in Texas for a summit on coordinated state-level border enforcement, presenting a united front on immigration policy independent of federal direction.',
     date: '2025-09-01T09:00:00Z',
     parentEventId: 'event-027',
     subEventIds: [],
@@ -301,6 +325,7 @@ export const events = [
   {
     id: 'event-032',
     text: 'House passes border security funding bill',
+    description: 'The House of Representatives passed a major border security funding bill along party lines, including provisions for wall construction, personnel increases, and new enforcement technologies.',
     date: '2025-09-15T16:00:00Z',
     parentEventId: null,
     subEventIds: ['event-033'],
@@ -313,6 +338,7 @@ export const events = [
   {
     id: 'event-033',
     text: 'Senate blocks border funding bill',
+    description: 'The Senate failed to advance the House border security bill, with Democrats blocking the legislation over objections to enforcement-only provisions and lack of pathway provisions for existing immigrants.',
     date: '2025-09-22T14:00:00Z',
     parentEventId: 'event-032',
     subEventIds: [],
@@ -324,6 +350,7 @@ export const events = [
   {
     id: 'event-034',
     text: 'Government shutdown begins',
+    description: 'A partial government shutdown began after Congress failed to reach agreement on spending bills, with border security funding disagreements cited as a primary obstacle to resolution.',
     date: '2025-10-01T00:00:00Z',
     parentEventId: null,
     subEventIds: [],
@@ -336,6 +363,7 @@ export const events = [
   {
     id: 'event-035',
     text: 'Opioid settlement distribution begins',
+    description: 'Distribution of funds from the national opioid settlement began, with states receiving billions of dollars earmarked for addiction treatment, prevention programs, and community recovery efforts.',
     date: '2025-07-01T09:00:00Z',
     parentEventId: null,
     subEventIds: ['event-036'],
@@ -347,6 +375,7 @@ export const events = [
   {
     id: 'event-036',
     text: 'States challenge settlement allocation formula',
+    description: 'Several states filed legal challenges to the opioid settlement allocation formula, arguing that the distribution methodology unfairly disadvantages certain communities hit hardest by the epidemic.',
     date: '2025-08-15T10:00:00Z',
     parentEventId: 'event-035',
     subEventIds: [],
@@ -358,6 +387,7 @@ export const events = [
   {
     id: 'event-037',
     text: 'Supreme Court agrees to hear election cases',
+    description: 'The Supreme Court granted certiorari to hear consolidated cases challenging state election law changes, setting up a major ruling on the balance between state and federal authority over elections.',
     date: '2025-11-15T10:00:00Z',
     parentEventId: null,
     subEventIds: [],
@@ -370,6 +400,7 @@ export const events = [
   {
     id: 'event-038',
     text: 'FBI leadership transition announced',
+    description: 'The White House announced a significant leadership transition at the FBI, with the incoming director pledging to refocus the bureau\'s priorities and rebuild relationships with conservative lawmakers.',
     date: '2025-12-01T14:00:00Z',
     parentEventId: null,
     subEventIds: [],

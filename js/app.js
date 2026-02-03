@@ -8,6 +8,7 @@ import { DataService } from './data/DataService.js';
 import { validateDataset } from './data/SchemaValidator.js';
 import { getMonitorEditor } from './components/MonitorEditorModal.js';
 import { getSearchFilterEditor } from './components/SearchFilterEditorModal.js';
+import { getTagEditor } from './components/TagEditorModal.js';
 import { mockData as americanPoliticsData, datasetId as americanPoliticsId, datasetName as americanPoliticsName, defaultSettings as americanPoliticsSettings } from './data/datasets/american-politics/index.js';
 import { mockData as chinaSemiconductorData, datasetId as chinaSemiconductorId, datasetName as chinaSemiconductorName, defaultSettings as chinaSemiconductorSettings } from './data/datasets/china-semiconductor/index.js';
 import { mockData as walmartBrandData, datasetId as walmartBrandId, datasetName as walmartBrandName, defaultSettings as walmartBrandSettings } from './data/datasets/walmart-brand/index.js';
@@ -15,6 +16,7 @@ import { mockData as singaporeMcoData, datasetId as singaporeMcoId, datasetName 
 import { Router } from './router.js';
 import { getSourceViewer } from './components/SourceViewerModal.js';
 import { getEntityCardModal } from './components/EntityCardModal.js';
+import { getTextSelectionPopover } from './components/TextSelectionPopover.js';
 import { escapeHtml } from './utils/htmlUtils.js';
 import { ChatService } from './services/ChatService.js';
 
@@ -85,6 +87,9 @@ class App {
     // Populate filters dropdown
     this.populateFiltersDropdown();
     
+    // Populate tags dropdown
+    this.populateTagsDropdown();
+    
     // Initialize settings modal
     this.initSettingsModal();
     
@@ -93,6 +98,9 @@ class App {
     
     // Initialize delegated source link handler
     this.initSourceLinkHandler();
+    
+    // Initialize text selection popover for saving snippets to projects
+    getTextSelectionPopover();
     
     // Update navigation based on settings
     this.updateNavigationForSettings();
@@ -116,6 +124,8 @@ class App {
       this.updateNavigationForSettings();
       // Refresh filters dropdown
       this.populateFiltersDropdown();
+      // Refresh tags dropdown
+      this.populateTagsDropdown();
     });
   }
 
@@ -928,6 +938,104 @@ class App {
     }
   }
 
+  /**
+   * Populate the tags dropdown with all tags
+   */
+  populateTagsDropdown() {
+    const menu = document.getElementById('tags-dropdown-menu');
+    if (!menu) return;
+
+    const tags = DataService.getTags();
+    const tagCounts = DataService.getTagCounts();
+    
+    // Always show the "New Tag" button at the top
+    const newTagBtn = `
+      <button class="dropdown-action-btn tag-dropdown-new">
+        <svg viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.5">
+          <path d="M8 3v10M3 8h10"/>
+        </svg>
+        New Tag
+      </button>
+    `;
+    
+    if (tags.length === 0) {
+      menu.innerHTML = `
+        ${newTagBtn}
+        <div class="dropdown-divider"></div>
+        <div class="dropdown-empty-state">
+          <span class="text-muted">No tags</span>
+        </div>
+      `;
+      this.attachTagDropdownListeners(menu, []);
+      return;
+    }
+
+    const tagLinks = tags.map(tag => {
+      const count = tagCounts[tag.id] || 0;
+      return `
+        <div class="tag-dropdown-item" data-tag-id="${tag.id}">
+          <div class="tag-dropdown-info">
+            <span class="tag-dropdown-color" style="background-color: ${tag.color || '#6b7280'}"></span>
+            <span class="tag-dropdown-name">${this.escapeHtml(tag.name)}</span>
+            <span class="tag-dropdown-count">${count}</span>
+          </div>
+        </div>
+      `;
+    }).join('');
+
+    menu.innerHTML = `
+      ${newTagBtn}
+      <div class="dropdown-divider"></div>
+      ${tagLinks}
+    `;
+
+    this.attachTagDropdownListeners(menu, tags);
+  }
+
+  /**
+   * Attach event listeners for the tags dropdown
+   */
+  attachTagDropdownListeners(menu, tags) {
+    // New tag button
+    const newBtn = menu.querySelector('.tag-dropdown-new');
+    if (newBtn) {
+      newBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        this.openTagEditor(null);
+        this.closeDropdown(menu);
+      });
+    }
+    
+    // Tag item clicks - navigate to tag detail
+    menu.querySelectorAll('.tag-dropdown-item').forEach(item => {
+      item.addEventListener('click', (e) => {
+        const tagId = item.dataset.tagId;
+        if (tagId) {
+          window.location.hash = `#/tag/${tagId}`;
+        }
+        this.closeDropdown(menu);
+      });
+    });
+  }
+
+  /**
+   * Open the tag editor modal
+   */
+  openTagEditor(tag) {
+    const editor = getTagEditor();
+    const callback = () => {
+      this.populateTagsDropdown();
+      if (this.router) {
+        this.router.handleRoute();
+      }
+    };
+    
+    if (tag) {
+      editor.openEdit(tag, callback);
+    } else {
+      editor.openCreate(callback);
+    }
+  }
 
   /**
    * Escape HTML to prevent XSS

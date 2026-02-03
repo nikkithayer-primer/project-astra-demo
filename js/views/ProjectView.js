@@ -5,8 +5,11 @@
 
 import { DetailViewBase } from './DetailViewBase.js';
 import { DataService } from '../data/DataService.js';
+import { dataStore } from '../data/DataStore.js';
 import { PageHeader } from '../utils/PageHeader.js';
 import { StatCards } from '../components/StatCards.js';
+import { formatRelativeTime } from '../utils/formatters.js';
+import { escapeHtml } from '../utils/htmlUtils.js';
 import {
   CardManager,
   NetworkGraphCard,
@@ -41,17 +44,21 @@ export class ProjectView extends DetailViewBase {
     // Determine active tab
     const activeTab = this.getCurrentTab();
     const hasDocuments = data.documents.length > 0;
+    const snippetCount = data.snippets.length;
     
     // Build cards based on active tab
     if (this.isDocumentsTab()) {
       super.setupDocumentsCard(project, data, 'project');
+    } else if (this.isSnippetsTab()) {
+      // Snippets tab - handled via direct HTML render below
+      this.cardManager = new CardManager(this); // Empty card manager
     } else {
       this.setupDashboardCards(project, data);
     }
     
-    // Generate tabs config
+    // Generate tabs config (always show tabs, including Snippets)
     const baseHref = `#/${this.projectId}/`;
-    const tabsConfig = hasDocuments ? this.getTabsConfig(baseHref, true) : null;
+    const tabsConfig = this.getProjectTabsConfig(baseHref, hasDocuments, snippetCount);
 
     // Build subtitle with stats
     const docCount = data.documents.length;
@@ -88,22 +95,29 @@ export class ProjectView extends DetailViewBase {
       activeTab: activeTab
     });
 
-    // Render page
+    // Render page content based on tab
+    const contentHtml = this.isSnippetsTab() 
+      ? this.renderSnippetsContent(data.snippets)
+      : `<div class="content-grid">${this.cardManager.getHtml()}</div>`;
+
     this.container.innerHTML = `
       ${headerHtml}
       <div class="content-area">
-        <div class="content-grid">
-          ${this.cardManager.getHtml()}
-        </div>
+        ${contentHtml}
       </div>
     `;
 
-    // Initialize card width toggles
-    this.initCardWidthToggles('project', this.projectId);
+    // Initialize card width toggles (skip for snippets tab)
+    if (!this.isSnippetsTab()) {
+      this.initCardWidthToggles('project', this.projectId);
 
-    // Initialize all card components
-    const components = this.cardManager.initializeAll();
-    Object.assign(this.components, components);
+      // Initialize all card components
+      const components = this.cardManager.initializeAll();
+      Object.assign(this.components, components);
+    } else {
+      // Initialize snippet event handlers
+      this.initSnippetHandlers();
+    }
 
     // Initialize stat card dropdowns
     this.initStatDropdowns(contextId, this.projectId);
@@ -113,11 +127,179 @@ export class ProjectView extends DetailViewBase {
   }
 
   /**
+   * Check if we're on the Snippets tab
+   */
+  isSnippetsTab() {
+    return this.getCurrentTab() === 'snippets';
+  }
+
+  /**
+   * Generate tabs configuration including Snippets tab
+   */
+  getProjectTabsConfig(baseHref, hasDocuments, snippetCount) {
+    // Remove trailing slash from baseHref for consistent URL format
+    const cleanHref = baseHref.endsWith('/') ? baseHref.slice(0, -1) : baseHref;
+    
+    const tabs = [
+      { id: 'dashboard', label: 'Dashboard', href: `${cleanHref}?tab=dashboard` }
+    ];
+
+    if (hasDocuments) {
+      tabs.push({ id: 'documents', label: 'Documents', href: `${cleanHref}?tab=documents` });
+    }
+
+    // Always show Snippets tab (count if has snippets)
+    const snippetsLabel = snippetCount > 0 ? `Snippets (${snippetCount})` : 'Snippets';
+    tabs.push({ id: 'snippets', label: snippetsLabel, href: `${cleanHref}?tab=snippets` });
+
+    return tabs;
+  }
+
+  /**
+   * Render the snippets tab content
+   */
+  renderSnippetsContent(snippets) {
+    if (!snippets || snippets.length === 0) {
+      return `
+        <div class="card">
+          <div class="card-body">
+            <div class="snippet-empty-state">
+              <svg viewBox="0 0 16 16" fill="currentColor">
+                <path d="M4 1.5H3a2 2 0 0 0-2 2V14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V3.5a2 2 0 0 0-2-2h-1v1h1a1 1 0 0 1 1 1V14a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V3.5a1 1 0 0 1 1-1h1v-1z"/>
+                <path d="M9.5 1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-3a.5.5 0 0 1-.5-.5v-1a.5.5 0 0 1 .5-.5h3zm-3-1A1.5 1.5 0 0 0 5 1.5v1A1.5 1.5 0 0 0 6.5 4h3A1.5 1.5 0 0 0 11 2.5v-1A1.5 1.5 0 0 0 9.5 0h-3z"/>
+              </svg>
+              <h3>No Snippets Yet</h3>
+              <p>Select text in any document and click "Send to Project" to save snippets here for easy reference.</p>
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    // Sort snippets by creation date (newest first)
+    const sortedSnippets = [...snippets].sort((a, b) => 
+      new Date(b.createdAt) - new Date(a.createdAt)
+    );
+
+    return `
+      <div class="card">
+        <div class="card-header">
+          <h2 class="card-title">Snippets</h2>
+          <span class="badge">${snippets.length}</span>
+        </div>
+        <div class="card-body">
+          <div class="snippet-list">
+            ${sortedSnippets.map(snippet => this.renderSnippetItem(snippet)).join('')}
+          </div>
+        </div>
+      </div>
+    `;
+  }
+
+  /**
+   * Render a single snippet item
+   */
+  renderSnippetItem(snippet) {
+    const createdAt = formatRelativeTime(snippet.createdAt);
+    
+    // Truncate very long snippets for display
+    const displayText = snippet.text.length > 500 
+      ? snippet.text.substring(0, 500) + '...' 
+      : snippet.text;
+
+    // Build source display based on source type
+    const sourceHtml = this._renderSnippetSource(snippet);
+
+    return `
+      <div class="snippet-item" data-snippet-id="${snippet.id}">
+        <blockquote class="snippet-text">"${escapeHtml(displayText)}"</blockquote>
+        <div class="snippet-meta">
+          ${sourceHtml}
+          <span>• ${createdAt}</span>
+        </div>
+        ${snippet.note ? `<p class="snippet-note">${escapeHtml(snippet.note)}</p>` : ''}
+        <div class="snippet-actions">
+          <button class="btn btn-small btn-ghost snippet-remove" data-snippet-id="${snippet.id}" title="Remove snippet">
+            <svg viewBox="0 0 16 16" width="14" height="14" fill="currentColor">
+              <path fill-rule="evenodd" d="M5.75 1a.75.75 0 0 0-.75.75v.5H2.25a.75.75 0 0 0 0 1.5h.5v9.5a2 2 0 0 0 2 2h6.5a2 2 0 0 0 2-2v-9.5h.5a.75.75 0 0 0 0-1.5H11v-.5A.75.75 0 0 0 10.25 1h-4.5zm-.5 2.25v-.5h5.5v.5h-5.5zm-1.5 1.5v9.5a.5.5 0 0 0 .5.5h6.5a.5.5 0 0 0 .5-.5v-9.5h-7.5z"/>
+            </svg>
+            Remove
+          </button>
+        </div>
+      </div>
+    `;
+  }
+
+  /**
+   * Render the source attribution for a snippet based on its type
+   */
+  _renderSnippetSource(snippet) {
+    const sourceType = snippet.sourceType || 'document';
+    const sourceDoc = snippet.sourceDocument;
+    
+    // For document-based sources (document, table, activity with doc)
+    if (sourceDoc && (sourceType === 'document' || sourceType === 'table' || sourceType === 'activity')) {
+      const docTitle = sourceDoc.title || 'Unknown document';
+      const docLink = `#/${this.projectId}/${sourceDoc.id}/`;
+      return `<a href="${docLink}" class="snippet-source" title="${escapeHtml(docTitle)}">${escapeHtml(docTitle)}</a>`;
+    }
+    
+    // For non-document sources, use the label
+    if (snippet.sourceLabel) {
+      // Truncate long labels
+      const label = snippet.sourceLabel.length > 50 
+        ? snippet.sourceLabel.substring(0, 50) + '...' 
+        : snippet.sourceLabel;
+      return `<span class="snippet-source snippet-source--${sourceType}" title="${escapeHtml(snippet.sourceLabel)}">${escapeHtml(label)}</span>`;
+    }
+    
+    // Fallback labels by type
+    const typeLabels = {
+      'chat': 'Chat response',
+      'narrative': 'Narrative',
+      'activity': 'Activity',
+      'table': 'Document table',
+      'summary': 'Summary'
+    };
+    
+    return `<span class="snippet-source snippet-source--${sourceType}">${typeLabels[sourceType] || 'Unknown source'}</span>`;
+  }
+
+  /**
+   * Initialize event handlers for snippet actions
+   */
+  initSnippetHandlers() {
+    // Remove snippet buttons
+    const removeButtons = this.container.querySelectorAll('.snippet-remove');
+    removeButtons.forEach(btn => {
+      this.addListener(btn, 'click', (e) => {
+        e.preventDefault();
+        const snippetId = btn.dataset.snippetId;
+        this.removeSnippet(snippetId);
+      });
+    });
+  }
+
+  /**
+   * Remove a snippet from this project
+   */
+  removeSnippet(snippetId) {
+    const result = dataStore.removeSnippetFromProject(this.projectId, snippetId);
+    if (result.success) {
+      // Re-render to update the view
+      this.render();
+    }
+  }
+
+  /**
    * Fetch all data for the project
    */
   fetchProjectData(project) {
     // Get all documents in the project
     const documents = DataService.getDocumentsForProject(this.projectId);
+
+    // Get snippets for this project
+    const snippets = DataService.getSnippetsForProject(this.projectId);
 
     // Get derived entities
     const entities = DataService.getEntitiesForProject(this.projectId);
@@ -152,6 +334,7 @@ export class ProjectView extends DetailViewBase {
 
     return {
       documents,
+      snippets,
       persons: entities.persons,
       organizations: entities.organizations,
       narratives: entities.narratives,

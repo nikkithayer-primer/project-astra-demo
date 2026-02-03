@@ -18,6 +18,7 @@ export const factions = [
   {
     id: 'faction-002',
     name: 'Walmart Employees',
+    description: 'Current Walmart associates and workers who share experiences about working conditions through social media and participate in organizing efforts. This faction has driven viral content about understaffing and supported unionization campaigns.',
     color: '#4E79A7',
     relatedFactionIds: ['faction-003', 'faction-011'],
     tagIds: ['tag-002'],
@@ -41,6 +42,7 @@ export const factions = [
   {
     id: 'faction-004',
     name: 'Consumer Safety Advocates',
+    description: 'Organizations and individuals focused on protecting consumer safety and advocating for product quality standards. This faction has been active in demanding accountability for the Great Value contamination recall and stricter private-label oversight.',
     color: '#F28E2B',
     relatedFactionIds: ['faction-001', 'faction-013', 'faction-014'],
     tagIds: ['tag-002'],
@@ -52,6 +54,7 @@ export const factions = [
   {
     id: 'faction-005',
     name: 'Retail Industry Analysts',
+    description: 'Professional analysts, financial experts, and business journalists who provide objective coverage and analysis of Walmart\'s operations, competitive positioning, and market performance.',
     color: '#76B7B2',
     relatedFactionIds: ['faction-010'],
     memberCount: 50000,
@@ -62,6 +65,7 @@ export const factions = [
   {
     id: 'faction-006',
     name: 'Competitor Supporters',
+    description: 'Consumers and stakeholders who prefer Walmart\'s competitors such as Target, Amazon, Costco, and Aldi. This faction highlights alternatives to Walmart and amplifies favorable comparisons for competing retailers.',
     color: '#59A14F',
     relatedFactionIds: ['faction-007', 'faction-016'],
     tagIds: ['tag-003'],
@@ -73,6 +77,7 @@ export const factions = [
   {
     id: 'faction-007',
     name: 'Small Business Advocates',
+    description: 'Advocates for local businesses and small retailers who argue that Walmart\'s market power has harmed Main Street shops and local economies. This faction raises concerns about monopoly power and community economic impact.',
     color: '#EDC948',
     relatedFactionIds: ['faction-006', 'faction-009', 'faction-015'],
     memberCount: 8000000,
@@ -83,6 +88,7 @@ export const factions = [
   {
     id: 'faction-008',
     name: 'Environmental Activists',
+    description: 'Environmental advocates concerned about Walmart\'s environmental impact, including supply chain sustainability, packaging waste, and the carbon footprint of e-commerce delivery operations.',
     color: '#AF7AA1',
     relatedFactionIds: ['faction-003'],
     memberCount: 6000000,
@@ -93,6 +99,7 @@ export const factions = [
   {
     id: 'faction-009',
     name: 'Community Organizers',
+    description: 'Grassroots organizers working in communities affected by Walmart\'s business decisions, including store closures, labor practices, and community development impacts. This faction mobilizes local opposition to corporate practices.',
     color: '#FF9DA7',
     relatedFactionIds: ['faction-003', 'faction-007', 'faction-012', 'faction-015'],
     memberCount: 4000000,
@@ -103,6 +110,7 @@ export const factions = [
   {
     id: 'faction-010',
     name: 'Shareholder Activists',
+    description: 'Investors and shareholder advocacy groups who push for changes in Walmart\'s corporate governance, executive compensation, and social responsibility practices through proxy votes and shareholder resolutions.',
     color: '#9C755F',
     relatedFactionIds: ['faction-005'],
     memberCount: 500000,
@@ -113,6 +121,7 @@ export const factions = [
   {
     id: 'faction-011',
     name: 'Supply Chain Workers',
+    description: 'Workers throughout Walmart\'s supply chain including warehouse employees, drivers, and fulfillment center staff. This faction increasingly aligns with labor organizing efforts and shares common concerns with retail store employees.',
     color: '#BAB0AC',
     relatedFactionIds: ['faction-002', 'faction-003'],
     memberCount: 3000000,
@@ -123,6 +132,7 @@ export const factions = [
   {
     id: 'faction-012',
     name: 'Local Government Officials',
+    description: 'Elected officials and government administrators in communities where Walmart operates, particularly those affected by store closures or seeking to attract or retain Walmart facilities and services.',
     color: '#86BCB6',
     relatedFactionIds: ['faction-009'],
     memberCount: 100000,
@@ -133,6 +143,7 @@ export const factions = [
   {
     id: 'faction-013',
     name: 'Healthcare Advocates',
+    description: 'Advocates focused on healthcare access and affordability who view Walmart Health\'s clinic expansion as either a positive development in underserved areas or a concerning corporatization of healthcare services.',
     color: '#D4A6C8',
     relatedFactionIds: ['faction-004'],
     memberCount: 2000000,
@@ -143,6 +154,7 @@ export const factions = [
   {
     id: 'faction-014',
     name: 'Tech Privacy Critics',
+    description: 'Privacy advocates and critics concerned about Walmart\'s use of surveillance technology in stores, including self-checkout monitoring systems, facial recognition, and data collection from customer apps.',
     color: '#D37295',
     relatedFactionIds: ['faction-001', 'faction-004'],
     memberCount: 5000000,
@@ -153,6 +165,7 @@ export const factions = [
   {
     id: 'faction-015',
     name: 'Rural Community Representatives',
+    description: 'Residents and leaders of rural communities dependent on Walmart for essential goods and services. This faction is particularly concerned about store closures that can leave communities as food deserts.',
     color: '#8CD17D',
     relatedFactionIds: ['faction-007', 'faction-009'],
     tagIds: ['tag-001'],
@@ -164,6 +177,7 @@ export const factions = [
   {
     id: 'faction-016',
     name: 'Budget-Conscious Consumers',
+    description: 'Price-sensitive shoppers who rely on Walmart for affordable goods but have become frustrated with perceived price increases and declining value proposition compared to discount competitors like Aldi.',
     color: '#499894',
     relatedFactionIds: ['faction-001', 'faction-006'],
     memberCount: 30000000,

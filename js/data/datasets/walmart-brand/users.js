@@ -9,7 +9,7 @@ export const users = [
     displayName: 'Jessica Rodriguez',
     role: 'Senior Brand Analyst',
     department: 'Corporate Communications',
-    avatarUrl: 'img/placeholders/avatar-default.svg',
+    avatarUrl: null,
     isCurrentUser: true
   },
   {
@@ -18,7 +18,7 @@ export const users = [
     displayName: 'Michael Thompson',
     role: 'Brand Intelligence Manager',
     department: 'Corporate Communications',
-    avatarUrl: 'img/placeholders/avatar-default.svg',
+    avatarUrl: null,
     isCurrentUser: false
   },
   {
@@ -27,7 +27,7 @@ export const users = [
     displayName: 'Sarah Patek',
     role: 'Social Media Analyst',
     department: 'Digital Marketing',
-    avatarUrl: 'img/placeholders/avatar-default.svg',
+    avatarUrl: null,
     isCurrentUser: false
   },
   {
@@ -36,7 +36,7 @@ export const users = [
     displayName: 'David Wilson',
     role: 'Risk Analyst',
     department: 'Legal Affairs',
-    avatarUrl: 'img/placeholders/avatar-default.svg',
+    avatarUrl: null,
     isCurrentUser: false
   },
   {
@@ -45,7 +45,7 @@ export const users = [
     displayName: 'Linda Chen',
     role: 'Competitive Intelligence Lead',
     department: 'Strategy & Planning',
-    avatarUrl: 'img/placeholders/avatar-default.svg',
+    avatarUrl: null,
     isCurrentUser: false
   },
   {
@@ -54,7 +54,7 @@ export const users = [
     displayName: 'Robert Jackson',
     role: 'VP Corporate Communications',
     department: 'Corporate Communications',
-    avatarUrl: 'img/placeholders/avatar-default.svg',
+    avatarUrl: null,
     isCurrentUser: false
   }
 ];

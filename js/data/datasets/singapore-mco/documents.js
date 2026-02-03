@@ -24,7 +24,7 @@ export const documents = [
       { type: 'paragraph', content: 'A 19-year-old National Serviceman Full-time (NSF) died during a training exercise at the Basic Military Training Centre on Pulau Tekong this afternoon, the Ministry of Defence (MINDEF) said in a statement.', portionMark: { classification: 'U', handling: '' } },
       { type: 'paragraph', content: 'The NSF, who was in the midst of his Basic Military Training, collapsed during a routine physical training session at approximately 2:30pm. Medical personnel on site provided immediate assistance and he was evacuated to Changi General Hospital, where he was pronounced dead at 4:15pm.', portionMark: { classification: 'U', handling: '' } },
       { type: 'paragraph', content: 'MINDEF said the cause of death is being investigated and a Committee of Inquiry will be convened. The family of the deceased has been notified and is being supported by the SAF.', portionMark: { classification: 'U', handling: '' } },
-      { type: 'quote', content: '"We are deeply saddened by this incident. Our thoughts are with the family during this difficult time. The SAF takes all training incidents seriously and will conduct a thorough investigation." — MINDEF Spokesperson', portionMark: { classification: 'U', handling: '' } },
+      { type: 'blockquote', content: '"We are deeply saddened by this incident. Our thoughts are with the family during this difficult time. The SAF takes all training incidents seriously and will conduct a thorough investigation." — MINDEF Spokesperson', portionMark: { classification: 'U', handling: '' } },
       { type: 'paragraph', content: 'This is the first training-related fatality in the SAF since 2023. Minister for Defence Dr Ng Eng Hen is expected to address the incident in Parliament next week.', portionMark: { classification: 'U', handling: '' } }
     ],
     narrativeIds: ['narr-002'],
@@ -35,6 +35,34 @@ export const documents = [
     locationIds: ['loc-003'],
     eventIds: ['event-001'],
     tagIds: ['tag-004'],
+    quotes: [
+      {
+        id: 'quote-001-01',
+        speakerId: 'org-002',
+        speakerType: 'organization',
+        text: 'We are deeply saddened by this incident. Our thoughts are with the family during this difficult time. The SAF takes all training incidents seriously and will conduct a thorough investigation.'
+      }
+    ],
+    activities: [
+      {
+        id: 'activity-001-01',
+        actorId: 'org-002',
+        actorType: 'organization',
+        action: 'announced investigation into',
+        targetId: null,
+        targetType: null,
+        targetText: 'training fatality at Pulau Tekong'
+      },
+      {
+        id: 'activity-001-02',
+        actorId: 'org-002',
+        actorType: 'organization',
+        action: 'convened',
+        targetId: null,
+        targetType: null,
+        targetText: 'Committee of Inquiry'
+      }
+    ],
     factionMentions: {
       'faction-001': { sentiment: -0.35 },
       'faction-002': { sentiment: -0.78 },
@@ -99,9 +127,21 @@ export const documents = [
     locationIds: ['loc-003'],
     eventIds: ['event-001'],
     tagIds: ['tag-005'],
+    quotes: [],
+    activities: [
+      {
+        id: 'activity-002-01',
+        actorId: 'org-002',
+        actorType: 'organization',
+        action: 'criticized for',
+        targetId: null,
+        targetType: null,
+        targetText: 'safety culture in training'
+      }
+    ],
     factionMentions: {
-      'faction-002': { sentiment: -0.82 },
       'faction-001': { sentiment: 0.45 },
+      'faction-002': { sentiment: -0.82 },
       'faction-007': { sentiment: -0.48 }
     },
     metrics: { shares: 0 },
@@ -159,6 +199,34 @@ export const documents = [
     locationIds: ['loc-002'],
     eventIds: ['event-002'],
     tagIds: ['tag-005'],
+    quotes: [
+      {
+        id: 'quote-003-01',
+        speakerId: 'person-001',
+        speakerType: 'person',
+        text: 'Every loss of life in the SAF weighs heavily on us. We owe it to the family and to all who serve to understand exactly what happened and to ensure we learn from this tragedy.'
+      }
+    ],
+    activities: [
+      {
+        id: 'activity-003-01',
+        actorId: 'person-001',
+        actorType: 'person',
+        action: 'announced',
+        targetId: null,
+        targetType: null,
+        targetText: 'Committee of Inquiry into NSF training death'
+      },
+      {
+        id: 'activity-003-02',
+        actorId: 'org-001',
+        actorType: 'organization',
+        action: 'initiated',
+        targetId: null,
+        targetType: null,
+        targetText: 'review of high-intensity training protocols'
+      }
+    ],
     factionMentions: {
       'faction-001': { sentiment: 0.55 },
       'faction-002': { sentiment: -0.35 },
@@ -181,7 +249,7 @@ export const documents = [
     author: {
       username: '@sgpolitics_',
       displayName: 'SG Politics',
-      avatarUrl: 'img/placeholders/avatar-default.svg'
+      avatarUrl: 'https://i.pravatar.cc/150?u=sgpolitics_'
     },
     excerpt: 'Viral video comparing NS duration across countries questions why Singapore requires 2-year service when facing no active threats.',
     headerImage: null,
@@ -201,6 +269,8 @@ export const documents = [
     locationIds: ['loc-001'],
     eventIds: ['event-003'],
     tagIds: ['tag-005'],
+    quotes: [],
+    activities: [],
     factionMentions: {
       'faction-002': { sentiment: -0.78 },
       'faction-007': { sentiment: -0.42 }
@@ -263,6 +333,8 @@ export const documents = [
     locationIds: ['loc-001'],
     eventIds: ['event-003'],
     tagIds: ['tag-005'],
+    quotes: [],
+    activities: [],
     factionMentions: {
       'faction-002': { sentiment: -0.55 },
       'faction-001': { sentiment: 0.35 },
@@ -298,6 +370,34 @@ export const documents = [
     locationIds: ['loc-005'],
     eventIds: ['event-004'],
     tagIds: ['tag-005'],
+    quotes: [
+      {
+        id: 'quote-008-01',
+        speakerId: 'org-020',
+        speakerType: 'organization',
+        text: 'While we recognize Singapore\'s right to conduct training on their territory, we expect proper protocols to be followed given the proximity to our border.'
+      }
+    ],
+    activities: [
+      {
+        id: 'activity-008-01',
+        actorId: 'org-020',
+        actorType: 'organization',
+        action: 'expressed concern about',
+        targetId: null,
+        targetType: null,
+        targetText: 'SAF live-fire exercises near bilateral border'
+      },
+      {
+        id: 'activity-008-02',
+        actorId: 'org-020',
+        actorType: 'organization',
+        action: 'called for',
+        targetId: null,
+        targetType: null,
+        targetText: 'better advance notification and coordination'
+      }
+    ],
     factionMentions: {
       'faction-005': { sentiment: -0.55 },
       'faction-001': { sentiment: 0.35 }
@@ -331,6 +431,8 @@ export const documents = [
     locationIds: ['loc-005'],
     eventIds: ['event-004'],
     tagIds: ['tag-005', 'tag-origin-003'],
+    quotes: [],
+    activities: [],
     factionMentions: {
       'faction-005': { sentiment: -0.72 }
     },
@@ -363,6 +465,34 @@ export const documents = [
     locationIds: ['loc-001'],
     eventIds: ['event-005'],
     tagIds: ['tag-006'],
+    quotes: [
+      {
+        id: 'quote-010-01',
+        speakerId: 'org-008',
+        speakerType: 'organization',
+        text: 'Singapore maintains open channels of communication with Malaysia on defence matters. The exercises in question were conducted in accordance with existing arrangements.'
+      }
+    ],
+    activities: [
+      {
+        id: 'activity-010-01',
+        actorId: 'org-008',
+        actorType: 'organization',
+        action: 'issued statement clarifying',
+        targetId: null,
+        targetType: null,
+        targetText: 'bilateral protocols for military exercises'
+      },
+      {
+        id: 'activity-010-02',
+        actorId: 'org-008',
+        actorType: 'organization',
+        action: 'affirmed commitment to',
+        targetId: null,
+        targetType: null,
+        targetText: 'strengthening bilateral defence relations through Five Power Defence Arrangements'
+      }
+    ],
     factionMentions: {
       'faction-001': { sentiment: 0.65 },
       'faction-007': { sentiment: 0.45 }
@@ -399,6 +529,8 @@ export const documents = [
     locationIds: ['loc-001'],
     eventIds: ['event-006'],
     tagIds: ['tag-004', 'tag-origin-004'],
+    quotes: [],
+    activities: [],
     factionMentions: {
       'faction-004': { sentiment: 0.72 }
     },
@@ -455,6 +587,8 @@ export const documents = [
     locationIds: ['loc-001'],
     eventIds: ['event-006'],
     tagIds: ['tag-004', 'tag-origin-004'],
+    quotes: [],
+    activities: [],
     factionMentions: {
       'faction-004': { sentiment: 0.68 }
     },
@@ -489,6 +623,49 @@ export const documents = [
     locationIds: ['loc-006'],
     eventIds: ['event-007'],
     tagIds: ['tag-004', 'tag-origin-002'],
+    quotes: [
+      {
+        id: 'quote-013-01',
+        speakerId: 'person-012',
+        speakerType: 'person',
+        text: 'Singapore\'s prosperity has been built on being a neutral hub that does business with everyone. By allowing itself to become a strategic outpost for American containment of China, Singapore risks its economic future and regional relationships.'
+      },
+      {
+        id: 'quote-013-02',
+        speakerId: 'person-012',
+        speakerType: 'person',
+        text: 'Singapore should ask itself: when the US eventually withdraws from Asia as it always does, who will be left to pick up the pieces?'
+      }
+    ],
+    activities: [
+      {
+        id: 'activity-013-01',
+        actorId: 'org-018',
+        actorType: 'organization',
+        action: 'published commentary criticizing',
+        targetId: null,
+        targetType: null,
+        targetText: 'Singapore\'s perceived alignment with US strategic interests'
+      },
+      {
+        id: 'activity-013-02',
+        actorId: 'person-012',
+        actorType: 'person',
+        action: 'warned',
+        targetId: null,
+        targetType: null,
+        targetText: 'Singapore about abandoning neutrality in great power competition'
+      },
+      {
+        id: 'activity-013-03',
+        actorId: 'org-018',
+        actorType: 'organization',
+        action: 'framed ethnic Chinese Singaporeans as having',
+        targetId: null,
+        targetType: null,
+        targetText: 'natural ties to the motherland'
+      }
+    ],
     factionMentions: {
       'faction-003': { sentiment: 0.85 },
       'faction-004': { sentiment: 0.78 },
@@ -552,6 +729,8 @@ export const documents = [
     locationIds: ['loc-006'],
     eventIds: ['event-007'],
     tagIds: ['tag-005', 'tag-origin-002'],
+    quotes: [],
+    activities: [],
     factionMentions: {
       'faction-003': { sentiment: 0.82 },
       'faction-004': { sentiment: 0.75 }
@@ -576,7 +755,7 @@ export const documents = [
       { type: 'paragraph', content: 'The Ministry of Foreign Affairs (MFA) has responded to recent commentary in Chinese state media suggesting Singapore is abandoning neutrality to become a "US pawn" in the region.', portionMark: { classification: 'U', handling: '' } },
       { type: 'paragraph', content: '"Singapore\'s foreign policy is based on our national interests, not alignment with any major power," the MFA statement said. "We maintain good relations with both the United States and China, and reject the suggestion that we must choose sides."', portionMark: { classification: 'U', handling: '' } },
       { type: 'paragraph', content: 'The statement also addressed the framing around ethnic Chinese Singaporeans. "Singaporeans of all ethnicities are Singaporean first. Suggestions that ethnic heritage should determine foreign policy alignment are unwelcome and inappropriate."', portionMark: { classification: 'U', handling: '' } },
-      { type: 'quote', content: '"We will not be lectured on our foreign policy by any external party. Singapore will continue to act in accordance with our national interests and principles of international law." — MFA Spokesperson', portionMark: { classification: 'U', handling: '' } }
+      { type: 'blockquote', content: '"We will not be lectured on our foreign policy by any external party. Singapore will continue to act in accordance with our national interests and principles of international law." — MFA Spokesperson', portionMark: { classification: 'U', handling: '' } }
     ],
     narrativeIds: ['narr-003'],
     themeIds: ['sub-006', 'sub-007'],
@@ -586,6 +765,55 @@ export const documents = [
     locationIds: ['loc-001'],
     eventIds: ['event-008'],
     tagIds: ['tag-005'],
+    quotes: [
+      {
+        id: 'quote-015-01',
+        speakerId: 'org-008',
+        speakerType: 'organization',
+        text: 'Singapore\'s foreign policy is based on our national interests, not alignment with any major power. We maintain good relations with both the United States and China, and reject the suggestion that we must choose sides.'
+      },
+      {
+        id: 'quote-015-02',
+        speakerId: 'org-008',
+        speakerType: 'organization',
+        text: 'Singaporeans of all ethnicities are Singaporean first. Suggestions that ethnic heritage should determine foreign policy alignment are unwelcome and inappropriate.'
+      },
+      {
+        id: 'quote-015-03',
+        speakerId: 'org-008',
+        speakerType: 'organization',
+        text: 'We will not be lectured on our foreign policy by any external party. Singapore will continue to act in accordance with our national interests and principles of international law.'
+      }
+    ],
+    activities: [
+      {
+        id: 'activity-015-01',
+        actorId: 'org-008',
+        actorType: 'organization',
+        action: 'responded to',
+        targetId: null,
+        targetType: null,
+        targetText: 'Chinese state media commentary questioning Singapore\'s foreign policy'
+      },
+      {
+        id: 'activity-015-02',
+        actorId: 'org-008',
+        actorType: 'organization',
+        action: 'rejected',
+        targetId: null,
+        targetType: null,
+        targetText: 'framing that ethnic heritage should determine foreign policy alignment'
+      },
+      {
+        id: 'activity-015-03',
+        actorId: 'person-005',
+        actorType: 'person',
+        action: 'affirmed',
+        targetId: null,
+        targetType: null,
+        targetText: 'Singapore\'s independent foreign policy based on national interests'
+      }
+    ],
     factionMentions: {
       'faction-001': { sentiment: 0.78 },
       'faction-003': { sentiment: -0.65 },
@@ -621,6 +849,8 @@ export const documents = [
     locationIds: ['loc-001'],
     eventIds: ['event-009'],
     tagIds: ['tag-005'],
+    quotes: [],
+    activities: [],
     factionMentions: {
       'faction-002': { sentiment: -0.85 },
       'faction-007': { sentiment: -0.45 }
@@ -676,6 +906,27 @@ export const documents = [
     locationIds: ['loc-001'],
     eventIds: ['event-009'],
     tagIds: ['tag-005'],
+    quotes: [],
+    activities: [
+      {
+        id: 'activity-017-01',
+        actorId: 'org-001',
+        actorType: 'organization',
+        action: 'declined to comment on',
+        targetId: null,
+        targetType: null,
+        targetText: 'viral HardwareZone thread on NS inequities'
+      },
+      {
+        id: 'activity-017-02',
+        actorId: 'org-001',
+        actorType: 'organization',
+        action: 'previously stated',
+        targetId: null,
+        targetType: null,
+        targetText: 'NS policies are regularly reviewed for relevance and fairness'
+      }
+    ],
     factionMentions: {
       'faction-002': { sentiment: -0.55 },
       'faction-007': { sentiment: -0.35 }
@@ -701,7 +952,7 @@ export const documents = [
       { type: 'paragraph', content: 'Prime Minister Lawrence Wong marked Total Defence Day 2026 with a call for all Singaporeans to strengthen their resilience against evolving threats, emphasizing digital defence and psychological resilience.', portionMark: { classification: 'U', handling: '' } },
       { type: 'paragraph', content: '"The threats we face today are different from those of our founding generation. Disinformation, cyber attacks, and attempts to divide our society are the new battlefields," PM Wong said in his address.', portionMark: { classification: 'U', handling: '' } },
       { type: 'paragraph', content: 'The Prime Minister highlighted recent examples of coordinated online campaigns targeting national unity and urged citizens to verify information before sharing.', portionMark: { classification: 'U', handling: '' } },
-      { type: 'quote', content: '"Total Defence is not just about the military. Every Singaporean has a role to play in defending our nation against those who wish to weaken our society from within."', portionMark: { classification: 'U', handling: '' } }
+      { type: 'blockquote', content: '"Total Defence is not just about the military. Every Singaporean has a role to play in defending our nation against those who wish to weaken our society from within."', portionMark: { classification: 'U', handling: '' } }
     ],
     narrativeIds: ['narr-009'],
     themeIds: ['sub-018', 'sub-019'],
@@ -711,6 +962,49 @@ export const documents = [
     locationIds: ['loc-001'],
     eventIds: ['event-010'],
     tagIds: ['tag-006'],
+    quotes: [
+      {
+        id: 'quote-018-01',
+        speakerId: 'person-009',
+        speakerType: 'person',
+        text: 'The threats we face today are different from those of our founding generation. Disinformation, cyber attacks, and attempts to divide our society are the new battlefields.'
+      },
+      {
+        id: 'quote-018-02',
+        speakerId: 'person-009',
+        speakerType: 'person',
+        text: 'Total Defence is not just about the military. Every Singaporean has a role to play in defending our nation against those who wish to weaken our society from within.'
+      }
+    ],
+    activities: [
+      {
+        id: 'activity-018-01',
+        actorId: 'person-009',
+        actorType: 'person',
+        action: 'called for',
+        targetId: null,
+        targetType: null,
+        targetText: 'Singaporeans to strengthen resilience against evolving threats'
+      },
+      {
+        id: 'activity-018-02',
+        actorId: 'person-009',
+        actorType: 'person',
+        action: 'marked',
+        targetId: null,
+        targetType: null,
+        targetText: 'Total Defence Day 2026 with address on digital and psychological defence'
+      },
+      {
+        id: 'activity-018-03',
+        actorId: 'person-009',
+        actorType: 'person',
+        action: 'highlighted',
+        targetId: null,
+        targetType: null,
+        targetText: 'coordinated online campaigns targeting national unity'
+      }
+    ],
     factionMentions: {
       'faction-001': { sentiment: 0.78 },
       'faction-007': { sentiment: 0.55 }
@@ -744,6 +1038,8 @@ export const documents = [
     locationIds: ['loc-001'],
     eventIds: ['event-010'],
     tagIds: ['tag-005'],
+    quotes: [],
+    activities: [],
     factionMentions: {
       'faction-002': { sentiment: -0.55 },
       'faction-006': { sentiment: -0.62 },
@@ -779,6 +1075,34 @@ export const documents = [
     locationIds: ['loc-001'],
     eventIds: ['event-011'],
     tagIds: ['tag-005'],
+    quotes: [
+      {
+        id: 'quote-020-01',
+        speakerId: 'org-010',
+        speakerType: 'organization',
+        text: 'The increase in Employment Pass holders reflects growth in technology, financial services, and healthcare sectors, which continue to face talent shortages in specialized roles.'
+      }
+    ],
+    activities: [
+      {
+        id: 'activity-020-01',
+        actorId: 'org-010',
+        actorType: 'organization',
+        action: 'released',
+        targetId: null,
+        targetType: null,
+        targetText: 'Employment Pass data showing 5% year-on-year increase'
+      },
+      {
+        id: 'activity-020-02',
+        actorId: 'org-010',
+        actorType: 'organization',
+        action: 'attributed increase to',
+        targetId: null,
+        targetType: null,
+        targetText: 'talent shortages in tech, financial services, and healthcare sectors'
+      }
+    ],
     factionMentions: {
       'faction-006': { sentiment: -0.65 },
       'faction-007': { sentiment: -0.35 }
@@ -812,6 +1136,8 @@ export const documents = [
     locationIds: ['loc-001'],
     eventIds: ['event-011'],
     tagIds: ['tag-005'],
+    quotes: [],
+    activities: [],
     factionMentions: {
       'faction-006': { sentiment: -0.75 },
       'faction-008': { sentiment: -0.82 },
@@ -846,6 +1172,40 @@ export const documents = [
     locationIds: ['loc-001'],
     eventIds: ['event-012'],
     tagIds: ['tag-005'],
+    quotes: [
+      {
+        id: 'quote-022-01',
+        speakerId: 'org-010',
+        speakerType: 'organization',
+        text: 'All EP applications are assessed on merit and must meet stringent criteria including salary thresholds and the COMPASS points system.'
+      },
+      {
+        id: 'quote-022-02',
+        speakerId: 'person-010',
+        speakerType: 'person',
+        text: 'The government remains committed to ensuring Singaporeans have access to good jobs while maintaining an open economy that attracts global talent.'
+      }
+    ],
+    activities: [
+      {
+        id: 'activity-022-01',
+        actorId: 'org-010',
+        actorType: 'organization',
+        action: 'issued clarification on',
+        targetId: null,
+        targetType: null,
+        targetText: 'Employment Pass policies and COMPASS framework'
+      },
+      {
+        id: 'activity-022-02',
+        actorId: 'person-010',
+        actorType: 'person',
+        action: 'emphasized',
+        targetId: null,
+        targetType: null,
+        targetText: 'government commitment to Singaporean job access alongside open economy'
+      }
+    ],
     factionMentions: {
       'faction-001': { sentiment: 0.55 },
       'faction-006': { sentiment: -0.35 },
@@ -881,6 +1241,43 @@ export const documents = [
     locationIds: ['loc-001'],
     eventIds: ['event-013'],
     tagIds: ['tag-004'],
+    quotes: [
+      {
+        id: 'quote-023-01',
+        speakerId: 'org-007',
+        speakerType: 'organization',
+        text: 'Singapore has strict laws against inciting religious disharmony. We urge all parties to exercise restraint.'
+      }
+    ],
+    activities: [
+      {
+        id: 'activity-023-01',
+        actorId: 'org-007',
+        actorType: 'organization',
+        action: 'issued reminder about',
+        targetId: null,
+        targetType: null,
+        targetText: 'laws against inciting religious disharmony'
+      },
+      {
+        id: 'activity-023-02',
+        actorId: 'org-007',
+        actorType: 'organization',
+        action: 'investigating',
+        targetId: null,
+        targetType: null,
+        targetText: 'confrontation at Speakers\' Corner between religious groups'
+      },
+      {
+        id: 'activity-023-03',
+        actorId: 'org-007',
+        actorType: 'organization',
+        action: 'urged',
+        targetId: null,
+        targetType: null,
+        targetText: 'all parties to exercise restraint'
+      }
+    ],
     factionMentions: {
       'faction-007': { sentiment: -0.55 },
       'faction-008': { sentiment: -0.85 }
@@ -914,6 +1311,8 @@ export const documents = [
     locationIds: ['loc-001'],
     eventIds: ['event-013'],
     tagIds: ['tag-004'],
+    quotes: [],
+    activities: [],
     factionMentions: {
       'faction-008': { sentiment: -0.88 }
     },
@@ -947,6 +1346,43 @@ export const documents = [
     locationIds: ['loc-007', 'loc-008'],
     eventIds: ['event-014'],
     tagIds: ['tag-005'],
+    quotes: [
+      {
+        id: 'quote-025-01',
+        speakerId: 'org-004',
+        speakerType: 'organization',
+        text: 'The transit was conducted in accordance with international maritime law.'
+      }
+    ],
+    activities: [
+      {
+        id: 'activity-025-01',
+        actorId: 'org-022',
+        actorType: 'organization',
+        action: 'transited',
+        targetId: null,
+        targetType: null,
+        targetText: 'Singapore Strait with three-vessel naval task group'
+      },
+      {
+        id: 'activity-025-02',
+        actorId: 'org-004',
+        actorType: 'organization',
+        action: 'monitored',
+        targetId: 'org-022',
+        targetType: 'organization',
+        targetText: 'Chinese naval task group transit'
+      },
+      {
+        id: 'activity-025-03',
+        actorId: 'org-022',
+        actorType: 'organization',
+        action: 'expanded presence in',
+        targetId: null,
+        targetType: null,
+        targetText: 'Southeast Asian waters'
+      }
+    ],
     factionMentions: {
       'faction-001': { sentiment: 0.35 },
       'faction-003': { sentiment: 0.72 },
@@ -981,6 +1417,27 @@ export const documents = [
     locationIds: ['loc-007'],
     eventIds: ['event-014'],
     tagIds: ['tag-005'],
+    quotes: [],
+    activities: [
+      {
+        id: 'activity-026-01',
+        actorId: 'org-022',
+        actorType: 'organization',
+        action: 'increased transit frequency through',
+        targetId: null,
+        targetType: null,
+        targetText: 'Southeast Asian waters'
+      },
+      {
+        id: 'activity-026-02',
+        actorId: 'org-023',
+        actorType: 'organization',
+        action: 'called for',
+        targetId: null,
+        targetType: null,
+        targetText: 'strengthened maritime domain awareness and coordination'
+      }
+    ],
     factionMentions: {
       'faction-003': { sentiment: 0.55 },
       'faction-007': { sentiment: -0.35 }
@@ -1015,6 +1472,34 @@ export const documents = [
     locationIds: ['loc-004', 'loc-005'],
     eventIds: ['event-015'],
     tagIds: ['tag-005'],
+    quotes: [
+      {
+        id: 'quote-027-01',
+        speakerId: 'person-004',
+        speakerType: 'person',
+        text: 'The 1962 Water Agreement should be renegotiated to reflect current market prices.'
+      }
+    ],
+    activities: [
+      {
+        id: 'activity-027-01',
+        actorId: 'person-004',
+        actorType: 'person',
+        action: 'suggested renegotiation of',
+        targetId: null,
+        targetType: null,
+        targetText: '1962 Water Agreement pricing terms'
+      },
+      {
+        id: 'activity-027-02',
+        actorId: 'person-004',
+        actorType: 'person',
+        action: 'scheduled',
+        targetId: null,
+        targetType: null,
+        targetText: 'bilateral talks on water cooperation with Singapore'
+      }
+    ],
     factionMentions: {
       'faction-005': { sentiment: -0.55 },
       'faction-001': { sentiment: 0.45 }
@@ -1048,6 +1533,8 @@ export const documents = [
     locationIds: ['loc-005'],
     eventIds: ['event-015'],
     tagIds: ['tag-005', 'tag-origin-003'],
+    quotes: [],
+    activities: [],
     factionMentions: {
       'faction-005': { sentiment: -0.72 }
     },
@@ -1081,6 +1568,43 @@ export const documents = [
     locationIds: ['loc-001'],
     eventIds: ['event-016'],
     tagIds: ['tag-005'],
+    quotes: [
+      {
+        id: 'quote-029-01',
+        speakerId: 'org-001',
+        speakerType: 'organization',
+        text: 'The claim that all new citizens are exempt from NS obligations is patently false. Under the Enlistment Act, first-generation male permanent residents and new citizens are required to register for and serve NS.'
+      }
+    ],
+    activities: [
+      {
+        id: 'activity-029-01',
+        actorId: 'org-001',
+        actorType: 'organization',
+        action: 'issued POFMA correction directive for',
+        targetId: null,
+        targetType: null,
+        targetText: 'false claims about NS exemptions for new citizens'
+      },
+      {
+        id: 'activity-029-02',
+        actorId: 'org-006',
+        actorType: 'organization',
+        action: 'enforced',
+        targetId: null,
+        targetType: null,
+        targetText: 'POFMA correction notice requiring publication alongside original posts'
+      },
+      {
+        id: 'activity-029-03',
+        actorId: 'org-016',
+        actorType: 'organization',
+        action: 'published',
+        targetId: null,
+        targetType: null,
+        targetText: 'government factual clarification linked from correction notice'
+      }
+    ],
     factionMentions: {
       'faction-001': { sentiment: 0.65 },
       'faction-002': { sentiment: -0.35 }
@@ -1109,7 +1633,7 @@ export const documents = [
       { type: 'paragraph', content: 'The Ministry of Defence unveiled a locally-developed Next-Generation Armoured Fighting Vehicle (NGAFV) at the Singapore Airshow on Wednesday, marking a significant milestone in SAF modernization efforts.', portionMark: { classification: 'U', handling: '' } },
       { type: 'paragraph', content: 'The NGAFV, developed by ST Engineering in collaboration with DSTA, features advanced protection systems, enhanced firepower, and improved situational awareness through integrated sensors and AI-assisted systems.', portionMark: { classification: 'U', handling: '' } },
       { type: 'paragraph', content: 'Minister for Defence Dr Ng Eng Hen said the vehicle represents Singapore\'s commitment to developing indigenous defence capabilities. "This demonstrates that a small nation can punch above its weight through innovation and technological excellence."', portionMark: { classification: 'U', handling: '' } },
-      { type: 'quote', content: '"The NGAFV will give our soldiers a decisive edge on the modern battlefield. It represents the best of Singapore\'s defence technology ecosystem." — Dr Ng Eng Hen', portionMark: { classification: 'U', handling: '' } }
+      { type: 'blockquote', content: '"The NGAFV will give our soldiers a decisive edge on the modern battlefield. It represents the best of Singapore\'s defence technology ecosystem." — Dr Ng Eng Hen', portionMark: { classification: 'U', handling: '' } }
     ],
     narrativeIds: ['narr-010'],
     themeIds: ['sub-020'],
@@ -1119,6 +1643,58 @@ export const documents = [
     locationIds: ['loc-001'],
     eventIds: ['event-017'],
     tagIds: ['tag-006'],
+    quotes: [
+      {
+        id: 'quote-030-01',
+        speakerId: 'person-001',
+        speakerType: 'person',
+        text: 'This demonstrates that a small nation can punch above its weight through innovation and technological excellence.'
+      },
+      {
+        id: 'quote-030-02',
+        speakerId: 'person-001',
+        speakerType: 'person',
+        text: 'The NGAFV will give our soldiers a decisive edge on the modern battlefield. It represents the best of Singapore\'s defence technology ecosystem.'
+      }
+    ],
+    activities: [
+      {
+        id: 'activity-030-01',
+        actorId: 'org-001',
+        actorType: 'organization',
+        action: 'unveiled',
+        targetId: null,
+        targetType: null,
+        targetText: 'Next-Generation Armoured Fighting Vehicle at Singapore Airshow'
+      },
+      {
+        id: 'activity-030-02',
+        actorId: 'org-003',
+        actorType: 'organization',
+        action: 'developed',
+        targetId: null,
+        targetType: null,
+        targetText: 'NGAFV in collaboration with DSTA'
+      },
+      {
+        id: 'activity-030-03',
+        actorId: 'person-001',
+        actorType: 'person',
+        action: 'announced',
+        targetId: null,
+        targetType: null,
+        targetText: 'SAF modernization milestone showcasing indigenous defence capabilities'
+      },
+      {
+        id: 'activity-030-04',
+        actorId: 'person-024',
+        actorType: 'person',
+        action: 'presented',
+        targetId: null,
+        targetType: null,
+        targetText: 'technical capabilities of NGAFV at Singapore Airshow'
+      }
+    ],
     factionMentions: {
       'faction-001': { sentiment: 0.85 },
       'faction-007': { sentiment: 0.62 }
@@ -1152,6 +1728,8 @@ export const documents = [
     locationIds: ['loc-001'],
     eventIds: ['event-017'],
     tagIds: ['tag-006'],
+    quotes: [],
+    activities: [],
     factionMentions: {
       'faction-001': { sentiment: 0.82 },
       'faction-007': { sentiment: 0.55 }
@@ -1186,6 +1764,34 @@ export const documents = [
     locationIds: ['loc-001'],
     eventIds: ['event-018'],
     tagIds: ['tag-004', 'tag-origin-002'],
+    quotes: [
+      {
+        id: 'quote-032-01',
+        speakerId: 'org-017',
+        speakerType: 'organization',
+        text: 'Singapore media has consistently adopted Western narratives on the South China Sea, ignoring China\'s historical rights and legal positions.'
+      }
+    ],
+    activities: [
+      {
+        id: 'activity-032-01',
+        actorId: 'org-017',
+        actorType: 'organization',
+        action: 'issued statement criticizing',
+        targetId: null,
+        targetType: null,
+        targetText: 'Singapore media coverage of South China Sea issues'
+      },
+      {
+        id: 'activity-032-02',
+        actorId: 'org-017',
+        actorType: 'organization',
+        action: 'called for',
+        targetId: null,
+        targetType: null,
+        targetText: 'balanced and fair coverage reflecting China\'s perspective'
+      }
+    ],
     factionMentions: {
       'faction-003': { sentiment: 0.78 },
       'faction-004': { sentiment: 0.72 },
@@ -1220,6 +1826,8 @@ export const documents = [
     locationIds: ['loc-001'],
     eventIds: ['event-018'],
     tagIds: ['tag-005', 'tag-origin-002'],
+    quotes: [],
+    activities: [],
     factionMentions: {
       'faction-003': { sentiment: 0.72 },
       'faction-007': { sentiment: -0.25 }
@@ -1266,7 +1874,7 @@ export const documents = [
       { type: 'paragraph', content: 'The Ministry of Foreign Affairs (MFA) on Thursday rejected the Chinese embassy\'s characterization of Singapore media coverage as "biased," affirming the editorial independence of Singapore\'s press.', portionMark: { classification: 'U', handling: '' } },
       { type: 'paragraph', content: '"Singapore media operates independently of the government and is not obligated to present any country\'s official position," the MFA statement said.', portionMark: { classification: 'U', handling: '' } },
       { type: 'paragraph', content: '"We note with concern attempts by foreign missions to characterize our media\'s coverage in ways that suggest they should adopt particular national perspectives."', portionMark: { classification: 'U', handling: '' } },
-      { type: 'quote', content: '"Singapore will not accept foreign interference in our domestic discourse, whether from any country." — MFA Spokesperson', portionMark: { classification: 'U', handling: '' } }
+      { type: 'blockquote', content: '"Singapore will not accept foreign interference in our domestic discourse, whether from any country." — MFA Spokesperson', portionMark: { classification: 'U', handling: '' } }
     ],
     narrativeIds: ['narr-003'],
     themeIds: ['sub-006', 'sub-007'],
@@ -1276,6 +1884,55 @@ export const documents = [
     locationIds: ['loc-001'],
     eventIds: ['event-019'],
     tagIds: ['tag-005'],
+    quotes: [
+      {
+        id: 'quote-034-01',
+        speakerId: 'org-008',
+        speakerType: 'organization',
+        text: 'Singapore media operates independently of the government and is not obligated to present any country\'s official position.'
+      },
+      {
+        id: 'quote-034-02',
+        speakerId: 'org-008',
+        speakerType: 'organization',
+        text: 'We note with concern attempts by foreign missions to characterize our media\'s coverage in ways that suggest they should adopt particular national perspectives.'
+      },
+      {
+        id: 'quote-034-03',
+        speakerId: 'org-008',
+        speakerType: 'organization',
+        text: 'Singapore will not accept foreign interference in our domestic discourse, whether from any country.'
+      }
+    ],
+    activities: [
+      {
+        id: 'activity-034-01',
+        actorId: 'org-008',
+        actorType: 'organization',
+        action: 'rejected',
+        targetId: 'org-017',
+        targetType: 'organization',
+        targetText: 'Chinese embassy\'s characterization of Singapore media as biased'
+      },
+      {
+        id: 'activity-034-02',
+        actorId: 'org-008',
+        actorType: 'organization',
+        action: 'affirmed',
+        targetId: null,
+        targetType: null,
+        targetText: 'editorial independence of Singapore\'s press'
+      },
+      {
+        id: 'activity-034-03',
+        actorId: 'person-005',
+        actorType: 'person',
+        action: 'expressed concern about',
+        targetId: null,
+        targetType: null,
+        targetText: 'foreign missions attempting to influence domestic media coverage'
+      }
+    ],
     factionMentions: {
       'faction-001': { sentiment: 0.82 },
       'faction-003': { sentiment: -0.72 },
@@ -1302,7 +1959,7 @@ export const documents = [
       { type: 'paragraph', content: 'Prime Minister Lawrence Wong and Malaysian Prime Minister Anwar Ibrahim met in Kuala Lumpur on Wednesday for the annual Leaders\' Retreat, reaffirming commitment to strengthening bilateral ties.', portionMark: { classification: 'U', handling: '' } },
       { type: 'paragraph', content: 'The leaders discussed ongoing bilateral issues including water cooperation, airspace management, and the progress of the Johor Bahru-Singapore Rapid Transit System Link.', portionMark: { classification: 'U', handling: '' } },
       { type: 'paragraph', content: 'On water, PM Anwar acknowledged the 1962 Water Agreement while noting Malaysia\'s interest in exploring new frameworks for future cooperation. PM Wong reiterated Singapore\'s position that existing agreements must be honored.', portionMark: { classification: 'U', handling: '' } },
-      { type: 'quote', content: '"Our relationship is stronger than any single issue. We will continue to work together in the spirit of good neighbourliness." — PM Lawrence Wong', portionMark: { classification: 'U', handling: '' } }
+      { type: 'blockquote', content: '"Our relationship is stronger than any single issue. We will continue to work together in the spirit of good neighbourliness." — PM Lawrence Wong', portionMark: { classification: 'U', handling: '' } }
     ],
     narrativeIds: ['narr-005'],
     themeIds: ['sub-010', 'sub-011'],
@@ -1312,6 +1969,52 @@ export const documents = [
     locationIds: ['loc-004'],
     eventIds: ['event-020'],
     tagIds: ['tag-006'],
+    quotes: [
+      {
+        id: 'quote-035-01',
+        speakerId: 'person-009',
+        speakerType: 'person',
+        text: 'Our relationship is stronger than any single issue. We will continue to work together in the spirit of good neighbourliness.'
+      }
+    ],
+    activities: [
+      {
+        id: 'activity-035-01',
+        actorId: 'person-009',
+        actorType: 'person',
+        action: 'met with',
+        targetId: 'person-004',
+        targetType: 'person',
+        targetText: 'Malaysian PM at annual Leaders\' Retreat in Kuala Lumpur'
+      },
+      {
+        id: 'activity-035-02',
+        actorId: 'person-009',
+        actorType: 'person',
+        action: 'reiterated',
+        targetId: null,
+        targetType: null,
+        targetText: 'Singapore\'s position that existing water agreements must be honored'
+      },
+      {
+        id: 'activity-035-03',
+        actorId: 'person-004',
+        actorType: 'person',
+        action: 'acknowledged',
+        targetId: null,
+        targetType: null,
+        targetText: '1962 Water Agreement while noting interest in exploring new frameworks'
+      },
+      {
+        id: 'activity-035-04',
+        actorId: 'org-009',
+        actorType: 'organization',
+        action: 'reaffirmed commitment to',
+        targetId: null,
+        targetType: null,
+        targetText: 'strengthening bilateral ties with Malaysia'
+      }
+    ],
     factionMentions: {
       'faction-001': { sentiment: 0.65 },
       'faction-005': { sentiment: 0.35 },
@@ -1346,6 +2049,43 @@ export const documents = [
     locationIds: ['loc-004'],
     eventIds: ['event-020'],
     tagIds: ['tag-005'],
+    quotes: [
+      {
+        id: 'quote-036-01',
+        speakerId: 'person-004',
+        speakerType: 'person',
+        text: 'Malaysia will continue to advocate for a review of pricing mechanisms while respecting existing legal frameworks.'
+      }
+    ],
+    activities: [
+      {
+        id: 'activity-036-01',
+        actorId: 'person-004',
+        actorType: 'person',
+        action: 'expressed optimism about',
+        targetId: null,
+        targetType: null,
+        targetText: 'bilateral relations with Singapore'
+      },
+      {
+        id: 'activity-036-02',
+        actorId: 'person-004',
+        actorType: 'person',
+        action: 'committed to',
+        targetId: null,
+        targetType: null,
+        targetText: 'RTS Link project 2026 completion target'
+      },
+      {
+        id: 'activity-036-03',
+        actorId: 'person-009',
+        actorType: 'person',
+        action: 'highlighted',
+        targetId: null,
+        targetType: null,
+        targetText: 'RTS Link as positive example of bilateral cooperation'
+      }
+    ],
     factionMentions: {
       'faction-001': { sentiment: 0.55 },
       'faction-005': { sentiment: 0.45 },

@@ -30,6 +30,7 @@ export const factions = [
   {
     id: 'faction-003',
     name: 'Global Semiconductor Analysts',
+    description: 'Independent industry analysts, researchers, and journalists providing technical and market analysis of the semiconductor industry. This faction offers objective assessments of China\'s chip progress and the impact of export controls.',
     color: '#76B7B2',
     relatedFactionIds: ['faction-006', 'faction-008', 'faction-010', 'faction-012'],
     memberCount: 500000,
@@ -41,6 +42,7 @@ export const factions = [
   {
     id: 'faction-004',
     name: 'Chinese State Media',
+    description: 'Official Chinese media outlets including Xinhua and CGTN that promote government narratives about semiconductor self-sufficiency, characterize export controls as unfair containment, and celebrate domestic chip achievements.',
     color: '#F28E2B',
     relatedFactionIds: ['faction-001', 'faction-011'],
     memberCount: 15000000,
@@ -51,6 +53,7 @@ export const factions = [
   {
     id: 'faction-005',
     name: 'US Tech Industry',
+    description: 'American semiconductor companies and technology firms balancing compliance with export controls against business interests in China. This faction often advocates for measured restrictions that don\'t harm US competitiveness.',
     color: '#B07AA1',
     relatedFactionIds: ['faction-006', 'faction-007', 'faction-014', 'faction-016'],
     memberCount: 12000000,
@@ -62,6 +65,7 @@ export const factions = [
   {
     id: 'faction-006',
     name: 'Supply Chain Watchers',
+    description: 'Industry observers, logistics experts, and business journalists focused on semiconductor supply chain dynamics. This faction tracks equipment flows, manufacturing capacity, and the practical impact of geopolitical tensions on chip production.',
     color: '#59A14F',
     relatedFactionIds: ['faction-003', 'faction-005', 'faction-009', 'faction-015'],
     memberCount: 2000000,
@@ -73,6 +77,7 @@ export const factions = [
   {
     id: 'faction-007',
     name: 'Taiwan Tech Defenders',
+    description: 'Voices emphasizing Taiwan\'s critical role in the global semiconductor supply chain and advocating for protection of Taiwanese technology interests. This faction highlights TSMC\'s strategic importance and cross-strait technology security concerns.',
     color: '#EDC948',
     relatedFactionIds: ['faction-005'],
     memberCount: 8000000,
@@ -83,6 +88,7 @@ export const factions = [
   {
     id: 'faction-008',
     name: 'Academic Researchers',
+    description: 'University researchers and academic institutions studying semiconductor technology, industrial policy, and technology competition. This faction provides scholarly analysis of chip development trends and policy implications.',
     color: '#AF7AA1',
     relatedFactionIds: ['faction-003'],
     memberCount: 2000000,
@@ -93,6 +99,7 @@ export const factions = [
   {
     id: 'faction-009',
     name: 'Investor Community',
+    description: 'Financial analysts, institutional investors, and market watchers focused on semiconductor industry investments. This faction analyzes company valuations, market trends, and the financial impact of technology restrictions.',
     color: '#FF9DA7',
     relatedFactionIds: ['faction-005', 'faction-006', 'faction-014'],
     memberCount: 5000000,
@@ -103,6 +110,7 @@ export const factions = [
   {
     id: 'faction-010',
     name: 'European Chip Industry',
+    description: 'European semiconductor companies and industry associations navigating US-led export controls while maintaining business relationships. This faction includes ASML stakeholders and EU policymakers addressing chip supply security.',
     color: '#9C755F',
     relatedFactionIds: ['faction-003', 'faction-012', 'faction-016'],
     memberCount: 3000000,
@@ -113,6 +121,7 @@ export const factions = [
   {
     id: 'faction-011',
     name: 'Chinese Nationalists',
+    description: 'Patriotic Chinese voices on social media and in public discourse who view semiconductor self-sufficiency as a matter of national pride. This faction celebrates domestic achievements and strongly opposes foreign technology restrictions.',
     color: '#BAB0AC',
     relatedFactionIds: ['faction-001', 'faction-004'],
     memberCount: 50000000,
@@ -123,6 +132,7 @@ export const factions = [
   {
     id: 'faction-012',
     name: 'Free Trade Advocates',
+    description: 'Economists, trade policy experts, and business groups who argue that technology export controls harm global economic efficiency and innovation. This faction advocates for reduced barriers and international cooperation.',
     color: '#86BCB6',
     relatedFactionIds: ['faction-003', 'faction-010'],
     memberCount: 4000000,
@@ -133,6 +143,7 @@ export const factions = [
   {
     id: 'faction-013',
     name: 'National Security Hawks',
+    description: 'Security-focused policymakers and analysts who prioritize restricting China\'s access to advanced semiconductor technology. This faction advocates for comprehensive export controls and allied coordination on technology restrictions.',
     color: '#D4A6C8',
     relatedFactionIds: ['faction-002'],
     memberCount: 6000000,
@@ -143,6 +154,7 @@ export const factions = [
   {
     id: 'faction-014',
     name: 'AI Industry Leaders',
+    description: 'Leaders and stakeholders in the artificial intelligence industry who depend on advanced semiconductors. This faction is particularly concerned about export controls affecting AI chip supply and the competitive landscape.',
     color: '#D37295',
     relatedFactionIds: ['faction-005', 'faction-009'],
     memberCount: 1000000,
@@ -153,6 +165,7 @@ export const factions = [
   {
     id: 'faction-015',
     name: 'Environmental Tech Critics',
+    description: 'Environmental advocates and critics who highlight the resource intensity and environmental impact of semiconductor manufacturing. This faction raises concerns about water usage, energy consumption, and chemical waste in chip production.',
     color: '#8CD17D',
     relatedFactionIds: ['faction-006'],
     memberCount: 3000000,
@@ -163,6 +176,7 @@ export const factions = [
   {
     id: 'faction-016',
     name: 'Japanese Tech Industry',
+    description: 'Japanese semiconductor companies and equipment makers coordinating with US export controls while maintaining Asian business relationships. This faction includes firms like Tokyo Electron navigating geopolitical technology tensions.',
     color: '#499894',
     relatedFactionIds: ['faction-005', 'faction-010'],
     memberCount: 4000000,

@@ -26,7 +26,7 @@ export const documents = [
       { type: 'paragraph', content: 'The remarks come amid escalating tensions over President Trump\'s renewed interest in acquiring Greenland, a semi-autonomous Danish territory. Trump has made several public statements suggesting the United States should have control over the strategically located island.', portionMark: { classification: 'U', handling: '' } },
       { type: 'heading', content: 'A Coordinated European Response', portionMark: { classification: 'U', handling: '' } },
       { type: 'paragraph', content: 'Macron\'s speech appeared to be part of a coordinated European response to the Greenland situation. European Commission President Ursula von der Leyen, who spoke at the same forum, echoed similar themes about defending "rules-based international order."', portionMark: { classification: 'U', handling: '' } },
-      { type: 'quote', content: '"Europe must be prepared to defend its interests and its values, even when—perhaps especially when—they are challenged by our closest allies."', portionMark: { classification: 'U', handling: '' } },
+      { type: 'blockquote', content: '"Europe must be prepared to defend its interests and its values, even when—perhaps especially when—they are challenged by our closest allies."', portionMark: { classification: 'U', handling: '' } },
       { type: 'paragraph', content: 'The French president also emphasized the need for European nations to develop greater strategic autonomy, particularly in defense and energy. "We have relied too long on others for our security," Macron said. "The events of recent weeks should be a wake-up call."', portionMark: { classification: 'U', handling: '' } },
       { type: 'image', imageUrl: 'http://static.photos/cityscape/640x360/2', caption: 'World leaders gathered at the Congress Centre in Davos for the annual World Economic Forum.' },
       { type: 'heading', content: 'Washington Dismisses Criticism', portionMark: { classification: 'U', handling: '' } },
@@ -42,12 +42,51 @@ export const documents = [
     locationIds: ['loc-005'],
     eventIds: ['event-006'],
     tagIds: ['tag-003'],
+    quotes: [
+      {
+        id: 'quote-001-01',
+        speakerId: 'person-003',
+        speakerType: 'person',
+        text: 'We cannot accept a world where the law of the strongest prevails. When leaders start questioning the territorial integrity of sovereign nations, we are on a dangerous path.'
+      },
+      {
+        id: 'quote-001-02',
+        speakerId: 'person-003',
+        speakerType: 'person',
+        text: 'Europe must be prepared to defend its interests and its values, even when—perhaps especially when—they are challenged by our closest allies.'
+      },
+      {
+        id: 'quote-001-03',
+        speakerId: 'person-003',
+        speakerType: 'person',
+        text: 'We have relied too long on others for our security. The events of recent weeks should be a wake-up call.'
+      }
+    ],
+    activities: [
+      {
+        id: 'activity-001-01',
+        actorId: 'person-003',
+        actorType: 'person',
+        action: 'criticized',
+        targetId: 'person-004',
+        targetType: 'person',
+        targetText: 'Trump\'s Greenland policy'
+      },
+      {
+        id: 'activity-001-02',
+        actorId: 'person-003',
+        actorType: 'person',
+        action: 'urged',
+        targetId: null,
+        targetType: null,
+        targetText: 'European leaders to resist U.S. pressure'
+      }
+    ],
     factionMentions: {
-      'faction-001': { sentiment: -0.35,
+      'faction-001': { sentiment: -0.35 },
+      'faction-002': { sentiment: 0.55 },
       'faction-009': { sentiment: 0.82 },
       'faction-010': { sentiment: 0.35 }
-    },
-      'faction-002': { sentiment: 0.55 }
     },
     metrics: { shares: 45200 },
     highlights: [
@@ -139,7 +178,7 @@ export const documents = [
       { type: 'heading', content: 'Unprecedented Diplomatic Breach', portionMark: { classification: 'U', handling: '' } },
       { type: 'paragraph', content: 'Former diplomats expressed alarm at the disclosure. "This is simply unprecedented," said Richard Haass, former president of the Council on Foreign Relations. "No world leader will trust private communications with the United States after this."', portionMark: { classification: 'U', handling: '' } },
       { type: 'paragraph', content: 'The Élysée Palace declined to comment on the authenticity of the message but issued a terse statement saying France "remains committed to the transatlantic relationship and will continue to engage through appropriate diplomatic channels."', portionMark: { classification: 'U', handling: '' } },
-      { type: 'quote', content: '"What world leader would now send a candid message to the White House knowing it could end up on social media? This fundamentally damages our ability to conduct diplomacy." — Former Ambassador to NATO', portionMark: { classification: 'U', handling: '' } },
+      { type: 'blockquote', content: '"What world leader would now send a candid message to the White House knowing it could end up on social media? This fundamentally damages our ability to conduct diplomacy." — Former Ambassador to NATO', portionMark: { classification: 'U', handling: '' } },
       { type: 'heading', content: 'White House Response', portionMark: { classification: 'U', handling: '' } },
       { type: 'paragraph', content: 'White House Press Secretary Karoline Leavitt defended the president\'s action, saying Trump "believes in transparency with the American people" and that Macron\'s message demonstrated European leaders\' "hysterical" reaction to legitimate American interests.', portionMark: { classification: 'U', handling: '' } },
       { type: 'paragraph', content: '"The president is not going to be lectured by foreign leaders about what\'s best for America," Leavitt said during the daily briefing. "If President Macron wants to have a private conversation, perhaps he should be more respectful."', portionMark: { classification: 'U', handling: '' } }
@@ -152,12 +191,45 @@ export const documents = [
     locationIds: ['loc-001'],
     eventIds: ['event-007'],
     tagIds: ['tag-002'],
+    quotes: [
+      {
+        id: 'quote-002-01',
+        speakerId: 'person-003',
+        speakerType: 'person',
+        text: 'Donald, I do not understand what you are doing with this Greenland business. This is not how allies treat each other. Please call me so we can discuss.'
+      },
+      {
+        id: 'quote-002-02',
+        speakerId: 'person-004',
+        speakerType: 'person',
+        text: 'Can you believe this guy? France is a mess, Paris is burning, and he wants to lecture ME about how to do deals? Maybe focus on your own problems, Emmanuel!'
+      }
+    ],
+    activities: [
+      {
+        id: 'activity-002-01',
+        actorId: 'person-004',
+        actorType: 'person',
+        action: 'leaked',
+        targetId: 'person-003',
+        targetType: 'person',
+        targetText: 'private diplomatic message from Macron'
+      },
+      {
+        id: 'activity-002-02',
+        actorId: 'person-004',
+        actorType: 'person',
+        action: 'mocked',
+        targetId: 'person-003',
+        targetType: 'person',
+        targetText: 'Macron on social media'
+      }
+    ],
     factionMentions: {
-      'faction-001': { sentiment: -0.48,
+      'faction-001': { sentiment: -0.48 },
+      'faction-002': { sentiment: 0.62 },
       'faction-009': { sentiment: 0.82 },
       'faction-010': { sentiment: 0.35 }
-    },
-      'faction-002': { sentiment: 0.62 }
     },
     metrics: { shares: 128500 },
     highlights: [],
@@ -181,7 +253,7 @@ export const documents = [
     contentBlocks: [
       { type: 'paragraph', content: 'European Commission President Ursula von der Leyen called for a "new form of European independence" on Monday, as tensions between the European Union and the United States reach their highest point in decades.', portionMark: { classification: 'U', handling: '' } },
       { type: 'paragraph', content: 'Speaking at the World Economic Forum in Davos just hours after French President Macron\'s pointed remarks, von der Leyen said Europe must reduce its dependence on American security guarantees and develop its own capabilities.', portionMark: { classification: 'U', handling: '' } },
-      { type: 'quote', content: '"For too long, we have assumed that the post-war order would remain stable. Recent events have shown us that assumption was naive. Europe must now chart its own course."', portionMark: { classification: 'U', handling: '' } },
+      { type: 'blockquote', content: '"For too long, we have assumed that the post-war order would remain stable. Recent events have shown us that assumption was naive. Europe must now chart its own course."', portionMark: { classification: 'U', handling: '' } },
       { type: 'paragraph', content: 'The Commission President outlined a series of proposals aimed at strengthening European autonomy, including increased defense spending, accelerated energy transition, and closer coordination on foreign policy.', portionMark: { classification: 'U', handling: '' } },
       { type: 'heading', content: 'Defense and Security', portionMark: { classification: 'U', handling: '' } },
       { type: 'paragraph', content: 'Von der Leyen announced plans to present a new European Defense Initiative at next month\'s EU summit. The proposal would include a 500 billion euro fund for joint military procurement and the creation of a rapid reaction force independent of NATO structures.', portionMark: { classification: 'U', handling: '' } },
@@ -199,12 +271,45 @@ export const documents = [
     locationIds: ['loc-005'],
     eventIds: ['event-009'],
     tagIds: ['tag-001'],
+    quotes: [
+      {
+        id: 'quote-003-01',
+        speakerId: 'person-005',
+        speakerType: 'person',
+        text: 'For too long, we have assumed that the post-war order would remain stable. Recent events have shown us that assumption was naive. Europe must now chart its own course.'
+      },
+      {
+        id: 'quote-003-02',
+        speakerId: 'person-005',
+        speakerType: 'person',
+        text: 'We are not abandoning NATO. But we must be prepared for scenarios where we need to act on our own. The Greenland situation has made that abundantly clear.'
+      }
+    ],
+    activities: [
+      {
+        id: 'activity-003-01',
+        actorId: 'person-005',
+        actorType: 'person',
+        action: 'called for',
+        targetId: null,
+        targetType: null,
+        targetText: 'new form of European independence'
+      },
+      {
+        id: 'activity-003-02',
+        actorId: 'person-005',
+        actorType: 'person',
+        action: 'announced',
+        targetId: null,
+        targetType: null,
+        targetText: 'European Defense Initiative at EU summit'
+      }
+    ],
     factionMentions: {
-      'faction-001': { sentiment: -0.42,
+      'faction-001': { sentiment: -0.42 },
+      'faction-002': { sentiment: 0.58 },
       'faction-009': { sentiment: 0.82 },
       'faction-010': { sentiment: 0.35 }
-    },
-      'faction-002': { sentiment: 0.58 }
     },
     metrics: { shares: 38700 },
     highlights: [],
@@ -228,7 +333,7 @@ export const documents = [
     contentBlocks: [
       { type: 'paragraph', content: 'Greenland\'s Prime Minister Múte Bourup Egede delivered a defiant response to President Trump\'s renewed push to acquire the autonomous Danish territory, declaring that Greenlanders "are not for sale" and demanding respect for international law.', portionMark: { classification: 'U', handling: '' } },
       { type: 'paragraph', content: 'Speaking at a press conference in Nuuk, Egede said Trump\'s statements were "deeply disrespectful" to Greenland\'s 57,000 residents and represented a dangerous precedent for small nations everywhere.', portionMark: { classification: 'U', handling: '' } },
-      { type: 'quote', content: '"We are a people with our own identity, our own culture, our own aspirations. We are not a piece of real estate to be bought and sold. We demand respect for the world order that protects the sovereignty of all nations, large and small."', portionMark: { classification: 'U', handling: '' } },
+      { type: 'blockquote', content: '"We are a people with our own identity, our own culture, our own aspirations. We are not a piece of real estate to be bought and sold. We demand respect for the world order that protects the sovereignty of all nations, large and small."', portionMark: { classification: 'U', handling: '' } },
       { type: 'paragraph', content: 'The prime minister\'s remarks came after Trump posted on social media that the United States "needs Greenland for national security purposes" and that "one way or another, we will get it."', portionMark: { classification: 'U', handling: '' } },
       { type: 'heading', content: 'Independence Movement Gains Momentum', portionMark: { classification: 'U', handling: '' } },
       { type: 'paragraph', content: 'Ironically, Trump\'s pressure appears to be accelerating Greenland\'s long-term goal of independence from Denmark. Egede, who leads the pro-independence Inuit Ataqatigiit party, said recent events had "strengthened our resolve."', portionMark: { classification: 'U', handling: '' } },
@@ -246,12 +351,45 @@ export const documents = [
     organizationIds: [],
     locationIds: ['loc-006'],
     eventIds: ['event-008'],
+    quotes: [
+      {
+        id: 'quote-004-01',
+        speakerId: 'person-006',
+        speakerType: 'person',
+        text: 'We are a people with our own identity, our own culture, our own aspirations. We are not a piece of real estate to be bought and sold. We demand respect for the world order that protects the sovereignty of all nations, large and small.'
+      },
+      {
+        id: 'quote-004-02',
+        speakerId: 'person-006',
+        speakerType: 'person',
+        text: 'We will decide our own future. Not Washington, not Copenhagen. Greenlanders will determine the path of Greenland.'
+      }
+    ],
+    activities: [
+      {
+        id: 'activity-004-01',
+        actorId: 'person-006',
+        actorType: 'person',
+        action: 'rejected',
+        targetId: 'person-004',
+        targetType: 'person',
+        targetText: 'Trump\'s acquisition threats'
+      },
+      {
+        id: 'activity-004-02',
+        actorId: 'person-006',
+        actorType: 'person',
+        action: 'demanded',
+        targetId: null,
+        targetType: null,
+        targetText: 'respect for international law and sovereignty'
+      }
+    ],
     factionMentions: {
-      'faction-001': { sentiment: -0.52,
+      'faction-001': { sentiment: -0.52 },
+      'faction-002': { sentiment: 0.48 },
       'faction-009': { sentiment: 0.82 },
       'faction-010': { sentiment: 0.35 }
-    },
-      'faction-002': { sentiment: 0.48 }
     },
     metrics: { shares: 52300 },
     highlights: [],
@@ -281,7 +419,7 @@ export const documents = [
       { type: 'paragraph', content: '"State officials who interfere with federal law enforcement will be held accountable," Attorney General Pam Bondi said in a statement. "We will not tolerate sanctuary policies that endanger American communities."', portionMark: { classification: 'U', handling: '' } },
       { type: 'heading', content: 'State Officials Vow to Fight', portionMark: { classification: 'U', handling: '' } },
       { type: 'paragraph', content: 'Attorney General Ellison responded defiantly, calling the subpoenas "a politically motivated attack on the people of Minnesota" and vowing to challenge them in court.', portionMark: { classification: 'U', handling: '' } },
-      { type: 'quote', content: '"We will not be intimidated by federal overreach. Minnesota will continue to protect the constitutional rights of all our residents, regardless of immigration status."', portionMark: { classification: 'U', handling: '' } },
+      { type: 'blockquote', content: '"We will not be intimidated by federal overreach. Minnesota will continue to protect the constitutional rights of all our residents, regardless of immigration status."', portionMark: { classification: 'U', handling: '' } },
       { type: 'paragraph', content: 'Governor Walz, speaking at an unrelated event in St. Paul, said the state would "vigorously defend" its policies. "We are a nation of laws, and that includes the Constitution, which protects due process for everyone," he said.', portionMark: { classification: 'U', handling: '' } },
       { type: 'image', imageUrl: 'http://static.photos/cityscape/640x360/9', caption: 'Protesters gather outside the federal building in Minneapolis to oppose ICE operations.' },
       { type: 'heading', content: 'Legal Experts Divided', portionMark: { classification: 'U', handling: '' } },
@@ -296,14 +434,47 @@ export const documents = [
     organizationIds: ['org-010'],
     locationIds: ['loc-002'],
     eventIds: ['event-010'],
+    quotes: [
+      {
+        id: 'quote-005-01',
+        speakerId: 'org-010',
+        speakerType: 'organization',
+        text: 'State officials who interfere with federal law enforcement will be held accountable. We will not tolerate sanctuary policies that endanger American communities.'
+      },
+      {
+        id: 'quote-005-02',
+        speakerId: 'person-007',
+        speakerType: 'person',
+        text: 'We will not be intimidated by federal overreach. Minnesota will continue to protect the constitutional rights of all our residents, regardless of immigration status.'
+      }
+    ],
+    activities: [
+      {
+        id: 'activity-005-01',
+        actorId: 'org-010',
+        actorType: 'organization',
+        action: 'announced subpoenas for',
+        targetId: 'person-007',
+        targetType: 'person',
+        targetText: 'Minnesota AG and Governor over ICE obstruction'
+      },
+      {
+        id: 'activity-005-02',
+        actorId: 'person-007',
+        actorType: 'person',
+        action: 'vowed to fight',
+        targetId: 'org-010',
+        targetType: 'organization',
+        targetText: 'DOJ subpoenas'
+      }
+    ],
     factionMentions: {
-      'faction-001': { sentiment: 0.68,
-      'faction-008': { sentiment: -0.72 },
-      'faction-013': { sentiment: -0.58 }
-    },
+      'faction-001': { sentiment: 0.68 },
       'faction-002': { sentiment: -0.75 },
       'faction-003': { sentiment: -0.82 },
-      'faction-004': { sentiment: 0.58 }
+      'faction-004': { sentiment: 0.58 },
+      'faction-008': { sentiment: -0.72 },
+      'faction-013': { sentiment: -0.58 }
     },
     metrics: { shares: 67800 },
     highlights: [
@@ -389,7 +560,7 @@ export const documents = [
     contentBlocks: [
       { type: 'paragraph', content: 'A federal judge in Minnesota issued an emergency injunction Monday barring federal agents from arresting peaceful protesters without probable cause, delivering a sharp rebuke to the Trump administration\'s aggressive immigration enforcement tactics.', portionMark: { classification: 'U', handling: '' } },
       { type: 'paragraph', content: 'U.S. District Judge Wilhelmina Wright ruled that the government had not demonstrated a compelling interest in detaining individuals engaged in lawful First Amendment activity, even during immigration enforcement operations.', portionMark: { classification: 'U', handling: '' } },
-      { type: 'quote', content: '"The Constitution does not cease to apply because the government invokes immigration enforcement. Peaceful protest is protected speech, and agents cannot arrest citizens simply for being present at a demonstration."', portionMark: { classification: 'U', handling: '' } },
+      { type: 'blockquote', content: '"The Constitution does not cease to apply because the government invokes immigration enforcement. Peaceful protest is protected speech, and agents cannot arrest citizens simply for being present at a demonstration."', portionMark: { classification: 'U', handling: '' } },
       { type: 'heading', content: 'DOJ Files Immediate Appeal', portionMark: { classification: 'U', handling: '' } },
       { type: 'paragraph', content: 'The Department of Justice filed an emergency appeal within hours of the ruling, arguing that the injunction would "severely hamper" federal law enforcement operations and create "dangerous precedent" for limiting executive authority.', portionMark: { classification: 'U', handling: '' } },
       { type: 'paragraph', content: 'In their filing, government lawyers argued that federal agents must have broad discretion to maintain order during enforcement operations, and that distinguishing between "protesters" and potential threats in real-time is impractical.', portionMark: { classification: 'U', handling: '' } },
@@ -405,15 +576,48 @@ export const documents = [
     organizationIds: ['org-010', 'org-011'],
     locationIds: ['loc-002'],
     eventIds: ['event-011'],
+    quotes: [
+      {
+        id: 'quote-006-01',
+        speakerId: 'person-017',
+        speakerType: 'person',
+        text: 'The Constitution does not cease to apply because the government invokes immigration enforcement. Peaceful protest is protected speech, and agents cannot arrest citizens simply for being present at a demonstration.'
+      },
+      {
+        id: 'quote-006-02',
+        speakerId: 'org-011',
+        speakerType: 'organization',
+        text: 'This administration has treated peaceful protesters as enemy combatants. Today\'s ruling reminds them that they cannot suspend the Bill of Rights simply by declaring an immigration emergency.'
+      }
+    ],
+    activities: [
+      {
+        id: 'activity-006-01',
+        actorId: 'person-017',
+        actorType: 'person',
+        action: 'issued injunction against',
+        targetId: 'org-010',
+        targetType: 'organization',
+        targetText: 'DOJ arresting peaceful protesters'
+      },
+      {
+        id: 'activity-006-02',
+        actorId: 'org-010',
+        actorType: 'organization',
+        action: 'appealed',
+        targetId: null,
+        targetType: null,
+        targetText: 'federal judge ruling on protesters'
+      }
+    ],
     factionMentions: {
-      'faction-001': { sentiment: 0.72,
-      'faction-008': { sentiment: -0.72 },
-      'faction-013': { sentiment: -0.58 },
-      'faction-009': { sentiment: 0.65 }
-    },
+      'faction-001': { sentiment: 0.72 },
       'faction-002': { sentiment: -0.78 },
       'faction-003': { sentiment: -0.85 },
-      'faction-004': { sentiment: 0.62 }
+      'faction-004': { sentiment: 0.62 },
+      'faction-008': { sentiment: -0.72 },
+      'faction-009': { sentiment: 0.65 },
+      'faction-013': { sentiment: -0.58 }
     },
     metrics: { shares: 54200 },
     highlights: [],
@@ -441,7 +645,7 @@ export const documents = [
       { type: 'paragraph', content: 'Good, 34, was shot and killed on January 17 during a protest against ICE operations in Minneapolis. Video footage from multiple angles shows she was unarmed and had her hands raised when the agent opened fire.', portionMark: { classification: 'U', handling: '' } },
       { type: 'heading', content: 'Investigation Takes Unexpected Turn', portionMark: { classification: 'U', handling: '' } },
       { type: 'paragraph', content: 'Sources familiar with the investigation say FBI agents have been interviewing Good\'s colleagues, friends, and family members—not to gather information about the shooting, but to build a profile of her political activities and associations.', portionMark: { classification: 'U', handling: '' } },
-      { type: 'quote', content: '"They asked me about her social media posts, what protests she had attended, whether she had ever advocated violence. They\'re trying to make her the criminal when she was the victim." — Friend of Renee Good', portionMark: { classification: 'U', handling: '' } },
+      { type: 'blockquote', content: '"They asked me about her social media posts, what protests she had attended, whether she had ever advocated violence. They\'re trying to make her the criminal when she was the victim." — Friend of Renee Good', portionMark: { classification: 'U', handling: '' } },
       { type: 'paragraph', content: 'Good\'s widow, Sarah Good, has also been contacted by FBI agents seeking information about her wife\'s "known associations" with activist groups. Through her attorney, Sarah Good declined to be interviewed.', portionMark: { classification: 'U', handling: '' } },
       { type: 'image', imageUrl: 'http://static.photos/cityscape/640x360/12', caption: 'Community members hold a vigil for Renee Good outside the Minneapolis Federal Building.' },
       { type: 'heading', content: 'DOJ Defends Investigation', portionMark: { classification: 'U', handling: '' } },
@@ -459,14 +663,56 @@ export const documents = [
     organizationIds: ['org-011', 'org-012'],
     locationIds: ['loc-002'],
     eventIds: ['event-013', 'event-014'],
+    quotes: [
+      {
+        id: 'quote-007-01',
+        speakerId: 'org-012',
+        speakerType: 'organization',
+        text: 'When the government investigates murder victims instead of killers, we have lost our way as a nation. Renee Good was exercising her First Amendment rights when she was killed by a federal agent. That agent should be the focus of any investigation.'
+      },
+      {
+        id: 'quote-007-02',
+        speakerId: 'org-011',
+        speakerType: 'organization',
+        text: 'A thorough investigation requires examining all circumstances surrounding the incident. We will follow the evidence wherever it leads.'
+      }
+    ],
+    activities: [
+      {
+        id: 'activity-007-01',
+        actorId: 'org-012',
+        actorType: 'organization',
+        action: 'shifted focus of',
+        targetId: 'person-008',
+        targetType: 'person',
+        targetText: 'civil rights investigation to victim Renee Good'
+      },
+      {
+        id: 'activity-007-02',
+        actorId: 'org-012',
+        actorType: 'organization',
+        action: 'announced plans to file lawsuit on behalf of',
+        targetId: 'person-008',
+        targetType: 'person',
+        targetText: 'the Good family'
+      },
+      {
+        id: 'activity-007-03',
+        actorId: 'org-011',
+        actorType: 'organization',
+        action: 'interviewed',
+        targetId: null,
+        targetType: null,
+        targetText: 'Good\'s colleagues, friends, and family members'
+      }
+    ],
     factionMentions: {
-      'faction-001': { sentiment: 0.65,
-      'faction-008': { sentiment: -0.72 },
-      'faction-013': { sentiment: -0.58 }
-    },
+      'faction-001': { sentiment: 0.65 },
       'faction-002': { sentiment: -0.82 },
       'faction-003': { sentiment: -0.88 },
-      'faction-004': { sentiment: 0.55 }
+      'faction-004': { sentiment: 0.55 },
+      'faction-008': { sentiment: -0.72 },
+      'faction-013': { sentiment: -0.58 }
     },
     metrics: { shares: 89400 },
     highlights: [],
@@ -496,7 +742,7 @@ export const documents = [
       { type: 'paragraph', content: 'Video footage from the incident shows Easterwood attempting to continue the service as protesters surrounded the pulpit. The demonstration lasted approximately 15 minutes before church security and local police escorted the protesters outside.', portionMark: { classification: 'U', handling: '' } },
       { type: 'heading', content: 'Easterwood\'s Dual Role Under Scrutiny', portionMark: { classification: 'U', handling: '' } },
       { type: 'paragraph', content: 'Easterwood has served as an associate pastor at Cities Church for eight years while simultaneously working as a Deputy Director of ICE\'s Enforcement and Removal Operations. His dual roles have drawn criticism from immigrant advocacy groups who question how someone can preach Christian values while overseeing deportation operations.', portionMark: { classification: 'U', handling: '' } },
-      { type: 'quote', content: '"How can you stand at that pulpit on Sunday and talk about loving your neighbor, and then on Monday send agents to tear families apart? There is no reconciling those two things." — Protest organizer Maria Santos', portionMark: { classification: 'U', handling: '' } },
+      { type: 'blockquote', content: '"How can you stand at that pulpit on Sunday and talk about loving your neighbor, and then on Monday send agents to tear families apart? There is no reconciling those two things." — Protest organizer Maria Santos', portionMark: { classification: 'U', handling: '' } },
       { type: 'paragraph', content: 'Cities Church released a statement calling the protest "a violation of our sacred space" and defending Easterwood as "a man of deep faith who serves his community and his country with integrity."', portionMark: { classification: 'U', handling: '' } },
       { type: 'heading', content: 'Federal Response Swift', portionMark: { classification: 'U', handling: '' } },
       { type: 'paragraph', content: 'The Department of Justice announced within hours that it was opening an investigation into whether the protest violated the Freedom of Access to Clinic Entrances (FACE) Act, which also protects houses of worship from obstruction.', portionMark: { classification: 'U', handling: '' } },
@@ -509,15 +755,57 @@ export const documents = [
     organizationIds: ['org-016', 'org-011'],
     locationIds: ['loc-008'],
     eventIds: ['event-017'],
+    quotes: [
+      {
+        id: 'quote-008-01',
+        speakerId: 'person-015',
+        speakerType: 'person',
+        text: 'How can you stand at that pulpit on Sunday and talk about loving your neighbor, and then on Monday send agents to tear families apart? There is no reconciling those two things.'
+      },
+      {
+        id: 'quote-008-02',
+        speakerId: 'org-016',
+        speakerType: 'organization',
+        text: 'A man of deep faith who serves his community and his country with integrity.'
+      }
+    ],
+    activities: [
+      {
+        id: 'activity-008-01',
+        actorId: 'person-015',
+        actorType: 'person',
+        action: 'organized protest against',
+        targetId: 'person-014',
+        targetType: 'person',
+        targetText: 'David Easterwood at Cities Church'
+      },
+      {
+        id: 'activity-008-02',
+        actorId: 'org-016',
+        actorType: 'organization',
+        action: 'defended',
+        targetId: 'person-014',
+        targetType: 'person',
+        targetText: 'Pastor David Easterwood'
+      },
+      {
+        id: 'activity-008-03',
+        actorId: 'org-011',
+        actorType: 'organization',
+        action: 'opened investigation into',
+        targetId: null,
+        targetType: null,
+        targetText: 'church protest under FACE Act'
+      }
+    ],
     factionMentions: {
-      'faction-001': { sentiment: 0.72,
+      'faction-001': { sentiment: 0.72 },
+      'faction-002': { sentiment: -0.68 },
+      'faction-003': { sentiment: -0.75 },
+      'faction-004': { sentiment: 0.65 },
       'faction-008': { sentiment: -0.68 },
       'faction-013': { sentiment: -0.58 },
       'faction-014': { sentiment: 0.38 }
-    },
-      'faction-002': { sentiment: -0.68 },
-      'faction-003': { sentiment: -0.75 },
-      'faction-004': { sentiment: 0.65 }
     },
     metrics: { shares: 73500 },
     highlights: [],
@@ -542,7 +830,7 @@ export const documents = [
     contentBlocks: [
       { type: 'paragraph', content: 'Attorney General Pam Bondi announced Sunday evening that the Department of Justice is opening a federal investigation into protesters who disrupted church services in St. Paul, Minnesota, warning that "attacks on Christians and law enforcement will not be tolerated."', portionMark: { classification: 'U', handling: '' } },
       { type: 'paragraph', content: 'Speaking at an impromptu press conference at DOJ headquarters, Bondi said the protest at Cities Church may have violated the Freedom of Access to Clinic Entrances (FACE) Act, which makes it a federal crime to obstruct access to places of religious worship.', portionMark: { classification: 'U', handling: '' } },
-      { type: 'quote', content: '"Let me be clear: this administration will use the full force of federal law to protect religious freedom and to defend the men and women who keep our communities safe. These agitators crossed a line today, and they will be held accountable."', portionMark: { classification: 'U', handling: '' } },
+      { type: 'blockquote', content: '"Let me be clear: this administration will use the full force of federal law to protect religious freedom and to defend the men and women who keep our communities safe. These agitators crossed a line today, and they will be held accountable."', portionMark: { classification: 'U', handling: '' } },
       { type: 'heading', content: 'FACE Act Charges Carry Serious Penalties', portionMark: { classification: 'U', handling: '' } },
       { type: 'paragraph', content: 'The FACE Act, originally passed in 1994 to protect abortion clinics from violent protesters, was amended in 2021 to include enhanced protections for houses of worship. Violations can carry penalties of up to one year in prison for first offenses, and up to three years for repeat offenders or if bodily injury occurs.', portionMark: { classification: 'U', handling: '' } },
       { type: 'paragraph', content: 'Bondi indicated that federal prosecutors are reviewing video footage from the protest to identify participants who may face charges. She declined to specify how many individuals are being investigated.', portionMark: { classification: 'U', handling: '' } },
@@ -558,15 +846,57 @@ export const documents = [
     organizationIds: ['org-010'],
     locationIds: ['loc-001'],
     eventIds: ['event-018'],
+    quotes: [
+      {
+        id: 'quote-009-01',
+        speakerId: 'person-013',
+        speakerType: 'person',
+        text: 'Let me be clear: this administration will use the full force of federal law to protect religious freedom and to defend the men and women who keep our communities safe. These agitators crossed a line today, and they will be held accountable.'
+      },
+      {
+        id: 'quote-009-02',
+        speakerId: 'person-013',
+        speakerType: 'person',
+        text: 'The FACE Act was designed to protect all houses of worship equally. We will prosecute all violations of federal law, regardless of the victim\'s faith.'
+      }
+    ],
+    activities: [
+      {
+        id: 'activity-009-01',
+        actorId: 'person-013',
+        actorType: 'person',
+        action: 'announced',
+        targetId: null,
+        targetType: null,
+        targetText: 'FACE Act investigation into church protesters'
+      },
+      {
+        id: 'activity-009-02',
+        actorId: 'org-010',
+        actorType: 'organization',
+        action: 'is reviewing',
+        targetId: null,
+        targetType: null,
+        targetText: 'video footage from protest to identify participants'
+      },
+      {
+        id: 'activity-009-03',
+        actorId: 'person-013',
+        actorType: 'person',
+        action: 'dismissed criticism from',
+        targetId: null,
+        targetType: null,
+        targetText: 'civil liberties groups as desperate deflection'
+      }
+    ],
     factionMentions: {
-      'faction-001': { sentiment: 0.75,
+      'faction-001': { sentiment: 0.75 },
+      'faction-002': { sentiment: -0.72 },
+      'faction-003': { sentiment: -0.78 },
+      'faction-004': { sentiment: 0.68 },
       'faction-008': { sentiment: -0.68 },
       'faction-013': { sentiment: -0.58 },
       'faction-014': { sentiment: 0.38 }
-    },
-      'faction-002': { sentiment: -0.72 },
-      'faction-003': { sentiment: -0.78 },
-      'faction-004': { sentiment: 0.68 }
     },
     metrics: { shares: 42100 },
     highlights: [],
@@ -594,7 +924,7 @@ export const documents = [
       { type: 'paragraph', content: 'In an interview with Fox News, Dhillon said Lemon is "on notice" that his activities are being reviewed by federal prosecutors. "Being a journalist doesn\'t give you immunity to participate in criminal activity," she said. "If you\'re aiding and abetting, you can be charged."', portionMark: { classification: 'U', handling: '' } },
       { type: 'heading', content: 'Press Freedom Organizations Sound Alarm', portionMark: { classification: 'U', handling: '' } },
       { type: 'paragraph', content: 'The Committee to Protect Journalists called the threat "an alarming escalation in this administration\'s war on the press" and demanded that the DOJ immediately clarify that reporting on protests is protected First Amendment activity.', portionMark: { classification: 'U', handling: '' } },
-      { type: 'quote', content: '"Threatening to prosecute a journalist for covering a news event is authoritarianism, plain and simple. This is the kind of thing we see in Russia and China, not the United States." — CPJ Executive Director Jodie Ginsberg', portionMark: { classification: 'U', handling: '' } },
+      { type: 'blockquote', content: '"Threatening to prosecute a journalist for covering a news event is authoritarianism, plain and simple. This is the kind of thing we see in Russia and China, not the United States." — CPJ Executive Director Jodie Ginsberg', portionMark: { classification: 'U', handling: '' } },
       { type: 'paragraph', content: 'CNN issued a strongly worded statement defending Lemon, saying he "was doing his job as a journalist, reporting on a newsworthy event" and that the network would "vigorously defend" him against any charges.', portionMark: { classification: 'U', handling: '' } },
       { type: 'heading', content: 'Lemon Responds', portionMark: { classification: 'U', handling: '' } },
       { type: 'paragraph', content: 'Lemon addressed the threats during his Monday evening broadcast, saying he would not be intimidated. "I was standing on a public sidewalk doing my job. If that\'s now a crime in America, then we have much bigger problems than anything I reported on yesterday."', portionMark: { classification: 'U', handling: '' } },
@@ -607,15 +937,57 @@ export const documents = [
     organizationIds: ['org-010'],
     locationIds: ['loc-008'],
     eventIds: ['event-019'],
+    quotes: [
+      {
+        id: 'quote-010-01',
+        speakerId: 'person-012',
+        speakerType: 'person',
+        text: 'Being a journalist doesn\'t give you immunity to participate in criminal activity. If you\'re aiding and abetting, you can be charged.'
+      },
+      {
+        id: 'quote-010-02',
+        speakerId: 'person-016',
+        speakerType: 'person',
+        text: 'I was standing on a public sidewalk doing my job. If that\'s now a crime in America, then we have much bigger problems than anything I reported on yesterday.'
+      }
+    ],
+    activities: [
+      {
+        id: 'activity-010-01',
+        actorId: 'person-012',
+        actorType: 'person',
+        action: 'threatened charges against',
+        targetId: 'person-016',
+        targetType: 'person',
+        targetText: 'journalist Don Lemon for covering protest'
+      },
+      {
+        id: 'activity-010-02',
+        actorId: 'org-010',
+        actorType: 'organization',
+        action: 'warned',
+        targetId: 'person-016',
+        targetType: 'person',
+        targetText: 'that activities are being reviewed by federal prosecutors'
+      },
+      {
+        id: 'activity-010-03',
+        actorId: 'person-016',
+        actorType: 'person',
+        action: 'defended himself against',
+        targetId: 'org-010',
+        targetType: 'organization',
+        targetText: 'DOJ prosecution threats'
+      }
+    ],
     factionMentions: {
-      'faction-001': { sentiment: 0.58,
+      'faction-001': { sentiment: 0.58 },
+      'faction-002': { sentiment: -0.75 },
+      'faction-003': { sentiment: -0.82 },
+      'faction-004': { sentiment: 0.52 },
       'faction-008': { sentiment: -0.68 },
       'faction-013': { sentiment: -0.58 },
       'faction-014': { sentiment: 0.38 }
-    },
-      'faction-002': { sentiment: -0.75 },
-      'faction-003': { sentiment: -0.82 },
-      'faction-004': { sentiment: 0.52 }
     },
     metrics: { shares: 156800 },
     highlights: [],
@@ -635,7 +1007,7 @@ export const documents = [
     author: {
       username: '@realDonaldTrump',
       displayName: 'Donald J. Trump',
-      avatarUrl: 'img/placeholders/avatar-default.svg'
+      avatarUrl: 'https://i.pravatar.cc/150?u=realDonaldTrump'
     },
     contentBlocks: [
       { type: 'paragraph', content: 'The agitators and insurrectionists who disrupted a Church Service in Minnesota are highly trained, and should be thrown in jail, or thrown out of the Country. They are not "protesters," they are professional troublemakers who are destroying our Country. LAW AND ORDER!', portionMark: { classification: 'U', handling: '' } }
@@ -653,15 +1025,16 @@ export const documents = [
     organizationIds: [],
     locationIds: ['loc-001'],
     eventIds: ['event-020'],
+    quotes: [],
+    activities: [],
     factionMentions: {
-      'faction-001': { sentiment: 0.82,
+      'faction-001': { sentiment: 0.82 },
+      'faction-002': { sentiment: -0.65 },
+      'faction-003': { sentiment: -0.72 },
+      'faction-004': { sentiment: 0.75 },
       'faction-008': { sentiment: -0.68 },
       'faction-013': { sentiment: -0.58 },
       'faction-014': { sentiment: 0.38 }
-    },
-      'faction-002': { sentiment: -0.65 },
-      'faction-003': { sentiment: -0.72 },
-      'faction-004': { sentiment: 0.75 }
     },
     metrics: { views: 8500000, shares: 52847 },
     highlights: [],
@@ -689,7 +1062,7 @@ export const documents = [
       { type: 'paragraph', content: 'The civil rights attorney and activist said the protest was intended to highlight what she called the "moral contradiction" of Easterwood\'s dual roles as ICE official and pastor at Cities Church.', portionMark: { classification: 'U', handling: '' } },
       { type: 'heading', content: 'A Question of Moral Authority', portionMark: { classification: 'U', handling: '' } },
       { type: 'paragraph', content: 'Levy Armstrong, who holds a law degree from the University of Illinois and previously worked as a civil rights attorney, said the protest was peaceful and that demonstrators deliberately chose not to physically disrupt the service beyond their presence.', portionMark: { classification: 'U', handling: '' } },
-      { type: 'quote', content: '"We walked in, we stood there, we held our signs, and we asked a simple question: How do you justify this? That\'s not violence. That\'s not intimidation. That\'s accountability."', portionMark: { classification: 'U', handling: '' } },
+      { type: 'blockquote', content: '"We walked in, we stood there, we held our signs, and we asked a simple question: How do you justify this? That\'s not violence. That\'s not intimidation. That\'s accountability."', portionMark: { classification: 'U', handling: '' } },
       { type: 'paragraph', content: 'She dismissed the DOJ\'s FACE Act investigation as "political theater" designed to intimidate protesters and said she was prepared to face any charges.', portionMark: { classification: 'U', handling: '' } },
       { type: 'heading', content: 'Easterwood\'s Record Under Examination', portionMark: { classification: 'U', handling: '' } },
       { type: 'paragraph', content: 'According to documents obtained by immigrant advocacy groups, Easterwood has overseen enforcement operations that resulted in the deportation of more than 15,000 individuals during his tenure, including parents of U.S. citizen children.', portionMark: { classification: 'U', handling: '' } },
@@ -703,15 +1076,63 @@ export const documents = [
     organizationIds: ['org-018', 'org-016'],
     locationIds: ['loc-008'],
     eventIds: ['event-017'],
+    quotes: [
+      {
+        id: 'quote-012-01',
+        speakerId: 'person-015',
+        speakerType: 'person',
+        text: 'How can anyone who claims to be Christian condone the separation of families? How can you preach about loving your neighbor while sending agents to drag people from their homes in the middle of the night?'
+      },
+      {
+        id: 'quote-012-02',
+        speakerId: 'person-015',
+        speakerType: 'person',
+        text: 'We walked in, we stood there, we held our signs, and we asked a simple question: How do you justify this? That\'s not violence. That\'s not intimidation. That\'s accountability.'
+      },
+      {
+        id: 'quote-012-03',
+        speakerId: 'person-015',
+        speakerType: 'person',
+        text: 'This isn\'t abstract policy. These are real families being destroyed by someone who then stands at a pulpit and talks about Christian love. The hypocrisy is staggering.'
+      }
+    ],
+    activities: [
+      {
+        id: 'activity-012-01',
+        actorId: 'person-015',
+        actorType: 'person',
+        action: 'defended',
+        targetId: null,
+        targetType: null,
+        targetText: 'church protest in CNN interview'
+      },
+      {
+        id: 'activity-012-02',
+        actorId: 'person-015',
+        actorType: 'person',
+        action: 'questioned moral authority of',
+        targetId: 'person-014',
+        targetType: 'person',
+        targetText: 'David Easterwood serving as both ICE official and pastor'
+      },
+      {
+        id: 'activity-012-03',
+        actorId: 'person-015',
+        actorType: 'person',
+        action: 'dismissed',
+        targetId: 'org-010',
+        targetType: 'organization',
+        targetText: 'DOJ FACE Act investigation as political theater'
+      }
+    ],
     factionMentions: {
-      'faction-001': { sentiment: -0.45,
+      'faction-001': { sentiment: -0.45 },
+      'faction-002': { sentiment: 0.68 },
+      'faction-003': { sentiment: 0.72 },
+      'faction-004': { sentiment: -0.38 },
       'faction-008': { sentiment: -0.68 },
       'faction-013': { sentiment: -0.58 },
       'faction-014': { sentiment: 0.38 }
-    },
-      'faction-002': { sentiment: 0.68 },
-      'faction-003': { sentiment: 0.72 },
-      'faction-004': { sentiment: -0.38 }
     },
     metrics: { shares: 38900 },
     highlights: [],
@@ -741,7 +1162,7 @@ export const documents = [
       { type: 'paragraph', content: 'The Tippecanoe County Sheriff\'s Office said the shooting occurred around 2:30 p.m. when a suspect approached the Meyer residence and opened fire. Neighbors reported hearing multiple gunshots before seeing a figure flee on foot.', portionMark: { classification: 'U', handling: '' } },
       { type: 'heading', content: 'Judge\'s Recent Cases Under Review', portionMark: { classification: 'U', handling: '' } },
       { type: 'paragraph', content: 'Investigators are examining Judge Meyer\'s recent cases for potential motives. Meyer has presided over several high-profile criminal cases in recent months, including drug trafficking and violent crime cases that resulted in significant prison sentences.', portionMark: { classification: 'U', handling: '' } },
-      { type: 'quote', content: '"At this time, we are treating this as a targeted attack on a sitting judge. We are reviewing all recent cases and known threats, and we urge anyone with information to contact law enforcement immediately." — Tippecanoe County Sheriff Bob Goldsmith', portionMark: { classification: 'U', handling: '' } },
+      { type: 'blockquote', content: '"At this time, we are treating this as a targeted attack on a sitting judge. We are reviewing all recent cases and known threats, and we urge anyone with information to contact law enforcement immediately." — Tippecanoe County Sheriff Bob Goldsmith', portionMark: { classification: 'U', handling: '' } },
       { type: 'paragraph', content: 'Meyer, 58, has served on the Tippecanoe Superior Court for 12 years and is known for his strict sentencing in violent crime cases.', portionMark: { classification: 'U', handling: '' } },
       { type: 'heading', content: 'Increased Security for Indiana Judges', portionMark: { classification: 'U', handling: '' } },
       { type: 'paragraph', content: 'In the wake of the shooting, the Indiana State Police announced they would provide additional security for judges across the state. Indiana Supreme Court Chief Justice Loretta Rush is expected to address the incident in a statement Monday.', portionMark: { classification: 'U', handling: '' } },
@@ -754,13 +1175,49 @@ export const documents = [
     organizationIds: ['org-013', 'org-015'],
     locationIds: ['loc-007'],
     eventIds: ['event-015'],
+    quotes: [
+      {
+        id: 'quote-013-01',
+        speakerId: 'org-013',
+        speakerType: 'organization',
+        text: 'At this time, we are treating this as a targeted attack on a sitting judge. We are reviewing all recent cases and known threats, and we urge anyone with information to contact law enforcement immediately.'
+      }
+    ],
+    activities: [
+      {
+        id: 'activity-013-01',
+        actorId: null,
+        actorType: null,
+        action: 'shot',
+        targetId: 'person-009',
+        targetType: 'person',
+        targetText: 'Judge Steven Meyer and wife at their home'
+      },
+      {
+        id: 'activity-013-02',
+        actorId: 'org-013',
+        actorType: 'organization',
+        action: 'launched manhunt for',
+        targetId: null,
+        targetType: null,
+        targetText: 'shooting suspect'
+      },
+      {
+        id: 'activity-013-03',
+        actorId: 'org-015',
+        actorType: 'organization',
+        action: 'announced additional security for',
+        targetId: null,
+        targetType: null,
+        targetText: 'judges across Indiana'
+      }
+    ],
     factionMentions: {
-      'faction-001': { sentiment: -0.32,
+      'faction-001': { sentiment: -0.32 },
+      'faction-002': { sentiment: -0.65 },
+      'faction-004': { sentiment: -0.55 },
       'faction-010': { sentiment: 0.35 },
       'faction-012': { sentiment: 0.42 }
-    },
-      'faction-002': { sentiment: -0.65 },
-      'faction-004': { sentiment: -0.55 }
     },
     metrics: { shares: 95200 },
     highlights: [],
@@ -785,7 +1242,7 @@ export const documents = [
     contentBlocks: [
       { type: 'paragraph', content: 'Indiana Supreme Court Chief Justice Loretta H. Rush sent an urgent letter Monday to all state judges warning them to "remain vigilant" about their personal security in the wake of Sunday\'s shooting of Tippecanoe Superior Court Judge Steven Meyer.', portionMark: { classification: 'U', handling: '' } },
       { type: 'paragraph', content: 'The letter, obtained by the Indianapolis Star, expressed "deep concern" about the attack and announced immediate steps to enhance security for Indiana\'s roughly 400 state court judges.', portionMark: { classification: 'U', handling: '' } },
-      { type: 'quote', content: '"The attack on Judge Meyer and his wife is a stark reminder that those who serve on the bench face real dangers. I urge all of you to please remain vigilant in your own security, both at work and at home. Do not take any threat lightly."', portionMark: { classification: 'U', handling: '' } },
+      { type: 'blockquote', content: '"The attack on Judge Meyer and his wife is a stark reminder that those who serve on the bench face real dangers. I urge all of you to please remain vigilant in your own security, both at work and at home. Do not take any threat lightly."', portionMark: { classification: 'U', handling: '' } },
       { type: 'heading', content: 'New Security Measures Announced', portionMark: { classification: 'U', handling: '' } },
       { type: 'paragraph', content: 'Rush announced that the Indiana Office of Court Services would immediately begin conducting security assessments for judges who request them, including evaluations of their homes and vehicles.', portionMark: { classification: 'U', handling: '' } },
       { type: 'paragraph', content: 'The state will also expedite the installation of security cameras and panic buttons in courthouses that lack them, and will provide personal safety training for judges and their families.', portionMark: { classification: 'U', handling: '' } },
@@ -801,13 +1258,52 @@ export const documents = [
     organizationIds: ['org-014'],
     locationIds: ['loc-007'],
     eventIds: ['event-016'],
+    quotes: [
+      {
+        id: 'quote-014-01',
+        speakerId: 'person-011',
+        speakerType: 'person',
+        text: 'The attack on Judge Meyer and his wife is a stark reminder that those who serve on the bench face real dangers. I urge all of you to please remain vigilant in your own security, both at work and at home. Do not take any threat lightly.'
+      },
+      {
+        id: 'quote-014-02',
+        speakerId: 'person-011',
+        speakerType: 'person',
+        text: 'We cannot allow those who would use violence to intimidate the judiciary to succeed. Our courts must continue to function, and justice must be served.'
+      },
+      {
+        id: 'quote-014-03',
+        speakerId: 'person-011',
+        speakerType: 'person',
+        text: 'Judges make difficult decisions that affect people\'s lives. While most accept these decisions, some respond with anger and, increasingly, with threats. We must be prepared.'
+      }
+    ],
+    activities: [
+      {
+        id: 'activity-014-01',
+        actorId: 'person-011',
+        actorType: 'person',
+        action: 'sent urgent letter to',
+        targetId: null,
+        targetType: null,
+        targetText: 'all state judges warning about security'
+      },
+      {
+        id: 'activity-014-02',
+        actorId: 'org-014',
+        actorType: 'organization',
+        action: 'announced',
+        targetId: null,
+        targetType: null,
+        targetText: 'security assessments, cameras, and panic buttons for judges'
+      }
+    ],
     factionMentions: {
-      'faction-001': { sentiment: -0.38,
+      'faction-001': { sentiment: -0.38 },
+      'faction-002': { sentiment: -0.72 },
+      'faction-004': { sentiment: -0.62 },
       'faction-010': { sentiment: 0.35 },
       'faction-012': { sentiment: 0.42 }
-    },
-      'faction-002': { sentiment: -0.72 },
-      'faction-004': { sentiment: -0.62 }
     },
     metrics: { shares: 28700 },
     highlights: [],
@@ -837,7 +1333,7 @@ export const documents = [
       { type: 'paragraph', content: 'The ruling marks a significant victory for the Trump administration, which has sought to limit congressional access to detention facilities amid reports of overcrowding and inadequate medical care.', portionMark: { classification: 'U', handling: '' } },
       { type: 'heading', content: 'Judge Cites Security Concerns', portionMark: { classification: 'U', handling: '' } },
       { type: 'paragraph', content: 'In her ruling, Judge Cobb said DHS had demonstrated legitimate security concerns that justified the notice requirement. "Detention facilities present unique security challenges," she wrote. "Unannounced visits by large delegations could disrupt operations and potentially compromise safety."', portionMark: { classification: 'U', handling: '' } },
-      { type: 'quote', content: '"While Congress has broad oversight authority, that authority is not unlimited. The executive branch retains reasonable discretion to manage access to sensitive facilities."', portionMark: { classification: 'U', handling: '' } },
+      { type: 'blockquote', content: '"While Congress has broad oversight authority, that authority is not unlimited. The executive branch retains reasonable discretion to manage access to sensitive facilities."', portionMark: { classification: 'U', handling: '' } },
       { type: 'heading', content: 'Democrats Vow Appeal', portionMark: { classification: 'U', handling: '' } },
       { type: 'paragraph', content: 'Representative Alexandria Ocasio-Cortez, one of the plaintiffs, said the ruling would be appealed and accused the judge of enabling the administration\'s "cover-up" of conditions at detention facilities.', portionMark: { classification: 'U', handling: '' } },
       { type: 'paragraph', content: '"When they have a week to prepare for our visits, they can clean up the facilities, move detainees, and hide evidence of abuse," Ocasio-Cortez said. "This ruling makes meaningful oversight impossible."', portionMark: { classification: 'U', handling: '' } },
@@ -849,14 +1345,56 @@ export const documents = [
     organizationIds: ['org-017', 'org-020'],
     locationIds: ['loc-009'],
     eventIds: ['event-021', 'event-022'],
+    quotes: [
+      {
+        id: 'quote-015-01',
+        speakerId: 'person-025',
+        speakerType: 'person',
+        text: 'While Congress has broad oversight authority, that authority is not unlimited. The executive branch retains reasonable discretion to manage access to sensitive facilities.'
+      },
+      {
+        id: 'quote-015-02',
+        speakerId: 'person-021',
+        speakerType: 'person',
+        text: 'When they have a week to prepare for our visits, they can clean up the facilities, move detainees, and hide evidence of abuse. This ruling makes meaningful oversight impossible.'
+      }
+    ],
+    activities: [
+      {
+        id: 'activity-015-01',
+        actorId: 'person-025',
+        actorType: 'person',
+        action: 'ruled in favor of',
+        targetId: 'org-017',
+        targetType: 'organization',
+        targetText: 'DHS requiring week notice for inspections'
+      },
+      {
+        id: 'activity-015-02',
+        actorId: 'person-021',
+        actorType: 'person',
+        action: 'vowed to appeal',
+        targetId: null,
+        targetType: null,
+        targetText: 'ruling blocking no-notice inspections'
+      },
+      {
+        id: 'activity-015-03',
+        actorId: 'person-022',
+        actorType: 'person',
+        action: 'welcomed',
+        targetId: null,
+        targetType: null,
+        targetText: 'ruling allowing advance notice requirement'
+      }
+    ],
     factionMentions: {
-      'faction-001': { sentiment: 0.75,
-      'faction-009': { sentiment: 0.78 },
-      'faction-013': { sentiment: -0.58 }
-    },
+      'faction-001': { sentiment: 0.75 },
       'faction-002': { sentiment: -0.82 },
       'faction-003': { sentiment: -0.78 },
-      'faction-004': { sentiment: 0.62 }
+      'faction-004': { sentiment: 0.62 },
+      'faction-009': { sentiment: 0.78 },
+      'faction-013': { sentiment: -0.58 }
     },
     metrics: { shares: 31400 },
     highlights: [],
@@ -880,7 +1418,7 @@ export const documents = [
     contentBlocks: [
       { type: 'paragraph', content: 'The Department of Justice filed a scathing response Monday to Minnesota\'s lawsuit seeking to halt ICE operations in the state, calling the legal challenge an "absurdity" that would "fundamentally undermine federal supremacy over immigration enforcement."', portionMark: { classification: 'U', handling: '' } },
       { type: 'paragraph', content: 'In a 47-page brief, federal lawyers argued that states have no authority to dictate how the federal government enforces immigration law, citing a long line of Supreme Court precedents establishing exclusive federal jurisdiction over immigration matters.', portionMark: { classification: 'U', handling: '' } },
-      { type: 'quote', content: '"Minnesota\'s lawsuit represents an unprecedented attempt by a state to nullify federal law. If successful, it would create a patchwork of immigration policies across the country and render national enforcement impossible."', portionMark: { classification: 'U', handling: '' } },
+      { type: 'blockquote', content: '"Minnesota\'s lawsuit represents an unprecedented attempt by a state to nullify federal law. If successful, it would create a patchwork of immigration policies across the country and render national enforcement impossible."', portionMark: { classification: 'U', handling: '' } },
       { type: 'heading', content: 'Federal Preemption Arguments', portionMark: { classification: 'U', handling: '' } },
       { type: 'paragraph', content: 'The DOJ brief extensively cited Arizona v. United States (2012), in which the Supreme Court struck down portions of Arizona\'s immigration law on the grounds that immigration enforcement is an exclusively federal function.', portionMark: { classification: 'U', handling: '' } },
       { type: 'paragraph', content: '"The irony is not lost on this department that liberal states now seek to use the same states\' rights arguments they once condemned when used by conservative states," the brief noted.', portionMark: { classification: 'U', handling: '' } },
@@ -895,14 +1433,56 @@ export const documents = [
     organizationIds: ['org-010'],
     locationIds: ['loc-002'],
     eventIds: ['event-023'],
+    quotes: [
+      {
+        id: 'quote-016-01',
+        speakerId: 'org-010',
+        speakerType: 'organization',
+        text: 'Minnesota\'s lawsuit represents an unprecedented attempt by a state to nullify federal law. If successful, it would create a patchwork of immigration policies across the country and render national enforcement impossible.'
+      },
+      {
+        id: 'quote-016-02',
+        speakerId: 'person-007',
+        speakerType: 'person',
+        text: 'We\'re not saying ICE can\'t operate in Minnesota. We\'re saying they can\'t violate the Fourth Amendment rights of our residents while doing so. There\'s a difference.'
+      }
+    ],
+    activities: [
+      {
+        id: 'activity-016-01',
+        actorId: 'org-010',
+        actorType: 'organization',
+        action: 'filed response calling',
+        targetId: null,
+        targetType: null,
+        targetText: 'Minnesota lawsuit an absurdity'
+      },
+      {
+        id: 'activity-016-02',
+        actorId: 'person-007',
+        actorType: 'person',
+        action: 'defended',
+        targetId: null,
+        targetType: null,
+        targetText: 'state lawsuit against federal immigration enforcement'
+      },
+      {
+        id: 'activity-016-03',
+        actorId: 'org-010',
+        actorType: 'organization',
+        action: 'cited',
+        targetId: null,
+        targetType: null,
+        targetText: 'Arizona v. United States precedent for federal preemption'
+      }
+    ],
     factionMentions: {
-      'faction-001': { sentiment: 0.68,
-      'faction-009': { sentiment: 0.78 },
-      'faction-013': { sentiment: -0.58 }
-    },
+      'faction-001': { sentiment: 0.68 },
       'faction-002': { sentiment: -0.75 },
       'faction-003': { sentiment: -0.72 },
-      'faction-004': { sentiment: 0.55 }
+      'faction-004': { sentiment: 0.55 },
+      'faction-009': { sentiment: 0.78 },
+      'faction-013': { sentiment: -0.58 }
     },
     metrics: { shares: 24600 },
     highlights: [],
@@ -929,7 +1509,7 @@ export const documents = [
       { type: 'paragraph', content: 'The admission came just hours after DHS spokesperson released a statement categorically denying that agents had used "any chemical agents" during the operations.', portionMark: { classification: 'U', handling: '' } },
       { type: 'heading', content: 'Contradictory Statements', portionMark: { classification: 'U', handling: '' } },
       { type: 'paragraph', content: 'When pressed on the contradiction, Noem said the earlier statement was based on "incomplete information" and that she had personally ordered a review of all footage and reports from the operation.', portionMark: { classification: 'U', handling: '' } },
-      { type: 'quote', content: '"Look, our agents were facing a hostile crowd. People were throwing things at them. Pepper spray is a standard, non-lethal tool that our agents are trained to use in exactly these situations. I make no apologies for my agents defending themselves."', portionMark: { classification: 'U', handling: '' } },
+      { type: 'blockquote', content: '"Look, our agents were facing a hostile crowd. People were throwing things at them. Pepper spray is a standard, non-lethal tool that our agents are trained to use in exactly these situations. I make no apologies for my agents defending themselves."', portionMark: { classification: 'U', handling: '' } },
       { type: 'paragraph', content: 'Video footage from the scene, however, appears to show agents deploying pepper spray against protesters who were standing peacefully behind a barricade.', portionMark: { classification: 'U', handling: '' } },
       { type: 'heading', content: 'Critics Demand Accountability', portionMark: { classification: 'U', handling: '' } },
       { type: 'paragraph', content: 'Democratic lawmakers seized on the reversal, with House Homeland Security Committee ranking member Bennie Thompson calling for an investigation into both the use of pepper spray and the "apparent attempt to cover it up."', portionMark: { classification: 'U', handling: '' } },
@@ -942,14 +1522,50 @@ export const documents = [
     organizationIds: ['org-017'],
     locationIds: ['loc-001'],
     eventIds: ['event-025'],
+    quotes: [
+      {
+        id: 'quote-017-01',
+        speakerId: 'person-018',
+        speakerType: 'person',
+        text: 'Look, our agents were facing a hostile crowd. People were throwing things at them. Pepper spray is a standard, non-lethal tool that our agents are trained to use in exactly these situations. I make no apologies for my agents defending themselves.'
+      }
+    ],
+    activities: [
+      {
+        id: 'activity-017-01',
+        actorId: 'person-018',
+        actorType: 'person',
+        action: 'reversed course admitting',
+        targetId: null,
+        targetType: null,
+        targetText: 'federal agents used pepper spray'
+      },
+      {
+        id: 'activity-017-02',
+        actorId: 'org-017',
+        actorType: 'organization',
+        action: 'initially denied using',
+        targetId: null,
+        targetType: null,
+        targetText: 'chemical agents in Minneapolis'
+      },
+      {
+        id: 'activity-017-03',
+        actorId: 'person-018',
+        actorType: 'person',
+        action: 'dismissed criticism as',
+        targetId: null,
+        targetType: null,
+        targetText: 'political theater'
+      }
+    ],
     factionMentions: {
-      'faction-001': { sentiment: 0.72,
-      'faction-009': { sentiment: 0.78 },
-      'faction-013': { sentiment: -0.58 }
-    },
+      'faction-001': { sentiment: 0.72 },
       'faction-002': { sentiment: -0.78 },
       'faction-003': { sentiment: -0.68 },
-      'faction-004': { sentiment: 0.58 }
+      'faction-004': { sentiment: 0.58 },
+      'faction-009': { sentiment: 0.78 },
+      'faction-013': { sentiment: -0.58 }
     },
     metrics: { shares: 67300 },
     highlights: [],
@@ -978,7 +1594,7 @@ export const documents = [
       { type: 'paragraph', content: 'The new guidelines recommend that Americans nearly double their protein consumption, with an emphasis on "high-quality animal proteins" including beef, pork, and chicken. They also recommend whole milk, butter, and cheese as preferred dairy options.', portionMark: { classification: 'U', handling: '' } },
       { type: 'heading', content: 'Major Departures from Scientific Consensus', portionMark: { classification: 'U', handling: '' } },
       { type: 'paragraph', content: 'The guidelines represent a dramatic break from decades of nutrition science and the recommendations of major health organizations, including the American Heart Association and American Cancer Society.', portionMark: { classification: 'U', handling: '' } },
-      { type: 'quote', content: '"These guidelines are not based on science. They\'re based on ideology and industry influence. Following them will lead to increased rates of heart disease, diabetes, and cancer." — Dr. Walter Willett, Harvard School of Public Health', portionMark: { classification: 'U', handling: '' } },
+      { type: 'blockquote', content: '"These guidelines are not based on science. They\'re based on ideology and industry influence. Following them will lead to increased rates of heart disease, diabetes, and cancer." — Dr. Walter Willett, Harvard School of Public Health', portionMark: { classification: 'U', handling: '' } },
       { type: 'paragraph', content: 'The new pyramid places grains and fruits at the top, recommending they be consumed "sparingly," while placing red meat and animal fats at the base as foods that should be eaten "abundantly."', portionMark: { classification: 'U', handling: '' } },
       { type: 'heading', content: 'Industry Applauds Changes', portionMark: { classification: 'U', handling: '' } },
       { type: 'paragraph', content: 'The National Cattlemen\'s Beef Association praised the new guidelines as "a return to common sense nutrition" and said they expected beef sales to increase significantly.', portionMark: { classification: 'U', handling: '' } },
@@ -991,13 +1607,55 @@ export const documents = [
     organizationIds: ['org-022'],
     locationIds: ['loc-001'],
     eventIds: ['event-026'],
+    quotes: [
+      {
+        id: 'quote-018-01',
+        speakerId: 'person-026',
+        speakerType: 'person',
+        text: 'For 50 years, the government has told Americans to eat less fat and more carbohydrates, and we\'ve only gotten fatter and sicker. Today, we are ending the war on saturated fats and embracing the foods that made America strong.'
+      },
+      {
+        id: 'quote-018-02',
+        speakerId: 'org-022',
+        speakerType: 'organization',
+        text: 'These guidelines are not based on science. They\'re based on ideology and industry influence. Following them will lead to increased rates of heart disease, diabetes, and cancer.'
+      }
+    ],
+    activities: [
+      {
+        id: 'activity-018-01',
+        actorId: 'person-026',
+        actorType: 'person',
+        action: 'unveiled',
+        targetId: null,
+        targetType: null,
+        targetText: 'new meat-heavy dietary guidelines'
+      },
+      {
+        id: 'activity-018-02',
+        actorId: 'org-022',
+        actorType: 'organization',
+        action: 'criticized',
+        targetId: 'person-026',
+        targetType: 'person',
+        targetText: 'RFK Jr\'s dietary guidelines as unscientific'
+      },
+      {
+        id: 'activity-018-03',
+        actorId: 'person-026',
+        actorType: 'person',
+        action: 'recommended',
+        targetId: null,
+        targetType: null,
+        targetText: 'Americans nearly double protein consumption'
+      }
+    ],
     factionMentions: {
-      'faction-001': { sentiment: 0.62,
+      'faction-001': { sentiment: 0.62 },
+      'faction-005': { sentiment: -0.82 },
+      'faction-006': { sentiment: -0.88 },
       'faction-011': { sentiment: -0.55 },
       'faction-014': { sentiment: 0.38 }
-    },
-      'faction-005': { sentiment: -0.82 },
-      'faction-006': { sentiment: -0.88 }
     },
     metrics: { shares: 142500 },
     highlights: [],
@@ -1021,7 +1679,7 @@ export const documents = [
     contentBlocks: [
       { type: 'paragraph', content: 'The new federal dietary guidelines released this week would require an additional 100 million acres of farmland to meet increased meat demand—an area roughly the size of California—while adding hundreds of millions of tons of greenhouse gas emissions annually, according to an analysis by the World Resources Institute.', portionMark: { classification: 'U', handling: '' } },
       { type: 'paragraph', content: 'The environmental research organization calculated that if Americans followed the new guidelines, beef production alone would need to increase by approximately 40%, requiring massive expansion of cattle ranching into forests, wetlands, and other natural areas.', portionMark: { classification: 'U', handling: '' } },
-      { type: 'quote', content: '"These guidelines would be catastrophic for climate change efforts. We\'d be looking at an additional 300-400 million metric tons of CO2 equivalent emissions per year, just from the dietary changes." — Tim Searchinger, WRI Senior Fellow', portionMark: { classification: 'U', handling: '' } },
+      { type: 'blockquote', content: '"These guidelines would be catastrophic for climate change efforts. We\'d be looking at an additional 300-400 million metric tons of CO2 equivalent emissions per year, just from the dietary changes." — Tim Searchinger, WRI Senior Fellow', portionMark: { classification: 'U', handling: '' } },
       { type: 'heading', content: 'Water and Land Impacts', portionMark: { classification: 'U', handling: '' } },
       { type: 'paragraph', content: 'Beyond emissions, the analysis found that the increased meat production would require approximately 15 trillion additional gallons of water annually and would accelerate deforestation in the Amazon and other critical ecosystems to create new grazing land.', portionMark: { classification: 'U', handling: '' } },
       { type: 'paragraph', content: '"The environmental math simply doesn\'t work," said Dr. Sarah Lake, a food systems researcher at Stanford University. "The planet cannot sustain the level of meat consumption these guidelines encourage."', portionMark: { classification: 'U', handling: '' } },
@@ -1036,13 +1694,40 @@ export const documents = [
     organizationIds: ['org-023'],
     locationIds: [],
     eventIds: [],
+    quotes: [
+      {
+        id: 'quote-019-01',
+        speakerId: 'org-023',
+        speakerType: 'organization',
+        text: 'These guidelines would be catastrophic for climate change efforts. We\'d be looking at an additional 300-400 million metric tons of CO2 equivalent emissions per year, just from the dietary changes.'
+      }
+    ],
+    activities: [
+      {
+        id: 'activity-019-01',
+        actorId: 'org-023',
+        actorType: 'organization',
+        action: 'calculated',
+        targetId: null,
+        targetType: null,
+        targetText: '100 million acres additional farmland needed for meat guidelines'
+      },
+      {
+        id: 'activity-019-02',
+        actorId: 'org-023',
+        actorType: 'organization',
+        action: 'warned',
+        targetId: null,
+        targetType: null,
+        targetText: 'dietary guidelines would add hundreds of millions of tons of emissions'
+      }
+    ],
     factionMentions: {
-      'faction-001': { sentiment: 0.55,
+      'faction-001': { sentiment: 0.55 },
+      'faction-005': { sentiment: -0.78 },
+      'faction-006': { sentiment: -0.85 },
       'faction-011': { sentiment: -0.55 },
       'faction-014': { sentiment: 0.38 }
-    },
-      'faction-005': { sentiment: -0.78 },
-      'faction-006': { sentiment: -0.85 }
     },
     metrics: { shares: 78300 },
     highlights: [],
@@ -1066,7 +1751,7 @@ export const documents = [
     contentBlocks: [
       { type: 'paragraph', content: 'As HHS Secretary Robert F. Kennedy Jr. promotes new federal guidelines encouraging Americans to eat more meat, critics are circulating his past statements condemning the meat industry in the harshest possible terms.', portionMark: { classification: 'U', handling: '' } },
       { type: 'paragraph', content: 'In a 2004 speech at the Sierra Club, Kennedy called factory farming "a bigger threat to America than Osama bin Laden" and said the meat industry was "destroying our waterways, poisoning our air, and making us sick."', portionMark: { classification: 'U', handling: '' } },
-      { type: 'quote', content: '"These factory farms are not farms at all—they are industrial polluters masquerading as agriculture. They are poisoning rural America and producing meat that is making our nation sicker and fatter." — RFK Jr., 2004', portionMark: { classification: 'U', handling: '' } },
+      { type: 'blockquote', content: '"These factory farms are not farms at all—they are industrial polluters masquerading as agriculture. They are poisoning rural America and producing meat that is making our nation sicker and fatter." — RFK Jr., 2004', portionMark: { classification: 'U', handling: '' } },
       { type: 'heading', content: 'Decades of Anti-Meat Advocacy', portionMark: { classification: 'U', handling: '' } },
       { type: 'paragraph', content: 'Kennedy spent decades as an environmental lawyer suing meat producers on behalf of communities affected by pollution from hog farms and cattle operations. His organization, Waterkeeper Alliance, won several landmark cases forcing meat companies to pay millions in damages.', portionMark: { classification: 'U', handling: '' } },
       { type: 'paragraph', content: 'As recently as 2019, Kennedy wrote that Americans should "dramatically reduce" their meat consumption to address climate change and public health concerns.', portionMark: { classification: 'U', handling: '' } },
@@ -1081,13 +1766,55 @@ export const documents = [
     organizationIds: ['org-022'],
     locationIds: [],
     eventIds: [],
+    quotes: [
+      {
+        id: 'quote-020-01',
+        speakerId: 'person-026',
+        speakerType: 'person',
+        text: 'These factory farms are not farms at all—they are industrial polluters masquerading as agriculture. They are poisoning rural America and producing meat that is making our nation sicker and fatter.'
+      },
+      {
+        id: 'quote-020-02',
+        speakerId: 'person-026',
+        speakerType: 'person',
+        text: 'I still believe we need to reform how meat is produced. But the science is clear that animal protein is essential for human health. My job as HHS Secretary is to give Americans accurate nutrition information, not to advance an environmental agenda.'
+      }
+    ],
+    activities: [
+      {
+        id: 'activity-020-01',
+        actorId: 'person-026',
+        actorType: 'person',
+        action: 'contradicted',
+        targetId: null,
+        targetType: null,
+        targetText: 'his own past statements about factory farming'
+      },
+      {
+        id: 'activity-020-02',
+        actorId: 'person-026',
+        actorType: 'person',
+        action: 'defended',
+        targetId: null,
+        targetType: null,
+        targetText: 'shift in position on meat consumption'
+      },
+      {
+        id: 'activity-020-03',
+        actorId: 'org-022',
+        actorType: 'organization',
+        action: 'highlighted',
+        targetId: 'person-026',
+        targetType: 'person',
+        targetText: 'RFK Jr\'s past anti-meat advocacy'
+      }
+    ],
     factionMentions: {
-      'faction-001': { sentiment: 0.48,
+      'faction-001': { sentiment: 0.48 },
+      'faction-005': { sentiment: -0.72 },
+      'faction-006': { sentiment: -0.82 },
       'faction-011': { sentiment: -0.55 },
       'faction-014': { sentiment: 0.38 }
-    },
-      'faction-005': { sentiment: -0.72 },
-      'faction-006': { sentiment: -0.82 }
     },
     metrics: { shares: 93100 },
     highlights: [],
@@ -1116,7 +1843,7 @@ export const documents = [
       { type: 'paragraph', content: 'Researchers found a clear dose-response relationship: participants who consumed the most sodium nitrite had significantly higher cancer rates than those who consumed the least.', portionMark: { classification: 'U', handling: '' } },
       { type: 'heading', content: 'Common in Everyday Foods', portionMark: { classification: 'U', handling: '' } },
       { type: 'paragraph', content: 'Sodium nitrite is found in many common foods, including bacon, ham, hot dogs, deli meats, and some canned products. It serves both as a preservative and gives processed meats their characteristic pink color.', portionMark: { classification: 'U', handling: '' } },
-      { type: 'quote', content: '"Our findings add to the body of evidence suggesting that sodium nitrite consumption should be minimized. The increased cancer risk was significant and consistent across our study population." — Dr. Mathilde Touvier, lead researcher', portionMark: { classification: 'U', handling: '' } },
+      { type: 'blockquote', content: '"Our findings add to the body of evidence suggesting that sodium nitrite consumption should be minimized. The increased cancer risk was significant and consistent across our study population." — Dr. Mathilde Touvier, lead researcher', portionMark: { classification: 'U', handling: '' } },
       { type: 'paragraph', content: 'The World Health Organization has classified processed meat as a Group 1 carcinogen since 2015, though sodium nitrite\'s specific contribution to cancer risk has been debated.', portionMark: { classification: 'U', handling: '' } },
       { type: 'heading', content: 'Industry Response', portionMark: { classification: 'U', handling: '' } },
       { type: 'paragraph', content: 'The North American Meat Institute disputed the findings, calling the study "observational" and noting that it cannot prove causation. "Sodium nitrite has been used safely for over a century," a spokesperson said.', portionMark: { classification: 'U', handling: '' } },
@@ -1129,12 +1856,39 @@ export const documents = [
     organizationIds: ['org-003'],
     locationIds: [],
     eventIds: [],
+    quotes: [
+      {
+        id: 'quote-021-01',
+        speakerId: 'org-003',
+        speakerType: 'organization',
+        text: 'Our findings add to the body of evidence suggesting that sodium nitrite consumption should be minimized. The increased cancer risk was significant and consistent across our study population.'
+      }
+    ],
+    activities: [
+      {
+        id: 'activity-021-01',
+        actorId: 'org-003',
+        actorType: 'organization',
+        action: 'published study linking',
+        targetId: null,
+        targetType: null,
+        targetText: 'sodium nitrite to 32% increased cancer risk'
+      },
+      {
+        id: 'activity-021-02',
+        actorId: 'org-003',
+        actorType: 'organization',
+        action: 'tracked',
+        targetId: null,
+        targetType: null,
+        targetText: '100,000+ adults over a decade'
+      }
+    ],
     factionMentions: {
-      'faction-005': { sentiment: -0.72,
+      'faction-005': { sentiment: -0.72 },
+      'faction-006': { sentiment: -0.48 },
       'faction-011': { sentiment: -0.55 },
       'faction-014': { sentiment: 0.38 }
-    },
-      'faction-006': { sentiment: -0.48 }
     },
     metrics: { shares: 56400 },
     highlights: [],
@@ -1162,7 +1916,7 @@ export const documents = [
       { type: 'heading', content: 'What Are Ultra-Processed Foods?', portionMark: { classification: 'U', handling: '' } },
       { type: 'paragraph', content: 'Ultra-processed foods are defined as industrial formulations made mostly from substances derived from foods, with little or no intact food. Examples include soft drinks, packaged snacks, instant noodles, chicken nuggets, and ready-to-heat meals.', portionMark: { classification: 'U', handling: '' } },
       { type: 'paragraph', content: 'These products typically contain additives such as emulsifiers, artificial sweeteners, and preservatives that have been linked to inflammation and changes in gut microbiome composition.', portionMark: { classification: 'U', handling: '' } },
-      { type: 'quote', content: '"The risk was particularly elevated for certain types of ultra-processed foods, including processed meats and sugar-sweetened beverages. But we saw increased risk across the category." — Dr. Lu Wang', portionMark: { classification: 'U', handling: '' } },
+      { type: 'blockquote', content: '"The risk was particularly elevated for certain types of ultra-processed foods, including processed meats and sugar-sweetened beverages. But we saw increased risk across the category." — Dr. Lu Wang', portionMark: { classification: 'U', handling: '' } },
       { type: 'heading', content: 'Implications for Public Health', portionMark: { classification: 'U', handling: '' } },
       { type: 'paragraph', content: 'The findings are particularly concerning given that ultra-processed foods now make up nearly 60% of calories consumed by American adults, according to previous research.', portionMark: { classification: 'U', handling: '' } },
       { type: 'paragraph', content: 'Colorectal cancer is the third most common cancer in the United States and the second leading cause of cancer death. Rates have been increasing among younger adults, a trend some researchers attribute to dietary changes.', portionMark: { classification: 'U', handling: '' } },
@@ -1175,12 +1929,39 @@ export const documents = [
     organizationIds: [],
     locationIds: [],
     eventIds: [],
+    quotes: [
+      {
+        id: 'quote-022-01',
+        speakerId: null,
+        speakerType: null,
+        text: 'The risk was particularly elevated for certain types of ultra-processed foods, including processed meats and sugar-sweetened beverages. But we saw increased risk across the category.'
+      }
+    ],
+    activities: [
+      {
+        id: 'activity-022-01',
+        actorId: null,
+        actorType: null,
+        action: 'published study finding',
+        targetId: null,
+        targetType: null,
+        targetText: '45% higher colorectal cancer risk from ultra-processed foods'
+      },
+      {
+        id: 'activity-022-02',
+        actorId: null,
+        actorType: null,
+        action: 'analyzed',
+        targetId: null,
+        targetType: null,
+        targetText: 'dietary data from 45,000+ participants over 20 years'
+      }
+    ],
     factionMentions: {
-      'faction-005': { sentiment: -0.68,
+      'faction-005': { sentiment: -0.68 },
+      'faction-006': { sentiment: -0.42 },
       'faction-011': { sentiment: -0.55 },
       'faction-014': { sentiment: 0.38 }
-    },
-      'faction-006': { sentiment: -0.42 }
     },
     metrics: { shares: 48700 },
     highlights: [],
@@ -1199,7 +1980,7 @@ export const documents = [
     author: {
       username: '@healthnews',
       displayName: 'Health News Daily',
-      avatarUrl: 'img/placeholders/avatar-default.svg'
+      avatarUrl: 'https://i.pravatar.cc/150?u=healthnews'
     },
     contentBlocks: [
       { type: 'paragraph', content: 'The cancer study everyone is talking about 🧵 32% higher cancer risk from food preservatives?? #health #cancer #foodsafety #wellness #plantbased #rfkjr', portionMark: { classification: 'U', handling: '' } }
@@ -1222,12 +2003,13 @@ export const documents = [
     organizationIds: ['org-004'],
     locationIds: [],
     eventIds: [],
+    quotes: [],
+    activities: [],
     factionMentions: {
-      'faction-005': { sentiment: -0.65,
+      'faction-005': { sentiment: -0.65 },
+      'faction-006': { sentiment: -0.38 },
       'faction-011': { sentiment: -0.55 },
       'faction-014': { sentiment: 0.38 }
-    },
-      'faction-006': { sentiment: -0.38 }
     },
     metrics: { views: 4800000, shares: 42156 },
     highlights: [],
@@ -1248,7 +2030,7 @@ export const documents = [
     author: {
       username: '@ImmigrantRights',
       displayName: 'Immigrant Rights Watch',
-      avatarUrl: 'img/placeholders/avatar-default.svg'
+      avatarUrl: 'https://i.pravatar.cc/150?u=ImmigrantRights'
     },
     contentBlocks: [
       { type: 'paragraph', content: 'THREAD: David Easterwood is an ICE official in Minneapolis. On Sundays, he preaches at Cities Church about Christian love and compassion.\n\nDuring the week, he oversees operations that separate families and detain asylum seekers.\n\nHow do you reconcile these two roles? 🧵 (1/12)', portionMark: { classification: 'U', handling: '' } }
@@ -1265,15 +2047,16 @@ export const documents = [
     organizationIds: ['org-011', 'org-016'],
     locationIds: ['loc-008'],
     eventIds: ['event-017'],
+    quotes: [],
+    activities: [],
     factionMentions: {
-      'faction-001': { sentiment: -0.55,
+      'faction-001': { sentiment: -0.55 },
+      'faction-002': { sentiment: 0.72 },
+      'faction-003': { sentiment: 0.78 },
+      'faction-004': { sentiment: -0.48 },
       'faction-008': { sentiment: -0.68 },
       'faction-013': { sentiment: -0.58 },
       'faction-014': { sentiment: 0.38 }
-    },
-      'faction-002': { sentiment: 0.72 },
-      'faction-003': { sentiment: 0.78 },
-      'faction-004': { sentiment: -0.48 }
     },
     metrics: { views: 2500000, shares: 28491 },
     highlights: [],
@@ -1292,7 +2075,7 @@ export const documents = [
     author: {
       username: 'u/mpls_witness_2026',
       displayName: 'mpls_witness_2026',
-      avatarUrl: 'img/placeholders/avatar-default.svg'
+      avatarUrl: 'https://i.pravatar.cc/150?u=mpls_witness_2026'
     },
     contentBlocks: [
       { type: 'paragraph', content: '**[AMA] I was at the Minneapolis ICE protest when federal agents used pepper spray on peaceful demonstrators. Ask me anything.**\n\nI\'ve been protesting for three days now. What I\'ve seen is terrifying. Federal agents in unmarked vehicles, people being grabbed off the street, pepper spray used on people who were just standing there with signs.\n\nI have video. I have photos. I\'m willing to share what I witnessed.\n\nProof sent to mods.\n\n**Edit:** Wow this blew up. I\'ll try to answer as many questions as I can. To those asking - yes, I\'m safe. For now.\n\n**Edit 2:** For everyone asking about legal resources, check the pinned comment.', portionMark: { classification: 'U', handling: '' } }
@@ -1310,14 +2093,15 @@ export const documents = [
     organizationIds: ['org-011'],
     locationIds: ['loc-002'],
     eventIds: [],
+    quotes: [],
+    activities: [],
     factionMentions: {
-      'faction-001': { sentiment: -0.62,
-      'faction-008': { sentiment: -0.72 },
-      'faction-013': { sentiment: -0.58 }
-    },
+      'faction-001': { sentiment: -0.62 },
       'faction-002': { sentiment: 0.68 },
       'faction-003': { sentiment: 0.75 },
-      'faction-004': { sentiment: -0.52 }
+      'faction-004': { sentiment: -0.52 },
+      'faction-008': { sentiment: -0.72 },
+      'faction-013': { sentiment: -0.58 }
     },
     metrics: { likes: 24891, comments: 8234, platform: 'reddit' },
     highlights: [],
@@ -1360,14 +2144,15 @@ export const documents = [
     organizationIds: ['org-010', 'org-011', 'org-012'],
     locationIds: ['loc-002', 'loc-008'],
     eventIds: ['event-010', 'event-011', 'event-013'],
+    quotes: [],
+    activities: [],
     factionMentions: {
-      'faction-001': { sentiment: 0.15,
-      'faction-008': { sentiment: -0.72 },
-      'faction-013': { sentiment: -0.58 }
-    },
+      'faction-001': { sentiment: 0.15 },
       'faction-002': { sentiment: -0.12 },
       'faction-003': { sentiment: -0.18 },
-      'faction-004': { sentiment: 0.08 }
+      'faction-004': { sentiment: 0.08 },
+      'faction-008': { sentiment: -0.72 },
+      'faction-013': { sentiment: -0.58 }
     },
     highlights: [
       {
@@ -1443,12 +2228,13 @@ export const documents = [
     organizationIds: ['org-008', 'org-009'],
     locationIds: ['loc-005', 'loc-006', 'loc-001'],
     eventIds: ['event-006', 'event-007', 'event-008', 'event-009'],
+    quotes: [],
+    activities: [],
     factionMentions: {
-      'faction-001': { sentiment: 0.12,
+      'faction-001': { sentiment: 0.12 },
+      'faction-002': { sentiment: -0.15 },
       'faction-009': { sentiment: 0.82 },
       'faction-010': { sentiment: 0.35 }
-    },
-      'faction-002': { sentiment: -0.15 }
     },
     highlights: [
       {
@@ -1509,12 +2295,13 @@ export const documents = [
     organizationIds: ['org-010', 'org-011'],
     locationIds: ['loc-002', 'loc-009'],
     eventIds: ['event-010', 'event-011'],
+    quotes: [],
+    activities: [],
     factionMentions: {
-      'faction-001': { sentiment: 0.22,
+      'faction-001': { sentiment: 0.22 },
+      'faction-004': { sentiment: 0.18 },
       'faction-008': { sentiment: -0.72 },
       'faction-013': { sentiment: -0.58 }
-    },
-      'faction-004': { sentiment: 0.18 }
     },
     highlights: [
       {
@@ -1562,11 +2349,12 @@ export const documents = [
     organizationIds: ['org-013', 'org-014', 'org-015'],
     locationIds: ['loc-007'],
     eventIds: ['event-015', 'event-016'],
+    quotes: [],
+    activities: [],
     factionMentions: {
-      'faction-004': { sentiment: -0.25,
+      'faction-004': { sentiment: -0.25 },
       'faction-010': { sentiment: 0.35 },
       'faction-012': { sentiment: 0.42 }
-    }
     },
     highlights: [
       {
@@ -1627,12 +2415,13 @@ export const documents = [
     organizationIds: ['org-003', 'org-004'],
     locationIds: [],
     eventIds: [],
+    quotes: [],
+    activities: [],
     factionMentions: {
-      'faction-005': { sentiment: -0.15,
+      'faction-005': { sentiment: -0.15 },
+      'faction-006': { sentiment: -0.08 },
       'faction-011': { sentiment: -0.55 },
       'faction-014': { sentiment: 0.38 }
-    },
-      'faction-006': { sentiment: -0.08 }
     },
     highlights: [
       {
@@ -1680,12 +2469,13 @@ export const documents = [
     organizationIds: ['org-010', 'org-011'],
     locationIds: ['loc-002'],
     eventIds: ['event-013', 'event-014'],
+    quotes: [],
+    activities: [],
     factionMentions: {
-      'faction-002': { sentiment: -0.12,
+      'faction-002': { sentiment: -0.12 },
+      'faction-003': { sentiment: -0.18 },
       'faction-008': { sentiment: -0.72 },
       'faction-013': { sentiment: -0.58 }
-    },
-      'faction-003': { sentiment: -0.18 }
     },
     highlights: [],
     comments: [
@@ -1717,7 +2507,7 @@ export const documents = [
     contentBlocks: [
       { type: 'paragraph', content: 'Texas Governor Greg Abbott announced Monday the deployment of 5,000 additional National Guard troops to the southern border, marking the largest state-led border enforcement operation in American history.' },
       { type: 'paragraph', content: 'The deployment targets areas around Eagle Pass and Del Rio, where federal authorities have reported surging migrant encounters. Abbott said the state would continue to fill what he called a "vacuum of federal leadership."' },
-      { type: 'quote', content: '"Texas will not sit idly by while the federal government fails to secure our border. We will defend our state with every resource at our disposal," Abbott said at a press conference in Austin.' }
+      { type: 'blockquote', content: '"Texas will not sit idly by while the federal government fails to secure our border. We will defend our state with every resource at our disposal," Abbott said at a press conference in Austin.' }
     ],
     excerpt: 'Texas Governor Greg Abbott announces deployment of 5,000 National Guard troops to border in largest state-led enforcement operation.',
     narrativeIds: ['narr-014'],
@@ -1727,12 +2517,39 @@ export const documents = [
     organizationIds: ['org-024', 'org-029'],
     locationIds: ['loc-010', 'loc-011'],
     eventIds: ['event-027'],
+    quotes: [
+      {
+        id: 'quote-032-01',
+        speakerId: 'person-027',
+        speakerType: 'person',
+        text: 'Texas will not sit idly by while the federal government fails to secure our border. We will defend our state with every resource at our disposal.'
+      }
+    ],
+    activities: [
+      {
+        id: 'activity-032-01',
+        actorId: 'person-027',
+        actorType: 'person',
+        action: 'deployed',
+        targetId: null,
+        targetType: null,
+        targetText: '5,000 National Guard troops to the border'
+      },
+      {
+        id: 'activity-032-02',
+        actorId: 'org-024',
+        actorType: 'organization',
+        action: 'launched',
+        targetId: null,
+        targetType: null,
+        targetText: 'largest state-led border enforcement operation in history'
+      }
+    ],
     factionMentions: {
-      'faction-001': { sentiment: 0.72,
+      'faction-001': { sentiment: 0.72 },
+      'faction-002': { sentiment: -0.65 },
       'faction-009': { sentiment: 0.65 },
       'faction-013': { sentiment: -0.58 }
-    },
-      'faction-002': { sentiment: -0.65 }
     },
     highlights: [],
     comments: []
@@ -1759,13 +2576,40 @@ export const documents = [
     organizationIds: ['org-029', 'org-030'],
     locationIds: ['loc-011'],
     eventIds: ['event-027'],
+    quotes: [
+      {
+        id: 'quote-033-01',
+        speakerId: 'org-030',
+        speakerType: 'organization',
+        text: 'The militarization of the border threatens the rights of asylum seekers and could result in family separations.'
+      }
+    ],
+    activities: [
+      {
+        id: 'activity-033-01',
+        actorId: 'org-030',
+        actorType: 'organization',
+        action: 'condemned',
+        targetId: 'org-029',
+        targetType: 'organization',
+        targetText: 'Texas National Guard deployment as dangerous overreach'
+      },
+      {
+        id: 'activity-033-02',
+        actorId: 'org-030',
+        actorType: 'organization',
+        action: 'warned',
+        targetId: null,
+        targetType: null,
+        targetText: 'border militarization could lead to humanitarian crises'
+      }
+    ],
     factionMentions: {
-      'faction-001': { sentiment: -0.55,
+      'faction-001': { sentiment: -0.55 },
+      'faction-002': { sentiment: 0.62 },
+      'faction-003': { sentiment: 0.78 },
       'faction-009': { sentiment: 0.65 },
       'faction-013': { sentiment: -0.58 }
-    },
-      'faction-002': { sentiment: 0.62 },
-      'faction-003': { sentiment: 0.78 }
     },
     highlights: [],
     comments: []
@@ -1792,12 +2636,48 @@ export const documents = [
     organizationIds: ['org-025'],
     locationIds: [],
     eventIds: ['event-028'],
+    quotes: [
+      {
+        id: 'quote-034-01',
+        speakerId: 'person-028',
+        speakerType: 'person',
+        text: 'Florida stands ready to support Texas and other states in defending our nation\'s borders.'
+      }
+    ],
+    activities: [
+      {
+        id: 'activity-034-01',
+        actorId: 'person-028',
+        actorType: 'person',
+        action: 'signed',
+        targetId: null,
+        targetType: null,
+        targetText: 'aggressive border enforcement bill'
+      },
+      {
+        id: 'activity-034-02',
+        actorId: 'org-025',
+        actorType: 'organization',
+        action: 'allocated',
+        targetId: 'org-024',
+        targetType: 'organization',
+        targetText: '$100 million to support Texas border enforcement'
+      },
+      {
+        id: 'activity-034-03',
+        actorId: 'person-028',
+        actorType: 'person',
+        action: 'pledged support for',
+        targetId: null,
+        targetType: null,
+        targetText: 'Texas border coalition'
+      }
+    ],
     factionMentions: {
-      'faction-001': { sentiment: 0.75,
+      'faction-001': { sentiment: 0.75 },
+      'faction-002': { sentiment: -0.68 },
       'faction-009': { sentiment: 0.65 },
       'faction-013': { sentiment: -0.58 }
-    },
-      'faction-002': { sentiment: -0.68 }
     },
     highlights: [],
     comments: []
@@ -1824,11 +2704,38 @@ export const documents = [
     organizationIds: ['org-028', 'org-022'],
     locationIds: ['loc-001'],
     eventIds: ['event-035'],
+    quotes: [
+      {
+        id: 'quote-035-01',
+        speakerId: 'org-028',
+        speakerType: 'organization',
+        text: 'This is the beginning of a long recovery process. We are committed to using every dollar wisely to save lives.'
+      }
+    ],
+    activities: [
+      {
+        id: 'activity-035-01',
+        actorId: 'org-028',
+        actorType: 'organization',
+        action: 'began distributing',
+        targetId: null,
+        targetType: null,
+        targetText: 'first opioid settlement payments to affected communities'
+      },
+      {
+        id: 'activity-035-02',
+        actorId: 'org-028',
+        actorType: 'organization',
+        action: 'allocated',
+        targetId: null,
+        targetType: null,
+        targetText: '$42 million to West Virginia for treatment programs'
+      }
+    ],
     factionMentions: {
-      'faction-005': { sentiment: 0.45,
+      'faction-005': { sentiment: 0.45 },
+      'faction-006': { sentiment: 0.38 },
       'faction-016': { sentiment: -0.48 }
-    },
-      'faction-006': { sentiment: 0.38 }
     },
     highlights: [],
     comments: []
@@ -1855,11 +2762,38 @@ export const documents = [
     organizationIds: ['org-028', 'org-022'],
     locationIds: ['loc-001'],
     eventIds: ['event-035'],
+    quotes: [
+      {
+        id: 'quote-036-01',
+        speakerId: 'org-022',
+        speakerType: 'organization',
+        text: 'The debate over treatment versus enforcement reflects fundamental disagreements about how to address addiction.'
+      }
+    ],
+    activities: [
+      {
+        id: 'activity-036-01',
+        actorId: 'org-022',
+        actorType: 'organization',
+        action: 'debated',
+        targetId: null,
+        targetType: null,
+        targetText: 'best use of opioid settlement funds'
+      },
+      {
+        id: 'activity-036-02',
+        actorId: 'org-028',
+        actorType: 'organization',
+        action: 'issued conflicting guidance on',
+        targetId: null,
+        targetType: null,
+        targetText: 'federal expectations for settlement fund use'
+      }
+    ],
     factionMentions: {
-      'faction-005': { sentiment: 0.35,
+      'faction-005': { sentiment: 0.35 },
+      'faction-006': { sentiment: 0.42 },
       'faction-016': { sentiment: -0.48 }
-    },
-      'faction-006': { sentiment: 0.42 }
     },
     highlights: [],
     comments: []
@@ -1886,12 +2820,39 @@ export const documents = [
     organizationIds: ['org-026'],
     locationIds: ['loc-009'],
     eventIds: ['event-029'],
+    quotes: [
+      {
+        id: 'quote-037-01',
+        speakerId: 'person-029',
+        speakerType: 'person',
+        text: 'States cannot usurp federal immigration authority. These state enforcement actions violate the Constitution\'s Supremacy Clause.'
+      }
+    ],
+    activities: [
+      {
+        id: 'activity-037-01',
+        actorId: 'person-029',
+        actorType: 'person',
+        action: 'filed federal lawsuit against',
+        targetId: 'org-024',
+        targetType: 'organization',
+        targetText: 'Texas and Florida border enforcement actions'
+      },
+      {
+        id: 'activity-037-02',
+        actorId: 'org-026',
+        actorType: 'organization',
+        action: 'sought injunction to prevent',
+        targetId: null,
+        targetType: null,
+        targetText: 'state-led deportations and arrests'
+      }
+    ],
     factionMentions: {
-      'faction-001': { sentiment: -0.72,
+      'faction-001': { sentiment: -0.72 },
+      'faction-002': { sentiment: 0.68 },
       'faction-009': { sentiment: 0.65 },
       'faction-013': { sentiment: -0.58 }
-    },
-      'faction-002': { sentiment: 0.68 }
     },
     highlights: [],
     comments: []
@@ -1918,12 +2879,39 @@ export const documents = [
     organizationIds: ['org-010'],
     locationIds: ['loc-001'],
     eventIds: ['event-030'],
+    quotes: [
+      {
+        id: 'quote-038-01',
+        speakerId: 'person-030',
+        speakerType: 'person',
+        text: 'The Department of Justice will ensure that state actions do not violate the civil rights of any person.'
+      }
+    ],
+    activities: [
+      {
+        id: 'activity-038-01',
+        actorId: 'person-030',
+        actorType: 'person',
+        action: 'opened civil rights investigation into',
+        targetId: 'org-024',
+        targetType: 'organization',
+        targetText: 'Texas border enforcement operations'
+      },
+      {
+        id: 'activity-038-02',
+        actorId: 'org-010',
+        actorType: 'organization',
+        action: 'is examining',
+        targetId: null,
+        targetType: null,
+        targetText: 'civil rights violations against migrants and asylum seekers'
+      }
+    ],
     factionMentions: {
-      'faction-001': { sentiment: -0.58,
+      'faction-001': { sentiment: -0.58 },
+      'faction-002': { sentiment: 0.55 },
       'faction-009': { sentiment: 0.65 },
       'faction-013': { sentiment: -0.58 }
-    },
-      'faction-002': { sentiment: 0.55 }
     },
     highlights: [],
     comments: []
@@ -1950,11 +2938,38 @@ export const documents = [
     organizationIds: ['org-027'],
     locationIds: ['loc-009'],
     eventIds: ['event-036'],
+    quotes: [
+      {
+        id: 'quote-039-01',
+        speakerId: 'org-027',
+        speakerType: 'organization',
+        text: 'The current allocation formula fails to account for the disproportionate impact on communities that bore the brunt of the epidemic.'
+      }
+    ],
+    activities: [
+      {
+        id: 'activity-039-01',
+        actorId: 'org-027',
+        actorType: 'organization',
+        action: 'filed lawsuits challenging',
+        targetId: null,
+        targetType: null,
+        targetText: 'opioid settlement allocation formula'
+      },
+      {
+        id: 'activity-039-02',
+        actorId: 'org-027',
+        actorType: 'organization',
+        action: 'asked Supreme Court to review',
+        targetId: null,
+        targetType: null,
+        targetText: 'distribution methodology'
+      }
+    ],
     factionMentions: {
-      'faction-005': { sentiment: -0.42,
+      'faction-005': { sentiment: -0.42 },
+      'faction-006': { sentiment: -0.35 },
       'faction-016': { sentiment: -0.48 }
-    },
-      'faction-006': { sentiment: -0.35 }
     },
     highlights: [],
     comments: []
@@ -1981,12 +2996,45 @@ export const documents = [
     organizationIds: ['org-024', 'org-025'],
     locationIds: ['loc-010'],
     eventIds: ['event-031'],
+    quotes: [
+      {
+        id: 'quote-040-01',
+        speakerId: 'person-027',
+        speakerType: 'person',
+        text: 'Together, our states will fill the void left by federal inaction and secure our borders.'
+      },
+      {
+        id: 'quote-040-02',
+        speakerId: 'person-028',
+        speakerType: 'person',
+        text: 'This coalition represents the most significant assertion of states\' rights on border security in decades.'
+      }
+    ],
+    activities: [
+      {
+        id: 'activity-040-01',
+        actorId: 'person-027',
+        actorType: 'person',
+        action: 'announced unified strategy with',
+        targetId: 'person-028',
+        targetType: 'person',
+        targetText: 'DeSantis and six other governors'
+      },
+      {
+        id: 'activity-040-02',
+        actorId: 'org-024',
+        actorType: 'organization',
+        action: 'pledged mutual aid with',
+        targetId: 'org-025',
+        targetType: 'organization',
+        targetText: 'Florida and coalition states'
+      }
+    ],
     factionMentions: {
-      'faction-001': { sentiment: 0.78,
+      'faction-001': { sentiment: 0.78 },
+      'faction-002': { sentiment: -0.72 },
       'faction-009': { sentiment: 0.65 },
       'faction-013': { sentiment: -0.58 }
-    },
-      'faction-002': { sentiment: -0.72 }
     },
     highlights: [],
     comments: []
@@ -2013,15 +3061,42 @@ export const documents = [
     organizationIds: ['org-020'],
     locationIds: ['loc-004'],
     eventIds: ['event-032'],
+    quotes: [
+      {
+        id: 'quote-041-01',
+        speakerId: 'person-032',
+        speakerType: 'person',
+        text: 'This bill is essential for our national security. We cannot continue to ignore the crisis at our southern border.'
+      }
+    ],
+    activities: [
+      {
+        id: 'activity-041-01',
+        actorId: 'org-020',
+        actorType: 'organization',
+        action: 'passed',
+        targetId: null,
+        targetType: null,
+        targetText: '$14 billion border security funding bill'
+      },
+      {
+        id: 'activity-041-02',
+        actorId: 'person-032',
+        actorType: 'person',
+        action: 'championed',
+        targetId: null,
+        targetType: null,
+        targetText: 'border security funding bill'
+      }
+    ],
     factionMentions: {
-      'faction-001': { sentiment: 0.62,
+      'faction-001': { sentiment: 0.62 },
+      'faction-002': { sentiment: -0.45 },
       'faction-007': { sentiment: 0.15 },
-      'faction-010': { sentiment: 0.35 },
-      'faction-016': { sentiment: -0.48 },
       'faction-009': { sentiment: 0.65 },
-      'faction-013': { sentiment: -0.58 }
-    },
-      'faction-002': { sentiment: -0.45 }
+      'faction-010': { sentiment: 0.35 },
+      'faction-013': { sentiment: -0.58 },
+      'faction-016': { sentiment: -0.48 }
     },
     highlights: [],
     comments: []
@@ -2048,13 +3123,40 @@ export const documents = [
     organizationIds: ['org-020'],
     locationIds: ['loc-004'],
     eventIds: ['event-033'],
+    quotes: [
+      {
+        id: 'quote-042-01',
+        speakerId: 'person-033',
+        speakerType: 'person',
+        text: 'This is a ransom demand, not a serious piece of legislation. We will not allow government funding to be held hostage to extreme border demands.'
+      }
+    ],
+    activities: [
+      {
+        id: 'activity-042-01',
+        actorId: 'person-033',
+        actorType: 'person',
+        action: 'blocked',
+        targetId: null,
+        targetType: null,
+        targetText: 'House-passed border security bill'
+      },
+      {
+        id: 'activity-042-02',
+        actorId: 'org-020',
+        actorType: 'organization',
+        action: 'headed toward',
+        targetId: null,
+        targetType: null,
+        targetText: 'government shutdown'
+      }
+    ],
     factionMentions: {
-      'faction-001': { sentiment: -0.68,
+      'faction-001': { sentiment: -0.68 },
+      'faction-002': { sentiment: 0.52 },
       'faction-007': { sentiment: 0.15 },
       'faction-010': { sentiment: 0.35 },
       'faction-016': { sentiment: -0.48 }
-    },
-      'faction-002': { sentiment: 0.52 }
     },
     highlights: [],
     comments: []
@@ -2081,13 +3183,46 @@ export const documents = [
     organizationIds: ['org-020'],
     locationIds: ['loc-004'],
     eventIds: [],
+    quotes: [
+      {
+        id: 'quote-043-01',
+        speakerId: 'person-032',
+        speakerType: 'person',
+        text: 'Senate Democrats are the ones shutting down the government by refusing to secure the border.'
+      },
+      {
+        id: 'quote-043-02',
+        speakerId: 'person-033',
+        speakerType: 'person',
+        text: 'House Republicans are putting politics above the needs of federal workers and the American public.'
+      }
+    ],
+    activities: [
+      {
+        id: 'activity-043-01',
+        actorId: 'person-032',
+        actorType: 'person',
+        action: 'blamed',
+        targetId: 'person-033',
+        targetType: 'person',
+        targetText: 'Senate Democrats for budget impasse'
+      },
+      {
+        id: 'activity-043-02',
+        actorId: 'person-033',
+        actorType: 'person',
+        action: 'blamed',
+        targetId: 'person-032',
+        targetType: 'person',
+        targetText: 'House Republicans for budget impasse'
+      }
+    ],
     factionMentions: {
-      'faction-001': { sentiment: -0.35,
+      'faction-001': { sentiment: -0.35 },
+      'faction-002': { sentiment: -0.42 },
       'faction-007': { sentiment: 0.15 },
       'faction-010': { sentiment: 0.35 },
       'faction-016': { sentiment: -0.48 }
-    },
-      'faction-002': { sentiment: -0.42 }
     },
     highlights: [],
     comments: []
@@ -2114,13 +3249,40 @@ export const documents = [
     organizationIds: ['org-020'],
     locationIds: ['loc-001'],
     eventIds: ['event-034'],
+    quotes: [
+      {
+        id: 'quote-044-01',
+        speakerId: 'org-020',
+        speakerType: 'organization',
+        text: 'We deeply regret that Congress failed to reach an agreement. Federal workers deserve better.'
+      }
+    ],
+    activities: [
+      {
+        id: 'activity-044-01',
+        actorId: 'org-020',
+        actorType: 'organization',
+        action: 'failed to pass',
+        targetId: null,
+        targetType: null,
+        targetText: 'government funding bill'
+      },
+      {
+        id: 'activity-044-02',
+        actorId: null,
+        actorType: null,
+        action: 'furloughed',
+        targetId: null,
+        targetType: null,
+        targetText: 'hundreds of thousands of federal workers'
+      }
+    ],
     factionMentions: {
-      'faction-001': { sentiment: -0.52,
+      'faction-001': { sentiment: -0.52 },
+      'faction-002': { sentiment: -0.55 },
       'faction-007': { sentiment: 0.15 },
       'faction-010': { sentiment: 0.35 },
       'faction-016': { sentiment: -0.48 }
-    },
-      'faction-002': { sentiment: -0.55 }
     },
     highlights: [],
     comments: []
@@ -2147,13 +3309,40 @@ export const documents = [
     organizationIds: ['org-020'],
     locationIds: ['loc-001'],
     eventIds: [],
+    quotes: [
+      {
+        id: 'quote-045-01',
+        speakerId: 'org-020',
+        speakerType: 'organization',
+        text: 'Our members are facing real hardship. We need Congress to act now to end this shutdown.'
+      }
+    ],
+    activities: [
+      {
+        id: 'activity-045-01',
+        actorId: 'org-020',
+        actorType: 'organization',
+        action: 'continued shutdown entering',
+        targetId: null,
+        targetType: null,
+        targetText: 'second week without resolution'
+      },
+      {
+        id: 'activity-045-02',
+        actorId: null,
+        actorType: null,
+        action: 'called for',
+        targetId: 'org-020',
+        targetType: 'organization',
+        targetText: 'emergency legislation to end impasse'
+      }
+    ],
     factionMentions: {
-      'faction-001': { sentiment: -0.48,
+      'faction-001': { sentiment: -0.48 },
+      'faction-002': { sentiment: -0.45 },
       'faction-007': { sentiment: 0.15 },
       'faction-010': { sentiment: 0.35 },
       'faction-016': { sentiment: -0.48 }
-    },
-      'faction-002': { sentiment: -0.45 }
     },
     highlights: [],
     comments: []
@@ -2180,13 +3369,46 @@ export const documents = [
     organizationIds: ['org-020'],
     locationIds: ['loc-001'],
     eventIds: [],
+    quotes: [
+      {
+        id: 'quote-046-01',
+        speakerId: 'person-032',
+        speakerType: 'person',
+        text: 'This compromise isn\'t perfect, but it allows us to move forward and get federal workers back to their jobs.'
+      },
+      {
+        id: 'quote-046-02',
+        speakerId: 'person-033',
+        speakerType: 'person',
+        text: 'We prevented the most extreme border provisions while ensuring the government can reopen.'
+      }
+    ],
+    activities: [
+      {
+        id: 'activity-046-01',
+        actorId: 'org-020',
+        actorType: 'organization',
+        action: 'reached compromise ending',
+        targetId: null,
+        targetType: null,
+        targetText: '18-day government shutdown'
+      },
+      {
+        id: 'activity-046-02',
+        actorId: 'person-032',
+        actorType: 'person',
+        action: 'agreed to',
+        targetId: 'person-033',
+        targetType: 'person',
+        targetText: 'modest border security funding increase'
+      }
+    ],
     factionMentions: {
-      'faction-001': { sentiment: 0.25,
+      'faction-001': { sentiment: 0.25 },
+      'faction-002': { sentiment: 0.28 },
       'faction-007': { sentiment: 0.15 },
       'faction-010': { sentiment: 0.35 },
       'faction-016': { sentiment: -0.48 }
-    },
-      'faction-002': { sentiment: 0.28 }
     },
     highlights: [],
     comments: []
@@ -2212,14 +3434,15 @@ export const documents = [
     organizationIds: ['org-027'],
     locationIds: ['loc-009'],
     eventIds: ['event-037'],
+    quotes: [],
+    activities: [],
     factionMentions: {
-      'faction-001': { sentiment: 0.55,
+      'faction-001': { sentiment: 0.55 },
+      'faction-002': { sentiment: -0.62 },
+      'faction-004': { sentiment: 0.48 },
       'faction-009': { sentiment: 0.65 },
       'faction-010': { sentiment: 0.35 },
       'faction-015': { sentiment: 0.25 }
-    },
-      'faction-002': { sentiment: -0.62 },
-      'faction-004': { sentiment: 0.48 }
     },
     highlights: [],
     comments: []
@@ -2245,12 +3468,13 @@ export const documents = [
     organizationIds: [],
     locationIds: ['loc-004'],
     eventIds: [],
+    quotes: [],
+    activities: [],
     factionMentions: {
-      'faction-004': { sentiment: 0.65,
+      'faction-004': { sentiment: 0.65 },
       'faction-009': { sentiment: 0.65 },
       'faction-010': { sentiment: 0.35 },
       'faction-015': { sentiment: 0.25 }
-    }
     },
     highlights: [],
     comments: []
@@ -2276,14 +3500,15 @@ export const documents = [
     organizationIds: ['org-030'],
     locationIds: ['loc-009'],
     eventIds: [],
+    quotes: [],
+    activities: [],
     factionMentions: {
-      'faction-001': { sentiment: -0.72,
+      'faction-001': { sentiment: -0.72 },
+      'faction-002': { sentiment: 0.68 },
+      'faction-003': { sentiment: 0.55 },
       'faction-009': { sentiment: 0.65 },
       'faction-010': { sentiment: 0.35 },
       'faction-015': { sentiment: 0.25 }
-    },
-      'faction-002': { sentiment: 0.68 },
-      'faction-003': { sentiment: 0.55 }
     },
     highlights: [],
     comments: []
@@ -2309,13 +3534,14 @@ export const documents = [
     organizationIds: ['org-012'],
     locationIds: ['loc-001'],
     eventIds: ['event-038'],
+    quotes: [],
+    activities: [],
     factionMentions: {
-      'faction-001': { sentiment: 0.72,
+      'faction-001': { sentiment: 0.72 },
+      'faction-002': { sentiment: -0.78 },
       'faction-009': { sentiment: 0.65 },
       'faction-010': { sentiment: 0.35 },
       'faction-015': { sentiment: 0.25 }
-    },
-      'faction-002': { sentiment: -0.78 }
     },
     highlights: [],
     comments: []
@@ -2341,12 +3567,13 @@ export const documents = [
     organizationIds: [],
     locationIds: ['loc-004'],
     eventIds: [],
+    quotes: [],
+    activities: [],
     factionMentions: {
-      'faction-004': { sentiment: 0.58,
+      'faction-004': { sentiment: 0.58 },
       'faction-009': { sentiment: 0.65 },
       'faction-010': { sentiment: 0.35 },
       'faction-015': { sentiment: 0.25 }
-    }
     },
     highlights: [],
     comments: []
@@ -2372,15 +3599,16 @@ export const documents = [
     organizationIds: ['org-031'],
     locationIds: ['loc-009'],
     eventIds: [],
+    quotes: [],
+    activities: [],
     factionMentions: {
-      'faction-001': { sentiment: 0.82,
+      'faction-001': { sentiment: 0.82 },
+      'faction-002': { sentiment: -0.75 },
+      'faction-007': { sentiment: 0.15 },
       'faction-009': { sentiment: 0.65 },
       'faction-010': { sentiment: 0.35 },
       'faction-015': { sentiment: 0.25 },
-      'faction-007': { sentiment: 0.15 },
       'faction-016': { sentiment: -0.48 }
-    },
-      'faction-002': { sentiment: -0.75 }
     },
     highlights: [],
     comments: []
@@ -2407,11 +3635,12 @@ export const documents = [
     organizationIds: ['org-022', 'org-027'],
     locationIds: ['loc-001'],
     eventIds: [],
+    quotes: [],
+    activities: [],
     factionMentions: {
-      'faction-005': { sentiment: -0.38,
+      'faction-005': { sentiment: -0.38 },
+      'faction-006': { sentiment: -0.32 },
       'faction-016': { sentiment: -0.48 }
-    },
-      'faction-006': { sentiment: -0.32 }
     },
     highlights: [],
     comments: []
@@ -2438,12 +3667,13 @@ export const documents = [
     organizationIds: [],
     locationIds: ['loc-011'],
     eventIds: [],
+    quotes: [],
+    activities: [],
     factionMentions: {
-      'faction-001': { sentiment: 0.65,
+      'faction-001': { sentiment: 0.65 },
+      'faction-002': { sentiment: -0.42 },
       'faction-009': { sentiment: 0.65 },
       'faction-013': { sentiment: -0.58 }
-    },
-      'faction-002': { sentiment: -0.42 }
     },
     highlights: [],
     comments: []
@@ -2469,14 +3699,15 @@ export const documents = [
     organizationIds: ['org-027'],
     locationIds: ['loc-004'],
     eventIds: [],
+    quotes: [],
+    activities: [],
     factionMentions: {
-      'faction-001': { sentiment: 0.45,
+      'faction-001': { sentiment: 0.45 },
+      'faction-002': { sentiment: 0.38 },
+      'faction-004': { sentiment: 0.52 },
       'faction-009': { sentiment: 0.65 },
       'faction-010': { sentiment: 0.35 },
       'faction-015': { sentiment: 0.25 }
-    },
-      'faction-002': { sentiment: 0.38 },
-      'faction-004': { sentiment: 0.52 }
     },
     highlights: [],
     comments: []
@@ -2502,15 +3733,16 @@ export const documents = [
     organizationIds: ['org-020'],
     locationIds: ['loc-004'],
     eventIds: [],
+    quotes: [],
+    activities: [],
     factionMentions: {
-      'faction-001': { sentiment: 0.35,
+      'faction-001': { sentiment: 0.35 },
+      'faction-002': { sentiment: 0.32 },
+      'faction-007': { sentiment: 0.15 },
       'faction-009': { sentiment: 0.65 },
       'faction-010': { sentiment: 0.35 },
       'faction-015': { sentiment: 0.25 },
-      'faction-007': { sentiment: 0.15 },
       'faction-016': { sentiment: -0.48 }
-    },
-      'faction-002': { sentiment: 0.32 }
     },
     highlights: [],
     comments: []
@@ -2528,7 +3760,7 @@ export const documents = [
     author: {
       username: 'u/politics_watcher_2025',
       displayName: 'politics_watcher_2025',
-      avatarUrl: 'img/placeholders/avatar-default.svg'
+      avatarUrl: 'https://i.pravatar.cc/150?u=politics_watcher_2025'
     },
     contentBlocks: [
       { type: 'paragraph', content: '**Megathread: European leaders respond to Trump\'s Greenland acquisition comments**\n\nThis thread is for discussing the ongoing diplomatic fallout from recent Greenland statements. Please keep discussion civil.\n\nKey developments:\n- Macron calls emergency EU meeting\n- Danish PM rejects any discussion of sale\n- Greenland Premier says "not for sale at any price"' }
@@ -2560,7 +3792,7 @@ export const documents = [
     author: {
       username: '@political_analyst',
       displayName: 'Political Analysis Daily',
-      avatarUrl: 'img/placeholders/avatar-default.svg'
+      avatarUrl: 'https://i.pravatar.cc/150?u=political_analyst'
     },
     contentBlocks: [
       { type: 'paragraph', content: 'THREAD: Let\'s break down DOJ\'s new immigration enforcement strategy 🧵\n\n1/ The subpoena threats against state officials are unprecedented\n2/ Legal experts say this could set dangerous precedents for federalism\n3/ Minnesota is unlikely to comply without court orders\n4/ This is heading to SCOTUS eventually' }
@@ -2593,7 +3825,7 @@ export const documents = [
     author: {
       username: '@nutrition_facts',
       displayName: 'Dr. Sarah Nutrition',
-      avatarUrl: 'img/placeholders/avatar-default.svg'
+      avatarUrl: 'https://i.pravatar.cc/150?u=nutrition_facts'
     },
     contentBlocks: [
       { type: 'paragraph', content: 'POV: You just learned what sodium nitrite does to your body 😱 Foods I\'m cutting immediately #health #nutrition #cancerprevention #foodsafety #whatieatinaday', portionMark: { classification: 'U', handling: '' } }
@@ -2629,7 +3861,7 @@ export const documents = [
     author: {
       username: 'minnesota.neighbor',
       displayName: 'Minnesota Community Watch',
-      avatarUrl: 'img/placeholders/avatar-default.svg'
+      avatarUrl: 'https://i.pravatar.cc/150?u=minnesota.neighbor'
     },
     contentBlocks: [
       { type: 'paragraph', content: 'Has anyone else noticed increased federal vehicle presence in the Uptown area? Our neighborhood watch wants to make sure everyone knows their rights. Sharing resources in comments. Please be safe and look out for each other. 🙏' }
@@ -2661,7 +3893,7 @@ export const documents = [
     author: {
       username: 'jennifer.policy.expert',
       displayName: 'Jennifer Morrison, PhD - Health Policy',
-      avatarUrl: 'img/placeholders/avatar-default.svg'
+      avatarUrl: 'https://i.pravatar.cc/150?u=jennifer.policy.expert'
     },
     contentBlocks: [
       { type: 'paragraph', content: 'The new USDA dietary guidelines represent a significant departure from scientific consensus. As someone who has worked in nutrition policy for 20 years, I\'m deeply concerned about the environmental and public health implications of recommending near-doubled meat consumption. My full analysis: [link]\n\n#HealthPolicy #Nutrition #PublicHealth' }
@@ -2692,7 +3924,7 @@ export const documents = [
     author: {
       username: 'u/indiana_local_news',
       displayName: 'indiana_local_news',
-      avatarUrl: 'img/placeholders/avatar-default.svg'
+      avatarUrl: 'https://i.pravatar.cc/150?u=indiana_local_news'
     },
     contentBlocks: [
       { type: 'paragraph', content: '**Indiana judge and wife shot at home - suspect at large**\n\nJudge Steven Meyer and his wife Kimberly were shot at their Lafayette home. Both in stable condition. This is terrifying for our community.\n\nAnyone else concerned about the rise in threats against judges? The Indiana Supreme Court Chief Justice just urged all judges to "remain vigilant."' }
@@ -2723,7 +3955,7 @@ export const documents = [
     author: {
       username: '@border_reporter',
       displayName: 'Border Coverage Network',
-      avatarUrl: 'img/placeholders/avatar-default.svg'
+      avatarUrl: 'https://i.pravatar.cc/150?u=border_reporter'
     },
     contentBlocks: [
       { type: 'paragraph', content: 'Just witnessed another convoy of Texas National Guard vehicles heading to Eagle Pass. Governor Abbott\'s deployment now exceeds 5,000 troops. This is the largest state border operation in modern history. Federal officials are not happy. 📸 [photos attached]' }
@@ -2755,7 +3987,7 @@ export const documents = [
     author: {
       username: '@govt_worker',
       displayName: 'Fed Life Stories',
-      avatarUrl: 'img/placeholders/avatar-default.svg'
+      avatarUrl: 'https://i.pravatar.cc/150?u=govt_worker'
     },
     contentBlocks: [
       { type: 'paragraph', content: 'Day 5 of the shutdown diary 📓 No idea when we\'ll get paid, rent due next week #shutdown #federalworkers #governmentshutdown #fedlife #storytime', portionMark: { classification: 'U', handling: '' } }
@@ -2791,7 +4023,7 @@ export const documents = [
     author: {
       username: 'cities.church.member',
       displayName: 'Cities Church Community',
-      avatarUrl: 'img/placeholders/avatar-default.svg'
+      avatarUrl: 'https://i.pravatar.cc/150?u=cities.church.member'
     },
     contentBlocks: [
       { type: 'paragraph', content: 'Our church family was deeply shaken by Sunday\'s events. Whatever your views on politics, disrupting worship is not the answer. We are praying for peace and understanding in our community. Pastor David has asked us to respond with grace. Please join us in prayer. 🙏✝️' }
@@ -2823,7 +4055,7 @@ export const documents = [
     author: {
       username: 'michael.legal.analysis',
       displayName: 'Michael Chen, JD - Constitutional Law',
-      avatarUrl: 'img/placeholders/avatar-default.svg'
+      avatarUrl: 'https://i.pravatar.cc/150?u=michael.legal.analysis'
     },
     contentBlocks: [
       { type: 'paragraph', content: 'The DOJ\'s invocation of the FACE Act for the Minnesota church protest raises significant legal questions. Originally designed to protect abortion clinics, its 2021 expansion to houses of worship creates novel enforcement scenarios. Key considerations for legal professionals:\n\n1. Intent requirements under the statute\n2. First Amendment assembly protections\n3. Selective prosecution concerns\n\nFull analysis on my blog. #Law #ConstitutionalLaw #FirstAmendment' }
@@ -2854,7 +4086,7 @@ export const documents = [
     author: {
       username: 'u/recovery_advocate',
       displayName: 'recovery_advocate',
-      avatarUrl: 'img/placeholders/avatar-default.svg'
+      avatarUrl: 'https://i.pravatar.cc/150?u=recovery_advocate'
     },
     contentBlocks: [
       { type: 'paragraph', content: '**Where is the opioid settlement money going?**\n\nMy county was devastated by the opioid crisis. We lost so many people. Now that the settlement funds are being distributed, I\'m trying to track where the money is actually going.\n\nHas anyone seen actual treatment programs funded in their area? Or is it all going to general budgets?\n\nThis matters. People are still dying.' }
@@ -2886,7 +4118,7 @@ export const documents = [
     author: {
       username: '@capitol_watch',
       displayName: 'Capitol Security Monitor',
-      avatarUrl: 'img/placeholders/avatar-default.svg'
+      avatarUrl: 'https://i.pravatar.cc/150?u=capitol_watch'
     },
     contentBlocks: [
       { type: 'paragraph', content: 'NEW: Capitol Police expanding security perimeter ahead of January certification. Sources say they\'re preparing for potential challenges. National Guard on standby. Very different posture than 2020. The lessons of J6 are being applied. 🏛️' }
@@ -2919,7 +4151,7 @@ export const documents = [
     author: {
       username: '@plantbased_living',
       displayName: 'Plant Based Sarah',
-      avatarUrl: 'img/placeholders/avatar-default.svg'
+      avatarUrl: 'https://i.pravatar.cc/150?u=plantbased_living'
     },
     contentBlocks: [
       { type: 'paragraph', content: 'New dietary guidelines want us to eat MORE meat in 2025?? 🥩❌ Make it make sense #vegan #plantbased #dietaryguidelines #healthyeating #climatechange', portionMark: { classification: 'U', handling: '' } }
@@ -2955,7 +4187,7 @@ export const documents = [
     author: {
       username: 'ca.politics.discussion',
       displayName: 'California Political Discussion',
-      avatarUrl: 'img/placeholders/avatar-default.svg'
+      avatarUrl: 'https://i.pravatar.cc/150?u=ca.politics.discussion'
     },
     contentBlocks: [
       { type: 'paragraph', content: 'Governor Newsom just filed the federal lawsuit against Texas and Florida\'s border operations. This is going to be a landmark federalism case. What do you all think - does California have standing here? Is this about principles or politics?\n\nPlease keep discussion respectful. 🗳️' }

@@ -14,7 +14,9 @@ import {
   NarrativeListCard,
   ThemeListCard,
   NetworkGraphCard,
-  MapCard
+  MapCard,
+  QuotesTableCard,
+  ActivitiesTableCard
 } from '../components/CardComponents.js';
 import { 
   DOCUMENT_TYPES, 
@@ -98,6 +100,26 @@ export class DocumentView extends BaseView {
   setupCards(doc, data) {
     const personIds = data.persons.map(p => p.id);
     const orgIds = data.organizations.map(o => o.id);
+
+    // Quotes Table (first card)
+    const quotes = doc.quotes || [];
+    if (quotes.length > 0) {
+      this.cardManager.add(new QuotesTableCard(this, 'doc-quotes', {
+        title: 'Quotes',
+        quotes: quotes,
+        halfWidth: true
+      }));
+    }
+
+    // Activities Table (second card)
+    const activities = doc.activities || [];
+    if (activities.length > 0) {
+      this.cardManager.add(new ActivitiesTableCard(this, 'doc-activities', {
+        title: 'Activities',
+        activities: activities,
+        halfWidth: true
+      }));
+    }
 
     // Related Narratives
     if (data.narratives.length > 0) {

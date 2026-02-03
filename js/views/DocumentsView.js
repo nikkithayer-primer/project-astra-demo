@@ -109,10 +109,13 @@ export class DocumentsView extends BaseView {
       ${headerHtml}
 
       <div class="content-area">
-        <div class="card">
+        <div class="card card-document-table">
           <div class="card-header">
             <span class="card-title">All Documents</span>
             <div class="card-header-actions">
+              <!-- Expand Data Button -->
+              <button class="btn btn-secondary btn-small" id="expand-data-btn">Expand data</button>
+              
               <!-- Document Type Filter -->
               <div class="filter-control">
                 <label class="filter-label">Type</label>
@@ -196,6 +199,15 @@ export class DocumentsView extends BaseView {
   }
 
   attachFilterListeners() {
+    // Expand data button (placeholder)
+    const expandDataBtn = document.getElementById('expand-data-btn');
+    if (expandDataBtn) {
+      this.addListener(expandDataBtn, 'click', () => {
+        // TODO: Implement expand data functionality
+        console.log('Expand data clicked');
+      });
+    }
+    
     // Document type filter
     const documentTypeSelect = document.getElementById('document-type-filter');
     if (documentTypeSelect) {

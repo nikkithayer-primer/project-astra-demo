@@ -168,7 +168,7 @@ const SCHEMAS = {
                'contentBlocks', 'narrativeIds', 'themeIds', 'topicIds',
                'personIds', 'organizationIds', 'locationIds', 'eventIds',
                'metrics', 'highlights', 'comments', 'tagIds', 'createdAt',
-               'structuredData'],
+               'structuredData', 'quotes', 'activities'],
     types: {
       title: 'string',
       documentType: ['news_article', 'social_post', 'internal_report',
@@ -177,7 +177,10 @@ const SCHEMAS = {
       classification: ['U', 'CUI', 'C', 'S', 'TS'],
       publishedDate: 'datetime',
       factionMentions: { type: 'factionMentionsMap' },
-      structuredData: 'object'
+      structuredData: 'object',
+      contentBlocks: { type: 'contentBlocksArray' },
+      quotes: { type: 'quotesArray' },
+      activities: { type: 'activitiesArray' }
     },
     references: {
       repositoryId: 'repositories',
@@ -611,6 +614,175 @@ export class SchemaValidator {
                 `${field}['${factionId}'] must be a number between -1 and 1`,
                 { field, entity: entityId }
               );
+            }
+          }
+        }
+      }
+
+      // contentBlocks array validation
+      if (typeSpec.type === 'contentBlocksArray') {
+        if (!Array.isArray(value)) {
+          result.addError(`${field} must be an array`, { field, entity: entityId });
+        } else {
+          const validBlockTypes = ['paragraph', 'heading', 'blockquote', 'image', 'list'];
+          for (let i = 0; i < value.length; i++) {
+            const block = value[i];
+            const ctx = { field: `${field}[${i}]`, entity: entityId };
+
+            // Validate block type
+            if (block.type && !validBlockTypes.includes(block.type)) {
+              result.addWarning(
+                `Invalid block type '${block.type}'. Valid: ${validBlockTypes.join(', ')}`,
+                ctx
+              );
+            }
+
+            // Validate entityMentions if present
+            if (block.entityMentions && Array.isArray(block.entityMentions)) {
+              for (let j = 0; j < block.entityMentions.length; j++) {
+                const mention = block.entityMentions[j];
+                const mentionCtx = { field: `${field}[${i}].entityMentions[${j}]`, entity: entityId };
+
+                if (typeof mention.startOffset !== 'number') {
+                  result.addError(`Missing or invalid startOffset`, mentionCtx);
+                }
+                if (typeof mention.endOffset !== 'number') {
+                  result.addError(`Missing or invalid endOffset`, mentionCtx);
+                }
+                if (!mention.entityType || typeof mention.entityType !== 'string') {
+                  result.addError(`Missing or invalid entityType`, mentionCtx);
+                }
+                if (!mention.entityId || typeof mention.entityId !== 'string') {
+                  result.addError(`Missing or invalid entityId`, mentionCtx);
+                }
+
+                // Validate entityId prefix matches entityType
+                if (mention.entityType && mention.entityId) {
+                  const prefixMap = { person: 'person-', organization: 'org-', location: 'loc-', event: 'event-' };
+                  const expectedPrefix = prefixMap[mention.entityType];
+                  if (expectedPrefix && !mention.entityId.startsWith(expectedPrefix)) {
+                    result.addWarning(
+                      `entityId '${mention.entityId}' doesn't match entityType '${mention.entityType}'`,
+                      mentionCtx
+                    );
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+
+      // quotes array validation
+      if (typeSpec.type === 'quotesArray') {
+        if (!Array.isArray(value)) {
+          result.addError(`${field} must be an array`, { field, entity: entityId });
+        } else {
+          for (let i = 0; i < value.length; i++) {
+            const quote = value[i];
+            const ctx = { field: `${field}[${i}]`, entity: entityId };
+
+            // Required fields
+            if (!quote.id || typeof quote.id !== 'string') {
+              result.addError(`Missing or invalid id`, ctx);
+            }
+            if (!quote.speakerId || typeof quote.speakerId !== 'string') {
+              result.addError(`Missing or invalid speakerId`, ctx);
+            }
+            if (!quote.speakerType) {
+              result.addError(`Missing speakerType`, ctx);
+            } else if (!['person', 'organization'].includes(quote.speakerType)) {
+              result.addError(
+                `speakerType must be 'person' or 'organization', got '${quote.speakerType}'`,
+                ctx
+              );
+            }
+            if (!quote.text || typeof quote.text !== 'string') {
+              result.addError(`Missing or invalid text`, ctx);
+            }
+
+            // Cross-validate speakerId prefix matches speakerType
+            if (quote.speakerId && quote.speakerType) {
+              const expectedPrefix = quote.speakerType === 'person' ? 'person-' : 'org-';
+              if (!quote.speakerId.startsWith(expectedPrefix)) {
+                result.addWarning(
+                  `speakerId '${quote.speakerId}' doesn't match speakerType '${quote.speakerType}'`,
+                  ctx
+                );
+              }
+            }
+          }
+        }
+      }
+
+      // activities array validation
+      if (typeSpec.type === 'activitiesArray') {
+        if (!Array.isArray(value)) {
+          result.addError(`${field} must be an array`, { field, entity: entityId });
+        } else {
+          for (let i = 0; i < value.length; i++) {
+            const activity = value[i];
+            const ctx = { field: `${field}[${i}]`, entity: entityId };
+
+            // Required fields
+            if (!activity.id || typeof activity.id !== 'string') {
+              result.addError(`Missing or invalid id`, ctx);
+            }
+            if (!activity.actorId || typeof activity.actorId !== 'string') {
+              result.addError(`Missing or invalid actorId`, ctx);
+            }
+            if (!activity.actorType) {
+              result.addError(`Missing actorType`, ctx);
+            } else if (!['person', 'organization'].includes(activity.actorType)) {
+              result.addError(
+                `actorType must be 'person' or 'organization', got '${activity.actorType}'`,
+                ctx
+              );
+            }
+            if (!activity.action || typeof activity.action !== 'string') {
+              result.addError(`Missing or invalid action`, ctx);
+            }
+            if (activity.targetText === undefined || typeof activity.targetText !== 'string') {
+              result.addError(`Missing or invalid targetText`, ctx);
+            }
+
+            // Cross-validate actorId prefix matches actorType
+            if (activity.actorId && activity.actorType) {
+              const expectedPrefix = activity.actorType === 'person' ? 'person-' : 'org-';
+              if (!activity.actorId.startsWith(expectedPrefix)) {
+                result.addWarning(
+                  `actorId '${activity.actorId}' doesn't match actorType '${activity.actorType}'`,
+                  ctx
+                );
+              }
+            }
+
+            // Validate optional target fields if present
+            if (activity.targetId !== undefined && activity.targetId !== null) {
+              if (typeof activity.targetId !== 'string') {
+                result.addError(`targetId must be a string`, ctx);
+              }
+            }
+            if (activity.targetType !== undefined && activity.targetType !== null) {
+              const validTargetTypes = ['person', 'organization', 'location', 'event'];
+              if (!validTargetTypes.includes(activity.targetType)) {
+                result.addWarning(
+                  `targetType '${activity.targetType}' is non-standard. Valid: ${validTargetTypes.join(', ')}`,
+                  ctx
+                );
+              }
+            }
+
+            // Cross-validate targetId prefix matches targetType (if both present)
+            if (activity.targetId && activity.targetType) {
+              const prefixMap = { person: 'person-', organization: 'org-', location: 'loc-', event: 'event-' };
+              const expectedPrefix = prefixMap[activity.targetType];
+              if (expectedPrefix && !activity.targetId.startsWith(expectedPrefix)) {
+                result.addWarning(
+                  `targetId '${activity.targetId}' doesn't match targetType '${activity.targetType}'`,
+                  ctx
+                );
+              }
             }
           }
         }

@@ -45,6 +45,18 @@ export class DocumentContentRenderer extends BaseComponent {
     return num.toString();
   }
 
+  /**
+   * Get user initials from display name
+   */
+  getInitials(name) {
+    if (!name) return '?';
+    const parts = name.trim().split(/\s+/);
+    if (parts.length === 1) {
+      return parts[0].charAt(0).toUpperCase();
+    }
+    return (parts[0].charAt(0) + parts[parts.length - 1].charAt(0)).toUpperCase();
+  }
+
   formatDate(dateString) {
     if (!dateString) return '';
     const date = new Date(dateString);
@@ -202,7 +214,7 @@ export class DocumentContentRenderer extends BaseComponent {
     const repliesHtml = (comment.replies || []).map(reply => `
       <div class="comment-item comment-reply">
         <div class="comment-avatar">
-          <img src="${reply.user?.avatarUrl || 'img/placeholders/avatar-default.svg'}" alt="${reply.user?.displayName || 'User'}">
+          <span class="avatar-initials">${this.getInitials(reply.user?.displayName)}</span>
         </div>
         <div class="comment-content">
           <div class="comment-header">
@@ -230,7 +242,7 @@ export class DocumentContentRenderer extends BaseComponent {
         <div class="comment-thread-body">
           <div class="comment-item">
             <div class="comment-avatar">
-              <img src="${comment.user?.avatarUrl || 'img/placeholders/avatar-default.svg'}" alt="${comment.user?.displayName || 'User'}">
+              <span class="avatar-initials">${this.getInitials(comment.user?.displayName)}</span>
             </div>
             <div class="comment-content">
               <div class="comment-header">

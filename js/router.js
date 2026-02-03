@@ -695,8 +695,10 @@ export class Router {
     }
 
     // Initialize sticky header behavior
+    // Force collapsed on Documents tab to maximize space for document viewer
     try {
-      initStickyHeader();
+      const isDocumentsTab = filterOptions.tab === 'documents';
+      initStickyHeader({ forceCollapsed: isDocumentsTab });
     } catch (e) {
       console.error('Router: Error initializing sticky header:', e);
     }

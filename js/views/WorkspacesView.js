@@ -6,47 +6,18 @@
 import { BaseView } from './BaseView.js';
 import { DataService } from '../data/DataService.js';
 import { PageHeader } from '../utils/PageHeader.js';
-import { CardBuilder } from '../utils/CardBuilder.js';
+import { CollectionList } from '../components/CollectionList.js';
 import { getWorkspaceEditor } from '../components/WorkspaceEditorModal.js';
 import { dataStore } from '../data/DataStore.js';
-import { Dropdown } from '../components/Dropdown.js';
 
 export class WorkspacesView extends BaseView {
   constructor(container, options = {}) {
     super(container, options);
+    this.collectionList = null;
   }
 
   async render() {
     const workspaces = DataService.getWorkspaces();
-    const activeWorkspaces = workspaces.filter(w => w.status === 'active');
-    const archivedWorkspaces = workspaces.filter(w => w.status === 'archived');
-
-    // Build workspace cards
-    const activeCardsHtml = activeWorkspaces.map(w => this.renderWorkspaceCard(w)).join('');
-    const archivedCardsHtml = archivedWorkspaces.map(w => this.renderWorkspaceCard(w)).join('');
-
-    // Build archived section if there are any
-    const archivedSectionHtml = archivedWorkspaces.length > 0 ? `
-      <div class="content-section">
-        <h3 class="section-title text-muted">Archived</h3>
-        <div class="content-grid">
-          ${archivedCardsHtml}
-        </div>
-      </div>
-    ` : '';
-
-    // Build content based on whether we have workspaces
-    let contentHtml;
-    if (workspaces.length === 0) {
-      contentHtml = this.renderEmptyState();
-    } else {
-      contentHtml = `
-        <div class="content-grid">
-          ${activeCardsHtml}
-        </div>
-        ${archivedSectionHtml}
-      `;
-    }
 
     const headerHtml = PageHeader.render({
       breadcrumbs: [
@@ -63,84 +34,40 @@ export class WorkspacesView extends BaseView {
       ${headerHtml}
       
       <div class="content-area">
-        ${contentHtml}
-      </div>
-    `;
-
-    // Set up click handlers
-    this.setupEventHandlers();
-  }
-
-  /**
-   * Render a single workspace card
-   * @param {Object} workspace - The workspace object
-   * @returns {string} HTML string
-   */
-  renderWorkspaceCard(workspace) {
-    const docCount = workspace.documentIds?.length || 0;
-    const isArchived = workspace.status === 'archived';
-    const updatedAt = this.formatRelativeTime(workspace.updatedAt);
-
-    // Build actions HTML using CardBuilder
-    const actionsHtml = CardBuilder.actionMenu('workspace', workspace.id, { isArchived });
-
-    return `
-      <div class="card card-half-width workspace-card" data-workspace-id="${workspace.id}">
-        <div class="card-header">
-          <h2 class="card-title">${this.escapeHtml(workspace.name)}</h2>
-          <div class="card-header-actions">${actionsHtml}</div>
-        </div>
-        <div class="card-body">
-          <p class="text-sm text-secondary mb-md">Search: "${this.escapeHtml(workspace.query)}"</p>
-          ${workspace.description ? `<p class="text-xs text-muted mb-md">${this.escapeHtml(workspace.description)}</p>` : ''}
-          <div class="flex gap-sm">
-            <span class="badge">${docCount} Document${docCount !== 1 ? 's' : ''}</span>
-          </div>
-          <p class="text-xs text-muted mt-md">Last updated ${updatedAt}</p>
+        <div class="card">
+          <div class="card-body no-padding" id="workspaces-list-container"></div>
         </div>
       </div>
     `;
-  }
 
-  /**
-   * Render empty state when no workspaces exist
-   * @returns {string} HTML string
-   */
-  renderEmptyState() {
-    return `
-      <div class="card">
-        <div class="card-body" style="padding: var(--space-2xl);">
-          <div style="max-width: 400px; margin: 0 auto; text-align: center;">
-            <svg viewBox="0 0 24 24" width="48" height="48" fill="none" stroke="var(--text-muted)" stroke-width="1.5" style="margin-bottom: var(--space-md);">
-              <rect x="2" y="3" width="20" height="18" rx="2"/>
-              <path d="M8 7h8M8 11h8M8 15h4"/>
-            </svg>
-            <h2 style="font-size: var(--text-lg); font-weight: 500; color: var(--text-primary); margin-bottom: var(--space-sm);">No Workspaces Yet</h2>
-            <p class="text-secondary text-sm mb-lg">Workspaces help you organize search results and track documents related to specific topics.</p>
-            <button class="btn btn-primary" id="empty-create-btn">Create Your First Workspace</button>
-          </div>
-        </div>
-      </div>
-    `;
-  }
-
-  /**
-   * Set up click handlers for cards and buttons
-   */
-  setupEventHandlers() {
-    // Setup action menu dropdowns
-    this.setupActionMenus();
-
-    // Workspace card clicks - navigate to detail view
-    const workspaceCards = this.container.querySelectorAll('.workspace-card');
-    workspaceCards.forEach(card => {
-      card.style.cursor = 'pointer';
-      this.addListener(card, 'click', () => {
-        const workspaceId = card.dataset.workspaceId;
+    // Initialize the collection list component
+    this.collectionList = new CollectionList('workspaces-list-container', {
+      collectionType: 'workspace',
+      onItemClick: (workspaceId) => {
         window.location.hash = `#/${workspaceId}/`;
-      });
+      },
+      onEdit: (workspaceId) => {
+        this.handleEditWorkspace(workspaceId);
+      },
+      onArchive: (workspaceId) => {
+        this.handleArchiveWorkspace(workspaceId);
+      },
+      onCreate: () => {
+        this.handleCreateWorkspace();
+      }
     });
 
+    // Update the list with workspaces data
+    this.collectionList.update({ items: workspaces });
+
+    // Set up header button handler
+    this.setupHeaderHandlers();
+  }
+
+  /**
+   * Set up header button handlers
+   */
+  setupHeaderHandlers() {
     // Create workspace button in header
     const createBtn = this.container.querySelector('#create-workspace-btn');
     if (createBtn) {
@@ -148,46 +75,6 @@ export class WorkspacesView extends BaseView {
         this.handleCreateWorkspace();
       });
     }
-
-    // Empty state create button
-    const emptyCreateBtn = this.container.querySelector('#empty-create-btn');
-    if (emptyCreateBtn) {
-      this.addListener(emptyCreateBtn, 'click', () => {
-        this.handleCreateWorkspace();
-      });
-    }
-  }
-
-  /**
-   * Setup action menu dropdown handlers
-   */
-  setupActionMenus() {
-    // Initialize all dropdowns using the Dropdown component
-    this._actionDropdowns = Dropdown.initAll(this.container);
-    
-    // Listen for dropdown select events using event delegation
-    this.addListener(this.container, 'dropdown:select', (e) => {
-      const { item } = e.detail;
-      const action = item.dataset.action;
-      const workspaceId = item.dataset.workspaceId;
-      
-      if (action === 'edit' && !item.disabled) {
-        const workspace = DataService.getWorkspace(workspaceId);
-        if (workspace) {
-          const editor = getWorkspaceEditor();
-          editor.openEdit(workspace, () => {
-            this.render();
-          });
-        }
-      } else if (action === 'archive') {
-        const workspace = DataService.getWorkspace(workspaceId);
-        if (workspace) {
-          const newStatus = workspace.status === 'archived' ? 'active' : 'archived';
-          dataStore.updateWorkspace(workspaceId, { status: newStatus });
-          this.render();
-        }
-      }
-    });
   }
 
   /**
@@ -202,36 +89,42 @@ export class WorkspacesView extends BaseView {
   }
 
   /**
-   * Format a date as relative time (e.g., "2 hours ago")
-   * @param {string} isoDate - ISO date string
-   * @returns {string} Formatted relative time
+   * Handle edit workspace action
+   * @param {string} workspaceId - Workspace ID to edit
    */
-  formatRelativeTime(isoDate) {
-    if (!isoDate) return 'unknown';
-    
-    const date = new Date(isoDate);
-    const now = new Date();
-    const diffMs = now - date;
-    const diffMinutes = Math.floor(diffMs / (1000 * 60));
-    const diffHours = Math.floor(diffMs / (1000 * 60 * 60));
-    const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
-    const diffWeeks = Math.floor(diffDays / 7);
-    
-    if (diffMinutes < 1) return 'just now';
-    if (diffMinutes < 60) return `${diffMinutes} minute${diffMinutes !== 1 ? 's' : ''} ago`;
-    if (diffHours < 24) return `${diffHours} hour${diffHours !== 1 ? 's' : ''} ago`;
-    if (diffDays === 1) return 'yesterday';
-    if (diffDays < 7) return `${diffDays} days ago`;
-    if (diffWeeks === 1) return '1 week ago';
-    if (diffWeeks < 4) return `${diffWeeks} weeks ago`;
-    
-    return date.toLocaleDateString('en-US', {
-      month: 'short',
-      day: 'numeric',
-      year: date.getFullYear() !== now.getFullYear() ? 'numeric' : undefined
-    });
+  handleEditWorkspace(workspaceId) {
+    const workspace = DataService.getWorkspace(workspaceId);
+    if (workspace) {
+      const editor = getWorkspaceEditor();
+      editor.openEdit(workspace, () => {
+        this.render();
+      });
+    }
   }
 
+  /**
+   * Handle archive/restore workspace action
+   * @param {string} workspaceId - Workspace ID to archive/restore
+   */
+  handleArchiveWorkspace(workspaceId) {
+    const workspace = DataService.getWorkspace(workspaceId);
+    if (workspace) {
+      const newStatus = workspace.status === 'archived' ? 'active' : 'archived';
+      dataStore.updateWorkspace(workspaceId, { status: newStatus });
+      this.render();
+    }
+  }
+
+  /**
+   * Clean up resources
+   */
+  destroy() {
+    if (this.collectionList) {
+      this.collectionList.destroy();
+      this.collectionList = null;
+    }
+    super.destroy();
+  }
 }
 
 export default WorkspacesView;

@@ -9,7 +9,7 @@ export const users = [
     displayName: 'Nicole Thayer',
     role: 'Senior Analyst',
     department: 'Intelligence Analysis',
-    avatarUrl: 'img/placeholders/avatar-default.svg',
+    avatarUrl: null,
     isCurrentUser: true
   },
   {
@@ -18,7 +18,7 @@ export const users = [
     displayName: 'John Smith',
     role: 'Analyst',
     department: 'Intelligence Analysis',
-    avatarUrl: 'img/placeholders/avatar-default.svg',
+    avatarUrl: null,
     isCurrentUser: false
   },
   {
@@ -27,7 +27,7 @@ export const users = [
     displayName: 'Maria Williams',
     role: 'Team Lead',
     department: 'Cyber Operations',
-    avatarUrl: 'img/placeholders/avatar-default.svg',
+    avatarUrl: null,
     isCurrentUser: false
   },
   {
@@ -36,7 +36,7 @@ export const users = [
     displayName: 'David Chen',
     role: 'Senior Analyst',
     department: 'Domestic Operations',
-    avatarUrl: 'img/placeholders/avatar-default.svg',
+    avatarUrl: null,
     isCurrentUser: false
   },
   {
@@ -45,7 +45,7 @@ export const users = [
     displayName: 'Ana Garcia',
     role: 'Analyst',
     department: 'Legal Affairs',
-    avatarUrl: 'img/placeholders/avatar-default.svg',
+    avatarUrl: null,
     isCurrentUser: false
   },
   {
@@ -54,7 +54,7 @@ export const users = [
     displayName: 'Robert Johnson',
     role: 'Division Chief',
     department: 'Intelligence Analysis',
-    avatarUrl: 'img/placeholders/avatar-default.svg',
+    avatarUrl: null,
     isCurrentUser: false
   }
 ];

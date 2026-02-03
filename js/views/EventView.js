@@ -16,7 +16,9 @@ import {
   TimelineVolumeCompositeCard,
   TopicListCard,
   SentimentChartCard,
-  VennDiagramCard
+  VennDiagramCard,
+  QuotesTableCard,
+  ActivitiesTableCard
 } from '../components/CardComponents.js';
 
 export class EventView extends DetailViewBase {
@@ -71,7 +73,7 @@ export class EventView extends DetailViewBase {
     ].filter(Boolean).join(' • ');
 
     // Build context-aware breadcrumbs
-    const breadcrumbItems = [{ label: 'Events', route: 'events' }];
+    const breadcrumbItems = [];
     if (data.parentEvent) {
       breadcrumbItems.push({ label: this.truncateText(data.parentEvent.text, 30), id: data.parentEvent.id });
     }
@@ -195,13 +197,18 @@ export class EventView extends DetailViewBase {
     const allActivityData = DataService.getAllActivity();
     const activity = allActivityData.filter(item => docIdSet.has(item.documentId));
 
+    // Get quotes and activities from this event's documents
+    const quotes = DataService.getQuotesForDocuments(docIds);
+    const entityActivities = DataService.getActivitiesForDocuments(docIds);
+
     return { 
       parentEvent, subEvents, location, persons, organizations, 
       narratives, documents, hasNetwork, personIds, orgIds, allEvents,
       events: allEvents,
       publisherData, hasPublisherData, hasVolumeTimeline, topics,
       factions, sentimentFactions, factionOverlaps, mapLocations,
-      narrativeDurations, entities, locations, activity
+      narrativeDurations, entities, locations, activity,
+      quotes, entityActivities
     };
   }
 
@@ -212,7 +219,25 @@ export class EventView extends DetailViewBase {
     // Reset card manager for fresh setup
     this.cardManager = new CardManager(this);
 
-    // 1. Volume & Events Chart (full-width)
+    // 1. Quotes Table (half-width)
+    if (data.quotes && data.quotes.length > 0) {
+      this.cardManager.add(new QuotesTableCard(this, 'event-quotes', {
+        title: 'Quotes',
+        quotes: data.quotes,
+        halfWidth: true
+      }));
+    }
+
+    // 2. Activities Table (half-width)
+    if (data.entityActivities && data.entityActivities.length > 0) {
+      this.cardManager.add(new ActivitiesTableCard(this, 'event-activities', {
+        title: 'Activities',
+        activities: data.entityActivities,
+        halfWidth: true
+      }));
+    }
+
+    // 3. Volume & Events Chart (full-width)
     const hasDurationData = data.narrativeDurations?.length > 0;
     if (data.hasVolumeTimeline || hasDurationData) {
       this.cardManager.add(new TimelineVolumeCompositeCard(this, 'event-volume-events', {
@@ -228,7 +253,7 @@ export class EventView extends DetailViewBase {
       }));
     }
 
-    // 2. Related Narratives (half-width)
+    // 4. Related Narratives (half-width)
     if (data.narratives.length > 0) {
       this.cardManager.add(new NarrativeListCard(this, 'event-narratives', {
         title: 'Narratives',
@@ -240,7 +265,7 @@ export class EventView extends DetailViewBase {
       }));
     }
 
-    // 3. Topics (half-width)
+    // 5. Topics (half-width)
     if (data.topics.length > 0) {
       this.cardManager.add(new TopicListCard(this, 'event-topics', {
         title: 'Topics',
@@ -251,7 +276,7 @@ export class EventView extends DetailViewBase {
       }));
     }
 
-    // 4. People & Organizations Network (half-width)
+    // 6. People & Organizations Network (half-width)
     if (data.hasNetwork) {
       this.cardManager.add(new NetworkGraphCard(this, 'event-network', {
         title: 'People & Orgs',
@@ -262,7 +287,7 @@ export class EventView extends DetailViewBase {
       }));
     }
 
-    // 5. Faction Sentiment (half-width)
+    // 7. Faction Sentiment (half-width)
     if (data.sentimentFactions.length > 0) {
       this.cardManager.add(new SentimentChartCard(this, 'event-sentiment', {
         title: 'Faction Sentiment',
@@ -272,7 +297,7 @@ export class EventView extends DetailViewBase {
       }));
     }
 
-    // 6. Faction Overlaps Venn Diagram (half-width)
+    // 8. Faction Overlaps Venn Diagram (half-width)
     if (data.factions.length >= 2) {
       this.cardManager.add(new VennDiagramCard(this, 'event-venn', {
         title: 'Faction Overlaps',
@@ -283,7 +308,7 @@ export class EventView extends DetailViewBase {
       }));
     }
 
-    // 7. Location Map (half-width)
+    // 9. Location Map (half-width)
     if (data.mapLocations.length > 0) {
       this.cardManager.add(new MapCard(this, 'event-map', {
         title: 'Locations',

@@ -30,8 +30,10 @@
 
 /* Size Variants */
 .btn-small {
-  padding: var(--space-xs) var(--space-sm);
+  padding: var(--space-sm);
   font-size: var(--text-xs);
+  border-color: var(--border-subtle);
+  border-radius: var(--border-radius);
 }
 
 /* Color Variants */

@@ -55,7 +55,6 @@ export class FactionView extends DetailViewBase {
 
     // Build context-aware breadcrumbs
     const breadcrumbs = this.buildBreadcrumbs([
-      { label: 'Factions', route: 'factions' },
       faction.name
     ]);
 

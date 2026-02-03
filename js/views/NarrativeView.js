@@ -65,8 +65,7 @@ export class NarrativeView extends DetailViewBase {
 
     // Build context-aware breadcrumbs
     const breadcrumbs = this.buildBreadcrumbs([
-      { label: 'Narratives', route: 'narratives' },
-      'Detail'
+      this.truncateText(narrative.text, 50)
     ]);
 
     // Build stats for the header with dropdown support

@@ -187,13 +187,13 @@ export class BaseItemList extends BaseComponent {
   }
 
   /**
-   * Get the CSS class for a list item
-   * Override in subclass for custom styling
+   * Get the CSS class for a list item wrapper (the <li> element)
+   * The actual styling should be on the inner content element rendered by renderItemContent
    * @param {Object} item - The data item
    * @returns {string}
    */
   getItemClass(item) {
-    return 'narrative-item';
+    return '';
   }
 
   /**

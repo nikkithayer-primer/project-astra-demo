@@ -19,7 +19,7 @@ export const documents = [
     author: {
       username: '@shopper12345',
       displayName: 'Just Another Shopper',
-      avatarUrl: 'img/placeholders/avatar-default.svg'
+      avatarUrl: 'https://i.pravatar.cc/150?u=shopper12345'
     },
     contentBlocks: [
       { type: 'paragraph', content: 'POV: Walmart detains you even though you have your receipt 😭 This is so humiliating #walmart #selfcheckout #storytime #embarrassing #retail', portionMark: { classification: 'U', handling: '' } }
@@ -37,11 +37,22 @@ export const documents = [
     locationIds: ['loc-002'],
     eventIds: ['event-001'],
     factionIds: ['faction-001', 'faction-004'],
+    quotes: [],
+    activities: [
+      {
+        id: 'activity-001-01',
+        actorId: 'org-001',
+        actorType: 'organization',
+        action: 'detained',
+        targetId: null,
+        targetType: null,
+        targetText: 'customer despite having receipt'
+      }
+    ],
     factionMentions: {
-      'faction-001': { sentiment: -0.85,
+      'faction-001': { sentiment: -0.85 },
+      'faction-004': { sentiment: -0.72 },
       'faction-014': { sentiment: -0.65 }
-    },
-      'faction-004': { sentiment: -0.72 }
     },
     metrics: { views: 8500000, likes: 425000, shares: 185000, comments: 78000, platform: 'tiktok' },
     highlights: [
@@ -89,7 +100,7 @@ export const documents = [
     author: {
       username: 'u/annoyed_customer_2026',
       displayName: 'annoyed_customer_2026',
-      avatarUrl: 'img/placeholders/avatar-default.svg'
+      avatarUrl: 'https://i.pravatar.cc/150?u=annoyed_customer_2026'
     },
     headerImage: {
       url: 'http://static.photos/cityscape/640x360/49',
@@ -107,11 +118,22 @@ export const documents = [
     locationIds: [],
     eventIds: [],
     factionIds: ['faction-001', 'faction-004'],
+    quotes: [],
+    activities: [
+      {
+        id: 'activity-002-01',
+        actorId: 'org-001',
+        actorType: 'organization',
+        action: 'treated customers as',
+        targetId: null,
+        targetType: null,
+        targetText: 'suspected thieves at self-checkout'
+      }
+    ],
     factionMentions: {
-      'faction-001': { sentiment: -0.78,
+      'faction-001': { sentiment: -0.78 },
+      'faction-004': { sentiment: -0.65 },
       'faction-014': { sentiment: -0.65 }
-    },
-      'faction-004': { sentiment: -0.65 }
     },
     metrics: { likes: 15420, comments: 2850, platform: 'reddit' },
     highlights: [],
@@ -146,11 +168,38 @@ export const documents = [
     locationIds: ['loc-002'],
     eventIds: ['event-002'],
     factionIds: ['faction-001', 'faction-004'],
+    quotes: [
+      {
+        id: 'quote-003-01',
+        speakerId: 'person-008',
+        speakerType: 'person',
+        text: 'Walmart\'s loss prevention policies have created a culture of suspicion toward innocent customers. Our clients were humiliated and traumatized by these experiences.'
+      }
+    ],
+    activities: [
+      {
+        id: 'activity-003-01',
+        actorId: 'org-002',
+        actorType: 'organization',
+        action: 'filed class-action lawsuit against',
+        targetId: 'org-001',
+        targetType: 'organization',
+        targetText: 'Walmart over self-checkout detentions'
+      },
+      {
+        id: 'activity-003-02',
+        actorId: 'person-008',
+        actorType: 'person',
+        action: 'accused',
+        targetId: 'org-001',
+        targetType: 'organization',
+        targetText: 'Walmart of false imprisonment'
+      }
+    ],
     factionMentions: {
-      'faction-001': { sentiment: -0.68,
+      'faction-001': { sentiment: -0.68 },
+      'faction-004': { sentiment: -0.55 },
       'faction-014': { sentiment: -0.65 }
-    },
-      'faction-004': { sentiment: -0.55 }
     },
     metrics: { shares: 12500 },
     highlights: [
@@ -206,11 +255,38 @@ export const documents = [
     locationIds: ['loc-001'],
     eventIds: ['event-003'],
     factionIds: ['faction-001', 'faction-004'],
+    quotes: [
+      {
+        id: 'quote-004-01',
+        speakerId: 'person-001',
+        speakerType: 'person',
+        text: 'We\'ve heard our customers and are committed to providing checkout options that meet their preferences.'
+      }
+    ],
+    activities: [
+      {
+        id: 'activity-004-01',
+        actorId: 'org-001',
+        actorType: 'organization',
+        action: 'announced',
+        targetId: null,
+        targetType: null,
+        targetText: 'plan to add staffed checkout lanes at 500 stores'
+      },
+      {
+        id: 'activity-004-02',
+        actorId: 'person-001',
+        actorType: 'person',
+        action: 'responded to',
+        targetId: null,
+        targetType: null,
+        targetText: 'customer complaints about self-checkout'
+      }
+    ],
     factionMentions: {
-      'faction-001': { sentiment: -0.25,
+      'faction-001': { sentiment: -0.25 },
+      'faction-004': { sentiment: 0.15 },
       'faction-014': { sentiment: -0.65 }
-    },
-      'faction-004': { sentiment: 0.15 }
     },
     metrics: { shares: 5800 },
     highlights: [],
@@ -231,7 +307,7 @@ export const documents = [
     author: {
       username: '@frustratedshopper',
       displayName: 'Frustrated Shopper',
-      avatarUrl: 'img/placeholders/avatar-default.svg'
+      avatarUrl: 'https://i.pravatar.cc/150?u=frustratedshopper'
     },
     headerImage: {
       url: 'http://static.photos/cityscape/640x360/52',
@@ -249,10 +325,11 @@ export const documents = [
     locationIds: ['loc-004'],
     eventIds: ['event-004'],
     factionIds: ['faction-001'],
+    quotes: [],
+    activities: [],
     factionMentions: {
-      'faction-001': { sentiment: -0.82,
+      'faction-001': { sentiment: -0.82 },
       'faction-011': { sentiment: -0.72 }
-    }
     },
     metrics: { views: 2500000, likes: 45000, shares: 18500, comments: 8200, platform: 'x' },
     highlights: [],
@@ -271,7 +348,7 @@ export const documents = [
     author: {
       username: 'concerned.neighbor.42',
       displayName: 'Local Mom',
-      avatarUrl: 'img/placeholders/avatar-default.svg'
+      avatarUrl: 'https://i.pravatar.cc/150?u=concerned.neighbor.42'
     },
     headerImage: {
       url: 'http://static.photos/cityscape/640x360/53',
@@ -288,10 +365,11 @@ export const documents = [
     locationIds: [],
     eventIds: [],
     factionIds: ['faction-001'],
+    quotes: [],
+    activities: [],
     factionMentions: {
-      'faction-001': { sentiment: -0.68,
+      'faction-001': { sentiment: -0.68 },
       'faction-011': { sentiment: -0.72 }
-    }
     },
     metrics: { likes: 458, comments: 127, shares: 35, platform: 'facebook' },
     highlights: [],
@@ -325,11 +403,38 @@ export const documents = [
     locationIds: [],
     eventIds: ['event-005'],
     factionIds: ['faction-001', 'faction-005'],
+    quotes: [
+      {
+        id: 'quote-007-01',
+        speakerId: 'person-010',
+        speakerType: 'person',
+        text: 'Walmart\'s real-time inventory visibility appears to have gaps that competitors have addressed more effectively.'
+      }
+    ],
+    activities: [
+      {
+        id: 'activity-007-01',
+        actorId: 'person-010',
+        actorType: 'person',
+        action: 'analyzed',
+        targetId: 'org-001',
+        targetType: 'organization',
+        targetText: 'Walmart\'s inventory management system'
+      },
+      {
+        id: 'activity-007-02',
+        actorId: 'org-014',
+        actorType: 'organization',
+        action: 'published research on',
+        targetId: 'org-001',
+        targetType: 'organization',
+        targetText: 'persistent out-of-stock issues'
+      }
+    ],
     factionMentions: {
-      'faction-001': { sentiment: -0.58,
+      'faction-001': { sentiment: -0.58 },
+      'faction-005': { sentiment: -0.42 },
       'faction-011': { sentiment: -0.72 }
-    },
-      'faction-005': { sentiment: -0.42 }
     },
     metrics: { shares: 3200 },
     highlights: [
@@ -361,7 +466,7 @@ export const documents = [
     author: {
       username: '@walmartworkerlife',
       displayName: 'Walmart Worker Life',
-      avatarUrl: 'img/placeholders/avatar-default.svg'
+      avatarUrl: 'https://i.pravatar.cc/150?u=walmartworkerlife'
     },
     contentBlocks: [
       { type: 'paragraph', content: 'When you\'re the only one working 3 departments 🤡 "fully staffed" they said #walmartlife #retailworker #understaffed #worklife #retail', portionMark: { classification: 'U', handling: '' } }
@@ -379,12 +484,13 @@ export const documents = [
     locationIds: [],
     eventIds: ['event-006'],
     factionIds: ['faction-002', 'faction-003'],
+    quotes: [],
+    activities: [],
     factionMentions: {
-      'faction-002': { sentiment: -0.85,
+      'faction-002': { sentiment: -0.85 },
+      'faction-003': { sentiment: -0.78 },
       'faction-010': { sentiment: -0.25 },
       'faction-011': { sentiment: -0.72 }
-    },
-      'faction-003': { sentiment: -0.78 }
     },
     metrics: { views: 5200000, likes: 385000, shares: 125000, comments: 42000, platform: 'tiktok' },
     highlights: [],
@@ -403,7 +509,7 @@ export const documents = [
     author: {
       username: 'u/walmart_associate_tired',
       displayName: 'walmart_associate_tired',
-      avatarUrl: 'img/placeholders/avatar-default.svg'
+      avatarUrl: 'https://i.pravatar.cc/150?u=walmart_associate_tired'
     },
     headerImage: {
       url: 'http://static.photos/cityscape/640x360/55',
@@ -421,12 +527,13 @@ export const documents = [
     locationIds: [],
     eventIds: [],
     factionIds: ['faction-002', 'faction-003'],
+    quotes: [],
+    activities: [],
     factionMentions: {
-      'faction-002': { sentiment: -0.80,
+      'faction-002': { sentiment: -0.80 },
+      'faction-003': { sentiment: -0.75 },
       'faction-010': { sentiment: -0.25 },
       'faction-011': { sentiment: -0.72 }
-    },
-      'faction-003': { sentiment: -0.75 }
     },
     metrics: { likes: 8750, comments: 1420, platform: 'reddit' },
     highlights: [],
@@ -461,12 +568,48 @@ export const documents = [
     locationIds: ['loc-006'],
     eventIds: ['event-007'],
     factionIds: ['faction-002', 'faction-003'],
+    quotes: [
+      {
+        id: 'quote-010-01',
+        speakerId: 'person-003',
+        speakerType: 'person',
+        text: 'These workers deserve better. They kept this country running during the pandemic and now they\'re being stretched thinner than ever.'
+      }
+    ],
+    activities: [
+      {
+        id: 'activity-010-01',
+        actorId: 'org-005',
+        actorType: 'organization',
+        action: 'launched',
+        targetId: null,
+        targetType: null,
+        targetText: '#RespectWalmartWorkers social media campaign'
+      },
+      {
+        id: 'activity-010-02',
+        actorId: 'person-003',
+        actorType: 'person',
+        action: 'criticized',
+        targetId: 'org-001',
+        targetType: 'organization',
+        targetText: 'working conditions at Walmart'
+      },
+      {
+        id: 'activity-010-03',
+        actorId: 'org-006',
+        actorType: 'organization',
+        action: 'amplified',
+        targetId: null,
+        targetType: null,
+        targetText: 'employee stories about understaffing and scheduling issues'
+      }
+    ],
     factionMentions: {
-      'faction-002': { sentiment: 0.72,
+      'faction-002': { sentiment: 0.72 },
+      'faction-003': { sentiment: 0.68 },
       'faction-010': { sentiment: -0.25 },
       'faction-011': { sentiment: -0.72 }
-    },
-      'faction-003': { sentiment: 0.68 }
     },
     metrics: { shares: 4500 },
     highlights: [
@@ -522,12 +665,39 @@ export const documents = [
     locationIds: ['loc-001'],
     eventIds: [],
     factionIds: ['faction-002', 'faction-005'],
+    quotes: [
+      {
+        id: 'quote-011-01',
+        speakerId: 'org-001',
+        speakerType: 'organization',
+        text: 'We employ 1.6 million Americans and are committed to providing good jobs with opportunity for growth.'
+      }
+    ],
+    activities: [
+      {
+        id: 'activity-011-01',
+        actorId: 'org-001',
+        actorType: 'organization',
+        action: 'responded to',
+        targetId: null,
+        targetType: null,
+        targetText: 'viral social media posts depicting poor working conditions'
+      },
+      {
+        id: 'activity-011-02',
+        actorId: 'org-001',
+        actorType: 'organization',
+        action: 'highlighted',
+        targetId: null,
+        targetType: null,
+        targetText: '$14 minimum wage, healthcare benefits, and tuition assistance'
+      }
+    ],
     factionMentions: {
-      'faction-002': { sentiment: 0.35,
+      'faction-002': { sentiment: 0.35 },
+      'faction-005': { sentiment: 0.45 },
       'faction-010': { sentiment: -0.25 },
       'faction-011': { sentiment: -0.72 }
-    },
-      'faction-005': { sentiment: 0.45 }
     },
     metrics: { shares: 2800 },
     highlights: [],
@@ -564,11 +734,47 @@ export const documents = [
     locationIds: ['loc-007'],
     eventIds: ['event-008'],
     factionIds: ['faction-001', 'faction-004'],
+    quotes: [
+      {
+        id: 'quote-012-01',
+        speakerId: 'org-007',
+        speakerType: 'organization',
+        text: 'We are working with Walmart to identify the source of contamination and ensure all affected products are removed from shelves.'
+      }
+    ],
+    activities: [
+      {
+        id: 'activity-012-01',
+        actorId: 'org-007',
+        actorType: 'organization',
+        action: 'announced recall of',
+        targetId: 'org-001',
+        targetType: 'organization',
+        targetText: 'Great Value frozen vegetable products'
+      },
+      {
+        id: 'activity-012-02',
+        actorId: 'org-001',
+        actorType: 'organization',
+        action: 'issued',
+        targetId: null,
+        targetType: null,
+        targetText: 'voluntary recall for five SKUs sold nationwide'
+      },
+      {
+        id: 'activity-012-03',
+        actorId: 'org-007',
+        actorType: 'organization',
+        action: 'investigated',
+        targetId: null,
+        targetType: null,
+        targetText: 'potential Listeria monocytogenes contamination'
+      }
+    ],
     factionMentions: {
-      'faction-001': { sentiment: -0.75,
+      'faction-001': { sentiment: -0.75 },
+      'faction-004': { sentiment: -0.62 },
       'faction-013': { sentiment: 0.35 }
-    },
-      'faction-004': { sentiment: -0.62 }
     },
     metrics: { shares: 8500 },
     highlights: [
@@ -631,11 +837,47 @@ export const documents = [
     locationIds: ['loc-007'],
     eventIds: ['event-009'],
     factionIds: ['faction-001', 'faction-004'],
+    quotes: [
+      {
+        id: 'quote-013-01',
+        speakerId: 'org-001',
+        speakerType: 'organization',
+        text: 'We are deeply concerned for any customers who may have been affected and are working closely with the FDA to resolve this matter.'
+      }
+    ],
+    activities: [
+      {
+        id: 'activity-013-01',
+        actorId: 'org-007',
+        actorType: 'organization',
+        action: 'expanded recall to',
+        targetId: null,
+        targetType: null,
+        targetText: '15 SKUs across frozen vegetables and salad mixes'
+      },
+      {
+        id: 'activity-013-02',
+        actorId: 'org-001',
+        actorType: 'organization',
+        action: 'pulled products from',
+        targetId: null,
+        targetType: null,
+        targetText: 'store shelves nationwide'
+      },
+      {
+        id: 'activity-013-03',
+        actorId: 'org-001',
+        actorType: 'organization',
+        action: 'offered',
+        targetId: null,
+        targetType: null,
+        targetText: 'full refunds to affected customers'
+      }
+    ],
     factionMentions: {
-      'faction-001': { sentiment: -0.82,
+      'faction-001': { sentiment: -0.82 },
+      'faction-004': { sentiment: -0.70 },
       'faction-013': { sentiment: 0.35 }
-    },
-      'faction-004': { sentiment: -0.70 }
     },
     metrics: { shares: 12200 },
     highlights: [
@@ -679,10 +921,46 @@ export const documents = [
     locationIds: [],
     eventIds: ['event-010'],
     factionIds: ['faction-004'],
+    quotes: [
+      {
+        id: 'quote-014-01',
+        speakerId: 'person-007',
+        speakerType: 'person',
+        text: 'When consumers trust a store brand, they\'re trusting the retailer\'s commitment to safety. That trust must be earned through rigorous quality standards.'
+      }
+    ],
+    activities: [
+      {
+        id: 'activity-014-01',
+        actorId: 'org-008',
+        actorType: 'organization',
+        action: 'called for',
+        targetId: 'org-001',
+        targetType: 'organization',
+        targetText: 'stricter quality control measures for private-label products'
+      },
+      {
+        id: 'activity-014-02',
+        actorId: 'person-007',
+        actorType: 'person',
+        action: 'advocated for',
+        targetId: null,
+        targetType: null,
+        targetText: 'mandatory third-party audits of private-label food suppliers'
+      },
+      {
+        id: 'activity-014-03',
+        actorId: 'org-008',
+        actorType: 'organization',
+        action: 'criticized',
+        targetId: 'org-001',
+        targetType: 'organization',
+        targetText: 'quality control failures following Great Value recall'
+      }
+    ],
     factionMentions: {
-      'faction-004': { sentiment: -0.58,
+      'faction-004': { sentiment: -0.58 },
       'faction-013': { sentiment: 0.35 }
-    }
     },
     metrics: { shares: 5400 },
     highlights: [],
@@ -703,7 +981,7 @@ export const documents = [
     author: {
       username: '@frugalmom23',
       displayName: 'Frugal Mom Tips',
-      avatarUrl: 'img/placeholders/avatar-default.svg'
+      avatarUrl: 'https://i.pravatar.cc/150?u=frugalmom23'
     },
     contentBlocks: [
       { type: 'paragraph', content: 'Walmart vs Aldi price comparison - the results will SHOCK you 😱💰 #walmart #aldi #groceryshopping #savemoney #frugalliving #pricecheck', portionMark: { classification: 'U', handling: '' } }
@@ -721,12 +999,13 @@ export const documents = [
     locationIds: [],
     eventIds: [],
     factionIds: ['faction-001', 'faction-006'],
+    quotes: [],
+    activities: [],
     factionMentions: {
-      'faction-001': { sentiment: -0.72,
+      'faction-001': { sentiment: -0.72 },
+      'faction-006': { sentiment: 0.65 },
       'faction-007': { sentiment: -0.58 },
       'faction-016': { sentiment: -0.52 }
-    },
-      'faction-006': { sentiment: 0.65 }
     },
     metrics: { views: 4800000, likes: 325000, shares: 185000, comments: 52000, platform: 'tiktok' },
     highlights: [],
@@ -745,7 +1024,7 @@ export const documents = [
     author: {
       username: '@retailwatcher',
       displayName: 'Retail Watcher',
-      avatarUrl: 'img/placeholders/avatar-default.svg'
+      avatarUrl: 'https://i.pravatar.cc/150?u=retailwatcher'
     },
     headerImage: {
       url: 'http://static.photos/cityscape/640x360/61',
@@ -764,12 +1043,13 @@ export const documents = [
     locationIds: [],
     eventIds: [],
     factionIds: ['faction-001', 'faction-006'],
+    quotes: [],
+    activities: [],
     factionMentions: {
-      'faction-001': { sentiment: -0.68,
+      'faction-001': { sentiment: -0.68 },
+      'faction-006': { sentiment: 0.55 },
       'faction-007': { sentiment: -0.58 },
       'faction-016': { sentiment: -0.52 }
-    },
-      'faction-006': { sentiment: 0.55 }
     },
     metrics: { views: 1850000, likes: 42000, shares: 18500, comments: 5200, platform: 'x' },
     highlights: [],
@@ -803,12 +1083,39 @@ export const documents = [
     locationIds: [],
     eventIds: ['event-011'],
     factionIds: ['faction-001', 'faction-005'],
+    quotes: [
+      {
+        id: 'quote-017-01',
+        speakerId: 'person-012',
+        speakerType: 'person',
+        text: 'This could threaten Walmart\'s core brand promise of everyday low prices.'
+      }
+    ],
+    activities: [
+      {
+        id: 'activity-017-01',
+        actorId: 'person-012',
+        actorType: 'person',
+        action: 'analyzed',
+        targetId: 'org-001',
+        targetType: 'organization',
+        targetText: 'Walmart pricing data showing retained pandemic-era increases'
+      },
+      {
+        id: 'activity-017-02',
+        actorId: 'org-001',
+        actorType: 'organization',
+        action: 'maintained',
+        targetId: null,
+        targetType: null,
+        targetText: 'pandemic-era price increases despite falling wholesale costs'
+      }
+    ],
     factionMentions: {
-      'faction-001': { sentiment: -0.65,
+      'faction-001': { sentiment: -0.65 },
+      'faction-005': { sentiment: -0.48 },
       'faction-007': { sentiment: -0.58 },
       'faction-016': { sentiment: -0.52 }
-    },
-      'faction-005': { sentiment: -0.48 }
     },
     metrics: { shares: 8200 },
     highlights: [
@@ -865,11 +1172,38 @@ export const documents = [
     locationIds: [],
     eventIds: ['event-012'],
     factionIds: ['faction-005', 'faction-006'],
+    quotes: [
+      {
+        id: 'quote-018-01',
+        speakerId: 'person-013',
+        speakerType: 'person',
+        text: 'Our investments in micro-fulfillment centers and last-mile logistics partnerships have positioned us to deliver industry-leading service.'
+      }
+    ],
+    activities: [
+      {
+        id: 'activity-018-01',
+        actorId: 'org-003',
+        actorType: 'organization',
+        action: 'achieved',
+        targetId: null,
+        targetType: null,
+        targetText: '98% on-time delivery rate for same-day service'
+      },
+      {
+        id: 'activity-018-02',
+        actorId: 'person-013',
+        actorType: 'person',
+        action: 'attributed success to',
+        targetId: null,
+        targetType: null,
+        targetText: 'micro-fulfillment centers and logistics partnerships'
+      }
+    ],
     factionMentions: {
-      'faction-005': { sentiment: 0.25,
+      'faction-005': { sentiment: 0.25 },
+      'faction-006': { sentiment: 0.78 },
       'faction-016': { sentiment: -0.52 }
-    },
-      'faction-006': { sentiment: 0.78 }
     },
     metrics: { shares: 3800 },
     highlights: [],
@@ -903,11 +1237,38 @@ export const documents = [
     locationIds: ['loc-008'],
     eventIds: ['event-013'],
     factionIds: ['faction-005', 'faction-006'],
+    quotes: [
+      {
+        id: 'quote-019-01',
+        speakerId: 'person-014',
+        speakerType: 'person',
+        text: 'This investment underscores our commitment to customer convenience and delivering on our promise of fast, reliable service.'
+      }
+    ],
+    activities: [
+      {
+        id: 'activity-019-01',
+        actorId: 'org-004',
+        actorType: 'organization',
+        action: 'expanded',
+        targetId: null,
+        targetType: null,
+        targetText: 'sub-24-hour delivery to 85% of U.S. households'
+      },
+      {
+        id: 'activity-019-02',
+        actorId: 'org-004',
+        actorType: 'organization',
+        action: 'opened',
+        targetId: null,
+        targetType: null,
+        targetText: 'new distribution centers in previously underserved markets'
+      }
+    ],
     factionMentions: {
-      'faction-005': { sentiment: 0.18,
+      'faction-005': { sentiment: 0.18 },
+      'faction-006': { sentiment: 0.82 },
       'faction-016': { sentiment: -0.52 }
-    },
-      'faction-006': { sentiment: 0.82 }
     },
     metrics: { shares: 5600 },
     highlights: [],
@@ -926,7 +1287,7 @@ export const documents = [
     author: {
       username: 'u/delivery_compare_2026',
       displayName: 'delivery_compare_2026',
-      avatarUrl: 'img/placeholders/avatar-default.svg'
+      avatarUrl: 'https://i.pravatar.cc/150?u=delivery_compare_2026'
     },
     headerImage: {
       url: 'http://static.photos/cityscape/640x360/65',
@@ -944,11 +1305,12 @@ export const documents = [
     locationIds: [],
     eventIds: [],
     factionIds: ['faction-001', 'faction-006'],
+    quotes: [],
+    activities: [],
     factionMentions: {
-      'faction-001': { sentiment: -0.75,
+      'faction-001': { sentiment: -0.75 },
+      'faction-006': { sentiment: 0.62 },
       'faction-016': { sentiment: -0.52 }
-    },
-      'faction-006': { sentiment: 0.62 }
     },
     metrics: { likes: 4280, comments: 892, platform: 'reddit' },
     highlights: [],
@@ -985,13 +1347,49 @@ export const documents = [
     locationIds: ['loc-009'],
     eventIds: ['event-014'],
     factionIds: ['faction-001'],
+    quotes: [
+      {
+        id: 'quote-021-01',
+        speakerId: 'person-016',
+        speakerType: 'person',
+        text: 'This closure will devastate our community\'s elderly and low-income residents who depend on this store for basic necessities.'
+      }
+    ],
+    activities: [
+      {
+        id: 'activity-021-01',
+        actorId: 'org-001',
+        actorType: 'organization',
+        action: 'announced closure of',
+        targetId: null,
+        targetType: null,
+        targetText: 'local supercenter in rural Missouri'
+      },
+      {
+        id: 'activity-021-02',
+        actorId: 'person-016',
+        actorType: 'person',
+        action: 'warned about',
+        targetId: null,
+        targetType: null,
+        targetText: 'food desert impact on elderly and low-income residents'
+      },
+      {
+        id: 'activity-021-03',
+        actorId: 'org-013',
+        actorType: 'organization',
+        action: 'criticized',
+        targetId: 'org-001',
+        targetType: 'organization',
+        targetText: 'abandonment of rural community'
+      }
+    ],
     factionMentions: {
-      'faction-001': { sentiment: -0.88,
+      'faction-001': { sentiment: -0.88 },
       'faction-007': { sentiment: -0.58 },
       'faction-009': { sentiment: -0.55 },
       'faction-012': { sentiment: -0.45 },
       'faction-015': { sentiment: -0.68 }
-    }
     },
     metrics: { shares: 15200 },
     highlights: [
@@ -1039,7 +1437,7 @@ export const documents = [
     author: {
       username: 'save.our.walmart.mo',
       displayName: 'Save Our Walmart - Missouri',
-      avatarUrl: 'img/placeholders/avatar-default.svg'
+      avatarUrl: 'https://i.pravatar.cc/150?u=save.our.walmart.mo'
     },
     headerImage: {
       url: 'http://static.photos/cityscape/640x360/67',
@@ -1057,13 +1455,14 @@ export const documents = [
     locationIds: ['loc-009'],
     eventIds: ['event-014'],
     factionIds: ['faction-001'],
+    quotes: [],
+    activities: [],
     factionMentions: {
-      'faction-001': { sentiment: -0.92,
+      'faction-001': { sentiment: -0.92 },
       'faction-007': { sentiment: -0.58 },
       'faction-009': { sentiment: -0.55 },
       'faction-012': { sentiment: -0.45 },
       'faction-015': { sentiment: -0.68 }
-    }
     },
     metrics: { likes: 3850, comments: 1245, shares: 2180, platform: 'facebook' },
     highlights: [],
@@ -1097,13 +1496,40 @@ export const documents = [
     locationIds: ['loc-009', 'loc-010'],
     eventIds: [],
     factionIds: ['faction-001'],
+    quotes: [
+      {
+        id: 'quote-023-01',
+        speakerId: 'org-013',
+        speakerType: 'organization',
+        text: 'When you become the only grocery option for miles, you take on a responsibility to that community.'
+      }
+    ],
+    activities: [
+      {
+        id: 'activity-023-01',
+        actorId: 'org-013',
+        actorType: 'organization',
+        action: 'sent letter to',
+        targetId: 'person-001',
+        targetType: 'person',
+        targetText: 'urging reconsideration of rural store closures'
+      },
+      {
+        id: 'activity-023-02',
+        actorId: 'person-016',
+        actorType: 'person',
+        action: 'argued',
+        targetId: 'org-001',
+        targetType: 'organization',
+        targetText: 'Walmart has moral obligation to rural communities'
+      }
+    ],
     factionMentions: {
-      'faction-001': { sentiment: -0.72,
+      'faction-001': { sentiment: -0.72 },
       'faction-007': { sentiment: -0.58 },
       'faction-009': { sentiment: -0.55 },
       'faction-012': { sentiment: -0.45 },
       'faction-015': { sentiment: -0.68 }
-    }
     },
     metrics: { shares: 4800 },
     highlights: [
@@ -1143,12 +1569,39 @@ export const documents = [
     organizationIds: ['org-001'],
     locationIds: ['loc-006'],
     eventIds: ['event-015'],
+    quotes: [
+      {
+        id: 'quote-024-01',
+        speakerId: 'org-001',
+        speakerType: 'organization',
+        text: 'We take supplier compliance seriously and are investigating these allegations thoroughly.'
+      }
+    ],
+    activities: [
+      {
+        id: 'activity-024-01',
+        actorId: 'org-001',
+        actorType: 'organization',
+        action: 'was investigated for',
+        targetId: null,
+        targetType: null,
+        targetText: 'unsafe conditions at Great Value supplier factories'
+      },
+      {
+        id: 'activity-024-02',
+        actorId: 'org-001',
+        actorType: 'organization',
+        action: 'faced allegations of',
+        targetId: null,
+        targetType: null,
+        targetText: 'labor violations at private-label manufacturing facilities'
+      }
+    ],
     factionMentions: {
-      'faction-003': { sentiment: -0.72,
+      'faction-003': { sentiment: -0.72 },
+      'faction-004': { sentiment: -0.68 },
       'faction-008': { sentiment: -0.62 },
       'faction-011': { sentiment: -0.72 }
-    },
-      'faction-004': { sentiment: -0.68 }
     },
     highlights: [],
     comments: []
@@ -1175,12 +1628,39 @@ export const documents = [
     organizationIds: ['org-001'],
     locationIds: ['loc-006'],
     eventIds: [],
+    quotes: [
+      {
+        id: 'quote-025-01',
+        speakerId: 'org-001',
+        speakerType: 'organization',
+        text: 'We are committed to ethical sourcing and are continuously improving our supplier monitoring processes.'
+      }
+    ],
+    activities: [
+      {
+        id: 'activity-025-01',
+        actorId: 'org-001',
+        actorType: 'organization',
+        action: 'faced pressure from',
+        targetId: null,
+        targetType: null,
+        targetText: 'consumer advocacy groups over supply chain transparency'
+      },
+      {
+        id: 'activity-025-02',
+        actorId: 'org-001',
+        actorType: 'organization',
+        action: 'was criticized for',
+        targetId: null,
+        targetType: null,
+        targetText: 'aggressive price demands creating conditions for worker exploitation'
+      }
+    ],
     factionMentions: {
-      'faction-003': { sentiment: -0.65,
+      'faction-003': { sentiment: -0.65 },
+      'faction-005': { sentiment: -0.42 },
       'faction-008': { sentiment: -0.62 },
       'faction-011': { sentiment: -0.72 }
-    },
-      'faction-005': { sentiment: -0.42 }
     },
     highlights: [],
     comments: []
@@ -1208,12 +1688,39 @@ export const documents = [
     organizationIds: ['org-018', 'org-001'],
     locationIds: ['loc-006'],
     eventIds: ['event-016'],
+    quotes: [
+      {
+        id: 'quote-026-01',
+        speakerId: 'person-022',
+        speakerType: 'person',
+        text: 'We are examining whether price pressures from major retailers contribute to supplier labor violations.'
+      }
+    ],
+    activities: [
+      {
+        id: 'activity-026-01',
+        actorId: 'org-018',
+        actorType: 'organization',
+        action: 'opened inquiry into',
+        targetId: 'org-001',
+        targetType: 'organization',
+        targetText: 'retail supply chain practices'
+      },
+      {
+        id: 'activity-026-02',
+        actorId: 'person-022',
+        actorType: 'person',
+        action: 'investigated',
+        targetId: null,
+        targetType: null,
+        targetText: 'whether price pressures contribute to supplier labor violations'
+      }
+    ],
     factionMentions: {
-      'faction-004': { sentiment: 0.55,
+      'faction-004': { sentiment: 0.55 },
+      'faction-005': { sentiment: -0.48 },
       'faction-008': { sentiment: -0.62 },
       'faction-011': { sentiment: -0.72 }
-    },
-      'faction-005': { sentiment: -0.48 }
     },
     highlights: [],
     comments: []
@@ -1240,12 +1747,39 @@ export const documents = [
     organizationIds: ['org-016', 'org-001'],
     locationIds: ['loc-011'],
     eventIds: ['event-017'],
+    quotes: [
+      {
+        id: 'quote-027-01',
+        speakerId: 'person-020',
+        speakerType: 'person',
+        text: 'Workers are standing up for better conditions and fair treatment. This is a historic moment for warehouse workers everywhere.'
+      }
+    ],
+    activities: [
+      {
+        id: 'activity-027-01',
+        actorId: 'org-016',
+        actorType: 'organization',
+        action: 'supported',
+        targetId: null,
+        targetType: null,
+        targetText: 'union organizing effort at Dallas fulfillment center'
+      },
+      {
+        id: 'activity-027-02',
+        actorId: 'org-001',
+        actorType: 'organization',
+        action: 'faced union election at',
+        targetId: null,
+        targetType: null,
+        targetText: 'Dallas e-commerce fulfillment center'
+      }
+    ],
     factionMentions: {
-      'faction-002': { sentiment: 0.72,
+      'faction-002': { sentiment: 0.72 },
+      'faction-003': { sentiment: 0.78 },
       'faction-010': { sentiment: -0.25 },
       'faction-011': { sentiment: -0.72 }
-    },
-      'faction-003': { sentiment: 0.78 }
     },
     highlights: [],
     comments: []
@@ -1272,12 +1806,39 @@ export const documents = [
     organizationIds: ['org-016', 'org-017'],
     locationIds: [],
     eventIds: [],
+    quotes: [
+      {
+        id: 'quote-028-01',
+        speakerId: 'person-021',
+        speakerType: 'person',
+        text: 'The pandemic showed the world how essential warehouse workers are. Now we\'re demanding the respect and compensation we deserve.'
+      }
+    ],
+    activities: [
+      {
+        id: 'activity-028-01',
+        actorId: 'org-017',
+        actorType: 'organization',
+        action: 'inspired',
+        targetId: null,
+        targetType: null,
+        targetText: 'warehouse organizing efforts across the country'
+      },
+      {
+        id: 'activity-028-02',
+        actorId: 'org-016',
+        actorType: 'organization',
+        action: 'reported on',
+        targetId: null,
+        targetType: null,
+        targetText: 'record rates of warehouse worker organizing'
+      }
+    ],
     factionMentions: {
-      'faction-002': { sentiment: 0.68,
+      'faction-002': { sentiment: 0.68 },
+      'faction-003': { sentiment: 0.75 },
       'faction-010': { sentiment: -0.25 },
       'faction-011': { sentiment: -0.72 }
-    },
-      'faction-003': { sentiment: 0.75 }
     },
     highlights: [],
     comments: []
@@ -1303,14 +1864,41 @@ export const documents = [
     organizationIds: ['org-019'],
     locationIds: ['loc-001', 'loc-009'],
     eventIds: ['event-018'],
+    quotes: [
+      {
+        id: 'quote-029-01',
+        speakerId: 'person-023',
+        speakerType: 'person',
+        text: 'We can provide care at prices 40% below market rates by leveraging our existing store infrastructure.'
+      }
+    ],
+    activities: [
+      {
+        id: 'activity-029-01',
+        actorId: 'org-019',
+        actorType: 'organization',
+        action: 'expanded',
+        targetId: null,
+        targetType: null,
+        targetText: 'healthcare clinic network into rural communities'
+      },
+      {
+        id: 'activity-029-02',
+        actorId: 'org-019',
+        actorType: 'organization',
+        action: 'offered',
+        targetId: null,
+        targetType: null,
+        targetText: 'primary care, dental, and mental health services'
+      }
+    ],
     factionMentions: {
-      'faction-001': { sentiment: 0.45,
+      'faction-001': { sentiment: 0.45 },
+      'faction-004': { sentiment: 0.52 },
+      'faction-005': { sentiment: 0.58 },
       'faction-012': { sentiment: -0.45 },
       'faction-013': { sentiment: 0.35 },
       'faction-015': { sentiment: -0.68 }
-    },
-      'faction-004': { sentiment: 0.52 },
-      'faction-005': { sentiment: 0.58 }
     },
     highlights: [],
     comments: []
@@ -1336,13 +1924,40 @@ export const documents = [
     organizationIds: ['org-019'],
     locationIds: ['loc-009'],
     eventIds: [],
+    quotes: [
+      {
+        id: 'quote-030-01',
+        speakerId: 'org-019',
+        speakerType: 'organization',
+        text: 'We\'re committed to bringing affordable healthcare to communities that need it most.'
+      }
+    ],
+    activities: [
+      {
+        id: 'activity-030-01',
+        actorId: 'org-019',
+        actorType: 'organization',
+        action: 'opened clinic in',
+        targetId: null,
+        targetType: null,
+        targetText: 'rural Missouri community without hospital access'
+      },
+      {
+        id: 'activity-030-02',
+        actorId: 'org-019',
+        actorType: 'organization',
+        action: 'was questioned by',
+        targetId: null,
+        targetType: null,
+        targetText: 'healthcare advocates about serving vulnerable populations'
+      }
+    ],
     factionMentions: {
-      'faction-001': { sentiment: 0.55,
+      'faction-001': { sentiment: 0.55 },
+      'faction-004': { sentiment: 0.48 },
       'faction-012': { sentiment: -0.45 },
       'faction-013': { sentiment: 0.35 },
       'faction-015': { sentiment: -0.68 }
-    },
-      'faction-004': { sentiment: 0.48 }
     },
     highlights: [],
     comments: []
@@ -1368,13 +1983,40 @@ export const documents = [
     organizationIds: ['org-019', 'org-021'],
     locationIds: [],
     eventIds: [],
+    quotes: [
+      {
+        id: 'quote-031-01',
+        speakerId: 'org-021',
+        speakerType: 'organization',
+        text: 'The company\'s history of closing unprofitable stores regardless of community impact raises questions about long-term commitment.'
+      }
+    ],
+    activities: [
+      {
+        id: 'activity-031-01',
+        actorId: 'org-019',
+        actorType: 'organization',
+        action: 'was criticized for',
+        targetId: null,
+        targetType: null,
+        targetText: 'profit-driven healthcare expansion motives'
+      },
+      {
+        id: 'activity-031-02',
+        actorId: 'org-021',
+        actorType: 'organization',
+        action: 'questioned',
+        targetId: 'org-019',
+        targetType: 'organization',
+        targetText: 'long-term commitment to vulnerable communities'
+      }
+    ],
     factionMentions: {
-      'faction-001': { sentiment: -0.35,
+      'faction-001': { sentiment: -0.35 },
+      'faction-004': { sentiment: 0.42 },
       'faction-012': { sentiment: -0.45 },
       'faction-013': { sentiment: 0.35 },
       'faction-015': { sentiment: -0.68 }
-    },
-      'faction-004': { sentiment: 0.42 }
     },
     highlights: [],
     comments: []
@@ -1402,12 +2044,48 @@ export const documents = [
     organizationIds: ['org-016', 'org-001'],
     locationIds: ['loc-011'],
     eventIds: ['event-019'],
+    quotes: [
+      {
+        id: 'quote-032-01',
+        speakerId: 'person-020',
+        speakerType: 'person',
+        text: 'Walmart\'s aggressive anti-union campaign swayed undecided workers, but the close vote shows significant support for organizing.'
+      }
+    ],
+    activities: [
+      {
+        id: 'activity-032-01',
+        actorId: 'org-016',
+        actorType: 'organization',
+        action: 'lost union vote at',
+        targetId: 'org-001',
+        targetType: 'organization',
+        targetText: 'Dallas fulfillment center'
+      },
+      {
+        id: 'activity-032-02',
+        actorId: 'org-001',
+        actorType: 'organization',
+        action: 'defeated',
+        targetId: null,
+        targetType: null,
+        targetText: 'union organizing effort through anti-union campaign'
+      },
+      {
+        id: 'activity-032-03',
+        actorId: 'person-020',
+        actorType: 'person',
+        action: 'vowed to continue',
+        targetId: null,
+        targetType: null,
+        targetText: 'organizing efforts despite defeat'
+      }
+    ],
     factionMentions: {
-      'faction-002': { sentiment: -0.65,
+      'faction-002': { sentiment: -0.65 },
+      'faction-003': { sentiment: -0.72 },
       'faction-010': { sentiment: -0.25 },
       'faction-011': { sentiment: -0.72 }
-    },
-      'faction-003': { sentiment: -0.72 }
     },
     highlights: [],
     comments: []
@@ -1434,12 +2112,39 @@ export const documents = [
     organizationIds: ['org-016'],
     locationIds: ['loc-011'],
     eventIds: [],
+    quotes: [
+      {
+        id: 'quote-033-01',
+        speakerId: 'person-020',
+        speakerType: 'person',
+        text: 'The close vote shows significant worker support for unionization. We will continue organizing at other facilities.'
+      }
+    ],
+    activities: [
+      {
+        id: 'activity-033-01',
+        actorId: 'person-020',
+        actorType: 'person',
+        action: 'announced plans to',
+        targetId: null,
+        targetType: null,
+        targetText: 'continue organizing at other Walmart facilities'
+      },
+      {
+        id: 'activity-033-02',
+        actorId: 'org-016',
+        actorType: 'organization',
+        action: 'pledged to expand',
+        targetId: null,
+        targetType: null,
+        targetText: 'organizing campaign despite Dallas setback'
+      }
+    ],
     factionMentions: {
-      'faction-002': { sentiment: 0.58,
+      'faction-002': { sentiment: 0.58 },
+      'faction-003': { sentiment: 0.65 },
       'faction-010': { sentiment: -0.25 },
       'faction-011': { sentiment: -0.72 }
-    },
-      'faction-003': { sentiment: 0.65 }
     },
     highlights: [],
     comments: []
@@ -1466,13 +2171,40 @@ export const documents = [
     organizationIds: ['org-001', 'org-016'],
     locationIds: [],
     eventIds: [],
+    quotes: [
+      {
+        id: 'quote-034-01',
+        speakerId: 'org-016',
+        speakerType: 'organization',
+        text: 'Workers described mandatory meetings where managers warned about the dangers of unionization. These tactics must be investigated.'
+      }
+    ],
+    activities: [
+      {
+        id: 'activity-034-01',
+        actorId: 'org-001',
+        actorType: 'organization',
+        action: 'faced scrutiny for',
+        targetId: null,
+        targetType: null,
+        targetText: 'anti-union tactics including mandatory meetings'
+      },
+      {
+        id: 'activity-034-02',
+        actorId: 'org-016',
+        actorType: 'organization',
+        action: 'called for investigation into',
+        targetId: 'org-001',
+        targetType: 'organization',
+        targetText: 'anti-union campaign tactics'
+      }
+    ],
     factionMentions: {
-      'faction-002': { sentiment: -0.72,
+      'faction-002': { sentiment: -0.72 },
+      'faction-003': { sentiment: -0.78 },
+      'faction-005': { sentiment: -0.35 },
       'faction-010': { sentiment: -0.25 },
       'faction-011': { sentiment: -0.72 }
-    },
-      'faction-003': { sentiment: -0.78 },
-      'faction-005': { sentiment: -0.35 }
     },
     highlights: [],
     comments: []
@@ -1499,12 +2231,45 @@ export const documents = [
     organizationIds: ['org-016', 'org-006'],
     locationIds: ['loc-003'],
     eventIds: ['event-020'],
+    quotes: [
+      {
+        id: 'quote-035-01',
+        speakerId: 'person-020',
+        speakerType: 'person',
+        text: 'We learned from Texas and are better prepared for Walmart\'s opposition this time.'
+      },
+      {
+        id: 'quote-035-02',
+        speakerId: 'person-025',
+        speakerType: 'person',
+        text: 'Workers across the country are watching Atlanta. A victory here would change everything.'
+      }
+    ],
+    activities: [
+      {
+        id: 'activity-035-01',
+        actorId: 'org-016',
+        actorType: 'organization',
+        action: 'filed for union election at',
+        targetId: null,
+        targetType: null,
+        targetText: 'Atlanta fulfillment center'
+      },
+      {
+        id: 'activity-035-02',
+        actorId: 'org-006',
+        actorType: 'organization',
+        action: 'supported',
+        targetId: null,
+        targetType: null,
+        targetText: 'second Walmart union organizing effort'
+      }
+    ],
     factionMentions: {
-      'faction-002': { sentiment: 0.72,
+      'faction-002': { sentiment: 0.72 },
+      'faction-003': { sentiment: 0.75 },
       'faction-010': { sentiment: -0.25 },
       'faction-011': { sentiment: -0.72 }
-    },
-      'faction-003': { sentiment: 0.75 }
     },
     highlights: [],
     comments: []
@@ -1530,13 +2295,40 @@ export const documents = [
     organizationIds: ['org-019'],
     locationIds: ['loc-009', 'loc-010'],
     eventIds: ['event-021'],
+    quotes: [
+      {
+        id: 'quote-036-01',
+        speakerId: 'person-023',
+        speakerType: 'person',
+        text: 'These 15 new clinics will serve communities that have lost access to local healthcare. We\'re filling a critical gap.'
+      }
+    ],
+    activities: [
+      {
+        id: 'activity-036-01',
+        actorId: 'org-019',
+        actorType: 'organization',
+        action: 'opened',
+        targetId: null,
+        targetType: null,
+        targetText: '15 new clinics in underserved rural communities'
+      },
+      {
+        id: 'activity-036-02',
+        actorId: 'org-019',
+        actorType: 'organization',
+        action: 'offered services at',
+        targetId: null,
+        targetType: null,
+        targetText: 'prices significantly below market rates'
+      }
+    ],
     factionMentions: {
-      'faction-001': { sentiment: 0.62,
+      'faction-001': { sentiment: 0.62 },
+      'faction-004': { sentiment: 0.55 },
       'faction-012': { sentiment: -0.45 },
       'faction-013': { sentiment: 0.35 },
       'faction-015': { sentiment: -0.68 }
-    },
-      'faction-004': { sentiment: 0.55 }
     },
     highlights: [],
     comments: []
@@ -1562,13 +2354,40 @@ export const documents = [
     organizationIds: ['org-019'],
     locationIds: ['loc-009', 'loc-010'],
     eventIds: [],
+    quotes: [
+      {
+        id: 'quote-037-01',
+        speakerId: 'org-019',
+        speakerType: 'organization',
+        text: 'Any healthcare is better than none. These clinics are filling a critical gap left by closed hospitals.'
+      }
+    ],
+    activities: [
+      {
+        id: 'activity-037-01',
+        actorId: 'org-019',
+        actorType: 'organization',
+        action: 'was embraced by',
+        targetId: null,
+        targetType: null,
+        targetText: 'rural communities across the South'
+      },
+      {
+        id: 'activity-037-02',
+        actorId: 'org-019',
+        actorType: 'organization',
+        action: 'faced questions about',
+        targetId: null,
+        targetType: null,
+        targetText: 'long-term sustainability of rural healthcare services'
+      }
+    ],
     factionMentions: {
-      'faction-001': { sentiment: 0.68,
+      'faction-001': { sentiment: 0.68 },
+      'faction-004': { sentiment: 0.52 },
       'faction-012': { sentiment: -0.45 },
       'faction-013': { sentiment: 0.35 },
       'faction-015': { sentiment: -0.68 }
-    },
-      'faction-004': { sentiment: 0.52 }
     },
     highlights: [],
     comments: []
@@ -1596,13 +2415,46 @@ export const documents = [
     organizationIds: ['org-001'],
     locationIds: ['loc-001'],
     eventIds: ['event-022'],
+    quotes: [
+      {
+        id: 'quote-038-01',
+        speakerId: 'person-018',
+        speakerType: 'person',
+        text: 'We are working around the clock to resolve these issues and get orders to customers as quickly as possible.'
+      },
+      {
+        id: 'quote-038-02',
+        speakerId: 'org-001',
+        speakerType: 'organization',
+        text: 'We cannot guarantee delivery times for orders placed over the weekend due to unprecedented demand.'
+      }
+    ],
+    activities: [
+      {
+        id: 'activity-038-01',
+        actorId: 'org-001',
+        actorType: 'organization',
+        action: 'experienced',
+        targetId: null,
+        targetType: null,
+        targetText: 'delivery system collapse under Black Friday demand'
+      },
+      {
+        id: 'activity-038-02',
+        actorId: 'person-019',
+        actorType: 'person',
+        action: 'acknowledged',
+        targetId: null,
+        targetType: null,
+        targetText: 'delayed and missing customer orders'
+      }
+    ],
     factionMentions: {
-      'faction-001': { sentiment: -0.72,
+      'faction-001': { sentiment: -0.72 },
+      'faction-005': { sentiment: -0.65 },
+      'faction-006': { sentiment: 0.48 },
       'faction-014': { sentiment: -0.65 },
       'faction-016': { sentiment: -0.52 }
-    },
-      'faction-005': { sentiment: -0.65 },
-      'faction-006': { sentiment: 0.48 }
     },
     highlights: [],
     comments: []
@@ -1628,11 +2480,12 @@ export const documents = [
     organizationIds: ['org-001'],
     locationIds: [],
     eventIds: ['event-022'],
+    quotes: [],
+    activities: [],
     factionMentions: {
-      'faction-001': { sentiment: -0.82,
+      'faction-001': { sentiment: -0.82 },
       'faction-014': { sentiment: -0.65 },
       'faction-016': { sentiment: -0.52 }
-    }
     },
     highlights: [],
     comments: []
@@ -1660,12 +2513,48 @@ export const documents = [
     organizationIds: ['org-001'],
     locationIds: ['loc-001'],
     eventIds: ['event-023'],
+    quotes: [
+      {
+        id: 'quote-040-01',
+        speakerId: 'person-001',
+        speakerType: 'person',
+        text: 'I want to personally apologize to every customer who was let down during the holiday season. This is not the service you expect from Walmart.'
+      }
+    ],
+    activities: [
+      {
+        id: 'activity-040-01',
+        actorId: 'person-001',
+        actorType: 'person',
+        action: 'apologized for',
+        targetId: null,
+        targetType: null,
+        targetText: 'widespread holiday delivery failures'
+      },
+      {
+        id: 'activity-040-02',
+        actorId: 'org-001',
+        actorType: 'organization',
+        action: 'announced',
+        targetId: null,
+        targetType: null,
+        targetText: 'refunds and gift cards for affected customers'
+      },
+      {
+        id: 'activity-040-03',
+        actorId: 'person-018',
+        actorType: 'person',
+        action: 'defended',
+        targetId: 'org-001',
+        targetType: 'organization',
+        targetText: 'company response to delivery crisis'
+      }
+    ],
     factionMentions: {
-      'faction-001': { sentiment: -0.58,
+      'faction-001': { sentiment: -0.58 },
+      'faction-005': { sentiment: -0.42 },
       'faction-014': { sentiment: -0.65 },
       'faction-016': { sentiment: -0.52 }
-    },
-      'faction-005': { sentiment: -0.42 }
     },
     highlights: [],
     comments: []
@@ -1682,7 +2571,7 @@ export const documents = [
     author: {
       username: '@holiday_disaster',
       displayName: 'Holiday Disaster Stories',
-      avatarUrl: 'img/placeholders/avatar-default.svg'
+      avatarUrl: 'https://i.pravatar.cc/150?u=holiday_disaster'
     },
     video: {
       thumbnailUrl: 'img/placeholders/video-thumbnail.svg',
@@ -1700,11 +2589,12 @@ export const documents = [
     organizationIds: ['org-001'],
     locationIds: [],
     eventIds: [],
+    quotes: [],
+    activities: [],
     factionMentions: {
-      'faction-001': { sentiment: -0.85,
+      'faction-001': { sentiment: -0.85 },
       'faction-014': { sentiment: -0.65 },
       'faction-016': { sentiment: -0.52 }
-    }
     },
     highlights: [],
     comments: []
@@ -1731,12 +2621,45 @@ export const documents = [
     organizationIds: ['org-008', 'org-018'],
     locationIds: ['loc-006'],
     eventIds: ['event-024'],
+    quotes: [
+      {
+        id: 'quote-042-01',
+        speakerId: 'person-007',
+        speakerType: 'person',
+        text: 'Walmart made delivery promises it knew it couldn\'t keep. Consumers deserve protection from deceptive advertising.'
+      },
+      {
+        id: 'quote-042-02',
+        speakerId: 'person-022',
+        speakerType: 'person',
+        text: 'We will examine whether the company\'s holiday advertising constituted unfair or deceptive practices.'
+      }
+    ],
+    activities: [
+      {
+        id: 'activity-042-01',
+        actorId: 'org-008',
+        actorType: 'organization',
+        action: 'filed FTC complaint against',
+        targetId: 'org-001',
+        targetType: 'organization',
+        targetText: 'deceptive delivery promises'
+      },
+      {
+        id: 'activity-042-02',
+        actorId: 'org-018',
+        actorType: 'organization',
+        action: 'received complaint regarding',
+        targetId: 'org-001',
+        targetType: 'organization',
+        targetText: 'holiday delivery advertising practices'
+      }
+    ],
     factionMentions: {
-      'faction-001': { sentiment: 0.62,
+      'faction-001': { sentiment: 0.62 },
+      'faction-004': { sentiment: 0.72 },
       'faction-014': { sentiment: -0.65 },
       'faction-016': { sentiment: -0.52 }
-    },
-      'faction-004': { sentiment: 0.72 }
     },
     highlights: [],
     comments: []
@@ -1763,12 +2686,39 @@ export const documents = [
     organizationIds: ['org-001', 'org-022'],
     locationIds: [],
     eventIds: [],
+    quotes: [
+      {
+        id: 'quote-043-01',
+        speakerId: 'person-026',
+        speakerType: 'person',
+        text: 'Walmart underestimated online order volume and overcommitted on delivery promises. This was a preventable failure.'
+      }
+    ],
+    activities: [
+      {
+        id: 'activity-043-01',
+        actorId: 'org-001',
+        actorType: 'organization',
+        action: 'experienced',
+        targetId: null,
+        targetType: null,
+        targetText: 'delivery infrastructure collapse during peak season'
+      },
+      {
+        id: 'activity-043-02',
+        actorId: 'org-022',
+        actorType: 'organization',
+        action: 'analyzed',
+        targetId: 'org-001',
+        targetType: 'organization',
+        targetText: 'delivery system failures and infrastructure gaps'
+      }
+    ],
     factionMentions: {
-      'faction-005': { sentiment: -0.52,
+      'faction-005': { sentiment: -0.52 },
+      'faction-006': { sentiment: 0.45 },
       'faction-014': { sentiment: -0.65 },
       'faction-016': { sentiment: -0.52 }
-    },
-      'faction-006': { sentiment: 0.45 }
     },
     highlights: [],
     comments: []
@@ -1796,12 +2746,45 @@ export const documents = [
     organizationIds: ['org-001'],
     locationIds: ['loc-001'],
     eventIds: ['event-025'],
+    quotes: [
+      {
+        id: 'quote-044-01',
+        speakerId: 'person-001',
+        speakerType: 'person',
+        text: 'We are making a significant investment to ensure this never happens again. Our customers deserve better.'
+      },
+      {
+        id: 'quote-044-02',
+        speakerId: 'person-019',
+        speakerType: 'person',
+        text: 'This investment will expand fulfillment capacity and dramatically improve our logistics technology.'
+      }
+    ],
+    activities: [
+      {
+        id: 'activity-044-01',
+        actorId: 'org-001',
+        actorType: 'organization',
+        action: 'announced',
+        targetId: null,
+        targetType: null,
+        targetText: '$500 million investment in delivery infrastructure'
+      },
+      {
+        id: 'activity-044-02',
+        actorId: 'person-001',
+        actorType: 'person',
+        action: 'committed to',
+        targetId: null,
+        targetType: null,
+        targetText: 'expanded fulfillment capacity and improved logistics'
+      }
+    ],
     factionMentions: {
-      'faction-001': { sentiment: 0.35,
+      'faction-001': { sentiment: 0.35 },
+      'faction-005': { sentiment: 0.58 },
       'faction-014': { sentiment: -0.65 },
       'faction-016': { sentiment: -0.52 }
-    },
-      'faction-005': { sentiment: 0.58 }
     },
     highlights: [],
     comments: []
@@ -1827,11 +2810,12 @@ export const documents = [
     organizationIds: ['org-001'],
     locationIds: [],
     eventIds: [],
+    quotes: [],
+    activities: [],
     factionMentions: {
-      'faction-001': { sentiment: -0.72,
+      'faction-001': { sentiment: -0.72 },
       'faction-014': { sentiment: -0.65 },
       'faction-016': { sentiment: -0.52 }
-    }
     },
     highlights: [],
     comments: []
@@ -1859,12 +2843,54 @@ export const documents = [
     organizationIds: ['org-016', 'org-001'],
     locationIds: ['loc-003'],
     eventIds: ['event-026'],
+    quotes: [
+      {
+        id: 'quote-046-01',
+        speakerId: 'person-020',
+        speakerType: 'person',
+        text: 'This is a watershed moment for retail workers across America. We have proven that Walmart workers can win.'
+      },
+      {
+        id: 'quote-046-02',
+        speakerId: 'person-025',
+        speakerType: 'person',
+        text: 'Workers stood up against one of the largest corporations in the world and won. This changes everything.'
+      }
+    ],
+    activities: [
+      {
+        id: 'activity-046-01',
+        actorId: 'org-016',
+        actorType: 'organization',
+        action: 'won historic union vote at',
+        targetId: 'org-001',
+        targetType: 'organization',
+        targetText: 'Atlanta fulfillment center'
+      },
+      {
+        id: 'activity-046-02',
+        actorId: 'org-001',
+        actorType: 'organization',
+        action: 'lost first union election at',
+        targetId: null,
+        targetType: null,
+        targetText: 'e-commerce warehouse facility'
+      },
+      {
+        id: 'activity-046-03',
+        actorId: 'person-020',
+        actorType: 'person',
+        action: 'celebrated',
+        targetId: null,
+        targetType: null,
+        targetText: 'first successful Walmart warehouse union'
+      }
+    ],
     factionMentions: {
-      'faction-002': { sentiment: 0.85,
+      'faction-002': { sentiment: 0.85 },
+      'faction-003': { sentiment: 0.88 },
       'faction-010': { sentiment: -0.25 },
       'faction-011': { sentiment: -0.72 }
-    },
-      'faction-003': { sentiment: 0.88 }
     },
     highlights: [],
     comments: []
@@ -1891,13 +2917,40 @@ export const documents = [
     organizationIds: ['org-016', 'org-001'],
     locationIds: ['loc-003'],
     eventIds: ['event-026'],
+    quotes: [
+      {
+        id: 'quote-047-01',
+        speakerId: 'person-020',
+        speakerType: 'person',
+        text: 'This victory may inspire organizing efforts at other warehouses and retail facilities across the country.'
+      }
+    ],
+    activities: [
+      {
+        id: 'activity-047-01',
+        actorId: 'org-016',
+        actorType: 'organization',
+        action: 'analyzed implications of',
+        targetId: null,
+        targetType: null,
+        targetText: 'first successful Walmart warehouse union'
+      },
+      {
+        id: 'activity-047-02',
+        actorId: 'org-001',
+        actorType: 'organization',
+        action: 'faced pressure from',
+        targetId: null,
+        targetType: null,
+        targetText: 'potential organizing at other facilities'
+      }
+    ],
     factionMentions: {
-      'faction-002': { sentiment: 0.72,
+      'faction-002': { sentiment: 0.72 },
+      'faction-003': { sentiment: 0.78 },
+      'faction-005': { sentiment: -0.35 },
       'faction-010': { sentiment: -0.25 },
       'faction-011': { sentiment: -0.72 }
-    },
-      'faction-003': { sentiment: 0.78 },
-      'faction-005': { sentiment: -0.35 }
     },
     highlights: [],
     comments: []
@@ -1924,12 +2977,54 @@ export const documents = [
     organizationIds: ['org-001', 'org-016'],
     locationIds: ['loc-001'],
     eventIds: [],
+    quotes: [
+      {
+        id: 'quote-048-01',
+        speakerId: 'person-001',
+        speakerType: 'person',
+        text: 'We are committed to being a great employer and are announcing significant improvements to wages and scheduling flexibility.'
+      },
+      {
+        id: 'quote-048-02',
+        speakerId: 'org-016',
+        speakerType: 'organization',
+        text: 'These changes prove that organizing works. Workers only got these benefits because of the union threat.'
+      }
+    ],
+    activities: [
+      {
+        id: 'activity-048-01',
+        actorId: 'org-001',
+        actorType: 'organization',
+        action: 'announced',
+        targetId: null,
+        targetType: null,
+        targetText: 'new worker benefits including higher wages and scheduling flexibility'
+      },
+      {
+        id: 'activity-048-02',
+        actorId: 'person-001',
+        actorType: 'person',
+        action: 'responded to',
+        targetId: null,
+        targetType: null,
+        targetText: 'Atlanta union victory with benefit improvements'
+      },
+      {
+        id: 'activity-048-03',
+        actorId: 'org-016',
+        actorType: 'organization',
+        action: 'criticized',
+        targetId: 'org-001',
+        targetType: 'organization',
+        targetText: 'attempt to discourage further organizing'
+      }
+    ],
     factionMentions: {
-      'faction-002': { sentiment: 0.45,
+      'faction-002': { sentiment: 0.45 },
+      'faction-003': { sentiment: 0.52 },
       'faction-010': { sentiment: -0.25 },
       'faction-011': { sentiment: -0.72 }
-    },
-      'faction-003': { sentiment: 0.52 }
     },
     highlights: [],
     comments: []
@@ -1947,7 +3042,7 @@ export const documents = [
     author: {
       username: 'u/just_shopping_2025',
       displayName: 'just_shopping_2025',
-      avatarUrl: 'img/placeholders/avatar-default.svg'
+      avatarUrl: 'https://i.pravatar.cc/150?u=just_shopping_2025'
     },
     contentBlocks: [
       { type: 'paragraph', content: '**Just got accused of theft at Walmart self-checkout - I had my receipt!**\n\nI\'ve shopped at this Walmart for 5 years. Today, loss prevention stopped me, demanded to check my bags, and kept me waiting for 20 minutes while they verified every item. I had my receipt. I paid for everything.\n\nThe worst part? Other customers were staring at me like I was a criminal. I\'ve never been so embarrassed. Is this happening to anyone else?' }
@@ -1959,6 +3054,8 @@ export const documents = [
     organizationIds: ['org-001'],
     locationIds: [],
     eventIds: [],
+    quotes: [],
+    activities: [],
     factionMentions: {
       'faction-001': { sentiment: -0.85 },
       'faction-004': { sentiment: -0.72 }
@@ -1979,7 +3076,7 @@ export const documents = [
     author: {
       username: '@momof3_shopping',
       displayName: 'Shopping Mom Life',
-      avatarUrl: 'img/placeholders/avatar-default.svg'
+      avatarUrl: 'https://i.pravatar.cc/150?u=momof3_shopping'
     },
     contentBlocks: [
       { type: 'paragraph', content: 'Week 4 of no bread at Walmart 🍞❌ Had to go to THREE stores today #walmart #groceryshopping #outofstock #momlife #adulting', portionMark: { classification: 'U', handling: '' } }
@@ -1996,6 +3093,8 @@ export const documents = [
     organizationIds: ['org-001'],
     locationIds: [],
     eventIds: ['event-004'],
+    quotes: [],
+    activities: [],
     factionMentions: {
       'faction-001': { sentiment: -0.78 }
     },
@@ -2015,7 +3114,7 @@ export const documents = [
     author: {
       username: '@retail_analyst',
       displayName: 'Retail Industry Analysis',
-      avatarUrl: 'img/placeholders/avatar-default.svg'
+      avatarUrl: 'https://i.pravatar.cc/150?u=retail_analyst'
     },
     contentBlocks: [
       { type: 'paragraph', content: 'THREAD: Walmart\'s inventory management system is showing serious cracks 🧵\n\n1/ Out-of-stock complaints up 340% on social media vs last year\n2/ Their vaunted real-time inventory system has gaps competitors have fixed\n3/ Amazon and Target gaining ground\n4/ This threatens their core "always in stock" promise\n\nIs this the beginning of a bigger problem?' }
@@ -2027,6 +3126,8 @@ export const documents = [
     organizationIds: ['org-001', 'org-004'],
     locationIds: [],
     eventIds: [],
+    quotes: [],
+    activities: [],
     factionMentions: {
       'faction-001': { sentiment: -0.65 },
       'faction-005': { sentiment: 0.35 }
@@ -2047,7 +3148,7 @@ export const documents = [
     author: {
       username: 'walmart.worker.voices',
       displayName: 'Walmart Worker Voices',
-      avatarUrl: 'img/placeholders/avatar-default.svg'
+      avatarUrl: 'https://i.pravatar.cc/150?u=walmart.worker.voices'
     },
     contentBlocks: [
       { type: 'paragraph', content: 'Current and former Walmart workers - share your stories about understaffing!\n\nI\'ll go first: I\'m scheduled to cover electronics, toys, AND sporting goods by myself tonight. We should have 4 people. Management says we\'re "fully staffed." 🙄\n\nShare your experiences. Our voices matter. #WalmartWorkers #RespectWalmartWorkers' }
@@ -2059,6 +3160,8 @@ export const documents = [
     organizationIds: ['org-001'],
     locationIds: [],
     eventIds: [],
+    quotes: [],
+    activities: [],
     factionMentions: {
       'faction-002': { sentiment: -0.82 },
       'faction-003': { sentiment: -0.75 }
@@ -2079,7 +3182,7 @@ export const documents = [
     author: {
       username: 'u/concerned_parent_2025',
       displayName: 'concerned_parent_2025',
-      avatarUrl: 'img/placeholders/avatar-default.svg'
+      avatarUrl: 'https://i.pravatar.cc/150?u=concerned_parent_2025'
     },
     contentBlocks: [
       { type: 'paragraph', content: '**Great Value recall expanded AGAIN - is anyone else worried about quality control?**\n\nThis is the third expansion of the frozen vegetable recall. Now 15 SKUs affected.\n\nI\'ve been buying Great Value products for years because of the price. But Listeria? With hospitalizations? I have young kids.\n\nIs it worth saving a few dollars if the quality control is this bad?' }
@@ -2091,6 +3194,8 @@ export const documents = [
     organizationIds: ['org-001'],
     locationIds: [],
     eventIds: ['event-009'],
+    quotes: [],
+    activities: [],
     factionMentions: {
       'faction-001': { sentiment: -0.88 }
     },
@@ -2110,7 +3215,7 @@ export const documents = [
     author: {
       username: '@budget_shopper',
       displayName: 'Budget Shopping Tips',
-      avatarUrl: 'img/placeholders/avatar-default.svg'
+      avatarUrl: 'https://i.pravatar.cc/150?u=budget_shopper'
     },
     contentBlocks: [
       { type: 'paragraph', content: 'Did the math: Walmart lost to Aldi on 14 out of 20 items 📊 "everyday low prices" where?? #walmart #aldi #costco #groceryshopping #savemoney #pricecomparison', portionMark: { classification: 'U', handling: '' } }
@@ -2127,6 +3232,8 @@ export const documents = [
     organizationIds: ['org-001', 'org-010'],
     locationIds: [],
     eventIds: [],
+    quotes: [],
+    activities: [],
     factionMentions: {
       'faction-001': { sentiment: -0.72 },
       'faction-006': { sentiment: 0.55 }
@@ -2147,7 +3254,7 @@ export const documents = [
     author: {
       username: '@delivery_watch',
       displayName: 'Delivery Service Tracker',
-      avatarUrl: 'img/placeholders/avatar-default.svg'
+      avatarUrl: 'https://i.pravatar.cc/150?u=delivery_watch'
     },
     contentBlocks: [
       { type: 'paragraph', content: 'Tracking Walmart delivery complaints this week:\n\n📦 Late deliveries: +45% vs last month\n🔄 Substitutions without notice: Common complaint\n🥬 Produce quality issues: Many reports\n📱 App showing "delivered" but no package: Still happening\n\nTarget hitting 98% on-time. Amazon next-day still reliable. Walmart+ subscribers asking: is it worth it?' }
@@ -2159,6 +3266,8 @@ export const documents = [
     organizationIds: ['org-001', 'org-004'],
     locationIds: [],
     eventIds: [],
+    quotes: [],
+    activities: [],
     factionMentions: {
       'faction-001': { sentiment: -0.68 },
       'faction-006': { sentiment: 0.48 }
@@ -2179,7 +3288,7 @@ export const documents = [
     author: {
       username: 'missouri.community',
       displayName: 'Missouri Community Forum',
-      avatarUrl: 'img/placeholders/avatar-default.svg'
+      avatarUrl: 'https://i.pravatar.cc/150?u=missouri.community'
     },
     contentBlocks: [
       { type: 'paragraph', content: 'Just heard the news - our Walmart is closing in 60 days. 😢\n\nThis is the only grocery store within 30 miles. When Walmart came in 15 years ago, they put all our local shops out of business. Now they\'re leaving us with NOTHING.\n\nWhat are we supposed to do? The elderly folks here can\'t drive an hour for groceries.\n\nIs anyone organizing the community meeting?' }
@@ -2191,6 +3300,8 @@ export const documents = [
     organizationIds: ['org-001'],
     locationIds: ['loc-009'],
     eventIds: ['event-013'],
+    quotes: [],
+    activities: [],
     factionMentions: {
       'faction-001': { sentiment: -0.92 }
     },
@@ -2210,7 +3321,7 @@ export const documents = [
     author: {
       username: 'u/ex_walmart_associate',
       displayName: 'ex_walmart_associate',
-      avatarUrl: 'img/placeholders/avatar-default.svg'
+      avatarUrl: 'https://i.pravatar.cc/150?u=ex_walmart_associate'
     },
     contentBlocks: [
       { type: 'paragraph', content: '**Quit Walmart after 3 years - here\'s what it\'s really like**\n\nScheduling: "Open availability" required but shifts change weekly\nStaffing: Doing 2-3 people\'s jobs for $14/hr\nManagement: Constant pressure to meet metrics that keep changing\nBreaks: Often interrupted or skipped during rushes\nBenefits: Health insurance costs almost my entire paycheck\n\nI finally got out. AMA about what it\'s really like behind the scenes.' }
@@ -2222,6 +3333,8 @@ export const documents = [
     organizationIds: ['org-001'],
     locationIds: [],
     eventIds: [],
+    quotes: [],
+    activities: [],
     factionMentions: {
       'faction-002': { sentiment: -0.85 },
       'faction-003': { sentiment: -0.78 }
@@ -2242,7 +3355,7 @@ export const documents = [
     author: {
       username: '@warehouse_life',
       displayName: 'Warehouse Worker Diaries',
-      avatarUrl: 'img/placeholders/avatar-default.svg'
+      avatarUrl: 'https://i.pravatar.cc/150?u=warehouse_life'
     },
     contentBlocks: [
       { type: 'paragraph', content: 'Day in my life at Walmart fulfillment center 📦 17 miles walked yesterday and they wonder why we want to unionize #warehouse #walmartlife #unionize #workersrights #dayinmylife', portionMark: { classification: 'U', handling: '' } }
@@ -2259,6 +3372,8 @@ export const documents = [
     organizationIds: ['org-001'],
     locationIds: ['loc-011'],
     eventIds: [],
+    quotes: [],
+    activities: [],
     factionMentions: {
       'faction-002': { sentiment: -0.75 },
       'faction-003': { sentiment: -0.68 }
@@ -2279,7 +3394,7 @@ export const documents = [
     author: {
       username: '@consumer_rights',
       displayName: 'Consumer Rights Watch',
-      avatarUrl: 'img/placeholders/avatar-default.svg'
+      avatarUrl: 'https://i.pravatar.cc/150?u=consumer_rights'
     },
     contentBlocks: [
       { type: 'paragraph', content: 'THREAD: Our investigation into Great Value private label suppliers 🧵\n\n1/ Multiple suppliers have labor violations on record\n2/ FDA inspection failures at 3 facilities we identified\n3/ Walmart\'s price pressure creates conditions for cutting corners\n4/ The FTC is now involved\n\nFull report link in bio. This goes deeper than one recall.' }
@@ -2291,6 +3406,8 @@ export const documents = [
     organizationIds: ['org-001', 'org-008'],
     locationIds: [],
     eventIds: [],
+    quotes: [],
+    activities: [],
     factionMentions: {
       'faction-001': { sentiment: -0.82 }
     },
@@ -2310,7 +3427,7 @@ export const documents = [
     author: {
       username: 'rural.voices.america',
       displayName: 'Rural America Voices',
-      avatarUrl: 'img/placeholders/avatar-default.svg'
+      avatarUrl: 'https://i.pravatar.cc/150?u=rural.voices.america'
     },
     contentBlocks: [
       { type: 'paragraph', content: 'Let\'s talk about what happens when Walmart leaves small towns.\n\n1. Walmart comes in, undercuts local stores\n2. Local stores close\n3. Walmart becomes only option\n4. Walmart leaves when profits decline\n5. Town becomes food desert\n\nThis has happened to dozens of communities. When does corporate responsibility kick in?\n\nShare your town\'s story below. 👇' }
@@ -2322,6 +3439,8 @@ export const documents = [
     organizationIds: ['org-001'],
     locationIds: ['loc-009'],
     eventIds: [],
+    quotes: [],
+    activities: [],
     factionMentions: {
       'faction-001': { sentiment: -0.88 }
     },
@@ -2341,7 +3460,7 @@ export const documents = [
     author: {
       username: 'u/price_tracker_2025',
       displayName: 'price_tracker_2025',
-      avatarUrl: 'img/placeholders/avatar-default.svg'
+      avatarUrl: 'https://i.pravatar.cc/150?u=price_tracker_2025'
     },
     contentBlocks: [
       { type: 'paragraph', content: '**I\'ve been tracking Walmart prices for 3 years - here\'s what I found**\n\nStarted a spreadsheet in 2022 tracking 100 common items. Key findings:\n\n- 78% of pandemic-era price increases were kept even as wholesale costs dropped\n- "Rollback" prices often higher than pre-pandemic regular prices\n- Great Value items saw biggest % increases\n\nSpreadsheet in comments. "Everyday Low Prices" is marketing, not reality anymore.' }
@@ -2353,6 +3472,8 @@ export const documents = [
     organizationIds: ['org-001'],
     locationIds: [],
     eventIds: [],
+    quotes: [],
+    activities: [],
     factionMentions: {
       'faction-001': { sentiment: -0.75 },
       'faction-006': { sentiment: 0.62 }
@@ -2373,7 +3494,7 @@ export const documents = [
     author: {
       username: '@healthcare_access',
       displayName: 'Healthcare Access Stories',
-      avatarUrl: 'img/placeholders/avatar-default.svg'
+      avatarUrl: 'https://i.pravatar.cc/150?u=healthcare_access'
     },
     contentBlocks: [
       { type: 'paragraph', content: 'Our hospital closed and Walmart Health is the only option now - honestly it\'s been amazing 🏥 #ruralhealth #walmartHealth #healthcare #rurallife', portionMark: { classification: 'U', handling: '' } }
@@ -2390,6 +3511,8 @@ export const documents = [
     organizationIds: ['org-001', 'org-019'],
     locationIds: ['loc-009'],
     eventIds: ['event-018'],
+    quotes: [],
+    activities: [],
     factionMentions: {
       'faction-005': { sentiment: 0.72 }
     },
@@ -2409,7 +3532,7 @@ export const documents = [
     author: {
       username: '@labor_news',
       displayName: 'Labor Movement News',
-      avatarUrl: 'img/placeholders/avatar-default.svg'
+      avatarUrl: 'https://i.pravatar.cc/150?u=labor_news'
     },
     contentBlocks: [
       { type: 'paragraph', content: 'BREAKING: Dallas Walmart fulfillment center votes NO on union 52-48%\n\nIncredibly close. Workers cited fear of retaliation and promised benefit improvements.\n\nWalmart spent heavily on anti-union messaging in final weeks.\n\nThis fight isn\'t over. Atlanta vote coming in January. 📊' }
@@ -2421,6 +3544,8 @@ export const documents = [
     organizationIds: ['org-001', 'org-016'],
     locationIds: ['loc-011'],
     eventIds: ['event-019'],
+    quotes: [],
+    activities: [],
     factionMentions: {
       'faction-002': { sentiment: -0.55 },
       'faction-003': { sentiment: -0.48 }
@@ -2441,7 +3566,7 @@ export const documents = [
     author: {
       username: 'frugal.life.tips',
       displayName: 'Frugal Living Community',
-      avatarUrl: 'img/placeholders/avatar-default.svg'
+      avatarUrl: 'https://i.pravatar.cc/150?u=frugal.life.tips'
     },
     contentBlocks: [
       { type: 'paragraph', content: 'I used to shop exclusively at Walmart for 10 years. Did a test month shopping at Aldi + Costco instead.\n\nResults: Saved $127 on groceries. Food quality was better. Shopping experience was less stressful.\n\nAnyone else made the switch? What alternatives work best in your area? 🛒💰' }
@@ -2453,6 +3578,8 @@ export const documents = [
     organizationIds: ['org-001', 'org-010'],
     locationIds: [],
     eventIds: [],
+    quotes: [],
+    activities: [],
     factionMentions: {
       'faction-001': { sentiment: -0.58 },
       'faction-006': { sentiment: 0.65 }
@@ -2473,7 +3600,7 @@ export const documents = [
     author: {
       username: 'u/need_legal_help_2025',
       displayName: 'need_legal_help_2025',
-      avatarUrl: 'img/placeholders/avatar-default.svg'
+      avatarUrl: 'https://i.pravatar.cc/150?u=need_legal_help_2025'
     },
     contentBlocks: [
       { type: 'paragraph', content: '**Was detained at Walmart for 45 minutes, missed my flight - do I have a case?**\n\nLong story short: self-checkout flagged an item as not scanned (it was). LP detained me, verified my receipt, found nothing wrong, and let me go. But it took 45 minutes and I missed my flight.\n\n$800 flight gone. Lost business meeting. Can I sue? This seems like false imprisonment.\n\nTexas, if that matters.' }
@@ -2485,6 +3612,8 @@ export const documents = [
     organizationIds: ['org-001'],
     locationIds: [],
     eventIds: [],
+    quotes: [],
+    activities: [],
     factionMentions: {
       'faction-001': { sentiment: -0.82 },
       'faction-004': { sentiment: -0.75 }
@@ -2505,7 +3634,7 @@ export const documents = [
     author: {
       username: '@holiday_disasters',
       displayName: 'Holiday Shopping Fails',
-      avatarUrl: 'img/placeholders/avatar-default.svg'
+      avatarUrl: 'https://i.pravatar.cc/150?u=holiday_disasters'
     },
     contentBlocks: [
       { type: 'paragraph', content: 'Ordered toys, got cat food and someone else\'s PRESCRIPTION?? 😭 Walmart what is going on #walmartfail #christmasruined #deliveryfail #storytime', portionMark: { classification: 'U', handling: '' } }
@@ -2522,6 +3651,8 @@ export const documents = [
     organizationIds: ['org-001'],
     locationIds: [],
     eventIds: ['event-022'],
+    quotes: [],
+    activities: [],
     factionMentions: {
       'faction-001': { sentiment: -0.92 }
     },
@@ -2541,7 +3672,7 @@ export const documents = [
     author: {
       username: '@retail_workers_united',
       displayName: 'Retail Workers United',
-      avatarUrl: 'img/placeholders/avatar-default.svg'
+      avatarUrl: 'https://i.pravatar.cc/150?u=retail_workers_united'
     },
     contentBlocks: [
       { type: 'paragraph', content: '🎉 HISTORIC VICTORY 🎉\n\nAtlanta Walmart fulfillment center votes YES to unionize!\n\nThis is the FIRST successful Walmart warehouse union. Ever.\n\n58% voted yes. Workers cited:\n- Better scheduling\n- Safety concerns\n- Respect on the job\n\nThe tide is turning. Who\'s next? ✊' }
@@ -2553,6 +3684,8 @@ export const documents = [
     organizationIds: ['org-001', 'org-016'],
     locationIds: ['loc-012'],
     eventIds: ['event-026'],
+    quotes: [],
+    activities: [],
     factionMentions: {
       'faction-002': { sentiment: 0.85 },
       'faction-003': { sentiment: 0.78 }
@@ -2573,7 +3706,7 @@ export const documents = [
     author: {
       username: 'holiday.shopping.support',
       displayName: 'Holiday Shopping Support Group',
-      avatarUrl: 'img/placeholders/avatar-default.svg'
+      avatarUrl: 'https://i.pravatar.cc/150?u=holiday.shopping.support'
     },
     contentBlocks: [
       { type: 'paragraph', content: 'Share your Walmart delivery horror stories from this holiday season! I\'ll start:\n\nOrdered Dec 1. "Guaranteed by Dec 15." Still not here on Dec 18. App says "in transit" for 10 days. Support says "please wait." Kids might not have presents under the tree. 💔\n\nLet\'s collect these stories - maybe if enough of us share, they\'ll actually fix the system.' }
@@ -2585,6 +3718,8 @@ export const documents = [
     organizationIds: ['org-001'],
     locationIds: [],
     eventIds: ['event-022'],
+    quotes: [],
+    activities: [],
     factionMentions: {
       'faction-001': { sentiment: -0.88 }
     },
@@ -2604,7 +3739,7 @@ export const documents = [
     author: {
       username: '@union_strong',
       displayName: 'Union Organizing Tips',
-      avatarUrl: 'img/placeholders/avatar-default.svg'
+      avatarUrl: 'https://i.pravatar.cc/150?u=union_strong'
     },
     contentBlocks: [
       { type: 'paragraph', content: 'How we won the first Walmart warehouse union ✊ Tips for workers thinking about organizing #union #workersrights #organizing #walmartworkers #labormovement', portionMark: { classification: 'U', handling: '' } }
@@ -2621,6 +3756,8 @@ export const documents = [
     organizationIds: ['org-016'],
     locationIds: ['loc-012'],
     eventIds: ['event-026'],
+    quotes: [],
+    activities: [],
     factionMentions: {
       'faction-002': { sentiment: 0.82 },
       'faction-003': { sentiment: 0.75 }
@@ -2641,7 +3778,7 @@ export const documents = [
     author: {
       username: 'u/walmart_associate_real',
       displayName: 'walmart_associate_real',
-      avatarUrl: 'img/placeholders/avatar-default.svg'
+      avatarUrl: 'https://i.pravatar.cc/150?u=walmart_associate_real'
     },
     contentBlocks: [
       { type: 'paragraph', content: '**New Walmart benefits announced - here\'s what workers think**\n\nSo Walmart just announced higher minimum wage and better scheduling after the Atlanta union win. Thoughts:\n\n✅ Good: $2/hr raise in some markets\n✅ Good: More schedule flexibility\n❌ Bad: Clearly trying to stop more unions\n❌ Bad: Why did it take a union threat to get this?\n\nMixed feelings. What do other associates think? Is this enough or too little too late?' }
@@ -2653,6 +3790,8 @@ export const documents = [
     organizationIds: ['org-001', 'org-016'],
     locationIds: [],
     eventIds: [],
+    quotes: [],
+    activities: [],
     factionMentions: {
       'faction-002': { sentiment: 0.35 },
       'faction-003': { sentiment: 0.28 }
@@ -2679,6 +3818,8 @@ export const documents = [
     locationIds: ['loc-001'],
     narrativeIds: [],
     eventIds: [],
+    quotes: [],
+    activities: [],
     factionMentions: {},
     structuredData: {
       recordType: 'corporate_record',
@@ -2714,6 +3855,8 @@ export const documents = [
     locationIds: ['loc-001'],
     narrativeIds: ['narr-004', 'narr-008'],
     eventIds: [],
+    quotes: [],
+    activities: [],
     factionMentions: {},
     structuredData: {
       recordType: 'corporate_record',
@@ -2749,6 +3892,8 @@ export const documents = [
     locationIds: [],
     narrativeIds: ['narr-008'],
     eventIds: ['event-015', 'event-016'],
+    quotes: [],
+    activities: [],
     factionMentions: {
       'faction-002': { sentiment: -0.6 }
     },
@@ -2786,6 +3931,8 @@ export const documents = [
     locationIds: ['loc-009', 'loc-010'],
     narrativeIds: ['narr-010'],
     eventIds: ['event-018', 'event-021'],
+    quotes: [],
+    activities: [],
     factionMentions: {
       'faction-001': { sentiment: 0.5 }
     },
@@ -2823,6 +3970,8 @@ export const documents = [
     locationIds: [],
     narrativeIds: [],
     eventIds: [],
+    quotes: [],
+    activities: [],
     factionMentions: {},
     structuredData: {
       recordType: 'corporate_record',
@@ -2858,6 +4007,8 @@ export const documents = [
     locationIds: ['loc-009'],
     narrativeIds: ['narr-010'],
     eventIds: [],
+    quotes: [],
+    activities: [],
     factionMentions: {},
     structuredData: {
       recordType: 'corporate_record',
@@ -2893,6 +4044,8 @@ export const documents = [
     locationIds: ['loc-002'],
     narrativeIds: ['narr-001'],
     eventIds: ['event-002'],
+    quotes: [],
+    activities: [],
     factionMentions: {},
     structuredData: {
       recordType: 'corporate_record',
@@ -2928,6 +4081,8 @@ export const documents = [
     locationIds: ['loc-003'],
     narrativeIds: ['narr-009'],
     eventIds: ['event-020'],
+    quotes: [],
+    activities: [],
     factionMentions: {
       'faction-002': { sentiment: 0.8 },
       'faction-003': { sentiment: 0.7 }
@@ -2966,6 +4121,8 @@ export const documents = [
     locationIds: [],
     narrativeIds: ['narr-010'],
     eventIds: [],
+    quotes: [],
+    activities: [],
     factionMentions: {},
     structuredData: {
       recordType: 'corporate_record',
@@ -3001,6 +4158,8 @@ export const documents = [
     locationIds: [],
     narrativeIds: ['narr-011'],
     eventIds: [],
+    quotes: [],
+    activities: [],
     factionMentions: {},
     structuredData: {
       recordType: 'corporate_record',
@@ -3040,6 +4199,8 @@ export const documents = [
     locationIds: ['loc-006'],
     narrativeIds: [],
     eventIds: [],
+    quotes: [],
+    activities: [],
     factionMentions: {},
     structuredData: {
       recordType: 'political_finance',
@@ -3074,6 +4235,8 @@ export const documents = [
     locationIds: ['loc-006'],
     narrativeIds: ['narr-009'],
     eventIds: [],
+    quotes: [],
+    activities: [],
     factionMentions: {
       'faction-001': { sentiment: 0.3 }
     },
@@ -3112,6 +4275,8 @@ export const documents = [
     locationIds: ['loc-006', 'loc-007'],
     narrativeIds: ['narr-004'],
     eventIds: ['event-008', 'event-009'],
+    quotes: [],
+    activities: [],
     factionMentions: {},
     structuredData: {
       recordType: 'political_finance',
@@ -3148,6 +4313,8 @@ export const documents = [
     locationIds: ['loc-006'],
     narrativeIds: ['narr-008'],
     eventIds: ['event-016'],
+    quotes: [],
+    activities: [],
     factionMentions: {},
     structuredData: {
       recordType: 'political_finance',
@@ -3182,6 +4349,8 @@ export const documents = [
     locationIds: ['loc-006'],
     narrativeIds: ['narr-009'],
     eventIds: [],
+    quotes: [],
+    activities: [],
     factionMentions: {
       'faction-002': { sentiment: 0.8 },
       'faction-003': { sentiment: 0.7 }
@@ -3219,6 +4388,8 @@ export const documents = [
     locationIds: ['loc-006', 'loc-009'],
     narrativeIds: ['narr-010'],
     eventIds: ['event-018'],
+    quotes: [],
+    activities: [],
     factionMentions: {
       'faction-001': { sentiment: 0.4 }
     },
@@ -3257,6 +4428,8 @@ export const documents = [
     locationIds: ['loc-006'],
     narrativeIds: [],
     eventIds: [],
+    quotes: [],
+    activities: [],
     factionMentions: {},
     structuredData: {
       recordType: 'political_finance',
@@ -3293,6 +4466,8 @@ export const documents = [
     locationIds: ['loc-006'],
     narrativeIds: ['narr-004'],
     eventIds: ['event-008'],
+    quotes: [],
+    activities: [],
     factionMentions: {
       'faction-002': { sentiment: 0.5 }
     },
@@ -3331,6 +4506,8 @@ export const documents = [
     locationIds: [],
     narrativeIds: [],
     eventIds: [],
+    quotes: [],
+    activities: [],
     factionMentions: {},
     structuredData: {
       recordType: 'political_finance',
@@ -3365,6 +4542,8 @@ export const documents = [
     locationIds: ['loc-001'],
     narrativeIds: [],
     eventIds: [],
+    quotes: [],
+    activities: [],
     factionMentions: {},
     structuredData: {
       recordType: 'political_finance',

@@ -3258,6 +3258,54 @@ export const DataService = {
     };
   },
 
+  // ============================================
+  // Project Snippets
+  // ============================================
+
+  /**
+   * Get all snippets for a project with resolved source documents
+   * @param {string} projectId - Project ID
+   * @returns {Array} Snippets with sourceDocument attached
+   */
+  getSnippetsForProject: (projectId) => {
+    const snippets = dataStore.getSnippetsForProject(projectId);
+    return snippets.map(snippet => ({
+      ...snippet,
+      sourceDocument: findById('documents', snippet.sourceDocumentId)
+    }));
+  },
+
+  /**
+   * Add a snippet to a project
+   * @param {string} projectId - Project ID
+   * @param {Object} snippetData - Snippet data
+   * @returns {Object} Result with snippetId
+   */
+  addSnippetToProject: (projectId, snippetData) => {
+    return dataStore.addSnippetToProject(projectId, snippetData);
+  },
+
+  /**
+   * Remove a snippet from a project
+   * @param {string} projectId - Project ID
+   * @param {string} snippetId - Snippet ID
+   * @returns {Object} Result
+   */
+  removeSnippetFromProject: (projectId, snippetId) => {
+    return dataStore.removeSnippetFromProject(projectId, snippetId);
+  },
+
+  /**
+   * Update a snippet note
+   * @param {string} projectId - Project ID
+   * @param {string} snippetId - Snippet ID
+   * @param {string} note - New note content
+   * @returns {boolean} Success
+   */
+  updateSnippetNote: (projectId, snippetId, note) => {
+    return dataStore.updateSnippetInProject(projectId, snippetId, { note });
+  },
+
   // Search across all entities
   /**
    * Search across all entities
@@ -3849,13 +3897,171 @@ export const DataService = {
       organization: 'organizations',
       document: 'documents',
       topic: 'topics',
-      monitor: 'monitors'
+      monitor: 'monitors',
+      workspace: 'workspaces',
+      project: 'projects'
     };
     
     const collection = collectionMap[entityType];
     if (!collection) return false;
     
     return dataStore.updateEntity(collection, entityId, { tagIds: tagIds || [] });
+  },
+
+  // ============================================
+  // Quote and Activity Aggregation Methods
+  // ============================================
+
+  /**
+   * Get all quotes by a person, optionally filtered to specific documents
+   * @param {string} personId - Person ID
+   * @param {Array} documentIds - Optional array of document IDs to filter by
+   * @returns {Array} Quotes with document metadata
+   */
+  getQuotesForPerson: (personId, documentIds = null) => {
+    let documents = dataStore.data?.documents || [];
+    
+    // Filter to specific documents if provided
+    if (documentIds && documentIds.length > 0) {
+      documents = documents.filter(doc => documentIds.includes(doc.id));
+    }
+    
+    return documents
+      .flatMap(doc => (doc.quotes || [])
+        .filter(q => q.speakerType === 'person' && q.speakerId === personId)
+        .map(q => ({
+          ...q,
+          documentId: doc.id,
+          documentTitle: doc.title,
+          publishedDate: doc.publishedDate
+        }))
+      )
+      .sort((a, b) => new Date(b.publishedDate) - new Date(a.publishedDate));
+  },
+
+  /**
+   * Get all quotes by an organization, optionally filtered to specific documents
+   * @param {string} orgId - Organization ID
+   * @param {Array} documentIds - Optional array of document IDs to filter by
+   * @returns {Array} Quotes with document metadata
+   */
+  getQuotesForOrganization: (orgId, documentIds = null) => {
+    let documents = dataStore.data?.documents || [];
+    
+    // Filter to specific documents if provided
+    if (documentIds && documentIds.length > 0) {
+      documents = documents.filter(doc => documentIds.includes(doc.id));
+    }
+    
+    return documents
+      .flatMap(doc => (doc.quotes || [])
+        .filter(q => q.speakerType === 'organization' && q.speakerId === orgId)
+        .map(q => ({
+          ...q,
+          documentId: doc.id,
+          documentTitle: doc.title,
+          publishedDate: doc.publishedDate
+        }))
+      )
+      .sort((a, b) => new Date(b.publishedDate) - new Date(a.publishedDate));
+  },
+
+  /**
+   * Get all activities involving a person (as actor or target), optionally filtered to specific documents
+   * @param {string} personId - Person ID
+   * @param {Array} documentIds - Optional array of document IDs to filter by
+   * @returns {Array} Activities with document metadata and role indicator
+   */
+  getActivitiesForPerson: (personId, documentIds = null) => {
+    let documents = dataStore.data?.documents || [];
+    
+    // Filter to specific documents if provided
+    if (documentIds && documentIds.length > 0) {
+      documents = documents.filter(doc => documentIds.includes(doc.id));
+    }
+    
+    return documents
+      .flatMap(doc => (doc.activities || [])
+        .filter(a => 
+          (a.actorType === 'person' && a.actorId === personId) ||
+          (a.targetType === 'person' && a.targetId === personId)
+        )
+        .map(a => ({
+          ...a,
+          documentId: doc.id,
+          documentTitle: doc.title,
+          publishedDate: doc.publishedDate,
+          role: a.actorId === personId ? 'actor' : 'target'
+        }))
+      )
+      .sort((a, b) => new Date(b.publishedDate) - new Date(a.publishedDate));
+  },
+
+  /**
+   * Get all activities involving an organization (as actor or target), optionally filtered to specific documents
+   * @param {string} orgId - Organization ID
+   * @param {Array} documentIds - Optional array of document IDs to filter by
+   * @returns {Array} Activities with document metadata and role indicator
+   */
+  getActivitiesForOrganization: (orgId, documentIds = null) => {
+    let documents = dataStore.data?.documents || [];
+    
+    // Filter to specific documents if provided
+    if (documentIds && documentIds.length > 0) {
+      documents = documents.filter(doc => documentIds.includes(doc.id));
+    }
+    
+    return documents
+      .flatMap(doc => (doc.activities || [])
+        .filter(a => 
+          (a.actorType === 'organization' && a.actorId === orgId) ||
+          (a.targetType === 'organization' && a.targetId === orgId)
+        )
+        .map(a => ({
+          ...a,
+          documentId: doc.id,
+          documentTitle: doc.title,
+          publishedDate: doc.publishedDate,
+          role: a.actorId === orgId ? 'actor' : 'target'
+        }))
+      )
+      .sort((a, b) => new Date(b.publishedDate) - new Date(a.publishedDate));
+  },
+
+  /**
+   * Get all quotes from documents in a specific scope
+   * @param {Array} documentIds - Array of document IDs to search
+   * @returns {Array} All quotes from those documents
+   */
+  getQuotesForDocuments: (documentIds) => {
+    const documents = (dataStore.data?.documents || []).filter(doc => documentIds.includes(doc.id));
+    
+    return documents
+      .flatMap(doc => (doc.quotes || []).map(q => ({
+        ...q,
+        documentId: doc.id,
+        documentTitle: doc.title,
+        publishedDate: doc.publishedDate
+      })))
+      .sort((a, b) => new Date(b.publishedDate) - new Date(a.publishedDate));
+  },
+
+  /**
+   * Get all activities from documents in a specific scope
+   * @param {Array} documentIds - Array of document IDs to search
+   * @returns {Array} All activities from those documents
+   */
+  getActivitiesForDocuments: (documentIds) => {
+    const documents = (dataStore.data?.documents || []).filter(doc => documentIds.includes(doc.id));
+    
+    return documents
+      .flatMap(doc => (doc.activities || []).map(a => ({
+        ...a,
+        documentId: doc.id,
+        documentTitle: doc.title,
+        publishedDate: doc.publishedDate
+      })))
+      .sort((a, b) => new Date(b.publishedDate) - new Date(a.publishedDate));
   }
 };
 
