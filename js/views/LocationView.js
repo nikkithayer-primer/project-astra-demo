@@ -96,7 +96,7 @@ export class LocationView extends DetailViewBase {
     `;
 
     // Initialize stat card dropdowns
-    this.initStatDropdowns(contextId);
+    this.initStatDropdowns(contextId, this.locationId);
 
     // Initialize card width toggles
     this.initCardWidthToggles('location', this.locationId);

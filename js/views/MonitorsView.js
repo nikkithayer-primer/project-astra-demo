@@ -538,7 +538,7 @@ export class MonitorsView extends BaseView {
             <h2 class="card-title">All Alerts</h2>
             <span class="badge badge-default">${sortedAlerts.length} total</span>
           </div>
-          <div class="card-body card-body-no-padding">
+          <div class="card-body no-padding">
             <div class="alerts-list">
               ${alertsListHtml}
             </div>

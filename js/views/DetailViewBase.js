@@ -91,12 +91,16 @@ export class DetailViewBase extends BaseView {
 
   /**
    * Initialize stat card dropdowns
-   * @param {string|null} contextId - The context ID for the dropdowns
+   * @param {string|null} contextId - The parent context ID for the dropdowns
+   * @param {string|null} currentEntityId - The current entity ID being viewed (for documents tab route)
    * @returns {Array} Array of dropdown instances
    */
-  initStatDropdowns(contextId = null) {
+  initStatDropdowns(contextId = null, currentEntityId = null) {
     const ctxId = contextId ?? this.context?.id ?? null;
-    this._statDropdowns = StatCards.initDropdowns(this.container, { contextId: ctxId });
+    this._statDropdowns = StatCards.initDropdowns(this.container, { 
+      contextId: ctxId,
+      currentEntityId: currentEntityId
+    });
     return this._statDropdowns;
   }
 

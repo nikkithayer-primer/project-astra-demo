@@ -99,7 +99,7 @@ export class TopicView extends DetailViewBase {
     `;
 
     // Initialize stat card dropdowns
-    this.initStatDropdowns(contextId);
+    this.initStatDropdowns(contextId, this.topicId);
 
     // Initialize card width toggles
     this.initCardWidthToggles('topic', this.topicId);

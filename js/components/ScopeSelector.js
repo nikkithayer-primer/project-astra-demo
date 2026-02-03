@@ -347,7 +347,6 @@ export class ScopeSelector {
     return [
       { id: 'news_article', name: 'News Article' },
       { id: 'social_post', name: 'Social Post' },
-      { id: 'tiktok', name: 'TikTok' },
       { id: 'internal_report', name: 'Internal Report' },
       { id: 'intelligence_report', name: 'Intelligence Report' },
       { id: 'memo', name: 'Memo' },

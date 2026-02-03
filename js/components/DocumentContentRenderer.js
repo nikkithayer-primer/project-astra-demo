@@ -1,7 +1,7 @@
 /**
  * DocumentContentRenderer.js
  * Renders document content based on document type
- * Supports: social_post, tiktok, news_article, internal, and structured data types
+ * Supports: social_post, news_article, internal, and structured data types
  * Includes highlight and comment annotations
  */
 
@@ -94,9 +94,6 @@ export class DocumentContentRenderer extends BaseComponent {
     switch (docType) {
       case DOCUMENT_TYPES.SOCIAL_POST:
         this.renderSocialPost(doc, highlights, comments);
-        break;
-      case DOCUMENT_TYPES.TIKTOK:
-        this.renderTikTok(doc, highlights, comments);
         break;
       case DOCUMENT_TYPES.NEWS_ARTICLE:
         this.renderNewsArticle(doc, highlights, comments);
@@ -292,11 +289,12 @@ export class DocumentContentRenderer extends BaseComponent {
   renderSocialPost(doc, highlights = [], comments = []) {
     const media = doc.media || [];
     const video = doc.video;
+    const isTikTok = doc.publisherId?.includes('tiktok');
 
-    // Handle TikTok-style video (9:16 aspect ratio)
-    let videoHtml = '';
+    // Handle TikTok-style video (9:16 aspect ratio) - video player only
+    let videoPlayerHtml = '';
     if (video) {
-      videoHtml = `
+      videoPlayerHtml = `
         <div class="tiktok-video-container">
           <div class="tiktok-video-placeholder">
             <img src="${video.thumbnailUrl || PLACEHOLDERS.video}" alt="Video thumbnail">
@@ -305,14 +303,16 @@ export class DocumentContentRenderer extends BaseComponent {
             <svg viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"/></svg>
           </div>
         </div>
-        ${doc.transcription ? `
-          <div class="tiktok-transcription">
-            <div class="tiktok-transcription-label">Transcription</div>
-            <div class="tiktok-transcription-text">${this.escapeHtml(doc.transcription)}</div>
-          </div>
-        ` : ''}
       `;
     }
+
+    // Transcription (separate from video player for TikToks)
+    const transcriptionHtml = doc.transcription ? `
+      <div class="tiktok-transcription">
+        <div class="tiktok-transcription-label">Transcription</div>
+        <div class="tiktok-transcription-text">${this.escapeHtml(doc.transcription)}</div>
+      </div>
+    ` : '';
 
     // Handle regular media (images, etc.)
     const mediaHtml = media.length > 0 ? `
@@ -334,9 +334,18 @@ export class DocumentContentRenderer extends BaseComponent {
       ? this.renderContentBlocks(contentBlocks, this.shouldShowPortionMarks(), highlights, comments)
       : (doc.excerpt ? `<p class="social-post-text">${this.escapeHtml(doc.excerpt)}</p>` : '');
 
-    const html = `
+    // For TikToks: video → caption → transcription
+    // For other social posts: video+transcription → content → media
+    const html = isTikTok ? `
       <div class="social-post">
-        ${videoHtml}
+        ${videoPlayerHtml}
+        <div class="social-post-content">${contentHtml}</div>
+        ${transcriptionHtml}
+      </div>
+    ` : `
+      <div class="social-post">
+        ${videoPlayerHtml}
+        ${transcriptionHtml}
         <div class="social-post-content">${contentHtml}</div>
         ${mediaHtml}
       </div>

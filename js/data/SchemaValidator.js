@@ -171,7 +171,7 @@ const SCHEMAS = {
                'structuredData'],
     types: {
       title: 'string',
-      documentType: ['news_article', 'social_post', 'tiktok', 'internal_report',
+      documentType: ['news_article', 'social_post', 'internal_report',
                      'intelligence_report', 'memo', 'transcript', 'internal',
                      'corporate_record', 'watchlist_match', 'political_finance', 'event_attendance'],
       classification: ['U', 'CUI', 'C', 'S', 'TS'],

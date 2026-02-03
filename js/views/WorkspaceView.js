@@ -74,7 +74,6 @@ export class WorkspaceView extends DetailViewBase {
 
     const headerHtml = PageHeader.render({
       breadcrumbs: [
-        { label: 'Dashboard', href: '#/dashboard' },
         { label: 'Workspaces', href: '#/workspaces' },
         workspace.name
       ],
@@ -108,7 +107,7 @@ export class WorkspaceView extends DetailViewBase {
     Object.assign(this.components, components);
 
     // Initialize stat card dropdowns
-    this.initStatDropdowns(contextId);
+    this.initStatDropdowns(contextId, this.workspaceId);
 
     // Initialize tag chips
     this.initTagChips(workspace, 'workspace');

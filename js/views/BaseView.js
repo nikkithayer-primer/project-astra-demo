@@ -126,10 +126,10 @@ export class BaseView {
         breadcrumbs.push({ label: 'Projects', href: '#/projects' });
         breadcrumbs.push({ label: ctx.getName(), href: `#/${ctx.id}/` });
       } else {
-        breadcrumbs.push({ label: 'COP', href: '#/cop/' });
+        breadcrumbs.push({ label: 'Common Operating Picture', href: '#/cop/' });
       }
     } else {
-      breadcrumbs.push({ label: 'COP', href: '#/cop/' });
+      breadcrumbs.push({ label: 'Common Operating Picture', href: '#/cop/' });
     }
     
     // Add remaining items

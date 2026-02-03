@@ -661,6 +661,65 @@ export class ChatService {
   }
 
   /**
+   * Get current conversation history
+   * @returns {Array} Array of message objects
+   */
+  getHistory() {
+    return [...this.conversationHistory];
+  }
+
+  /**
+   * Set conversation history (for restoring from storage)
+   * @param {Array} history - Array of message objects
+   */
+  setHistory(history) {
+    if (Array.isArray(history)) {
+      this.conversationHistory = history.slice(-this.maxHistoryLength);
+    }
+  }
+
+  /**
+   * Save conversation history to sessionStorage for a context
+   * @param {string} contextKey - The context key (e.g., "workspace-workspace-001")
+   */
+  saveHistoryToStorage(contextKey) {
+    if (contextKey && this.conversationHistory.length > 0) {
+      sessionStorage.setItem(`chat_history_${contextKey}`, JSON.stringify(this.conversationHistory));
+    }
+  }
+
+  /**
+   * Load conversation history from sessionStorage for a context
+   * @param {string} contextKey - The context key
+   * @returns {boolean} Whether history was restored
+   */
+  loadHistoryFromStorage(contextKey) {
+    if (!contextKey) return false;
+    
+    const stored = sessionStorage.getItem(`chat_history_${contextKey}`);
+    if (stored) {
+      try {
+        const history = JSON.parse(stored);
+        this.setHistory(history);
+        return true;
+      } catch (e) {
+        console.error('Failed to parse stored chat history:', e);
+      }
+    }
+    return false;
+  }
+
+  /**
+   * Clear stored history for a context
+   * @param {string} contextKey - The context key
+   */
+  clearStoredHistory(contextKey) {
+    if (contextKey) {
+      sessionStorage.removeItem(`chat_history_${contextKey}`);
+    }
+  }
+
+  /**
    * Build rich context for the current page
    * @returns {string} Formatted context string
    */
@@ -893,5 +952,175 @@ export class ChatService {
       this.conversationHistory.pop();
       throw error;
     }
+  }
+
+  /**
+   * Generate a page summary without adding to conversation history
+   * Used for automatic navigation summaries that shouldn't pollute the chat history
+   * @param {string} instruction - The instruction/prompt for what to summarize
+   * @returns {Promise<string>} The summary response
+   */
+  async generateSummaryOnly(instruction) {
+    const apiKey = ChatService.getApiKey();
+    if (!apiKey) {
+      throw new Error('OpenAI API key not configured.');
+    }
+
+    // Build context for current page
+    const contextString = this.buildContextString();
+    
+    const systemPrompt = `You are an intelligence analyst assistant. Based on the current page context, provide a brief summary as requested.
+
+${contextString}
+
+Guidelines:
+- Be concise (2-3 sentences max)
+- Focus on key insights and actionable information
+- Don't ask follow-up questions
+- Don't mention that you're an AI or reference the prompt`;
+
+    try {
+      const response = await fetch('https://api.openai.com/v1/chat/completions', {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${apiKey}`,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          model: 'gpt-4o',
+          messages: [
+            { role: 'system', content: systemPrompt },
+            { role: 'user', content: instruction }
+          ],
+          temperature: 0.7,
+          max_tokens: 300
+        })
+      });
+
+      if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.error?.message || 'OpenAI API request failed');
+      }
+
+      const data = await response.json();
+      return data.choices[0].message.content;
+    } catch (error) {
+      console.error('Summary generation failed:', error);
+      throw error;
+    }
+  }
+
+  /**
+   * Generate AI-powered suggested questions based on entity context
+   * Uses gpt-3.5-turbo for speed and cost efficiency
+   * @param {Object} context - Entity context with type, name, and available data
+   * @returns {Promise<string[]>} Array of 3 suggested questions
+   */
+  async generateSuggestedQuestions(context) {
+    const apiKey = ChatService.getApiKey();
+    if (!apiKey) {
+      throw new Error('No API key configured');
+    }
+
+    const prompt = this.buildQuestionPrompt(context);
+    
+    try {
+      const response = await fetch('https://api.openai.com/v1/chat/completions', {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${apiKey}`,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          model: 'gpt-3.5-turbo',
+          messages: [
+            {
+              role: 'system',
+              content: 'You generate exactly 3 short, specific questions a user might want to ask about the data they are viewing. Each question should be on its own line. Questions should be concise (under 12 words) and actionable. Do not number them or add any other text.'
+            },
+            {
+              role: 'user',
+              content: prompt
+            }
+          ],
+          temperature: 0.7,
+          max_tokens: 150
+        })
+      });
+
+      if (!response.ok) {
+        throw new Error('API request failed');
+      }
+
+      const data = await response.json();
+      const content = data.choices[0].message.content;
+      
+      // Parse the response into an array of questions
+      const questions = content
+        .split('\n')
+        .map(q => q.trim())
+        .filter(q => q.length > 0 && q.endsWith('?'))
+        .slice(0, 3);
+      
+      // Ensure we have exactly 3 questions
+      if (questions.length < 3) {
+        throw new Error('Not enough questions generated');
+      }
+      
+      return questions;
+    } catch (error) {
+      console.error('Failed to generate suggested questions:', error);
+      throw error;
+    }
+  }
+
+  /**
+   * Build the prompt for generating suggested questions
+   */
+  buildQuestionPrompt(context) {
+    let prompt = `The user is viewing a ${context.type}`;
+    
+    if (context.name) {
+      prompt += ` called "${context.name}"`;
+    }
+    prompt += '.\n\n';
+    
+    prompt += 'Available data:\n';
+    
+    if (context.description) {
+      prompt += `- Description: ${context.description.substring(0, 100)}...\n`;
+    }
+    if (context.themeCount > 0) {
+      prompt += `- ${context.themeCount} themes\n`;
+    }
+    if (context.factionCount > 0) {
+      prompt += `- ${context.factionCount} factions engaged\n`;
+    }
+    if (context.documentCount > 0) {
+      prompt += `- ${context.documentCount} related documents\n`;
+    }
+    if (context.narrativeCount > 0) {
+      prompt += `- Appears in ${context.narrativeCount} narratives\n`;
+    }
+    if (context.personCount > 0) {
+      prompt += `- ${context.personCount} people mentioned\n`;
+    }
+    if (context.orgCount > 0) {
+      prompt += `- ${context.orgCount} organizations mentioned\n`;
+    }
+    if (context.sentiment !== undefined) {
+      const sentimentLabel = context.sentiment > 0.2 ? 'positive' : context.sentiment < -0.2 ? 'negative' : 'neutral';
+      prompt += `- Overall sentiment: ${sentimentLabel} (${context.sentiment.toFixed(2)})\n`;
+    }
+    if (context.hasRecentActivity) {
+      prompt += `- Has recent activity (documents in last 7 days)\n`;
+    }
+    if (context.affiliatedFactions?.length > 0) {
+      prompt += `- Affiliated with factions: ${context.affiliatedFactions.join(', ')}\n`;
+    }
+    
+    prompt += '\nGenerate 3 specific questions the user might want to ask about this data.';
+    
+    return prompt;
   }
 }

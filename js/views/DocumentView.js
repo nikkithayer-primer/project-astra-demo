@@ -186,7 +186,9 @@ export class DocumentView extends BaseView {
     const nextIndex = (currentIndex + 1) % documentIds.length;
     const nextDocId = documentIds[nextIndex];
     
-    window.location.hash = `#/document/${nextDocId}`;
+    // Use context-aware routing
+    const contextPrefix = this.context?.id ? `${this.context.id}/` : '';
+    window.location.hash = `#/${contextPrefix}${nextDocId}/`;
   }
 
   /**
@@ -202,7 +204,9 @@ export class DocumentView extends BaseView {
     const prevIndex = (currentIndex - 1 + documentIds.length) % documentIds.length;
     const prevDocId = documentIds[prevIndex];
     
-    window.location.hash = `#/document/${prevDocId}`;
+    // Use context-aware routing
+    const contextPrefix = this.context?.id ? `${this.context.id}/` : '';
+    window.location.hash = `#/${contextPrefix}${prevDocId}/`;
   }
 
   /**
@@ -251,7 +255,7 @@ export class DocumentView extends BaseView {
 
   renderDocumentHeader(doc, publisher) {
     const breadcrumbsHtml = PageHeader.renderBreadcrumbs([
-      { label: 'Dashboard', href: '#/dashboard' },
+      { label: 'Common Operating Picture', href: '#/cop' },
       'Document'
     ]);
 

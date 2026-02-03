@@ -120,7 +120,7 @@ export class EventView extends DetailViewBase {
     `;
 
     // Initialize stat card dropdowns
-    this.initStatDropdowns(contextId);
+    this.initStatDropdowns(contextId, this.eventId);
 
     // Initialize card width toggles
     this.initCardWidthToggles('event', this.eventId);

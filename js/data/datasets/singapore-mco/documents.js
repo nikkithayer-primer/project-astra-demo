@@ -178,14 +178,20 @@ export const documents = [
     url: 'https://tiktok.com/@sgpolitics_/video/999888777',
     publishedDate: '2025-09-05T20:15:00+08:00',
     publisherId: 'pub-tiktok',
-    author: '@sgpolitics_',
+    author: {
+      username: '@sgpolitics_',
+      displayName: 'SG Politics',
+      avatarUrl: 'img/placeholders/avatar-default.svg'
+    },
     excerpt: 'Viral video comparing NS duration across countries questions why Singapore requires 2-year service when facing no active threats.',
     headerImage: null,
+    video: {
+      thumbnailUrl: 'img/placeholders/video-thumbnail.svg',
+      duration: 95
+    },
+    transcription: 'Did you know Singapore has one of the longest mandatory military services in the world? Two years. Meanwhile Taiwan, which faces an actual military threat from China, just reduced their service to 4 months. South Korea, which is technically still at war with the North, has 18-21 months. Israel, surrounded by hostile neighbors, has 2.5-3 years but they pay their soldiers a real salary. Singapore pays NSFs what, $600-700 a month? That\'s less than minimum wage in most developed countries. And we\'re not even at war with anyone. So what exactly are we training for? Two years of your life, gone. Two years you could have spent studying, working, building your career. And for what?',
     contentBlocks: [
-      { type: 'paragraph', content: '[Video transcript] "Did you know Singapore has one of the longest mandatory military services in the world? Two years. Meanwhile Taiwan, which faces an actual military threat from China, just reduced their service to 4 months."', portionMark: { classification: 'U', handling: '' } },
-      { type: 'paragraph', content: '"South Korea, which is technically still at war with the North, has 18-21 months. Israel, surrounded by hostile neighbors, has 2.5-3 years but they pay their soldiers a real salary."', portionMark: { classification: 'U', handling: '' } },
-      { type: 'paragraph', content: '"Singapore pays NSFs what, $600-700 a month? That\'s less than minimum wage in most developed countries. And we\'re not even at war with anyone. So what exactly are we training for?"', portionMark: { classification: 'U', handling: '' } },
-      { type: 'paragraph', content: '"Two years of your life, gone. Two years you could have spent studying, working, building your career. And for what?"', portionMark: { classification: 'U', handling: '' } }
+      { type: 'paragraph', content: 'Why does SG have 2 years NS when Taiwan only has 4 months?? 🤔 Make it make sense #singapore #ns #nationalservice #conscription #taiwan #military', portionMark: { classification: 'U', handling: '' } }
     ],
     narrativeIds: ['narr-001'],
     themeIds: ['sub-001'],
@@ -428,7 +434,7 @@ export const documents = [
     repositoryId: 'repo-edl',
     classification: 'C',
     title: 'Technical Appendix: Network Analysis of Anti-NS Accounts',
-    url: null,
+    url: 'https://edl.intel.gov/documents/doc-012',
     publishedDate: '2025-10-10T09:00:00+08:00',
     publisherId: 'pub-dept-mco',
     author: 'Digital Intelligence Team',
@@ -889,7 +895,7 @@ export const documents = [
     repositoryId: 'repo-edl',
     classification: 'C',
     title: 'MCO Assessment: Online amplification of religious confrontation incident',
-    url: null,
+    url: 'https://edl.intel.gov/documents/doc-024',
     publishedDate: '2025-11-29T10:00:00+08:00',
     publisherId: 'pub-dept-mco',
     author: 'MCO Analysis Division',

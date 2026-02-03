@@ -79,7 +79,7 @@ export class EntityDetailView extends DetailViewBase {
 
     // Initialize stat card dropdowns
     const contextId = this.context?.id || null;
-    this.initStatDropdowns(contextId);
+    this.initStatDropdowns(contextId, this.entityId);
 
     // Initialize card width toggles - first 4 cards default to half-width (dashboard only)
     const defaults = this.isDocumentsTab() ? {} : { 0: 'half', 1: 'half', 2: 'half', 3: 'half' };

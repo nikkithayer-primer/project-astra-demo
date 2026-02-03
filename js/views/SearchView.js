@@ -74,7 +74,7 @@ export class SearchView extends BaseView {
 
     const headerHtml = PageHeader.render({
       breadcrumbs: [
-        { label: 'Dashboard', href: '#/dashboard' },
+        { label: 'Common Operating Picture', href: '#/cop' },
         'Search'
       ],
       title: 'Search',
@@ -620,7 +620,6 @@ export class SearchView extends BaseView {
       const docTypeLabels = {
         'news_article': 'News Article',
         'social_post': 'Social Post',
-        'tiktok': 'TikTok',
         'internal_report': 'Internal Report',
         'intelligence_report': 'Intelligence Report',
         'memo': 'Memo',

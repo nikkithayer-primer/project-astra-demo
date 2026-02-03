@@ -100,7 +100,7 @@ export class NarrativeView extends DetailViewBase {
     `;
 
     // Initialize stat card dropdowns
-    this.initStatDropdowns(contextId);
+    this.initStatDropdowns(contextId, this.narrativeId);
 
     // Initialize card width toggles
     this.initCardWidthToggles('narrative', this.narrativeId);

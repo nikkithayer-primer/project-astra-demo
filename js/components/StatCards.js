@@ -414,6 +414,8 @@ export const StatCards = {
    * Initialize stat card dropdowns after DOM insertion
    * @param {HTMLElement} container - Parent container
    * @param {Object} options - Options passed to each dropdown
+   * @param {string} options.contextId - Parent context ID (e.g., workspace)
+   * @param {string} options.currentEntityId - Current entity ID being viewed (for documents tab route)
    * @returns {Array} Array of StatCardDropdown instances
    */
   initDropdowns(container, options = {}) {
@@ -438,6 +440,7 @@ export const StatCards = {
         icon: this.getIcon(type),
         label: this.getLabel(type),
         contextId,
+        currentEntityId: options.currentEntityId || null,
         onNavigate: options.onNavigate,
         maxItems: options.maxItems || 10
       });

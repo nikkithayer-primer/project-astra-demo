@@ -26,7 +26,7 @@ export class ActivityFeedView extends BaseView {
 
     const headerHtml = PageHeader.render({
       breadcrumbs: [
-        { label: 'Dashboard', href: '#/dashboard' },
+        { label: 'Common Operating Picture', href: '#/cop' },
         'Activity'
       ],
       title: 'Activity Feed',
@@ -124,7 +124,8 @@ export class ActivityFeedView extends BaseView {
     const userName = item.user?.displayName || item.user?.name || item.user?.username || 'Unknown User';
     const userInitials = this.getInitials(userName);
     const timeAgo = formatRelativeTime(item.createdAt);
-    const docLink = `<a href="#/document/${item.documentId}" class="doc-entity-link">${this.escapeHtml(this.truncateText(item.documentTitle, 60))}</a>`;
+    // Use documents view with doc query param (documents require context)
+    const docLink = `<a href="#/documents?doc=${item.documentId}" class="doc-entity-link">${this.escapeHtml(this.truncateText(item.documentTitle, 60))}</a>`;
     
     let icon, actionHtml, contentHtml;
     
@@ -235,7 +236,8 @@ export class ActivityFeedView extends BaseView {
         
         const documentId = item.dataset.documentId;
         if (documentId) {
-          window.location.hash = `#/document/${documentId}`;
+          // Use documents view with doc query param (documents require context)
+          window.location.hash = `#/documents?doc=${documentId}`;
         }
       });
     });

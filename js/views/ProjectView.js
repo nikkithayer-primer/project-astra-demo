@@ -73,7 +73,6 @@ export class ProjectView extends DetailViewBase {
 
     const headerHtml = PageHeader.render({
       breadcrumbs: [
-        { label: 'Dashboard', href: '#/dashboard' },
         { label: 'Projects', href: '#/projects' },
         project.name
       ],
@@ -107,7 +106,7 @@ export class ProjectView extends DetailViewBase {
     Object.assign(this.components, components);
 
     // Initialize stat card dropdowns
-    this.initStatDropdowns(contextId);
+    this.initStatDropdowns(contextId, this.projectId);
 
     // Initialize tag chips
     this.initTagChips(project, 'project');

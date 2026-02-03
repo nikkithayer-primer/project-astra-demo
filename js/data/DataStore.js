@@ -14,12 +14,12 @@ class DataStore {
     
     // Safely read from localStorage with fallbacks
     try {
-      this.currentDataset = localStorage.getItem(this.datasetKey) || 'american-politics';
-      this.currentDatasetName = localStorage.getItem(this.datasetNameKey) || 'American Politics';
+      this.currentDataset = localStorage.getItem(this.datasetKey) || 'china-semiconductor';
+      this.currentDatasetName = localStorage.getItem(this.datasetNameKey) || 'China Semiconductor';
     } catch (e) {
       console.error('DataStore: Failed to read from localStorage:', e);
-      this.currentDataset = 'american-politics';
-      this.currentDatasetName = 'American Politics';
+      this.currentDataset = 'china-semiconductor';
+      this.currentDatasetName = 'China Semiconductor';
     }
     
     this.data = this.load();

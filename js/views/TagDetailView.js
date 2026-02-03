@@ -91,7 +91,7 @@ export class TagDetailView extends BaseView {
     if (entities.documents.length > 0) {
       sections.push(this.renderSection('Documents', entities.documents.slice(0, 20), 'document', (d) => ({
         title: d.title || 'Untitled Document',
-        href: `#/document/${d.id}`,
+        href: `#/documents?doc=${d.id}`,
         subtitle: d.publishedDate ? this.formatDate(d.publishedDate) : ''
       }), entities.documents.length > 20 ? `+${entities.documents.length - 20} more` : null));
     }

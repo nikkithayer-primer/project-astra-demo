@@ -49,7 +49,7 @@ export class ProjectsView extends BaseView {
 
     const headerHtml = PageHeader.render({
       breadcrumbs: [
-        { label: 'Dashboard', href: '#/dashboard' },
+        { label: 'Common Operating Picture', href: '#/cop' },
         'Projects'
       ],
       title: 'Projects',

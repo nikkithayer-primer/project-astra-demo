@@ -22,7 +22,7 @@ export const documents = [
       avatarUrl: 'img/placeholders/avatar-default.svg'
     },
     contentBlocks: [
-      { type: 'paragraph', content: 'I literally had my receipt, I paid for everything, and they still stopped me and made me wait while they checked every item in my bag. This is so humiliating. #walmart #selfcheckout #embarrassing', portionMark: { classification: 'U', handling: '' } }
+      { type: 'paragraph', content: 'POV: Walmart detains you even though you have your receipt 😭 This is so humiliating #walmart #selfcheckout #storytime #embarrassing #retail', portionMark: { classification: 'U', handling: '' } }
     ],
     video: {
       thumbnailUrl: 'img/placeholders/video-thumbnail.svg',
@@ -364,7 +364,7 @@ export const documents = [
       avatarUrl: 'img/placeholders/avatar-default.svg'
     },
     contentBlocks: [
-      { type: 'paragraph', content: 'Welcome to my shift! I\'m the only one in electronics, toys, AND sporting goods tonight. There should be four of us. But sure, we\'re "fully staffed." #walmartlife #retailworker #understaffed', portionMark: { classification: 'U', handling: '' } }
+      { type: 'paragraph', content: 'When you\'re the only one working 3 departments 🤡 "fully staffed" they said #walmartlife #retailworker #understaffed #worklife #retail', portionMark: { classification: 'U', handling: '' } }
     ],
     video: {
       thumbnailUrl: 'img/placeholders/video-thumbnail.svg',
@@ -706,7 +706,7 @@ export const documents = [
       avatarUrl: 'img/placeholders/avatar-default.svg'
     },
     contentBlocks: [
-      { type: 'paragraph', content: 'Let\'s compare Walmart vs Aldi for a basic grocery list! You won\'t believe the difference. #walmart #aldi #groceryshopping #savemoney #frugalliving', portionMark: { classification: 'U', handling: '' } }
+      { type: 'paragraph', content: 'Walmart vs Aldi price comparison - the results will SHOCK you 😱💰 #walmart #aldi #groceryshopping #savemoney #frugalliving #pricecheck', portionMark: { classification: 'U', handling: '' } }
     ],
     video: {
       thumbnailUrl: 'img/placeholders/video-thumbnail.svg',
@@ -1679,9 +1679,18 @@ export const documents = [
     publishedDate: '2025-12-10T15:00:00Z',
     publisherId: 'pub-tiktok',
     title: 'Customer Fury Mounts as Walmart Gifts Arrive Late [Viral Video]',
-    author: '@holiday_disaster',
+    author: {
+      username: '@holiday_disaster',
+      displayName: 'Holiday Disaster Stories',
+      avatarUrl: 'img/placeholders/avatar-default.svg'
+    },
+    video: {
+      thumbnailUrl: 'img/placeholders/video-thumbnail.svg',
+      duration: 72
+    },
+    transcription: 'Look at this. This is what arrived from Walmart today. An empty box. EMPTY. This was supposed to be my kids\' Christmas presents. I ordered two weeks ago. Guaranteed delivery by December 8th. It\'s now December 10th and I open this and there\'s NOTHING inside. The packing slip says three items but the box is completely empty. Customer service wait time? Three hours. This is unacceptable. My kids are going to have nothing under the tree because Walmart can\'t get their act together.',
     contentBlocks: [
-      { type: 'paragraph', content: 'Viral TikTok shows parent opening empty box that was supposed to contain children\'s Christmas presents from Walmart. Video has 2.5M views. Comments filled with similar stories.' }
+      { type: 'paragraph', content: 'Walmart sent me an EMPTY BOX for my kids\' Christmas presents 📦😭 3 hour wait for customer service #walmartfail #christmasruined #deliveryfail #holiday #storytime', portionMark: { classification: 'U', handling: '' } }
     ],
     excerpt: 'Viral video shows Walmart delivery failures impacting holiday gifts.',
     narrativeIds: ['narr-011'],
@@ -1973,12 +1982,13 @@ export const documents = [
       avatarUrl: 'img/placeholders/avatar-default.svg'
     },
     contentBlocks: [
-      { type: 'paragraph', content: 'Week 4 of no bread at my local Walmart 🤦‍♀️ I\'m not even asking for anything fancy, just bread! Had to drive to three stores today to finish my grocery list. This used to be so easy. What is happening?? #walmart #groceryshopping #outofstock #momlife' }
+      { type: 'paragraph', content: 'Week 4 of no bread at Walmart 🍞❌ Had to go to THREE stores today #walmart #groceryshopping #outofstock #momlife #adulting', portionMark: { classification: 'U', handling: '' } }
     ],
     video: {
       thumbnailUrl: 'img/placeholders/video-thumbnail.svg',
       duration: 58
     },
+    transcription: 'Week four of no bread at my local Walmart. I\'m not even asking for anything fancy, just basic sandwich bread! Had to drive to three different stores today just to finish my grocery list. This used to be so easy. One stop, everything on my list, done. Now? Empty shelves everywhere. The bread aisle, the dairy section, even the frozen food. What is happening at Walmart?',
     excerpt: 'TikTok documenting persistent out-of-stock issues at Walmart.',
     narrativeIds: ['narr-002'],
     themeIds: ['sub-004', 'sub-005'],
@@ -2103,12 +2113,13 @@ export const documents = [
       avatarUrl: 'img/placeholders/avatar-default.svg'
     },
     contentBlocks: [
-      { type: 'paragraph', content: 'Did the math so you don\'t have to! 🧮 Compared 20 staple items at Walmart, Aldi, and Costco. Spoiler: Walmart is NOT the cheapest anymore on 14 out of 20 items! The everyday low prices aren\'t so low anymore 👀 #walmart #aldi #costco #groceryshopping #savemoney' }
+      { type: 'paragraph', content: 'Did the math: Walmart lost to Aldi on 14 out of 20 items 📊 "everyday low prices" where?? #walmart #aldi #costco #groceryshopping #savemoney #pricecomparison', portionMark: { classification: 'U', handling: '' } }
     ],
     video: {
       thumbnailUrl: 'img/placeholders/video-thumbnail.svg',
       duration: 124
     },
+    transcription: 'Did the math so you don\'t have to! I compared twenty staple items at Walmart, Aldi, and Costco. Spoiler alert: Walmart is NOT the cheapest anymore on fourteen out of twenty items! Let me show you. Milk at Walmart three ninety-eight, at Aldi two eighty-nine. Bread, Walmart two forty-eight, Aldi one twenty-nine. Eggs, Walmart four twenty-eight, Aldi two ninety-nine. And it goes on. The everyday low prices? They\'re not so low anymore. Walmart used to be the place for budget shopping but those days are over.',
     excerpt: 'TikTok price comparison showing Walmart is no longer cheapest.',
     narrativeIds: ['narr-005'],
     themeIds: ['sub-011', 'sub-012'],
@@ -2234,12 +2245,13 @@ export const documents = [
       avatarUrl: 'img/placeholders/avatar-default.svg'
     },
     contentBlocks: [
-      { type: 'paragraph', content: 'POV: You work at a Walmart fulfillment center during peak season 📦 Walking 15+ miles a day, handling 300+ packages, 10 minute breaks, constant pressure to meet rates... and they wonder why we want to unionize 🤷 #warehouse #walmartlife #unionize #workersrights' }
+      { type: 'paragraph', content: 'Day in my life at Walmart fulfillment center 📦 17 miles walked yesterday and they wonder why we want to unionize #warehouse #walmartlife #unionize #workersrights #dayinmylife', portionMark: { classification: 'U', handling: '' } }
     ],
     video: {
       thumbnailUrl: 'img/placeholders/video-thumbnail.svg',
       duration: 92
     },
+    transcription: 'POV: You work at a Walmart fulfillment center during peak season. Walking fifteen plus miles a day. Handling three hundred plus packages. Ten minute breaks, and that includes the time it takes to walk to and from the break room. Constant pressure to meet rates. My watch says I walked seventeen miles yesterday. Seventeen miles. And they wonder why we want to unionize. This is what it looks like behind the scenes of your two-day delivery.',
     excerpt: 'TikTok showing Walmart fulfillment center working conditions.',
     narrativeIds: ['narr-009', 'narr-003'],
     themeIds: ['sub-008', 'sub-019'],
@@ -2364,12 +2376,13 @@ export const documents = [
       avatarUrl: 'img/placeholders/avatar-default.svg'
     },
     contentBlocks: [
-      { type: 'paragraph', content: 'Our hospital closed 2 years ago. The nearest doctor was 45 minutes away. Then Walmart Health opened a clinic and honestly? It\'s been amazing. $40 checkups, dental, even mental health. Say what you want about corporations but they\'re filling a gap no one else would. #ruralhealth #walmartHealth #healthcare' }
+      { type: 'paragraph', content: 'Our hospital closed and Walmart Health is the only option now - honestly it\'s been amazing 🏥 #ruralhealth #walmartHealth #healthcare #rurallife', portionMark: { classification: 'U', handling: '' } }
     ],
     video: {
       thumbnailUrl: 'img/placeholders/video-thumbnail.svg',
       duration: 78
     },
+    transcription: 'Our hospital closed two years ago. The nearest doctor was forty-five minutes away. Then Walmart Health opened a clinic in our town and honestly? It\'s been amazing. Forty dollar checkups. They have dental. Even mental health services. I know people have feelings about big corporations but they\'re filling a gap that no one else would fill. For folks in rural areas like me, this is a lifeline. Say what you want about Walmart but they showed up when no one else did.',
     excerpt: 'TikTok praising Walmart Health clinic in rural area.',
     narrativeIds: ['narr-010'],
     themeIds: ['sub-020', 'sub-021'],
@@ -2495,12 +2508,13 @@ export const documents = [
       avatarUrl: 'img/placeholders/avatar-default.svg'
     },
     contentBlocks: [
-      { type: 'paragraph', content: 'Ordered toys for my kids for Christmas from Walmart. Here\'s what arrived: cleaning supplies, cat food (I don\'t have a cat), and someone else\'s prescription??? My order is completely gone and customer service has a 3 HOUR wait time. HELP 😭 #walmartfail #christmasruined #deliveryfail' }
+      { type: 'paragraph', content: 'Ordered toys, got cat food and someone else\'s PRESCRIPTION?? 😭 Walmart what is going on #walmartfail #christmasruined #deliveryfail #storytime', portionMark: { classification: 'U', handling: '' } }
     ],
     video: {
       thumbnailUrl: 'img/placeholders/video-thumbnail.svg',
       duration: 65
     },
+    transcription: 'Ordered toys for my kids for Christmas from Walmart. Here\'s what arrived: cleaning supplies, cat food - I don\'t even have a cat - and someone else\'s prescription medication. My order is completely gone. The toys I ordered? Nowhere to be found. And customer service has a THREE HOUR wait time. Three hours! Christmas is in two weeks and I have nothing for my kids. Help!',
     excerpt: 'TikTok showing wrong items received in Walmart holiday delivery.',
     narrativeIds: ['narr-011', 'narr-006'],
     themeIds: ['sub-023', 'sub-024'],
@@ -2593,12 +2607,13 @@ export const documents = [
       avatarUrl: 'img/placeholders/avatar-default.svg'
     },
     contentBlocks: [
-      { type: 'paragraph', content: 'How we won the first Walmart warehouse union 🧵 Tips for other workers thinking about organizing: 1) Build relationships with coworkers FIRST 2) Keep conversations private until you have majority support 3) Document everything 4) Don\'t let management scare you - they WILL try 5) Contact established unions for help. We did it. You can too. ✊ #union #workersrights #organizing #walmartworkers' }
+      { type: 'paragraph', content: 'How we won the first Walmart warehouse union ✊ Tips for workers thinking about organizing #union #workersrights #organizing #walmartworkers #labormovement', portionMark: { classification: 'U', handling: '' } }
     ],
     video: {
       thumbnailUrl: 'img/placeholders/video-thumbnail.svg',
       duration: 118
     },
+    transcription: 'How we won the first Walmart warehouse union. Tips for other workers thinking about organizing. Number one: Build relationships with your coworkers FIRST. Get to know people. Find out what issues matter to them. Number two: Keep conversations private until you have majority support. Management will try to shut you down the moment they find out. Number three: Document everything. Every policy violation, every unfair treatment. Number four: Don\'t let management scare you. They WILL try. They\'ll have meetings, they\'ll make threats, they\'ll promise changes. Stay strong. Number five: Contact established unions for help. We reached out to the Warehouse Workers Union and they guided us through the whole process. We did it. You can too.',
     excerpt: 'TikTok sharing organizing tips from Atlanta union victory.',
     narrativeIds: ['narr-009', 'narr-003'],
     themeIds: ['sub-019', 'sub-008'],

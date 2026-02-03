@@ -1320,7 +1320,7 @@ export const documents = [
     documentType: 'internal_report',
     repositoryId: 'repo-edl',
     classification: 'S',
-    url: null,
+    url: 'https://edl.intel.gov/documents/doc-031',
     publishedDate: '2026-01-16T08:00:00Z',
     publisherId: 'pub-dept-intel',
     title: 'Technical Assessment: SMIC 5nm DUV Multi-Patterning Capability',
@@ -1433,7 +1433,7 @@ export const documents = [
     documentType: 'internal_report',
     repositoryId: 'repo-edl',
     classification: 'S',
-    url: null,
+    url: 'https://edl.intel.gov/documents/doc-032',
     publishedDate: '2026-01-18T14:00:00Z',
     publisherId: 'pub-dept-intel',
     title: 'Export Controls Effectiveness Review: Semiconductor Equipment Restrictions',
@@ -1544,7 +1544,7 @@ export const documents = [
     documentType: 'internal_report',
     repositoryId: 'repo-edl',
     classification: 'U',
-    url: null,
+    url: 'https://edl.intel.gov/documents/doc-033',
     publishedDate: '2026-01-19T10:00:00Z',
     publisherId: 'pub-dept-econ',
     title: 'Investment Analysis: China National IC Fund Phase III',
@@ -1653,7 +1653,7 @@ export const documents = [
     documentType: 'internal_report',
     repositoryId: 'repo-edl',
     classification: 'S',
-    url: null,
+    url: 'https://edl.intel.gov/documents/doc-034',
     publishedDate: '2026-01-19T16:00:00Z',
     publisherId: 'pub-dept-intel',
     title: 'Supply Chain Analysis: YMTC Memory Chips in Global Consumer Electronics',
@@ -1762,7 +1762,7 @@ export const documents = [
     documentType: 'internal_report',
     repositoryId: 'repo-edl',
     classification: 'U',
-    url: null,
+    url: 'https://edl.intel.gov/documents/doc-035',
     publishedDate: '2026-01-17T15:00:00Z',
     publisherId: 'pub-dept-ops',
     title: 'Operations Assessment: TSMC Arizona Fab Construction and Workforce Challenges',
@@ -2792,12 +2792,13 @@ export const documents = [
       avatarUrl: 'img/placeholders/avatar-default.svg'
     },
     contentBlocks: [
-      { type: 'paragraph', content: 'So the US gave $52 billion to build chip factories here... but where are they? 🤔 Let\'s look at what\'s actually happening with the CHIPS Act money and why it\'s taking so long. Spoiler: building fabs is HARD. #chips #technology #manufacturing #usa' }
+      { type: 'paragraph', content: '$52 billion for chip factories but where are they?? 🤔 CHIPS Act explained #chips #technology #manufacturing #chipsact #techexplained', portionMark: { classification: 'U', handling: '' } }
     ],
     video: {
       thumbnailUrl: 'img/placeholders/video-thumbnail.svg',
       duration: 89
     },
+    transcription: 'So the US gave fifty-two billion dollars to build chip factories here. But where are they? Let\'s look at what\'s actually happening with the CHIPS Act money and why it\'s taking so long. Spoiler: building fabs is HARD. Intel\'s getting billions but their Ohio factory is delayed. TSMC\'s Arizona plant? Also delayed. Samsung? You guessed it, delayed. Turns out you can\'t just throw money at a problem and expect it to solve itself overnight. These factories take years to build and we\'re competing with decades of Asian manufacturing expertise. The money is flowing but the chips? They\'re still a few years away.',
     excerpt: 'TikTok explainer on CHIPS Act implementation progress and challenges.',
     narrativeIds: ['narr-007'],
     themeIds: ['sub-013', 'sub-014'],
@@ -2924,12 +2925,13 @@ export const documents = [
       avatarUrl: 'img/placeholders/avatar-default.svg'
     },
     contentBlocks: [
-      { type: 'paragraph', content: 'Me waiting 6 months for my H100 GPUs to arrive 🤡 Meanwhile my competitors got theirs last year. Nvidia please I\'m begging. The shortage is killing startups. #ai #nvidia #gpu #startuplife #h100' }
+      { type: 'paragraph', content: 'Me waiting 6 months for my H100s while competitors got theirs last year 🤡 #ai #nvidia #gpu #startuplife #h100 #aidev', portionMark: { classification: 'U', handling: '' } }
     ],
     video: {
       thumbnailUrl: 'img/placeholders/video-thumbnail.svg',
       duration: 45
     },
+    transcription: 'Me waiting six months for my H100 GPUs to arrive. Meanwhile my competitors got theirs last year. Nvidia please, I\'m begging. The shortage is killing startups. We can\'t train our models. We can\'t compete. The big players bought up all the inventory and the rest of us are left fighting over scraps. This is what the AI gold rush looks like for small companies. We have the ideas, we have the talent, but we don\'t have the hardware. And without hardware, we\'re dead in the water.',
     excerpt: 'TikTok expressing AI developer frustration with Nvidia GPU shortages.',
     narrativeIds: ['narr-011'],
     themeIds: ['sub-022', 'sub-023'],

@@ -11,6 +11,7 @@ import { getSearchFilterEditor } from './components/SearchFilterEditorModal.js';
 import { mockData as americanPoliticsData, datasetId as americanPoliticsId, datasetName as americanPoliticsName, defaultSettings as americanPoliticsSettings } from './data/datasets/american-politics/index.js';
 import { mockData as chinaSemiconductorData, datasetId as chinaSemiconductorId, datasetName as chinaSemiconductorName, defaultSettings as chinaSemiconductorSettings } from './data/datasets/china-semiconductor/index.js';
 import { mockData as walmartBrandData, datasetId as walmartBrandId, datasetName as walmartBrandName, defaultSettings as walmartBrandSettings } from './data/datasets/walmart-brand/index.js';
+import { mockData as singaporeMcoData, datasetId as singaporeMcoId, datasetName as singaporeMcoName, defaultSettings as singaporeMcoSettings } from './data/datasets/singapore-mco/index.js';
 import { Router } from './router.js';
 import { getSourceViewer } from './components/SourceViewerModal.js';
 import { getEntityCardModal } from './components/EntityCardModal.js';
@@ -36,6 +37,12 @@ const DATASETS = {
     name: walmartBrandName, 
     data: walmartBrandData,
     defaultSettings: walmartBrandSettings
+  },
+  [singaporeMcoId]: { 
+    id: singaporeMcoId,
+    name: singaporeMcoName, 
+    data: singaporeMcoData,
+    defaultSettings: singaporeMcoSettings
   }
 };
 
@@ -45,6 +52,8 @@ class App {
     this.dataStore = dataStore;
     this.chatOpen = false;
     this.chatService = null;
+    this.currentChatContext = null; // Track current chat context for bounded conversations
+    this.summarizedPagesInContext = new Set(); // Track pages already summarized in current context
   }
 
   /**
@@ -115,7 +124,7 @@ class App {
    */
   initializeDataset() {
     const currentDatasetId = this.dataStore.getCurrentDataset();
-    const dataset = DATASETS[currentDatasetId] || DATASETS['american-politics'];
+    const dataset = DATASETS[currentDatasetId] || DATASETS['china-semiconductor'];
     
     // Load the dataset with its default settings
     this.dataStore.switchDataset(dataset.id, dataset.data, dataset.name, dataset.defaultSettings);
@@ -1056,31 +1065,233 @@ class App {
   }
 
   /**
+   * Get the current chat context key
+   * Chat conversations are bounded by context (workspace, monitor, project, cop, dashboard)
+   * @returns {string} Context key like "workspace-workspace-001" or "cop"
+   */
+  getChatContextKey() {
+    if (!this.router) return 'default';
+    
+    const parsed = this.router.getCurrentRoute();
+    const { contextType, contextId } = parsed;
+    
+    // Build context key from type and id
+    if (contextId) {
+      return `${contextType}-${contextId}`;
+    }
+    return contextType || 'dashboard';
+  }
+
+  /**
+   * Check if there are any user messages in the chat
+   * @returns {boolean}
+   */
+  hasUserMessages() {
+    const chatMessages = document.getElementById('chat-messages');
+    if (!chatMessages) return false;
+    return chatMessages.querySelector('.chat-message.user') !== null;
+  }
+
+  /**
+   * Clear the chat UI (removes user/assistant messages but keeps welcome element)
+   */
+  clearChatUI() {
+    const chatMessages = document.getElementById('chat-messages');
+    if (!chatMessages) return;
+    
+    // Remove all messages except the welcome element and suggested questions
+    const messagesToRemove = chatMessages.querySelectorAll('.chat-message:not(#chat-welcome)');
+    messagesToRemove.forEach(msg => msg.remove());
+    
+    // Show welcome element again
+    const welcomeElement = document.getElementById('chat-welcome');
+    if (welcomeElement) {
+      welcomeElement.style.display = 'block';
+    }
+  }
+
+  /**
+   * Restore chat UI from conversation history
+   */
+  restoreChatUI() {
+    if (!this.chatService) return;
+    
+    const history = this.chatService.getHistory();
+    const chatMessages = document.getElementById('chat-messages');
+    const welcomeElement = document.getElementById('chat-welcome');
+    
+    if (!chatMessages || history.length === 0) return;
+    
+    // Hide welcome element since we're showing history
+    if (welcomeElement) {
+      welcomeElement.style.display = 'none';
+    }
+    
+    // Clear any existing non-welcome messages
+    const existingMessages = chatMessages.querySelectorAll('.chat-message:not(#chat-welcome)');
+    existingMessages.forEach(msg => msg.remove());
+    
+    // Restore each message
+    history.forEach(msg => {
+      if (msg.role === 'user') {
+        const userMsg = document.createElement('div');
+        userMsg.className = 'chat-message user';
+        userMsg.innerHTML = `<div class="chat-message-content">${this.escapeHtml(msg.content)}</div>`;
+        chatMessages.appendChild(userMsg);
+      } else if (msg.role === 'assistant') {
+        const assistantMsg = document.createElement('div');
+        assistantMsg.className = 'chat-message assistant';
+        assistantMsg.innerHTML = `<div class="chat-message-content">${this.formatAIResponse(msg.content)}</div>`;
+        chatMessages.appendChild(assistantMsg);
+      }
+    });
+    
+    // Scroll to bottom
+    chatMessages.scrollTop = chatMessages.scrollHeight;
+  }
+
+  /**
+   * Add a navigation summary as a chat message (for same-context navigation)
+   * Uses generateSummaryOnly to avoid polluting conversation history
+   */
+  async addNavigationSummary(route, id) {
+    const chatMessages = document.getElementById('chat-messages');
+    if (!chatMessages || !this.chatService || !ChatService.hasApiKey()) return;
+    
+    // Check if we've already summarized this page in this context
+    const pageKey = `${route}-${id || 'list'}`;
+    if (this.summarizedPagesInContext.has(pageKey)) {
+      return; // Skip - already summarized
+    }
+    
+    const prompt = this.getAutoSummaryPrompt(route, id);
+    if (!prompt) return;
+    
+    // Mark as summarized
+    this.summarizedPagesInContext.add(pageKey);
+    
+    // Create a navigation marker message
+    const navMsg = document.createElement('div');
+    navMsg.className = 'chat-message assistant chat-navigation-summary';
+    navMsg.innerHTML = `
+      <div class="chat-message-content">
+        <div class="chat-typing">
+          <span class="chat-typing-dot"></span>
+          <span class="chat-typing-dot"></span>
+          <span class="chat-typing-dot"></span>
+        </div>
+      </div>
+    `;
+    chatMessages.appendChild(navMsg);
+    chatMessages.scrollTop = chatMessages.scrollHeight;
+    
+    try {
+      // Use generateSummaryOnly to avoid adding to conversation history
+      const response = await this.chatService.generateSummaryOnly(prompt);
+      const contentEl = navMsg.querySelector('.chat-message-content');
+      contentEl.innerHTML = `
+        <div class="chat-ai-summary">
+          <div class="chat-ai-summary-label">Page Summary</div>
+          <div class="chat-ai-summary-content">${this.formatAIResponse(response)}</div>
+        </div>
+      `;
+    } catch (error) {
+      console.error('Navigation summary error:', error);
+      navMsg.remove(); // Remove failed message
+      this.summarizedPagesInContext.delete(pageKey); // Allow retry
+    }
+  }
+
+  /**
    * Update the welcome message with a summary of the current page
+   * Handles bounded chat contexts - clears on context change, appends on same-context navigation
    */
   updatePageSummary() {
     if (!this.router) return;
     
-    const { route, id } = this.router.getCurrentRoute();
-    const summary = this.generatePageSummary(route, id);
+    const newContextKey = this.getChatContextKey();
+    const contextChanged = this.currentChatContext !== newContextKey;
+    const previousContext = this.currentChatContext;
     
-    const welcomeElement = document.getElementById('chat-welcome');
-    if (welcomeElement && summary) {
-      const contentElement = welcomeElement.querySelector('.chat-message-content');
-      if (contentElement) {
-        contentElement.innerHTML = summary;
-        // Render sparklines after DOM update
-        requestAnimationFrame(() => this.renderChatSparklines(contentElement));
-      }
+    // Save history for previous context before switching
+    if (contextChanged && previousContext && this.chatService) {
+      this.chatService.saveHistoryToStorage(previousContext);
     }
     
-    // Update suggested questions for this page
-    this.updateSuggestedQuestions();
+    // Update current context
+    this.currentChatContext = newContextKey;
     
-    // Auto-generate AI summary if enabled
+    const { route, id } = this.router.getCurrentRoute();
     const settings = this.dataStore.getSettings();
-    if (settings.autoSummary && ChatService.hasApiKey() && this.chatService) {
-      this.generateAISummary(route, id);
+    
+    if (contextChanged) {
+      // Context changed - clear UI and load history for new context
+      this.clearChatUI();
+      
+      // Clear the summarized pages tracker for the new context
+      this.summarizedPagesInContext.clear();
+      
+      if (this.chatService) {
+        // Try to restore history for this context
+        const hasHistory = this.chatService.loadHistoryFromStorage(newContextKey);
+        if (hasHistory) {
+          this.restoreChatUI();
+        } else {
+          this.chatService.clearHistory();
+        }
+      }
+      
+      // Show welcome message for new context
+      const summary = this.generatePageSummary(route, id);
+      const welcomeElement = document.getElementById('chat-welcome');
+      if (welcomeElement && summary) {
+        welcomeElement.style.display = 'block';
+        const contentElement = welcomeElement.querySelector('.chat-message-content');
+        if (contentElement) {
+          contentElement.innerHTML = summary;
+          requestAnimationFrame(() => this.renderChatSparklines(contentElement));
+        }
+      }
+      
+      // Update suggested questions
+      this.updateSuggestedQuestions();
+      
+      // Auto-generate AI summary if enabled (for welcome)
+      if (settings.autoSummary && ChatService.hasApiKey() && this.chatService) {
+        this.generateAISummary(route, id);
+      }
+    } else if (this.hasUserMessages()) {
+      // Same context, but user has interacted - add navigation summary as message
+      // Hide the welcome element since we have conversation history
+      const welcomeElement = document.getElementById('chat-welcome');
+      if (welcomeElement) {
+        welcomeElement.style.display = 'none';
+      }
+      
+      this.updateSuggestedQuestions();
+      
+      if (settings.autoSummary && ChatService.hasApiKey() && this.chatService) {
+        this.addNavigationSummary(route, id);
+      }
+    } else {
+      // Same context, no interaction yet - update welcome message
+      const summary = this.generatePageSummary(route, id);
+      const welcomeElement = document.getElementById('chat-welcome');
+      if (welcomeElement && summary) {
+        const contentElement = welcomeElement.querySelector('.chat-message-content');
+        if (contentElement) {
+          contentElement.innerHTML = summary;
+          requestAnimationFrame(() => this.renderChatSparklines(contentElement));
+        }
+      }
+      
+      // Update suggested questions
+      this.updateSuggestedQuestions();
+      
+      // Auto-generate AI summary if enabled
+      if (settings.autoSummary && ChatService.hasApiKey() && this.chatService) {
+        this.generateAISummary(route, id);
+      }
     }
   }
 
@@ -1094,6 +1305,19 @@ class App {
     const contentElement = welcomeElement.querySelector('.chat-message-content');
     if (!contentElement) return;
     
+    // Check if this route should have auto-summary
+    const prompt = this.getAutoSummaryPrompt(route, id);
+    if (!prompt) return; // Skip auto-summary for this route
+    
+    // Check if we've already summarized this page in this context
+    const pageKey = `${route}-${id || 'list'}`;
+    if (this.summarizedPagesInContext.has(pageKey)) {
+      return; // Skip - already summarized
+    }
+    
+    // Mark as summarized
+    this.summarizedPagesInContext.add(pageKey);
+    
     // Show loading state (same typing indicator as chat replies)
     const originalContent = contentElement.innerHTML;
     contentElement.innerHTML = `
@@ -1105,8 +1329,8 @@ class App {
     `;
     
     try {
-      const prompt = this.getAutoSummaryPrompt(route, id);
-      const response = await this.chatService.sendMessage(prompt);
+      // Use generateSummaryOnly to avoid polluting conversation history
+      const response = await this.chatService.generateSummaryOnly(prompt);
       
       // Display the AI summary above the original content
       contentElement.innerHTML = `
@@ -1119,6 +1343,7 @@ class App {
       console.error('Auto-summary error:', error);
       // Restore original content on error
       contentElement.innerHTML = originalContent;
+      this.summarizedPagesInContext.delete(pageKey); // Allow retry
     }
   }
 
@@ -1139,9 +1364,17 @@ class App {
         return 'Briefly summarize this organization, its type, affiliations, and involvement in narratives.';
       case 'document':
         return 'Summarize the key points of this document and its relevance to tracked narratives.';
+      case 'event':
+        return 'Briefly summarize this event, when it occurred, and its connection to tracked narratives.';
       case 'dashboard':
       case 'monitor':
         return 'Give me a brief overview of the current activity - what are the top narratives and any notable trends?';
+      case 'monitors':
+        return 'Give me a brief summary of recent alerts - what requires attention and any patterns in the alerts?';
+      case 'workspaces':
+      case 'projects':
+      case 'search':
+        return null; // Skip auto-summary for these views
       default:
         return 'Briefly summarize what I\'m looking at on this page.';
     }
@@ -1150,7 +1383,7 @@ class App {
   /**
    * Update suggested questions based on current page
    */
-  updateSuggestedQuestions() {
+  async updateSuggestedQuestions() {
     const container = document.getElementById('chat-suggested-questions');
     if (!container) return;
     
@@ -1165,8 +1398,159 @@ class App {
     container.style.display = 'block';
     
     const { route, id } = this.router.getCurrentRoute();
-    const questions = this.getSuggestedQuestions(route, id);
     
+    // Check cache first
+    const cacheKey = `suggested_questions_${route}_${id || 'list'}`;
+    const cached = sessionStorage.getItem(cacheKey);
+    
+    if (cached) {
+      this.renderSuggestedQuestions(container, JSON.parse(cached));
+      return;
+    }
+    
+    // Show loading state
+    container.innerHTML = `
+      <div class="suggested-questions-loading">
+        <span class="chat-tool-indicator">Generating questions...</span>
+      </div>
+    `;
+    
+    try {
+      // Build context for this entity
+      const context = this.buildEntityContext(route, id);
+      
+      // Skip AI generation for certain routes
+      if (!context || route === 'workspaces' || route === 'projects' || route === 'search') {
+        container.style.display = 'none';
+        return;
+      }
+      
+      // Generate AI questions
+      const questions = await this.chatService.generateSuggestedQuestions(context);
+      
+      // Cache the result
+      sessionStorage.setItem(cacheKey, JSON.stringify(questions));
+      
+      this.renderSuggestedQuestions(container, questions);
+    } catch (error) {
+      console.error('Failed to generate AI questions, using fallback:', error);
+      // Fall back to static questions
+      const fallbackQuestions = this.getStaticSuggestedQuestions(route, id);
+      this.renderSuggestedQuestions(container, fallbackQuestions);
+    }
+  }
+
+  /**
+   * Build entity context for AI question generation
+   */
+  buildEntityContext(route, id) {
+    const context = { type: route };
+    
+    switch (route) {
+      case 'narrative': {
+        const narrative = DataService.getNarrative(id);
+        if (!narrative) return null;
+        context.name = narrative.text;
+        context.description = narrative.description;
+        context.sentiment = narrative.sentiment;
+        context.themeCount = DataService.getThemesForNarrative(id).length;
+        context.factionCount = Object.keys(DataService.getAggregateFactionMentionsForNarrative(id) || {}).length;
+        context.documentCount = DataService.getDocumentsForNarrative(id).length;
+        context.personCount = DataService.getPersonsForNarrative(id).length;
+        context.orgCount = DataService.getOrganizationsForNarrative(id).length;
+        // Check for recent activity
+        const docs = DataService.getDocumentsForNarrative(id);
+        const weekAgo = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000);
+        context.hasRecentActivity = docs.some(d => new Date(d.publishedDate) > weekAgo);
+        break;
+      }
+      case 'theme': {
+        const theme = DataService.getTheme(id);
+        if (!theme) return null;
+        context.name = theme.text;
+        context.sentiment = theme.sentiment;
+        const parent = DataService.getNarrative(theme.parentNarrativeId);
+        context.parentNarrative = parent?.text;
+        context.documentCount = DataService.getDocumentsForTheme(id).length;
+        break;
+      }
+      case 'faction': {
+        const faction = DataService.getFaction(id);
+        if (!faction) return null;
+        context.name = faction.name;
+        context.description = faction.description;
+        context.narrativeCount = DataService.getNarrativesForFaction(id).length;
+        context.personCount = DataService.getPersonsForFaction(id).length;
+        context.orgCount = DataService.getOrganizationsForFaction(id).length;
+        break;
+      }
+      case 'person': {
+        const person = DataService.getPerson(id);
+        if (!person) return null;
+        context.name = person.name;
+        context.description = person.description;
+        context.role = person.role;
+        context.narrativeCount = DataService.getNarrativesForPerson(id).length;
+        context.documentCount = DataService.getDocumentsForPerson(id).length;
+        const factions = DataService.getFactionsForPerson(id);
+        context.affiliatedFactions = factions.map(f => f.name);
+        break;
+      }
+      case 'organization': {
+        const org = DataService.getOrganization(id);
+        if (!org) return null;
+        context.name = org.name;
+        context.description = org.description;
+        context.orgType = org.type;
+        context.narrativeCount = DataService.getNarrativesForOrganization(id).length;
+        context.documentCount = DataService.getDocumentsForOrganization(id).length;
+        const factions = DataService.getFactionsForOrganization(id);
+        context.affiliatedFactions = factions.map(f => f.name);
+        break;
+      }
+      case 'document': {
+        const doc = DataService.getDocumentById(id);
+        if (!doc) return null;
+        context.name = doc.title;
+        context.description = doc.excerpt;
+        context.docType = doc.documentType;
+        context.narrativeCount = doc.narrativeIds?.length || 0;
+        context.personCount = doc.personIds?.length || 0;
+        context.orgCount = doc.organizationIds?.length || 0;
+        break;
+      }
+      case 'event': {
+        const event = DataService.getEvent(id);
+        if (!event) return null;
+        context.name = event.name;
+        context.description = event.description;
+        context.date = event.date;
+        context.documentCount = DataService.getDocumentsForEvent(id).length;
+        context.narrativeCount = DataService.getNarrativesForEvent(id).length;
+        break;
+      }
+      case 'dashboard':
+      case 'cop':
+      case 'monitor':
+      case 'monitors': {
+        context.type = 'dashboard overview';
+        context.narrativeCount = DataService.getNarratives().length;
+        context.factionCount = DataService.getFactions().length;
+        const alerts = DataService.getAlerts?.() || [];
+        context.alertCount = alerts.length;
+        break;
+      }
+      default:
+        return null;
+    }
+    
+    return context;
+  }
+
+  /**
+   * Render suggested questions in the container
+   */
+  renderSuggestedQuestions(container, questions) {
     container.innerHTML = questions.map(q => `
       <button class="suggested-question-btn" data-question="${this.escapeHtml(q)}">
         ${this.escapeHtml(q)}
@@ -1183,9 +1567,9 @@ class App {
   }
 
   /**
-   * Get suggested questions based on current page type
+   * Get static fallback suggested questions based on current page type
    */
-  getSuggestedQuestions(route, id) {
+  getStaticSuggestedQuestions(route, id) {
     switch (route) {
       case 'narrative':
         return [
@@ -1722,12 +2106,16 @@ class App {
     formatted = formatted.replace(/^- (.+)$/gm, '• $1');
     
     // Convert entity IDs to links (narr-xxx, person-xxx, etc.)
-    formatted = formatted.replace(/\b(narr-\d+)\b/g, '<a href="#/$1" class="chat-entity-link">$1</a>');
-    formatted = formatted.replace(/\b(sub-\d+)\b/g, '<a href="#/$1" class="chat-entity-link">$1</a>');
-    formatted = formatted.replace(/\b(person-\d+)\b/g, '<a href="#/$1" class="chat-entity-link">$1</a>');
-    formatted = formatted.replace(/\b(org-\d+)\b/g, '<a href="#/$1" class="chat-entity-link">$1</a>');
-    formatted = formatted.replace(/\b(faction-\d+)\b/g, '<a href="#/$1" class="chat-entity-link">$1</a>');
-    formatted = formatted.replace(/\b(doc-\d+)\b/g, '<a href="#/$1" class="chat-entity-link">$1</a>');
+    // Include context prefix if we're in a scoped context (workspace, monitor, project)
+    const context = this.router?.getContext();
+    const contextPrefix = context?.id ? `${context.id}/` : '';
+    
+    formatted = formatted.replace(/\b(narr-\d+)\b/g, `<a href="#/${contextPrefix}$1/" class="chat-entity-link">$1</a>`);
+    formatted = formatted.replace(/\b(sub-\d+)\b/g, `<a href="#/${contextPrefix}$1/" class="chat-entity-link">$1</a>`);
+    formatted = formatted.replace(/\b(person-\d+)\b/g, `<a href="#/${contextPrefix}$1/" class="chat-entity-link">$1</a>`);
+    formatted = formatted.replace(/\b(org-\d+)\b/g, `<a href="#/${contextPrefix}$1/" class="chat-entity-link">$1</a>`);
+    formatted = formatted.replace(/\b(faction-\d+)\b/g, `<a href="#/${contextPrefix}$1/" class="chat-entity-link">$1</a>`);
+    formatted = formatted.replace(/\b(doc-\d+)\b/g, `<a href="#/${contextPrefix}$1/" class="chat-entity-link">$1</a>`);
     
     return formatted;
   }

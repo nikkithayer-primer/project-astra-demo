@@ -285,13 +285,13 @@ Source documents (news articles, social posts, internal reports). **Documents ar
 ```javascript
 {
   id: string,              // Required. Prefix: 'doc-'
-  documentType: enum,      // Required. 'news_article' | 'social_post' | 'tiktok' | 'internal_report' | 
+  documentType: enum,      // Required. 'news_article' | 'social_post' | 'internal_report' | 
                            //           'intelligence_report' | 'memo' | 'transcript' | 'internal' |
                            //           'corporate_record' | 'watchlist_match' | 'political_finance' | 'event_attendance'
   repositoryId: string,    // Required. FK to Repository (e.g., 'repo-news', 'repo-osint', 'repo-edl')
   classification: string,  // Optional. 'U' | 'C' | 'S' | 'TS'
   title: string,           // Required. Document title
-  url: string,             // Optional. Source URL
+  url: string,             // Recommended. Source URL (external articles) or repository link (internal docs)
   publishedDate: datetime, // Required. When published (used for volume over time)
   publisherId: string,     // Required. FK to Publisher (used for publisher volume)
   author: string,          // Optional. Author name
@@ -573,7 +573,7 @@ Reusable entity/keyword selections that can be applied across monitors and other
     eventIds: string[],
     keywords: string[],
     // Document attribute filters
-    documentTypes: string[],   // 'news_article' | 'social_post' | 'tiktok' | 'internal_report' | 
+    documentTypes: string[],   // 'news_article' | 'social_post' | 'internal_report' | 
                                // 'intelligence_report' | 'memo' | 'transcript' | 'internal' |
                                // 'corporate_record' | 'watchlist_match' | 'political_finance' | 'event_attendance'
     publisherIds: string[],    // FKs to Publisher

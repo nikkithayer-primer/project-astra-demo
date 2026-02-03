@@ -67,7 +67,7 @@ const ENTITY_VIEW_MAP = {
 };
 
 // Top-level routes that don't follow the ID-based pattern
-const TOP_LEVEL_ROUTES = ['workspaces', 'monitors', 'search', 'projects', 'activity', 'settings', 'data-model', 'component-demos', 'status', 'cop'];
+const TOP_LEVEL_ROUTES = ['workspaces', 'monitors', 'search', 'projects', 'activity', 'documents', 'settings', 'data-model', 'component-demos', 'status', 'cop'];
 
 export class Router {
   constructor(containerId) {
@@ -713,6 +713,11 @@ export class Router {
    * Handle top-level routes (not scoped to a context)
    */
   _handleTopLevelRoute(route, filterOptions, settings) {
+    // Auto-close chat for workspaces and projects list views
+    if (route === 'workspaces' || route === 'projects') {
+      window.app?.toggleChat(false);
+    }
+    
     switch (route) {
       case 'workspaces':
         this.currentView = new WorkspacesView(this.container, filterOptions);
@@ -732,6 +737,10 @@ export class Router {
         
       case 'activity':
         this.currentView = new ActivityFeedView(this.container, filterOptions);
+        break;
+        
+      case 'documents':
+        this.currentView = new DocumentsView(this.container, filterOptions);
         break;
         
       case 'data-model':
@@ -779,6 +788,11 @@ export class Router {
       const viewConfig = ENTITY_VIEW_MAP[contextType];
       if (viewConfig) {
         this.currentView = new viewConfig.view(this.container, contextId, filterOptions);
+        
+        // Auto-open chat for individual workspace, project, and monitor views
+        if (['workspace', 'project', 'monitor'].includes(contextType)) {
+          window.app?.toggleChat(true);
+        }
       } else {
         this.showErrorPage('Not Found', `Unknown context type: ${contextType}`);
       }
@@ -787,6 +801,12 @@ export class Router {
     
     // Entity detail view
     if (entityId && entityType) {
+      // Documents require a context - redirect context-less document routes to documents view
+      if (entityType === 'document' && !contextId) {
+        window.location.hash = `#/documents?doc=${entityId}`;
+        return;
+      }
+      
       const viewConfig = ENTITY_VIEW_MAP[entityType];
       
       if (!viewConfig) {

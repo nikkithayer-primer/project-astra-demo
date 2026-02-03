@@ -2631,6 +2631,9 @@ export const DataService = {
    * Supports AND/OR logic for matching:
    * - OR mode (default): A narrative matches if it references ANY entity in the monitor's scope
    * - AND mode: A narrative matches if it references ALL entities in the monitor's scope
+   * 
+   * For keyword matching, narratives are derived from documents that match the keywords.
+   * This allows monitors with only keywords to display narratives and derived entities.
    */
   getNarrativesForMonitor: (monitorId) => {
     const monitor = findById('monitors', monitorId);
@@ -2639,6 +2642,16 @@ export const DataService = {
     const scope = monitor.scope || {};
     const logic = scope.logic || 'OR';
     const narratives = dataStore.data.narratives || [];
+    
+    // If keywords exist, get narrative IDs from keyword-matched documents
+    // This allows monitors with only keywords to derive narratives from documents
+    let keywordNarrativeIds = new Set();
+    if (scope.keywords?.length > 0) {
+      const matchedDocs = DataService.getDocumentsForMonitor(monitorId);
+      matchedDocs.forEach(doc => {
+        (doc.narrativeIds || []).forEach(nId => keywordNarrativeIds.add(nId));
+      });
+    }
     
     // Helper to check if narrative matches a specific entity type
     const matchesPersons = (narrative, personIds) => {
@@ -2679,6 +2692,12 @@ export const DataService = {
       return themeIds.some(tId => (narrative.themeIds || []).includes(tId));
     };
     
+    const matchesKeywords = (narrative, keywords) => {
+      if (!keywords || keywords.length === 0) return null;
+      // Check if narrative is linked to documents that matched the keyword scope
+      return keywordNarrativeIds.has(narrative.id);
+    };
+    
     return narratives.filter(narrative => {
       // Get match results for each criteria (null means no criteria set)
       const matches = [
@@ -2688,7 +2707,8 @@ export const DataService = {
         matchesFactions(narrative, scope.factionIds),
         matchesLocations(narrative, scope.locationIds),
         matchesEvents(narrative, scope.eventIds),
-        matchesThemes(narrative, scope.themeIds)
+        matchesThemes(narrative, scope.themeIds),
+        matchesKeywords(narrative, scope.keywords)
       ];
       
       // Filter out null values (criteria not set)

@@ -1202,7 +1202,7 @@ export const documents = [
       avatarUrl: 'img/placeholders/avatar-default.svg'
     },
     contentBlocks: [
-      { type: 'paragraph', content: 'The cancer study everyone is talking about 🧵 New research links food preservatives to 32% higher cancer risk. Here\'s what you need to know and what foods to AVOID. #health #cancer #foodsafety #wellness #plantbased', portionMark: { classification: 'U', handling: '' } }
+      { type: 'paragraph', content: 'The cancer study everyone is talking about 🧵 32% higher cancer risk from food preservatives?? #health #cancer #foodsafety #wellness #plantbased #rfkjr', portionMark: { classification: 'U', handling: '' } }
     ],
     video: {
       thumbnailUrl: 'img/placeholders/video-thumbnail.svg',
@@ -1334,7 +1334,7 @@ export const documents = [
     documentType: 'internal_report',
     repositoryId: 'repo-edl',
     classification: 'S',
-    url: null,
+    url: 'https://edl.intel.gov/documents/doc-026',
     publishedDate: '2026-01-19T09:00:00Z',
     publisherId: 'pub-dept-ops',
     title: 'Situation Assessment: Federal-State Conflict in Minnesota Immigration Enforcement',
@@ -1417,7 +1417,7 @@ export const documents = [
     documentType: 'internal_report',
     repositoryId: 'repo-edl',
     classification: 'S',
-    url: null,
+    url: 'https://edl.intel.gov/documents/doc-027',
     publishedDate: '2026-01-21T08:00:00Z',
     publisherId: 'pub-dept-intel',
     title: 'Diplomatic Assessment: Greenland Acquisition Rhetoric and Allied Response',
@@ -1482,7 +1482,7 @@ export const documents = [
     documentType: 'internal_report',
     repositoryId: 'repo-edl',
     classification: 'TS',
-    url: null,
+    url: 'https://edl.intel.gov/documents/doc-028',
     publishedDate: '2026-01-20T06:00:00Z',
     publisherId: 'pub-dept-ops',
     title: 'Operational Briefing: Nationwide Immigration Enforcement Surge - Phase II',
@@ -1536,7 +1536,7 @@ export const documents = [
     documentType: 'internal_report',
     repositoryId: 'repo-edl',
     classification: 'S',
-    url: null,
+    url: 'https://edl.intel.gov/documents/doc-029',
     publishedDate: '2026-01-20T14:00:00Z',
     publisherId: 'pub-dept-intel',
     title: 'Threat Assessment: Violence Against Judiciary - Lafayette Incident Analysis',
@@ -1600,7 +1600,7 @@ export const documents = [
     documentType: 'internal_report',
     repositoryId: 'repo-edl',
     classification: 'U',
-    url: null,
+    url: 'https://edl.intel.gov/documents/doc-030',
     publishedDate: '2026-01-18T10:00:00Z',
     publisherId: 'pub-dept-intel',
     title: 'Public Health Analysis: Food Preservative Research and Social Media Narratives',
@@ -1654,7 +1654,7 @@ export const documents = [
     documentType: 'internal_report',
     repositoryId: 'repo-edl',
     classification: 'C',
-    url: null,
+    url: 'https://edl.intel.gov/documents/doc-031',
     publishedDate: '2026-01-18T16:00:00Z',
     publisherId: 'pub-dept-intel',
     title: 'Intelligence Summary: Minneapolis Anti-ICE Protest Activity',
@@ -2596,12 +2596,13 @@ export const documents = [
       avatarUrl: 'img/placeholders/avatar-default.svg'
     },
     contentBlocks: [
-      { type: 'paragraph', content: 'POV: You just learned what sodium nitrite does to your body 😱 The new study linking it to 32% higher cancer risk is WILD. Here\'s what I\'m removing from my diet immediately... #health #nutrition #cancerprevention #foodsafety' }
+      { type: 'paragraph', content: 'POV: You just learned what sodium nitrite does to your body 😱 Foods I\'m cutting immediately #health #nutrition #cancerprevention #foodsafety #whatieatinaday', portionMark: { classification: 'U', handling: '' } }
     ],
     video: {
       thumbnailUrl: 'img/placeholders/video-thumbnail.svg',
       duration: 95
     },
+    transcription: 'POV: You just learned what sodium nitrite does to your body. The new study linking it to thirty-two percent higher cancer risk is WILD. Here\'s what I\'m removing from my diet immediately. Bacon - gone. Hot dogs - gone. Deli meat - sorry, but gone. Basically anything processed with that pink color? It\'s the sodium nitrite. And the scary part? This stuff is in EVERYTHING. Check your labels. If you see sodium nitrite or potassium nitrate, put it back on the shelf. Your future self will thank you.',
     excerpt: 'TikTok explaining food preservative cancer risk study findings.',
     narrativeIds: ['narr-003'],
     themeIds: ['sub-007'],
@@ -2757,12 +2758,13 @@ export const documents = [
       avatarUrl: 'img/placeholders/avatar-default.svg'
     },
     contentBlocks: [
-      { type: 'paragraph', content: 'Day 5 of the shutdown. Still no idea when we\'ll get paid. My rent is due next week. This is the reality for 800,000 federal workers right now. We\'re not political pawns, we\'re people. #shutdown #federalworkers #governmentshutdown' }
+      { type: 'paragraph', content: 'Day 5 of the shutdown diary 📓 No idea when we\'ll get paid, rent due next week #shutdown #federalworkers #governmentshutdown #fedlife #storytime', portionMark: { classification: 'U', handling: '' } }
     ],
     video: {
       thumbnailUrl: 'img/placeholders/video-thumbnail.svg',
       duration: 78
     },
+    transcription: 'Day five of the shutdown. Still no idea when we\'ll get paid. My rent is due next week. I have two kids. We\'re not sure how we\'re going to make it. This is the reality for eight hundred thousand federal workers right now. We\'re not political pawns. We\'re people. We have mortgages. We have car payments. We have kids to feed. And we\'re just sitting here, waiting, with no answers. Day five. Who knows how many more to go.',
     excerpt: 'TikTok documenting federal worker experience during government shutdown.',
     narrativeIds: ['narr-012'],
     themeIds: ['sub-031', 'sub-032'],
@@ -2920,12 +2922,13 @@ export const documents = [
       avatarUrl: 'img/placeholders/avatar-default.svg'
     },
     contentBlocks: [
-      { type: 'paragraph', content: 'The government wants you to eat MORE meat?? In 2025?? With everything we know about climate change and cancer risk?? Make it make sense 😭 Here\'s why I\'m ignoring these guidelines and you should too #vegan #plantbased #dietaryguidelines #healthyeating' }
+      { type: 'paragraph', content: 'New dietary guidelines want us to eat MORE meat in 2025?? 🥩❌ Make it make sense #vegan #plantbased #dietaryguidelines #healthyeating #climatechange', portionMark: { classification: 'U', handling: '' } }
     ],
     video: {
       thumbnailUrl: 'img/placeholders/video-thumbnail.svg',
       duration: 112
     },
+    transcription: 'The government wants you to eat MORE meat? In 2025? With everything we know about climate change and cancer risk? Make it make sense. These new dietary guidelines are brought to you by the same people who said cigarettes were safe and sugar wasn\'t a problem. The meat and dairy industry has their fingerprints ALL over this. Here\'s why I\'m ignoring these guidelines and you should too. First, the environmental impact. Second, the health implications we just talked about with those preservative studies. Third, there are better protein sources that don\'t come with all this baggage. Go plant-based. Your body and the planet will thank you.',
     excerpt: 'TikTok response to new dietary guidelines from vegan influencer perspective.',
     narrativeIds: ['narr-010', 'narr-003'],
     themeIds: ['sub-007', 'sub-027'],

@@ -55,7 +55,6 @@ export const CLASSIFICATION_LEVELS = {
 // Document types
 export const DOCUMENT_TYPES = {
   SOCIAL_POST: 'social_post',
-  TIKTOK: 'tiktok',
   NEWS_ARTICLE: 'news_article',
   INTERNAL: 'internal',
   // Structured data types
@@ -70,12 +69,7 @@ export const DOCUMENT_TYPE_INFO = {
   social_post: {
     label: 'Social Post',
     icon: 'social',
-    description: 'Social media posts from X, Facebook, Instagram, Reddit'
-  },
-  tiktok: {
-    label: 'TikTok',
-    icon: 'video',
-    description: 'TikTok video posts with transcriptions'
+    description: 'Social media posts from X, Facebook, Instagram, Reddit, TikTok'
   },
   news_article: {
     label: 'News Article',
@@ -211,8 +205,7 @@ export function calculateDocumentClassification(portionMarks) {
  * @returns {boolean}
  */
 export function isSocialMedia(documentType) {
-  return documentType === DOCUMENT_TYPES.SOCIAL_POST || 
-         documentType === DOCUMENT_TYPES.TIKTOK;
+  return documentType === DOCUMENT_TYPES.SOCIAL_POST;
 }
 
 /**
@@ -245,18 +238,13 @@ export function getDocumentTypeInfo(documentType) {
 /**
  * Determine document type from publisher type
  * @param {string} publisherType - Publisher type (social, national_news, international_news, internal)
- * @param {string} publisherId - Publisher ID for special cases like TikTok
  * @returns {string} Document type
  */
-export function getDocumentTypeFromPublisher(publisherType, publisherId = '') {
+export function getDocumentTypeFromPublisher(publisherType) {
   if (publisherType === 'internal') {
     return DOCUMENT_TYPES.INTERNAL;
   }
   if (publisherType === 'social') {
-    // Check if it's TikTok specifically
-    if (publisherId && publisherId.includes('tiktok')) {
-      return DOCUMENT_TYPES.TIKTOK;
-    }
     return DOCUMENT_TYPES.SOCIAL_POST;
   }
   if (publisherType === 'national_news' || publisherType === 'international_news') {

@@ -178,25 +178,9 @@
   border-bottom: 1px solid var(--border-subtle);
 }
 
-/* Monitor Cards - Override card overflow to allow dropdowns */
-.monitors-grid .card {
-  overflow: visible;
-}
-
+/* Monitor Cards - Visualization needs overflow visible for tooltips */
 .monitors-grid .card-body {
   overflow: visible;
-}
-
-/* Monitor card header needs to allow dropdown overflow */
-.monitors-grid .card-header {
-  overflow: visible;
-  z-index: 20;
-}
-
-.monitors-grid .card-header-actions {
-  overflow: visible;
-  background: transparent;
-  padding: 0;
 }
 
 .monitor-viz-container {

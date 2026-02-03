@@ -92,7 +92,7 @@ export class FactionView extends DetailViewBase {
     `;
 
     // Initialize stat card dropdowns
-    this.initStatDropdowns(contextId);
+    this.initStatDropdowns(contextId, this.factionId);
 
     // Initialize card width toggles
     this.initCardWidthToggles('faction', this.factionId);

@@ -19,8 +19,10 @@ export class StatCardDropdown extends BaseComponent {
       icon: '',
       // Label for the stat
       label: 'Entities',
-      // Optional context ID for building routes
+      // Optional context ID for building routes (parent context like workspace)
       contextId: null,
+      // Optional current entity ID (the entity being viewed, for documents tab route)
+      currentEntityId: null,
       // Callback when navigating (receives entity ID)
       onNavigate: null,
       // Max items to show in dropdown
@@ -44,6 +46,34 @@ export class StatCardDropdown extends BaseComponent {
     return `#/${entityId}/`;
   }
 
+  /**
+   * Build the route for a document in the documents tab with reader mode
+   * @param {string} docId - Document ID to open in reader
+   * @returns {string} Hash route to documents tab with doc query param
+   */
+  buildDocumentReaderRoute(docId) {
+    const { contextId, currentEntityId } = this.options;
+    
+    // Build base route with context and/or entity
+    let baseRoute;
+    if (contextId && currentEntityId) {
+      // Within a context (e.g., workspace), viewing an entity
+      baseRoute = `#/${contextId}/${currentEntityId}/documents/`;
+    } else if (currentEntityId) {
+      // Viewing an entity directly (no parent context)
+      baseRoute = `#/${currentEntityId}/documents/`;
+    } else if (contextId) {
+      // Context only (e.g., workspace home)
+      baseRoute = `#/${contextId}/documents/`;
+    } else {
+      // COP - use documents list view
+      baseRoute = '#/documents';
+    }
+    
+    // Add doc query param to open in reader mode
+    return `${baseRoute}?doc=${docId}`;
+  }
+
   render() {
     this.clear();
 
@@ -55,10 +85,13 @@ export class StatCardDropdown extends BaseComponent {
       return;
     }
     
-    // Build dropdown items
+    // Build dropdown items - documents use special routing to open in reader mode
     const displayItems = items.slice(0, maxItems);
     let dropdownItemsHtml = displayItems.map(item => {
-      const href = this.buildRoute(item.id);
+      // Documents route to documents tab with reader mode, others to entity detail
+      const href = type === 'documents' 
+        ? this.buildDocumentReaderRoute(item.id)
+        : this.buildRoute(item.id);
       const title = item.name || item.text || item.headline || item.id;
       const description = item.description ? `<span class="stat-dropdown-item-desc">${this.escapeHtml(item.description)}</span>` : '';
       return `
@@ -69,13 +102,22 @@ export class StatCardDropdown extends BaseComponent {
       `;
     }).join('');
 
-    // Show "more" indicator if truncated
+    // Show "more" indicator if truncated - for documents, make it a link to documents tab
     if (items.length > maxItems) {
-      dropdownItemsHtml += `
-        <div class="stat-dropdown-more">
-          +${items.length - maxItems} more
-        </div>
-      `;
+      if (type === 'documents') {
+        const docsTabRoute = this.buildDocumentReaderRoute('').replace('?doc=', '');
+        dropdownItemsHtml += `
+          <a class="stat-dropdown-more stat-dropdown-more-link" href="${docsTabRoute}">
+            +${items.length - maxItems} more
+          </a>
+        `;
+      } else {
+        dropdownItemsHtml += `
+          <div class="stat-dropdown-more">
+            +${items.length - maxItems} more
+          </div>
+        `;
+      }
     }
 
     // Build the dropdown HTML

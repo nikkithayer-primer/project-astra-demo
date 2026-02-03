@@ -180,7 +180,6 @@ export class MonitorView extends DetailViewBase {
 
     const headerHtml = PageHeader.render({
       breadcrumbs: [
-        { label: 'Dashboard', href: '#/dashboard' },
         { label: 'Monitors', href: '#/monitors' },
         monitor.name
       ],
@@ -221,7 +220,7 @@ export class MonitorView extends DetailViewBase {
     Object.assign(this.components, components);
 
     // Initialize stat card dropdowns
-    this.initStatDropdowns(contextId);
+    this.initStatDropdowns(contextId, this.monitorId);
 
     // Set up description toggle for narratives (Dashboard tab)
     if (this.isDashboardTab()) {
@@ -486,6 +485,7 @@ export class MonitorView extends DetailViewBase {
 
   /**
    * Get HTML for the Alerts tab content
+   * Uses the same styling as the MonitorsView alerts list page
    */
   getAlertsTabHtml(alerts) {
     if (!alerts || alerts.length === 0) {
@@ -505,23 +505,13 @@ export class MonitorView extends DetailViewBase {
       const typeClass = this.getAlertTypeClass(alert.type);
       const typeLabel = this.getAlertTypeLabel(alert.type);
       const timeAgo = this.formatRelativeTime(alert.triggeredAt);
-      const formattedDate = new Date(alert.triggeredAt).toLocaleDateString('en-US', {
-        year: 'numeric',
-        month: 'short',
-        day: 'numeric',
-        hour: '2-digit',
-        minute: '2-digit'
-      });
       const descriptionWithLinks = formatAlertDescriptionWithLinks(alert);
       
       return `
-        <div class="alert-item-full">
-          <div class="alert-item-full-header">
-            <span class="alert-type-badge ${typeClass}">${typeLabel}</span>
-            <span class="alert-title">${this.escapeHtml(alert.title || '')}</span>
-            <span class="alert-time" title="${formattedDate}">${timeAgo}</span>
-          </div>
-          <div class="alert-item-full-description">${descriptionWithLinks}</div>
+        <div class="alerts-list-item" data-alert-id="${alert.id}">
+          <span class="alert-type-badge ${typeClass}">${typeLabel}</span>
+          <span class="alert-description">${descriptionWithLinks}</span>
+          <span class="alert-time">${timeAgo}</span>
         </div>
       `;
     }).join('');
@@ -530,10 +520,10 @@ export class MonitorView extends DetailViewBase {
       <div class="card full-width">
         <div class="card-header">
           <h3 class="card-title">Alerts</h3>
-          <span class="card-count">${alerts.length}</span>
+          <span class="badge badge-default">${alerts.length} total</span>
         </div>
         <div class="card-body no-padding">
-          <div class="alerts-list-full">
+          <div class="alerts-list">
             ${alertsHtml}
           </div>
         </div>

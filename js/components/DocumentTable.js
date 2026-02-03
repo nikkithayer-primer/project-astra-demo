@@ -1487,37 +1487,149 @@ export class DocumentTable extends BaseComponent {
   }
 
   /**
+   * Render the standardized toolbar row for all document types
+   * @param {Object} doc - The document
+   * @returns {string} HTML string for toolbar
+   */
+  renderHeaderToolbar(doc) {
+    // Get repository info
+    const repository = DataService.getRepository(doc.repositoryId);
+    const repoName = repository?.name || 'Unknown Repository';
+    
+    // Get classification
+    const classification = doc.classification || 'U';
+    const showClassification = this.shouldShowClassification();
+    
+    // Get comments and highlights counts
+    const highlights = DataService.getHighlightsForDocument(doc.id) || [];
+    const comments = DataService.getCommentsForDocument(doc.id) || [];
+
+    return `
+      <div class="viewer-header-toolbar">
+        <div class="viewer-toolbar-left">
+          <span class="viewer-toolbar-repo">${repoName}</span>
+          ${showClassification ? renderClassificationBadge(classification) : ''}
+        </div>
+        <div class="viewer-toolbar-right">
+          <button class="btn btn-small btn-primary" id="viewer-add-to-project" title="Add to Project">
+            <svg viewBox="0 0 16 16" width="14" height="14" fill="currentColor">
+              <path fill-rule="evenodd" clip-rule="evenodd" d="M2 1C1.44771 1 1 1.44772 1 2V14C1 14.5523 1.44771 15 2 15H14C14.5523 15 15 14.5523 15 14V3.5C15 2.94772 14.5523 2.5 14 2.5H8.26759L7.56446 1.4453C7.37899 1.1671 7.06676 1 6.73241 1H2ZM2 2H6.73241L7.43554 3.0547C7.62101 3.3329 7.93324 3.5 8.26759 3.5H14V4.5H2V2ZM2 5.5V14H14V5.5H2Z"/>
+            </svg>
+            Add to Project
+          </button>
+          <span class="viewer-toolbar-stat" title="Comments">
+            <svg viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.5">
+              <path d="M14 10c0 .6-.4 1-1 1H5l-3 3V3c0-.6.4-1 1-1h10c.6 0 1 .4 1 1v7z"/>
+            </svg>
+            ${comments.length}
+          </span>
+          <span class="viewer-toolbar-stat" title="Highlights">
+            <svg viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.5">
+              <path d="M3 12h10M3 8h10M5 4h6"/>
+            </svg>
+            ${highlights.length}
+          </span>
+          <button class="btn btn-small btn-secondary ${this.detailsPanelOpen ? 'active' : ''}" id="viewer-toggle-details" title="Toggle Details">
+            <svg viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.5">
+              <rect x="1" y="2" width="14" height="12" rx="1"/>
+              <path d="M10 2v12"/>
+            </svg>
+            Show Details
+          </button>
+        </div>
+      </div>
+    `;
+  }
+
+  /**
+   * Get portion mark display from first content block
+   * @param {Object} doc - The document
+   * @returns {string} HTML for portion mark or empty string
+   */
+  getPortionMarkHtml(doc) {
+    const showClassification = this.shouldShowClassification();
+    if (!showClassification) return '';
+    
+    const firstBlock = doc.contentBlocks?.[0];
+    if (firstBlock?.portionMark) {
+      const pm = firstBlock.portionMark;
+      const pmClass = pm.classification?.toLowerCase() || 'u';
+      const pmText = pm.handling ? `${pm.classification}//${pm.handling}` : pm.classification;
+      return `<span class="viewer-portion-mark portion-mark-${pmClass}">(${pmText})</span>`;
+    }
+    return '';
+  }
+
+  /**
+   * Render external link button
+   * @param {Object} doc - The document
+   * @param {string} label - Button label
+   * @returns {string} HTML for link or empty string
+   */
+  renderExternalLink(doc, label = 'View Source') {
+    if (!doc.url) return '';
+    return `
+      <a href="${doc.url}" target="_blank" rel="noopener noreferrer" class="viewer-external-link">
+        ${label}
+        <svg viewBox="0 0 16 16" width="12" height="12" fill="none" stroke="currentColor" stroke-width="1.5">
+          <path d="M6 2h8v8M14 2L6 10"/>
+        </svg>
+      </a>
+    `;
+  }
+
+  /**
    * Render type-specific header for the viewer
    * @param {Object} doc - The document to render header for
    * @returns {string} HTML string for the header
    */
   renderViewerHeader(doc) {
     const docType = doc.documentType || 'news_article';
+    const toolbar = this.renderHeaderToolbar(doc);
     
+    let content;
     switch (docType) {
       case DOCUMENT_TYPES.SOCIAL_POST:
-        return this.renderSocialHeader(doc);
-      case DOCUMENT_TYPES.TIKTOK:
-        return this.renderTikTokHeader(doc);
+        // Use TikTok header for TikTok posts (identified by publisher)
+        const publisherId = this.getDocPublisherId(doc);
+        if (publisherId && publisherId.includes('tiktok')) {
+          content = this.renderTikTokHeader(doc);
+        } else {
+          content = this.renderSocialHeader(doc);
+        }
+        break;
       case DOCUMENT_TYPES.NEWS_ARTICLE:
-        return this.renderNewsHeader(doc);
+        content = this.renderNewsHeader(doc);
+        break;
       case DOCUMENT_TYPES.INTERNAL:
-        return this.renderInternalHeader(doc);
+        content = this.renderInternalHeader(doc);
+        break;
       default:
-        return this.renderNewsHeader(doc);
+        content = this.renderNewsHeader(doc);
     }
+    
+    return toolbar + content;
   }
 
   /**
-   * Render header for social media posts (X, Facebook, Instagram, Reddit)
+   * Render header for social media posts (X, Facebook, Instagram, Reddit, LinkedIn)
    */
   renderSocialHeader(doc) {
     const author = doc.author || {};
     const metrics = doc.metrics || {};
     const publisherName = this.getPublisherName(this.getDocPublisherId(doc));
     const formatted = this.formatDate(doc.publishedDate);
-    const classification = doc.classification || 'U';
-    const showClassification = this.shouldShowClassification();
+    const title = doc.title || '';
+    const portionMark = this.getPortionMarkHtml(doc);
+    const isLinkedIn = publisherName.toLowerCase().includes('linkedin');
+
+    // Header image if available
+    const headerImageHtml = doc.headerImage?.url ? `
+      <div class="viewer-header-image">
+        <img src="${doc.headerImage.url}" alt="${doc.headerImage.caption || 'Post image'}">
+        ${doc.headerImage.caption ? `<span class="viewer-header-image-caption">${doc.headerImage.caption}</span>` : ''}
+      </div>
+    ` : '';
 
     return `
       <div class="document-viewer-header-social">
@@ -1530,59 +1642,44 @@ export class DocumentTable extends BaseComponent {
             <span class="viewer-social-username">${author.username || ''}</span>
           </div>
         </div>
-        
+
+        ${!isLinkedIn && title ? `
+          <div class="viewer-social-headline">
+            ${portionMark}
+            <span class="viewer-social-title">${title}</span>
+          </div>
+        ` : ''}
+
         <div class="viewer-social-meta">
-          <span class="viewer-social-publisher">
-            ${publisherName}
-          </span>
+          <span class="viewer-social-publisher">${publisherName}</span>
           <span class="viewer-social-date">${formatted.date} ${formatted.time}</span>
-          ${showClassification && classification !== 'U' ? renderClassificationBadge(classification) : ''}
         </div>
 
-        <div class="viewer-social-engagement">
-          <div class="viewer-social-stat">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/>
-            </svg>
-            <span>${this.formatEngagement(metrics.comments || 0)}</span>
-          </div>
-          <div class="viewer-social-stat">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
-            </svg>
-            <span>${this.formatEngagement(metrics.likes || 0)}</span>
-          </div>
-          <div class="viewer-social-stat">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <path d="M17 1l4 4-4 4"/><path d="M3 11V9a4 4 0 0 1 4-4h14"/>
-              <path d="M7 23l-4-4 4-4"/><path d="M21 13v2a4 4 0 0 1-4 4H3"/>
-            </svg>
-            <span>${this.formatEngagement(metrics.shares || 0)}</span>
-          </div>
-        </div>
+        ${headerImageHtml}
 
-        <div class="viewer-header-actions">
-          ${doc.url ? `
-            <a href="${doc.url}" target="_blank" rel="noopener noreferrer" class="btn btn-small btn-secondary">
-              View on ${publisherName}
-              <svg viewBox="0 0 16 16" width="12" height="12" fill="none" stroke="currentColor" stroke-width="1.5">
-                <path d="M6 2h8v8M14 2L6 10"/>
+        <div class="viewer-social-footer">
+          <div class="viewer-social-engagement">
+            <div class="viewer-social-stat" title="Comments">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/>
               </svg>
-            </a>
-          ` : ''}
-          <button class="btn btn-small btn-primary" id="viewer-add-to-project" title="Add to Project">
-            <svg viewBox="0 0 16 16" width="14" height="14" fill="currentColor">
-              <path fill-rule="evenodd" clip-rule="evenodd" d="M2 1C1.44771 1 1 1.44772 1 2V14C1 14.5523 1.44771 15 2 15H14C14.5523 15 15 14.5523 15 14V3.5C15 2.94772 14.5523 2.5 14 2.5H8.26759L7.56446 1.4453C7.37899 1.1671 7.06676 1 6.73241 1H2ZM2 2H6.73241L7.43554 3.0547C7.62101 3.3329 7.93324 3.5 8.26759 3.5H14V4.5H2V2ZM2 5.5V14H14V5.5H2Z"/>
-            </svg>
-            Add to Project
-          </button>
-          <button class="btn btn-small btn-secondary ${this.detailsPanelOpen ? 'active' : ''}" id="viewer-toggle-details" title="Toggle Details">
-            <svg viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.5">
-              <rect x="1" y="2" width="14" height="12" rx="1"/>
-              <path d="M10 2v12"/>
-            </svg>
-            Show Details
-          </button>
+              <span>${this.formatEngagement(metrics.comments || 0)}</span>
+            </div>
+            <div class="viewer-social-stat" title="Likes">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+              </svg>
+              <span>${this.formatEngagement(metrics.likes || 0)}</span>
+            </div>
+            <div class="viewer-social-stat" title="Shares">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M17 1l4 4-4 4"/><path d="M3 11V9a4 4 0 0 1 4-4h14"/>
+                <path d="M7 23l-4-4 4-4"/><path d="M21 13v2a4 4 0 0 1-4 4H3"/>
+              </svg>
+              <span>${this.formatEngagement(metrics.shares || 0)}</span>
+            </div>
+          </div>
+          ${this.renderExternalLink(doc, `View on ${publisherName}`)}
         </div>
       </div>
     `;
@@ -1593,21 +1690,14 @@ export class DocumentTable extends BaseComponent {
    */
   renderTikTokHeader(doc) {
     const author = doc.author || {};
-    const video = doc.video || {};
     const metrics = doc.metrics || {};
     const formatted = this.formatDate(doc.publishedDate);
-    const classification = doc.classification || 'U';
-    const showClassification = this.shouldShowClassification();
-
-    // Format video duration
-    const duration = video.duration || 0;
-    const minutes = Math.floor(duration / 60);
-    const seconds = duration % 60;
-    const durationStr = minutes > 0 ? `${minutes}:${seconds.toString().padStart(2, '0')}` : `0:${seconds.toString().padStart(2, '0')}`;
+    const title = doc.title || '';
+    const portionMark = this.getPortionMarkHtml(doc);
 
     return `
-      <div class="document-viewer-header-tiktok">
-        <div class="viewer-tiktok-author">
+      <div class="document-viewer-header-social">
+        <div class="viewer-social-author">
           <div class="viewer-social-avatar">
             <img src="${author.avatarUrl || PLACEHOLDERS.avatar}" alt="${author.displayName || 'User'}">
           </div>
@@ -1615,69 +1705,43 @@ export class DocumentTable extends BaseComponent {
             <span class="viewer-social-displayname">${author.displayName || 'Unknown'}</span>
             <span class="viewer-social-username">${author.username || ''}</span>
           </div>
-          <div class="viewer-tiktok-badge">
-            <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor">
-              <path d="M19.59 6.69a4.83 4.83 0 01-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 01-5.2 1.74 2.89 2.89 0 012.31-4.64 2.93 2.93 0 01.88.13V9.4a6.84 6.84 0 00-1-.05A6.33 6.33 0 005 20.1a6.34 6.34 0 0010.86-4.43v-7a8.16 8.16 0 004.77 1.52v-3.4a4.85 4.85 0 01-1-.1z"/>
-            </svg>
-            TikTok
-          </div>
         </div>
 
-        <div class="viewer-tiktok-meta">
-          <span class="viewer-tiktok-duration">
-            <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2">
-              <polygon points="5 3 19 12 5 21 5 3"/>
-            </svg>
-            ${durationStr}
-          </span>
+        ${title ? `
+          <div class="viewer-social-headline">
+            ${portionMark}
+            <span class="viewer-social-title">${title}</span>
+          </div>
+        ` : ''}
+
+        <div class="viewer-social-meta">
+          <span class="viewer-social-publisher">TikTok</span>
           <span class="viewer-social-date">${formatted.date} ${formatted.time}</span>
-          ${showClassification && classification !== 'U' ? renderClassificationBadge(classification) : ''}
         </div>
 
-        <div class="viewer-social-engagement">
-          <div class="viewer-social-stat">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/>
-            </svg>
-            <span>${this.formatEngagement(metrics.comments || 0)}</span>
-          </div>
-          <div class="viewer-social-stat">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
-            </svg>
-            <span>${this.formatEngagement(metrics.likes || 0)}</span>
-          </div>
-          <div class="viewer-social-stat">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <path d="M17 1l4 4-4 4"/><path d="M3 11V9a4 4 0 0 1 4-4h14"/>
-              <path d="M7 23l-4-4 4-4"/><path d="M21 13v2a4 4 0 0 1-4 4H3"/>
-            </svg>
-            <span>${this.formatEngagement(metrics.shares || 0)}</span>
-          </div>
-        </div>
-
-        <div class="viewer-header-actions">
-          ${doc.url ? `
-            <a href="${doc.url}" target="_blank" rel="noopener noreferrer" class="btn btn-small btn-secondary">
-              View on TikTok
-              <svg viewBox="0 0 16 16" width="12" height="12" fill="none" stroke="currentColor" stroke-width="1.5">
-                <path d="M6 2h8v8M14 2L6 10"/>
+        <div class="viewer-social-footer">
+          <div class="viewer-social-engagement">
+            <div class="viewer-social-stat" title="Comments">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/>
               </svg>
-            </a>
-          ` : ''}
-          <button class="btn btn-small btn-primary" id="viewer-add-to-project" title="Add to Project">
-            <svg viewBox="0 0 16 16" width="14" height="14" fill="currentColor">
-              <path fill-rule="evenodd" clip-rule="evenodd" d="M2 1C1.44771 1 1 1.44772 1 2V14C1 14.5523 1.44771 15 2 15H14C14.5523 15 15 14.5523 15 14V3.5C15 2.94772 14.5523 2.5 14 2.5H8.26759L7.56446 1.4453C7.37899 1.1671 7.06676 1 6.73241 1H2ZM2 2H6.73241L7.43554 3.0547C7.62101 3.3329 7.93324 3.5 8.26759 3.5H14V4.5H2V2ZM2 5.5V14H14V5.5H2Z"/>
-            </svg>
-            Add to Project
-          </button>
-          <button class="btn btn-small btn-secondary ${this.detailsPanelOpen ? 'active' : ''}" id="viewer-toggle-details" title="Toggle Details">
-            <svg viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.5">
-              <rect x="1" y="2" width="14" height="12" rx="1"/>
-              <path d="M10 2v12"/>
-            </svg>
-            Show Details
-          </button>
+              <span>${this.formatEngagement(metrics.comments || 0)}</span>
+            </div>
+            <div class="viewer-social-stat" title="Likes">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+              </svg>
+              <span>${this.formatEngagement(metrics.likes || 0)}</span>
+            </div>
+            <div class="viewer-social-stat" title="Shares">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M17 1l4 4-4 4"/><path d="M3 11V9a4 4 0 0 1 4-4h14"/>
+                <path d="M7 23l-4-4 4-4"/><path d="M21 13v2a4 4 0 0 1-4 4H3"/>
+              </svg>
+              <span>${this.formatEngagement(metrics.shares || 0)}</span>
+            </div>
+          </div>
+          ${this.renderExternalLink(doc, 'View on TikTok')}
         </div>
       </div>
     `;
@@ -1689,49 +1753,23 @@ export class DocumentTable extends BaseComponent {
   renderNewsHeader(doc) {
     const publisherName = this.getPublisherName(this.getDocPublisherId(doc));
     const formatted = this.formatDate(doc.publishedDate);
-    const classification = doc.classification || 'U';
-    const showClassification = this.shouldShowClassification();
     const title = doc.title || 'Untitled Article';
+    const portionMark = this.getPortionMarkHtml(doc);
 
     return `
-      <div class="document-viewer-header-news">
-        <div class="viewer-news-masthead">
-          <span class="viewer-news-publisher">
-            ${publisherName}
-          </span>
-          ${showClassification && classification !== 'U' ? renderClassificationBadge(classification) : ''}
+      <div class="document-viewer-header-standard">
+        <div class="viewer-standard-headline">
+          ${portionMark}
+          <h2 class="viewer-standard-title">${title}</h2>
         </div>
 
-        <h2 class="viewer-news-title">${title}</h2>
-
-        <div class="viewer-news-byline">
-          ${doc.author ? `<span class="viewer-news-author">By ${doc.author}</span>` : ''}
-          <span class="viewer-news-date">${formatted.date} ${formatted.time}</span>
+        <div class="viewer-standard-meta">
+          <span class="viewer-standard-publisher">${publisherName}</span>
+          ${doc.author ? `<span class="viewer-standard-author">${doc.author}</span>` : ''}
+          <span class="viewer-standard-date">${formatted.date} ${formatted.time}</span>
         </div>
 
-        <div class="viewer-header-actions">
-          ${doc.url ? `
-            <a href="${doc.url}" target="_blank" rel="noopener noreferrer" class="btn btn-small btn-secondary">
-              View original
-              <svg viewBox="0 0 16 16" width="12" height="12" fill="none" stroke="currentColor" stroke-width="1.5">
-                <path d="M6 2h8v8M14 2L6 10"/>
-              </svg>
-            </a>
-          ` : ''}
-          <button class="btn btn-small btn-primary" id="viewer-add-to-project" title="Add to Project">
-            <svg viewBox="0 0 16 16" width="14" height="14" fill="currentColor">
-              <path fill-rule="evenodd" clip-rule="evenodd" d="M2 1C1.44771 1 1 1.44772 1 2V14C1 14.5523 1.44771 15 2 15H14C14.5523 15 15 14.5523 15 14V3.5C15 2.94772 14.5523 2.5 14 2.5H8.26759L7.56446 1.4453C7.37899 1.1671 7.06676 1 6.73241 1H2ZM2 2H6.73241L7.43554 3.0547C7.62101 3.3329 7.93324 3.5 8.26759 3.5H14V4.5H2V2ZM2 5.5V14H14V5.5H2Z"/>
-            </svg>
-            Add to Project
-          </button>
-          <button class="btn btn-small btn-secondary ${this.detailsPanelOpen ? 'active' : ''}" id="viewer-toggle-details" title="Toggle Details">
-            <svg viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.5">
-              <rect x="1" y="2" width="14" height="12" rx="1"/>
-              <path d="M10 2v12"/>
-            </svg>
-            Show Details
-          </button>
-        </div>
+        ${this.renderExternalLink(doc, 'View Source')}
       </div>
     `;
   }
@@ -1742,45 +1780,23 @@ export class DocumentTable extends BaseComponent {
   renderInternalHeader(doc) {
     const publisherName = this.getPublisherName(this.getDocPublisherId(doc));
     const formatted = this.formatDate(doc.publishedDate);
-    const classification = doc.classification || 'U';
-    const showClassification = this.shouldShowClassification();
     const title = doc.title || 'Untitled Document';
+    const portionMark = this.getPortionMarkHtml(doc);
 
     return `
-      <div class="document-viewer-header-internal">
-        ${showClassification ? `
-          <div class="viewer-internal-classification-banner classification-banner classification-banner-${classification.toLowerCase()}">
-            ${CLASSIFICATION_LEVELS[classification]?.fullName || classification}
-          </div>
-        ` : ''}
-
-        ${doc.department ? `
-          <div class="viewer-internal-department">${doc.department}</div>
-        ` : ''}
-
-        <h2 class="viewer-internal-title">${title}</h2>
-
-        <div class="viewer-internal-meta">
-          <span class="viewer-internal-publisher">${publisherName}</span>
-          ${doc.author ? `<span class="viewer-internal-author">Author: ${doc.author}</span>` : ''}
-          <span class="viewer-internal-date">${formatted.date} ${formatted.time}</span>
+      <div class="document-viewer-header-standard">
+        <div class="viewer-standard-headline">
+          ${portionMark}
+          <h2 class="viewer-standard-title">${title}</h2>
         </div>
 
-        <div class="viewer-header-actions">
-          <button class="btn btn-small btn-primary" id="viewer-add-to-project" title="Add to Project">
-            <svg viewBox="0 0 16 16" width="14" height="14" fill="currentColor">
-              <path fill-rule="evenodd" clip-rule="evenodd" d="M2 1C1.44771 1 1 1.44772 1 2V14C1 14.5523 1.44771 15 2 15H14C14.5523 15 15 14.5523 15 14V3.5C15 2.94772 14.5523 2.5 14 2.5H8.26759L7.56446 1.4453C7.37899 1.1671 7.06676 1 6.73241 1H2ZM2 2H6.73241L7.43554 3.0547C7.62101 3.3329 7.93324 3.5 8.26759 3.5H14V4.5H2V2ZM2 5.5V14H14V5.5H2Z"/>
-            </svg>
-            Add to Project
-          </button>
-          <button class="btn btn-small btn-secondary ${this.detailsPanelOpen ? 'active' : ''}" id="viewer-toggle-details" title="Toggle Details">
-            <svg viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.5">
-              <rect x="1" y="2" width="14" height="12" rx="1"/>
-              <path d="M10 2v12"/>
-            </svg>
-            Show Details
-          </button>
+        <div class="viewer-standard-meta">
+          <span class="viewer-standard-publisher">${publisherName}</span>
+          ${doc.author ? `<span class="viewer-standard-author">${doc.author}</span>` : ''}
+          <span class="viewer-standard-date">${formatted.date} ${formatted.time}</span>
         </div>
+
+        ${this.renderExternalLink(doc, 'View in Repository')}
       </div>
     `;
   }
@@ -1806,10 +1822,6 @@ export class DocumentTable extends BaseComponent {
       case DOCUMENT_TYPES.SOCIAL_POST:
         return `<svg viewBox="0 0 16 16" width="12" height="12" fill="currentColor">
           <path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/>
-        </svg>`;
-      case DOCUMENT_TYPES.TIKTOK:
-        return `<svg viewBox="0 0 16 16" width="12" height="12" fill="currentColor">
-          <path d="M13.06 4.46a3.22 3.22 0 01-2.51-2.83V1.33h-2.3v9.11a1.93 1.93 0 11-1.93 1.16 1.93 1.93 0 011.54-3.09c.2 0 .4.03.59.09V5.27a4.56 4.56 0 00-.67-.03 4.22 4.22 0 00-2.91 7.27 4.23 4.23 0 007.24-2.95V5.33a5.44 5.44 0 003.18 1.01V4.07c-.23.25-.47.34-.67.39z"/>
         </svg>`;
       case DOCUMENT_TYPES.NEWS_ARTICLE:
         return `<svg viewBox="0 0 16 16" width="12" height="12" fill="none" stroke="currentColor" stroke-width="1.5">

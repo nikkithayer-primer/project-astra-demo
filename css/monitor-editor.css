@@ -246,8 +246,8 @@
   align-items: center;
   gap: var(--space-sm);
   width: 100%;
-  padding: var(--space-sm) var(--space-md);
-  font-size: var(--text-sm);
+  padding: var(--space-md) var(--space-lg);
+  font-size: var(--text-base);
   text-align: left;
   color: var(--text-primary);
   background: var(--bg-tertiary);
@@ -319,9 +319,9 @@
   align-items: center;
   gap: var(--space-sm);
   width: 100%;
-  padding: var(--space-sm) var(--space-md);
+  padding: var(--space-md) var(--space-lg);
   text-align: left;
-  font-size: var(--text-sm);
+  font-size: var(--text-base);
   color: var(--text-primary);
   background: none;
   border: none;
