@@ -173,10 +173,17 @@ class App {
       this.router.filters.missionId = 'all';
     }
     
-    // Reinitialize router to refresh views
-    if (this.router) {
-      this.router.init();
+    // Navigate to the dataset's default start page
+    const settings = this.dataStore.getSettings();
+    let defaultPage = settings.defaultStartPage || 'monitors';
+    
+    // If COP is disabled and was set as start page, fall back to monitors
+    if (!settings.copEnabled && (defaultPage === 'cop' || defaultPage === 'dashboard')) {
+      defaultPage = 'monitors';
     }
+    
+    // Navigate to the default page for this dataset
+    window.location.hash = `#/${defaultPage}`;
     
     // Update page summary in chat
     this.updatePageSummary();

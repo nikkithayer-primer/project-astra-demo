@@ -85,11 +85,11 @@ export class StatCardDropdown extends BaseComponent {
       return;
     }
     
-    // Build dropdown items - documents use special routing to open in reader mode
+    // Build dropdown items - documents and activity use special routing to open in reader mode
     const displayItems = items.slice(0, maxItems);
     let dropdownItemsHtml = displayItems.map(item => {
-      // Documents route to documents tab with reader mode, others to entity detail
-      const href = type === 'documents' 
+      // Documents and activity route to documents tab with reader mode, others to entity detail
+      const href = (type === 'documents' || type === 'activity')
         ? this.buildDocumentReaderRoute(item.id)
         : this.buildRoute(item.id);
       const title = item.name || item.text || item.headline || item.id;

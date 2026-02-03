@@ -17,7 +17,7 @@ export const documents = [
     author: 'Jean-Baptiste Vey',
     excerpt: 'French President Emmanuel Macron delivered a thinly veiled critique of President Trump\'s foreign policy at the World Economic Forum, warning of dangerous precedents being set.',
     headerImage: {
-      url: 'http://static.photos/cityscape/640x360/142',
+      url: 'http://static.photos/cityscape/640x360/1',
       caption: 'French President Emmanuel Macron addresses the World Economic Forum in Davos, Switzerland. Photo: Reuters/Denis Balibouse'
     },
     contentBlocks: [
@@ -28,7 +28,7 @@ export const documents = [
       { type: 'paragraph', content: 'Macron\'s speech appeared to be part of a coordinated European response to the Greenland situation. European Commission President Ursula von der Leyen, who spoke at the same forum, echoed similar themes about defending "rules-based international order."', portionMark: { classification: 'U', handling: '' } },
       { type: 'quote', content: '"Europe must be prepared to defend its interests and its values, even when—perhaps especially when—they are challenged by our closest allies."', portionMark: { classification: 'U', handling: '' } },
       { type: 'paragraph', content: 'The French president also emphasized the need for European nations to develop greater strategic autonomy, particularly in defense and energy. "We have relied too long on others for our security," Macron said. "The events of recent weeks should be a wake-up call."', portionMark: { classification: 'U', handling: '' } },
-      { type: 'image', imageUrl: 'http://static.photos/cityscape/640x360/142', caption: 'World leaders gathered at the Congress Centre in Davos for the annual World Economic Forum.' },
+      { type: 'image', imageUrl: 'http://static.photos/cityscape/640x360/2', caption: 'World leaders gathered at the Congress Centre in Davos for the annual World Economic Forum.' },
       { type: 'heading', content: 'Washington Dismisses Criticism', portionMark: { classification: 'U', handling: '' } },
       { type: 'paragraph', content: 'The White House did not immediately respond to Macron\'s remarks. However, sources close to the administration told Reuters that President Trump views European criticism as "predictable posturing" that will not affect his policy decisions.', portionMark: { classification: 'U', handling: '' } },
       { type: 'paragraph', content: 'Republican lawmakers largely rallied behind the president. Senator Tom Cotton of Arkansas called Macron\'s speech "the usual European hand-wringing" and said the U.S. has legitimate security interests in the Arctic region.', portionMark: { classification: 'U', handling: '' } },
@@ -129,7 +129,7 @@ export const documents = [
     author: 'Kevin Liptak and Betsy Klein',
     excerpt: 'President Trump shared what appeared to be a private diplomatic message from French President Macron questioning his Greenland acquisition strategy.',
     headerImage: {
-      url: 'http://static.photos/cityscape/640x360/142',
+      url: 'http://static.photos/cityscape/640x360/3',
       caption: 'President Trump\'s Truth Social post displaying what appears to be a private message from President Macron.'
     },
     contentBlocks: [
@@ -175,7 +175,7 @@ export const documents = [
     author: 'Katya Adler',
     excerpt: 'European Commission President Ursula von der Leyen said the EU must develop greater autonomy in response to "geopolitical shocks" from across the Atlantic.',
     headerImage: {
-      url: 'http://static.photos/cityscape/640x360/142',
+      url: 'http://static.photos/cityscape/640x360/4',
       caption: 'European Commission President Ursula von der Leyen delivers her address at the World Economic Forum.'
     },
     contentBlocks: [
@@ -186,7 +186,7 @@ export const documents = [
       { type: 'heading', content: 'Defense and Security', portionMark: { classification: 'U', handling: '' } },
       { type: 'paragraph', content: 'Von der Leyen announced plans to present a new European Defense Initiative at next month\'s EU summit. The proposal would include a 500 billion euro fund for joint military procurement and the creation of a rapid reaction force independent of NATO structures.', portionMark: { classification: 'U', handling: '' } },
       { type: 'paragraph', content: '"We are not abandoning NATO," she emphasized. "But we must be prepared for scenarios where we need to act on our own. The Greenland situation has made that abundantly clear."', portionMark: { classification: 'U', handling: '' } },
-      { type: 'image', imageUrl: 'http://static.photos/cityscape/640x360/142', caption: 'EU and member state flags fly outside the European Commission headquarters in Brussels.' },
+      { type: 'image', imageUrl: 'http://static.photos/cityscape/640x360/5', caption: 'EU and member state flags fly outside the European Commission headquarters in Brussels.' },
       { type: 'heading', content: 'Mixed Reactions', portionMark: { classification: 'U', handling: '' } },
       { type: 'paragraph', content: 'The proposals received a mixed reception from EU member states. France and Germany expressed strong support, while Poland and the Baltic states warned against undermining the transatlantic alliance.', portionMark: { classification: 'U', handling: '' } },
       { type: 'paragraph', content: 'Polish Foreign Minister Radosław Sikorski cautioned that "Europe cannot defend itself without the United States, and we should not pretend otherwise. Our focus should be on repairing the relationship, not replacing it."', portionMark: { classification: 'U', handling: '' } }
@@ -222,7 +222,7 @@ export const documents = [
     author: 'Jon Henley',
     excerpt: 'Greenland\'s Prime Minister Múte Bourup Egede responded forcefully to Trump\'s acquisition threats, calling for respect of international norms.',
     headerImage: {
-      url: 'http://static.photos/cityscape/640x360/142',
+      url: 'http://static.photos/cityscape/640x360/6',
       caption: 'Greenland\'s Prime Minister Múte Bourup Egede addresses reporters in Nuuk. Photo: Ritzau Scanpix'
     },
     contentBlocks: [
@@ -233,7 +233,7 @@ export const documents = [
       { type: 'heading', content: 'Independence Movement Gains Momentum', portionMark: { classification: 'U', handling: '' } },
       { type: 'paragraph', content: 'Ironically, Trump\'s pressure appears to be accelerating Greenland\'s long-term goal of independence from Denmark. Egede, who leads the pro-independence Inuit Ataqatigiit party, said recent events had "strengthened our resolve."', portionMark: { classification: 'U', handling: '' } },
       { type: 'paragraph', content: '"We will decide our own future," he said. "Not Washington, not Copenhagen. Greenlanders will determine the path of Greenland."', portionMark: { classification: 'U', handling: '' } },
-      { type: 'image', imageUrl: 'http://static.photos/cityscape/640x360/142', caption: 'Protesters in Nuuk hold signs opposing American acquisition of Greenland.' },
+      { type: 'image', imageUrl: 'http://static.photos/cityscape/640x360/7', caption: 'Protesters in Nuuk hold signs opposing American acquisition of Greenland.' },
       { type: 'heading', content: 'Danish Support', portionMark: { classification: 'U', handling: '' } },
       { type: 'paragraph', content: 'Danish Prime Minister Mette Frederiksen reaffirmed Denmark\'s support for Greenland\'s self-determination. "Greenland belongs to the Greenlandic people," she said in a statement. "Denmark will always support their right to decide their own future."', portionMark: { classification: 'U', handling: '' } },
       { type: 'paragraph', content: 'The Danish government has recalled its ambassador to Washington for "consultations" and summoned the U.S. ambassador to Copenhagen to explain the administration\'s position.', portionMark: { classification: 'U', handling: '' } },
@@ -272,7 +272,7 @@ export const documents = [
     author: 'Charlie Savage and Miriam Jordan',
     excerpt: 'The Department of Justice announced plans to subpoena Minnesota\'s top officials in an escalating confrontation over immigration enforcement.',
     headerImage: {
-      url: 'http://static.photos/cityscape/640x360/142',
+      url: 'http://static.photos/cityscape/640x360/8',
       caption: 'Minnesota Attorney General Keith Ellison speaks at a press conference about federal immigration enforcement. Photo: Star Tribune'
     },
     contentBlocks: [
@@ -283,7 +283,7 @@ export const documents = [
       { type: 'paragraph', content: 'Attorney General Ellison responded defiantly, calling the subpoenas "a politically motivated attack on the people of Minnesota" and vowing to challenge them in court.', portionMark: { classification: 'U', handling: '' } },
       { type: 'quote', content: '"We will not be intimidated by federal overreach. Minnesota will continue to protect the constitutional rights of all our residents, regardless of immigration status."', portionMark: { classification: 'U', handling: '' } },
       { type: 'paragraph', content: 'Governor Walz, speaking at an unrelated event in St. Paul, said the state would "vigorously defend" its policies. "We are a nation of laws, and that includes the Constitution, which protects due process for everyone," he said.', portionMark: { classification: 'U', handling: '' } },
-      { type: 'image', imageUrl: 'http://static.photos/cityscape/640x360/142', caption: 'Protesters gather outside the federal building in Minneapolis to oppose ICE operations.' },
+      { type: 'image', imageUrl: 'http://static.photos/cityscape/640x360/9', caption: 'Protesters gather outside the federal building in Minneapolis to oppose ICE operations.' },
       { type: 'heading', content: 'Legal Experts Divided', portionMark: { classification: 'U', handling: '' } },
       { type: 'paragraph', content: 'Constitutional law experts are divided on the legality of the DOJ\'s actions. Some argue that state officials have a legitimate role in setting local law enforcement priorities, while others contend that immigration enforcement is an exclusively federal function.', portionMark: { classification: 'U', handling: '' } },
       { type: 'paragraph', content: '"This is uncharted territory," said Ilya Shapiro, a constitutional scholar at the Manhattan Institute. "The courts will ultimately have to decide where state sovereignty ends and federal supremacy begins."', portionMark: { classification: 'U', handling: '' } },
@@ -383,7 +383,7 @@ export const documents = [
     author: 'Devlin Barrett and Maria Sacchetti',
     excerpt: 'A federal judge issued an injunction protecting peaceful protesters from arrest by federal agents, but the DOJ immediately filed an appeal.',
     headerImage: {
-      url: 'http://static.photos/cityscape/640x360/142',
+      url: 'http://static.photos/cityscape/640x360/10',
       caption: 'Protesters gather outside the Minneapolis Federal Building following the court ruling. Photo: Washington Post'
     },
     contentBlocks: [
@@ -432,7 +432,7 @@ export const documents = [
     author: 'Julia Ainsley',
     excerpt: 'Critics are outraged after learning the FBI\'s investigation into the fatal shooting has shifted focus from the agent to the victim and her widow.',
     headerImage: {
-      url: 'http://static.photos/cityscape/640x360/142',
+      url: 'http://static.photos/cityscape/640x360/11',
       caption: 'A memorial for Renee Good at the site where she was killed during a protest in Minneapolis.'
     },
     contentBlocks: [
@@ -443,7 +443,7 @@ export const documents = [
       { type: 'paragraph', content: 'Sources familiar with the investigation say FBI agents have been interviewing Good\'s colleagues, friends, and family members—not to gather information about the shooting, but to build a profile of her political activities and associations.', portionMark: { classification: 'U', handling: '' } },
       { type: 'quote', content: '"They asked me about her social media posts, what protests she had attended, whether she had ever advocated violence. They\'re trying to make her the criminal when she was the victim." — Friend of Renee Good', portionMark: { classification: 'U', handling: '' } },
       { type: 'paragraph', content: 'Good\'s widow, Sarah Good, has also been contacted by FBI agents seeking information about her wife\'s "known associations" with activist groups. Through her attorney, Sarah Good declined to be interviewed.', portionMark: { classification: 'U', handling: '' } },
-      { type: 'image', imageUrl: 'http://static.photos/cityscape/640x360/142', caption: 'Community members hold a vigil for Renee Good outside the Minneapolis Federal Building.' },
+      { type: 'image', imageUrl: 'http://static.photos/cityscape/640x360/12', caption: 'Community members hold a vigil for Renee Good outside the Minneapolis Federal Building.' },
       { type: 'heading', content: 'DOJ Defends Investigation', portionMark: { classification: 'U', handling: '' } },
       { type: 'paragraph', content: 'A Justice Department spokesperson defended the investigation\'s scope, saying it would be "inappropriate to comment on specific investigative steps" but that all relevant facts were being examined.', portionMark: { classification: 'U', handling: '' } },
       { type: 'paragraph', content: '"A thorough investigation requires examining all circumstances surrounding the incident," the spokesperson said. "We will follow the evidence wherever it leads."', portionMark: { classification: 'U', handling: '' } },
@@ -487,7 +487,7 @@ export const documents = [
     author: 'Omar Jimenez and Ashley Killough',
     excerpt: 'Anti-ICE demonstrators interrupted Sunday worship at Cities Church in St. Paul, targeting David Easterwood who serves dual roles as ICE official and pastor.',
     headerImage: {
-      url: 'http://static.photos/cityscape/640x360/142',
+      url: 'http://static.photos/cityscape/640x360/13',
       caption: 'Protesters hold signs outside Cities Church in St. Paul during Sunday services. Photo: CNN'
     },
     contentBlocks: [
@@ -536,7 +536,7 @@ export const documents = [
     author: 'Bill Melugin',
     excerpt: 'Attorney General Pam Bondi declared that attacks against law enforcement and intimidation of Christians will be prosecuted to the fullest extent.',
     headerImage: {
-      url: 'http://static.photos/cityscape/640x360/142',
+      url: 'http://static.photos/cityscape/640x360/14',
       caption: 'Attorney General Pam Bondi speaks at a press conference at the Department of Justice. Photo: Fox News'
     },
     contentBlocks: [
@@ -585,7 +585,7 @@ export const documents = [
     author: 'Ed Pilkington',
     excerpt: 'Assistant AG Harmeet Dhillon said Lemon is "on notice" and cannot use journalism as a shield, prompting press freedom concerns.',
     headerImage: {
-      url: 'http://static.photos/cityscape/640x360/142',
+      url: 'http://static.photos/cityscape/640x360/15',
       caption: 'CNN anchor Don Lemon reports from outside Cities Church during the protest. Photo: Guardian/Getty'
     },
     contentBlocks: [
@@ -680,7 +680,7 @@ export const documents = [
     author: 'Sara Sidner',
     excerpt: 'Nekima Levy Armstrong questioned the moral standing of an ICE official serving as a pastor while overseeing immigration enforcement.',
     headerImage: {
-      url: 'http://static.photos/cityscape/640x360/142',
+      url: 'http://static.photos/cityscape/640x360/16',
       caption: 'Nekima Levy Armstrong speaks at a press conference following the church protest. Photo: CNN'
     },
     contentBlocks: [
@@ -732,7 +732,7 @@ export const documents = [
     author: 'Eric Levenson and Ray Sanchez',
     excerpt: 'Tippecanoe Superior Court Judge Steven Meyer and his wife Kimberly were shot Sunday afternoon. Both are in stable condition as agencies search for the suspect.',
     headerImage: {
-      url: 'http://static.photos/cityscape/640x360/142',
+      url: 'http://static.photos/cityscape/640x360/17',
       caption: 'Law enforcement vehicles line the street outside Judge Steven Meyer\'s residence in Lafayette, Indiana. Photo: CNN affiliate WLFI'
     },
     contentBlocks: [
@@ -779,7 +779,7 @@ export const documents = [
     author: 'Kaitlin Lange',
     excerpt: 'Chief Justice Loretta H. Rush sent an urgent letter to all state judges expressing concern about violence targeting the judiciary.',
     headerImage: {
-      url: 'http://static.photos/cityscape/640x360/142',
+      url: 'http://static.photos/cityscape/640x360/18',
       caption: 'Indiana Supreme Court Chief Justice Loretta H. Rush. Photo: Indianapolis Star file'
     },
     contentBlocks: [
@@ -828,7 +828,7 @@ export const documents = [
     author: 'Josh Gerstein',
     excerpt: 'Federal judge Jia Cobb ruled DHS can continue blocking no-notice inspections despite blocking a similar policy last month.',
     headerImage: {
-      url: 'http://static.photos/cityscape/640x360/142',
+      url: 'http://static.photos/cityscape/640x360/19',
       caption: 'The U.S. District Court for the District of Columbia. Photo: Politico'
     },
     contentBlocks: [
@@ -874,7 +874,7 @@ export const documents = [
     author: 'Jonathan Stempel',
     excerpt: 'Federal lawyers argued the state\'s attempt to end ICE activities would be unprecedented judicial overreach.',
     headerImage: {
-      url: 'http://static.photos/cityscape/640x360/142',
+      url: 'http://static.photos/cityscape/640x360/20',
       caption: 'The Department of Justice building in Washington, D.C. Photo: Reuters/Andrew Kelly'
     },
     contentBlocks: [
@@ -920,7 +920,7 @@ export const documents = [
     author: 'Priscilla Alvarez',
     excerpt: 'After initially denying federal agents used chemical agents, Secretary Noem now says pepper spray was necessary to establish order.',
     headerImage: {
-      url: 'http://static.photos/cityscape/640x360/142',
+      url: 'http://static.photos/cityscape/640x360/21',
       caption: 'DHS Secretary Kristi Noem speaks at a press briefing. Photo: CNN'
     },
     contentBlocks: [
@@ -969,7 +969,7 @@ export const documents = [
     author: 'Roni Caryn Rabin',
     excerpt: 'The new guidelines feature an inverted food pyramid emphasizing steak, poultry, and whole milk, urging Americans to nearly double protein consumption.',
     headerImage: {
-      url: 'http://static.photos/cityscape/640x360/142',
+      url: 'http://static.photos/cityscape/640x360/22',
       caption: 'HHS Secretary Robert F. Kennedy Jr. unveils the new Dietary Guidelines for Americans. Photo: NYT/Doug Mills'
     },
     contentBlocks: [
@@ -1015,7 +1015,7 @@ export const documents = [
     author: 'Oliver Milman',
     excerpt: 'World Resources Institute estimates the guidelines would add hundreds of millions of tons of emissions and require an area the size of California.',
     headerImage: {
-      url: 'http://static.photos/cityscape/640x360/142',
+      url: 'http://static.photos/cityscape/640x360/23',
       caption: 'Cattle grazing on farmland in Texas. The new dietary guidelines could significantly increase demand for beef. Photo: Guardian/Getty'
     },
     contentBlocks: [
@@ -1060,7 +1060,7 @@ export const documents = [
     author: 'Hayes Brown',
     excerpt: 'Critics highlight Kennedy\'s past environmental activism that sharply contradicts his new pro-meat dietary guidelines.',
     headerImage: {
-      url: 'http://static.photos/cityscape/640x360/142',
+      url: 'http://static.photos/cityscape/640x360/24',
       caption: 'Robert F. Kennedy Jr. speaking at an environmental rally in 2004. Photo: MSNBC/File'
     },
     contentBlocks: [
@@ -1107,7 +1107,7 @@ export const documents = [
     author: 'James Gallagher',
     excerpt: 'A major French study found sodium nitrite—common in deli meats—is associated with significantly higher prostate cancer risk.',
     headerImage: {
-      url: 'http://static.photos/cityscape/640x360/142',
+      url: 'http://static.photos/cityscape/640x360/25',
       caption: 'Processed meats containing sodium nitrite on display at a supermarket. Photo: BBC/Getty'
     },
     contentBlocks: [
@@ -1152,7 +1152,7 @@ export const documents = [
     author: 'Sandee LaMotte',
     excerpt: 'Researchers found high consumption of ultra-processed foods correlates with significantly increased risk of precancerous colorectal adenomas.',
     headerImage: {
-      url: 'http://static.photos/cityscape/640x360/142',
+      url: 'http://static.photos/cityscape/640x360/26',
       caption: 'Ultra-processed foods including packaged snacks and ready meals. Photo: CNN/Getty'
     },
     contentBlocks: [

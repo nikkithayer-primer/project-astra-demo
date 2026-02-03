@@ -86,11 +86,6 @@ export class DocumentContentRenderer extends BaseComponent {
     const highlights = this.data.highlights || [];
     const comments = this.data.comments || [];
 
-    // Render annotations summary if there are any
-    const annotationsSummaryHtml = this.options.showAnnotations && (highlights.length > 0 || comments.length > 0)
-      ? this.renderAnnotationsSummary(highlights, comments)
-      : '';
-
     switch (docType) {
       case DOCUMENT_TYPES.SOCIAL_POST:
         this.renderSocialPost(doc, highlights, comments);
@@ -111,37 +106,8 @@ export class DocumentContentRenderer extends BaseComponent {
         this.renderNewsArticle(doc, highlights, comments);
     }
 
-    // Prepend annotations summary
-    if (annotationsSummaryHtml) {
-      this.container.insertAdjacentHTML('afterbegin', annotationsSummaryHtml);
-    }
-
     // Bind event listeners for annotations
     this.bindAnnotationEvents();
-  }
-
-  renderAnnotationsSummary(highlights, comments) {
-    const totalComments = comments.reduce((sum, c) => sum + 1 + (c.replies || []).length, 0);
-    
-    return `
-      <div class="annotations-summary">
-        <div class="annotations-summary-item">
-          <svg viewBox="0 0 16 16" fill="currentColor">
-            <path d="M5.5 3.5A1.5 1.5 0 0 1 7 2h2.5a1.5 1.5 0 0 1 1.5 1.5v2.5a1.5 1.5 0 0 1-1.5 1.5H7a1.5 1.5 0 0 1-1.5-1.5V3.5z"/>
-            <path fill-rule="evenodd" d="M.5 8.5A1.5 1.5 0 0 1 2 7h2.5a1.5 1.5 0 0 1 1.5 1.5v2.5A1.5 1.5 0 0 1 4.5 12.5H2A1.5 1.5 0 0 1 .5 11V8.5zM2 8a.5.5 0 0 0-.5.5V11a.5.5 0 0 0 .5.5h2.5A.5.5 0 0 0 5 11V8.5A.5.5 0 0 0 4.5 8H2z"/>
-          </svg>
-          <span class="annotations-summary-count">${highlights.length}</span>
-          <span>highlight${highlights.length !== 1 ? 's' : ''}</span>
-        </div>
-        <div class="annotations-summary-item">
-          <svg viewBox="0 0 16 16" fill="currentColor">
-            <path d="M14 1a1 1 0 0 1 1 1v8a1 1 0 0 1-1 1H4.414A2 2 0 0 0 3 11.586l-2 2V2a1 1 0 0 1 1-1h12zM2 0a2 2 0 0 0-2 2v12.793a.5.5 0 0 0 .854.353l2.853-2.853A1 1 0 0 1 4.414 12H14a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H2z"/>
-          </svg>
-          <span class="annotations-summary-count">${totalComments}</span>
-          <span>comment${totalComments !== 1 ? 's' : ''}</span>
-        </div>
-      </div>
-    `;
   }
 
   bindAnnotationEvents() {

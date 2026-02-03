@@ -2,27 +2,27 @@
    Chat toggle, panel, messages, and input for Primer Dashboard */
 
 /* ============================================
-   Chat Toggle Button - uses btn classes for base styling
+   Sidebar Strip - Persistent left edge bar
    ============================================ */
 
-.chat-toggle-group {
-  margin-left: auto;
+.sidebar-strip {
+  position: fixed;
+  left: 0;
+  top: 0;
+  width: 48px;
+  height: 100vh;
+  background: var(--border-subtle);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-top: 60px;
+  z-index: 901;
+  border-right: 1px solid var(--border-color);
 }
 
-/* Chat toggle in navbar (positioned on left side) */
-.top-navbar .chat-toggle-btn {
-  margin-right: var(--space-md);
-}
-
-/* Active state when chat panel is open */
-.chat-toggle-btn.active {
-  background: var(--accent-muted);
-  border-color: var(--accent-secondary);
-  color: var(--text-primary);
-}
-
-.chat-toggle-label {
-  white-space: nowrap;
+/* Chat toggle button in sidebar strip - uses standard btn classes */
+.sidebar-strip .chat-toggle-btn.active {
+  background: var(--accent-secondary);
 }
 
 /* ============================================
@@ -32,10 +32,10 @@
 .chat-panel {
   position: fixed;
   top: 0;
-  left: 0;
+  left: 48px; /* Start after sidebar strip */
   width: var(--chat-width, 500px);
   min-width: 350px;
-  max-width: 50vw;
+  max-width: calc(50vw - 48px);
   height: 100vh;
   background: var(--bg-secondary);
   border-right: 1px solid var(--border-color);
@@ -524,8 +524,13 @@
    Adjust content wrapper when chat is open
    ============================================ */
 
+/* Content wrapper always has margin for sidebar strip */
+.content-wrapper {
+  margin-left: 48px;
+}
+
 body.chat-open .content-wrapper {
-  margin-left: var(--chat-width, 500px);
+  margin-left: calc(48px + var(--chat-width, 500px));
   transition: margin-left 0.25s ease;
 }
 

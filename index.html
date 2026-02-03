@@ -63,18 +63,20 @@
   <link rel="stylesheet" href="css/utilities.css">
 </head>
 <body>
+  <!-- Sidebar strip with chat toggle -->
+  <div class="sidebar-strip">
+    <button id="chat-toggle" class="btn btn-primary btn-icon chat-toggle-btn" title="Toggle Chat">
+      <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.5">
+        <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/>
+      </svg>
+    </button>
+  </div>
+
   <nav class="top-navbar">
     <div class="navbar-left">
       <a href="#/cop/" class="logo">
         <img src="img/logo.png" alt="Primer" class="logo-img">
       </a>
-      
-      <button id="chat-toggle" class="btn btn-small btn-secondary chat-toggle-btn" title="Toggle Chat">
-        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.5">
-          <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/>
-        </svg>
-        <span class="chat-toggle-label">Chat</span>
-      </button>
       
       <div class="navbar-links">
         <!-- Direct Links -->

@@ -11,6 +11,7 @@
   align-items: center;
   justify-content: space-between;
   padding: 0 var(--space-lg);
+  padding-left: calc(48px + var(--space-lg)); /* Account for sidebar strip */
   flex-shrink: 0;
   position: sticky;
   top: 0;

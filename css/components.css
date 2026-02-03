@@ -392,11 +392,34 @@
 }
 
 /* Stat Card Dropdowns */
+.stats-grid-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+}
+
 .stats-grid-dropdowns {
   display: flex;
   flex-wrap: wrap;
   gap: var(--space-sm);
-  margin-bottom: var(--space-lg);
+}
+
+/* Activity Stats - User-generated content, shown separately with blue styling */
+.stats-grid-activity {
+  display: flex;
+  margin-top: var(--space-xs);
+}
+
+.stats-grid-activity .stat-card-trigger .stat-icon {
+  color: var(--accent-primary);
+}
+
+.stats-grid-activity .stat-card-trigger .stat-value {
+  color: var(--accent-primary);
+}
+
+.stats-grid-activity .stat-card-trigger .stat-label {
+  color: var(--accent-primary);
 }
 
 .stat-dropdown-container {
@@ -1093,7 +1116,6 @@
   font-size: 15px;
   line-height: 1.5;
   color: var(--text-primary);
-  white-space: pre-wrap;
 }
 
 .social-post-media {
@@ -1337,6 +1359,7 @@
 .content-block-text {
   margin-bottom: var(--space-md);
   line-height: 1.6;
+  white-space: pre-wrap;
 }
 
 /* Tags/Badges */
@@ -6389,35 +6412,6 @@ body.has-fullscreen-card {
   display: flex;
   justify-content: flex-end;
   margin-top: var(--space-sm);
-}
-
-/* Comment/Highlight summary bar */
-.annotations-summary {
-  display: flex;
-  gap: var(--space-lg);
-  padding: var(--space-sm) var(--space-md);
-  background: var(--bg-tertiary);
-  border-radius: var(--border-radius);
-  margin-bottom: var(--space-md);
-  font-size: var(--text-xs);
-  color: var(--text-secondary);
-}
-
-.annotations-summary-item {
-  display: flex;
-  align-items: center;
-  gap: var(--space-xs);
-}
-
-.annotations-summary-item svg {
-  width: 14px;
-  height: 14px;
-  color: var(--text-muted);
-}
-
-.annotations-summary-count {
-  font-weight: 600;
-  color: var(--text-primary);
 }
 
 /* Document content wrapper for margin annotations */

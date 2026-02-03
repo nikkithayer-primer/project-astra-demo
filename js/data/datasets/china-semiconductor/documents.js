@@ -17,7 +17,7 @@ export const documents = [
     author: 'Mark Liu',
     excerpt: 'SMIC has confirmed it is mass producing 5nm chips using advanced multi-patterning techniques with DUV lithography, marking a significant milestone for Chinese semiconductor manufacturing.',
     headerImage: {
-      url: 'http://static.photos/cityscape/640x360/142',
+      url: 'http://static.photos/cityscape/640x360/27',
       caption: 'SMIC semiconductor fabrication facility'
     },
     contentBlocks: [
@@ -84,7 +84,7 @@ export const documents = [
     author: 'Che Pan',
     excerpt: 'In a major breakthrough, SMIC has demonstrated the ability to produce 5nm chips without access to ASML\'s extreme ultraviolet lithography systems, though at lower yields.',
     headerImage: {
-      url: 'http://static.photos/cityscape/640x360/142',
+      url: 'http://static.photos/cityscape/640x360/28',
       caption: 'SMIC chip production line'
     },
     contentBlocks: [
@@ -121,7 +121,7 @@ export const documents = [
     author: 'Dylan Patel',
     excerpt: 'SemiAnalysis deep-dive into SMIC\'s technical approach reveals innovative multi-patterning but significant cost and yield penalties compared to EUV-based production.',
     headerImage: {
-      url: 'http://static.photos/cityscape/640x360/142',
+      url: 'http://static.photos/cityscape/640x360/29',
       caption: 'Semiconductor wafer analysis'
     },
     contentBlocks: [
@@ -168,7 +168,7 @@ export const documents = [
     author: 'Ian King',
     excerpt: 'SMIC\'s unexpected advancement has sparked debate in Washington about the efficacy of semiconductor export controls and whether they are achieving their intended goals.',
     headerImage: {
-      url: 'http://static.photos/cityscape/640x360/142',
+      url: 'http://static.photos/cityscape/640x360/30',
       caption: 'US Capitol building'
     },
     contentBlocks: [
@@ -205,7 +205,7 @@ export const documents = [
     author: 'Toby Sterling',
     excerpt: 'The Dutch government has announced expanded export controls blocking ASML from shipping advanced deep ultraviolet lithography systems to China.',
     headerImage: {
-      url: 'http://static.photos/cityscape/640x360/142',
+      url: 'http://static.photos/cityscape/640x360/31',
       caption: 'ASML headquarters in Veldhoven, Netherlands'
     },
     contentBlocks: [
@@ -266,7 +266,7 @@ export const documents = [
     author: 'Peggy Hollinger',
     excerpt: 'ASML CEO Peter Wennink told investors that expanded China export restrictions will reduce the company\'s annual revenue by approximately $2.5 billion.',
     headerImage: {
-      url: 'http://static.photos/cityscape/640x360/142',
+      url: 'http://static.photos/cityscape/640x360/32',
       caption: 'ASML CEO Peter Wennink at investor meeting'
     },
     contentBlocks: [
@@ -305,7 +305,7 @@ export const documents = [
     author: 'Yuka Hayashi',
     excerpt: 'Commerce Secretary Gina Raimondo defended the administration\'s expanded semiconductor export controls, calling them essential to maintaining US technological leadership.',
     headerImage: {
-      url: 'http://static.photos/cityscape/640x360/142',
+      url: 'http://static.photos/cityscape/640x360/33',
       caption: 'Commerce Secretary Gina Raimondo at press briefing'
     },
     contentBlocks: [
@@ -344,7 +344,7 @@ export const documents = [
     author: 'Reuters Staff',
     excerpt: 'The Bureau of Industry and Security has added 15 new Chinese companies to the Entity List, expanding restrictions on semiconductor technology transfers.',
     headerImage: {
-      url: 'http://static.photos/cityscape/640x360/142',
+      url: 'http://static.photos/cityscape/640x360/34',
       caption: 'US Department of Commerce building'
     },
     contentBlocks: [
@@ -383,7 +383,7 @@ export const documents = [
     author: 'Debby Wu',
     excerpt: 'China has unveiled the third phase of its National IC Fund with 340 billion yuan ($47 billion), the largest semiconductor investment tranche in its history.',
     headerImage: {
-      url: 'http://static.photos/cityscape/640x360/142',
+      url: 'http://static.photos/cityscape/640x360/35',
       caption: 'China semiconductor investment announcement'
     },
     contentBlocks: [
@@ -442,7 +442,7 @@ export const documents = [
     author: 'Caixin Tech',
     excerpt: 'China\'s State Council has approved investment guidelines for the Big Fund III, prioritizing advanced packaging, semiconductor equipment, and EDA software development.',
     headerImage: {
-      url: 'http://static.photos/cityscape/640x360/142',
+      url: 'http://static.photos/cityscape/640x360/36',
       caption: 'China State Council meeting hall'
     },
     contentBlocks: [
@@ -480,7 +480,7 @@ export const documents = [
     author: 'Kathrin Hille',
     excerpt: 'Analysts debate whether China\'s massive new semiconductor investment fund can achieve technological breakthroughs without access to cutting-edge foreign equipment.',
     headerImage: {
-      url: 'http://static.photos/cityscape/640x360/142',
+      url: 'http://static.photos/cityscape/640x360/37',
       caption: 'China semiconductor manufacturing facility'
     },
     contentBlocks: [
@@ -518,7 +518,7 @@ export const documents = [
     author: 'Debby Wu',
     excerpt: 'Huawei has accumulated billions of dollars worth of semiconductor manufacturing equipment in warehouses across China, anticipating expanded US export restrictions.',
     headerImage: {
-      url: 'http://static.photos/cityscape/640x360/142',
+      url: 'http://static.photos/cityscape/640x360/38',
       caption: 'Huawei corporate headquarters'
     },
     contentBlocks: [
@@ -567,7 +567,7 @@ export const documents = [
     author: 'Kate O\'Keeffe',
     excerpt: 'US Commerce Department has opened an investigation into whether Huawei circumvented export controls by acquiring equipment through third-party intermediaries.',
     headerImage: {
-      url: 'http://static.photos/cityscape/640x360/142',
+      url: 'http://static.photos/cityscape/640x360/39',
       caption: 'Commerce Department investigation files'
     },
     contentBlocks: [
@@ -606,7 +606,7 @@ export const documents = [
     author: 'Iris Deng',
     excerpt: 'Huawei has issued a statement denying any violations of US export controls, dismissing reports of stockpiling as "speculation and conjecture."',
     headerImage: {
-      url: 'http://static.photos/cityscape/640x360/142',
+      url: 'http://static.photos/cityscape/640x360/40',
       caption: 'Huawei press release statement'
     },
     contentBlocks: [
@@ -645,7 +645,7 @@ export const documents = [
     author: 'Ryan Smith',
     excerpt: 'Independent testing reveals YMTC\'s 232-layer 3D NAND flash memory delivers performance comparable to Samsung\'s latest offerings in key metrics.',
     headerImage: {
-      url: 'http://static.photos/cityscape/640x360/142',
+      url: 'http://static.photos/cityscape/640x360/41',
       caption: 'YMTC 3D NAND chip close-up'
     },
     contentBlocks: [
@@ -683,7 +683,7 @@ export const documents = [
     author: 'Dan Hutcheson',
     excerpt: 'Research firm TechInsights has identified YMTC memory chips in consumer electronics from multiple brands, raising questions about Entity List enforcement.',
     headerImage: {
-      url: 'http://static.photos/cityscape/640x360/142',
+      url: 'http://static.photos/cityscape/640x360/42',
       caption: 'TechInsights chip analysis lab'
     },
     contentBlocks: [
@@ -742,7 +742,7 @@ export const documents = [
     author: 'Vlad Savov',
     excerpt: 'Analysis reveals YMTC memory chips are entering global supply chains through complex networks that make end-to-end tracking difficult for regulators.',
     headerImage: {
-      url: 'http://static.photos/cityscape/640x360/142',
+      url: 'http://static.photos/cityscape/640x360/43',
       caption: 'Global semiconductor supply chain map'
     },
     contentBlocks: [
@@ -779,7 +779,7 @@ export const documents = [
     author: 'Xinhua Staff',
     excerpt: 'Empyrean Technology has announced its EDA software suite now fully supports 14nm chip design, marking significant progress in Chinese design tool development.',
     headerImage: {
-      url: 'http://static.photos/cityscape/640x360/142',
+      url: 'http://static.photos/cityscape/640x360/44',
       caption: 'Empyrean Technology EDA software interface'
     },
     contentBlocks: [
@@ -816,7 +816,7 @@ export const documents = [
     author: 'Caixin Tech',
     excerpt: 'Huada Jiutian has outlined an aggressive roadmap to develop EDA tools capable of supporting 7nm chip design within the next two years.',
     headerImage: {
-      url: 'http://static.photos/cityscape/640x360/142',
+      url: 'http://static.photos/cityscape/640x360/45',
       caption: 'Huada Jiutian corporate campus'
     },
     contentBlocks: [
@@ -853,7 +853,7 @@ export const documents = [
     author: 'Yimou Lee',
     excerpt: 'TSMC has confirmed its Arizona fabrication facility will not begin production until late 2025, a significant delay from the original 2024 target.',
     headerImage: {
-      url: 'http://static.photos/cityscape/640x360/142',
+      url: 'http://static.photos/cityscape/640x360/46',
       caption: 'TSMC Arizona fab construction site'
     },
     contentBlocks: [
@@ -900,7 +900,7 @@ export const documents = [
     author: 'Cheng Ting-Fang',
     excerpt: 'TSMC CEO C.C. Wei acknowledged challenges at the Arizona fab, citing differences in work culture and the need to adapt management approaches.',
     headerImage: {
-      url: 'http://static.photos/cityscape/640x360/142',
+      url: 'http://static.photos/cityscape/640x360/47',
       caption: 'TSMC CEO C.C. Wei at investor conference'
     },
     contentBlocks: [
@@ -937,7 +937,7 @@ export const documents = [
     author: 'Ian King',
     excerpt: 'The Arizona Building and Construction Trades Council has filed formal grievances against TSMC, citing concerns about management practices and worker treatment.',
     headerImage: {
-      url: 'http://static.photos/cityscape/640x360/142',
+      url: 'http://static.photos/cityscape/640x360/48',
       caption: 'Arizona construction workers at TSMC site'
     },
     contentBlocks: [

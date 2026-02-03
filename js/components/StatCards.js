@@ -81,7 +81,7 @@ const STAT_ROUTES = {
 };
 
 /**
- * Display labels for each stat type
+ * Display labels for each stat type (singular)
  */
 const STAT_LABELS = {
   narratives: 'Narratives',
@@ -95,6 +95,13 @@ const STAT_LABELS = {
   persons: 'People',
   organizations: 'Orgs',
   activity: 'Activity'
+};
+
+/**
+ * Plural labels for stat types that need special handling
+ */
+const STAT_LABELS_PLURAL = {
+  activity: 'Activities'
 };
 
 /**
@@ -122,9 +129,14 @@ export const StatCards = {
   /**
    * Get the label for a stat type
    * @param {string} type - Stat type
+   * @param {number} count - Optional count for pluralization
    * @returns {string} Display label
    */
-  getLabel(type) {
+  getLabel(type, count = 1) {
+    // Use plural form if count > 1 and a plural label exists
+    if (count > 1 && STAT_LABELS_PLURAL[type]) {
+      return STAT_LABELS_PLURAL[type];
+    }
     return STAT_LABELS[type] || type;
   },
 
@@ -396,18 +408,39 @@ export const StatCards = {
     const statsWithItems = stats.filter(stat => stat.items && stat.items.length > 0);
     if (statsWithItems.length === 0) return '';
 
-    const dropdownsHtml = statsWithItems.map((stat, index) => {
+    // Separate activity from other stats (activity is user-generated, shown separately)
+    const regularStats = statsWithItems.filter(stat => stat.type !== 'activity');
+    const activityStats = statsWithItems.filter(stat => stat.type === 'activity');
+
+    // Helper to render a stat dropdown container
+    const renderStatContainer = (stat, index) => {
       const containerId = `stat-dropdown-${stat.type}-${index}`;
-      // Escape the JSON string for safe embedding in HTML attribute
       const itemsJson = this._escapeHtmlAttr(JSON.stringify(stat.items || []));
       return `<div id="${containerId}" class="stat-dropdown-container" 
         data-type="${stat.type}" 
         data-count="${stat.value}"
         data-items='${itemsJson}'
         data-context-id="${options.contextId || ''}"></div>`;
-    }).join('');
+    };
 
-    return `<div class="stats-grid stats-grid-dropdowns">${dropdownsHtml}</div>`;
+    let innerHtml = '';
+
+    // Render regular stats
+    if (regularStats.length > 0) {
+      const regularDropdownsHtml = regularStats.map((stat, index) => renderStatContainer(stat, index)).join('');
+      innerHtml += `<div class="stats-grid stats-grid-dropdowns">${regularDropdownsHtml}</div>`;
+    }
+
+    // Render activity stats on a separate line with distinct styling
+    if (activityStats.length > 0) {
+      const activityDropdownsHtml = activityStats.map((stat, index) => 
+        renderStatContainer(stat, regularStats.length + index)
+      ).join('');
+      innerHtml += `<div class="stats-grid stats-grid-activity">${activityDropdownsHtml}</div>`;
+    }
+
+    // Wrap in a container to ensure proper stacking in flex layouts
+    return `<div class="stats-grid-wrapper">${innerHtml}</div>`;
   },
 
   /**
@@ -438,7 +471,7 @@ export const StatCards = {
         count,
         items,
         icon: this.getIcon(type),
-        label: this.getLabel(type),
+        label: this.getLabel(type, count),
         contextId,
         currentEntityId: options.currentEntityId || null,
         onNavigate: options.onNavigate,

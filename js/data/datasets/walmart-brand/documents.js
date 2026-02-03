@@ -92,7 +92,7 @@ export const documents = [
       avatarUrl: 'img/placeholders/avatar-default.svg'
     },
     headerImage: {
-      url: 'http://static.photos/cityscape/640x360/142',
+      url: 'http://static.photos/cityscape/640x360/49',
       caption: 'Reddit discussion thread screenshot'
     },
     contentBlocks: [
@@ -130,7 +130,7 @@ export const documents = [
     publishedDate: '2026-01-18T10:00:00Z',
     author: 'Karen Sloan',
     headerImage: {
-      url: 'http://static.photos/cityscape/640x360/142',
+      url: 'http://static.photos/cityscape/640x360/50',
       caption: 'Walmart self-checkout area'
     },
     contentBlocks: [
@@ -190,7 +190,7 @@ export const documents = [
     publishedDate: '2026-01-19T14:00:00Z',
     author: 'Ben Unglesbee',
     headerImage: {
-      url: 'http://static.photos/cityscape/640x360/142',
+      url: 'http://static.photos/cityscape/640x360/51',
       caption: 'Walmart checkout lanes'
     },
     contentBlocks: [
@@ -234,7 +234,7 @@ export const documents = [
       avatarUrl: 'img/placeholders/avatar-default.svg'
     },
     headerImage: {
-      url: 'http://static.photos/cityscape/640x360/142',
+      url: 'http://static.photos/cityscape/640x360/52',
       caption: 'Empty grocery shelves at Walmart'
     },
     contentBlocks: [
@@ -274,7 +274,7 @@ export const documents = [
       avatarUrl: 'img/placeholders/avatar-default.svg'
     },
     headerImage: {
-      url: 'http://static.photos/cityscape/640x360/142',
+      url: 'http://static.photos/cityscape/640x360/53',
       caption: 'Facebook community discussion'
     },
     contentBlocks: [
@@ -309,7 +309,7 @@ export const documents = [
     publishedDate: '2026-01-17T09:00:00Z',
     author: 'Daphne Howland',
     headerImage: {
-      url: 'http://static.photos/cityscape/640x360/142',
+      url: 'http://static.photos/cityscape/640x360/54',
       caption: 'Walmart distribution center'
     },
     contentBlocks: [
@@ -406,7 +406,7 @@ export const documents = [
       avatarUrl: 'img/placeholders/avatar-default.svg'
     },
     headerImage: {
-      url: 'http://static.photos/cityscape/640x360/142',
+      url: 'http://static.photos/cityscape/640x360/55',
       caption: 'Reddit employee discussion'
     },
     contentBlocks: [
@@ -445,7 +445,7 @@ export const documents = [
     publishedDate: '2026-01-15T11:00:00Z',
     author: 'Matthew Boyle',
     headerImage: {
-      url: 'http://static.photos/cityscape/640x360/142',
+      url: 'http://static.photos/cityscape/640x360/56',
       caption: 'UFCW campaign launch event'
     },
     contentBlocks: [
@@ -506,7 +506,7 @@ export const documents = [
     publishedDate: '2026-01-17T06:00:00Z',
     author: 'Sarah Nassauer',
     headerImage: {
-      url: 'http://static.photos/cityscape/640x360/142',
+      url: 'http://static.photos/cityscape/640x360/57',
       caption: 'Walmart corporate headquarters'
     },
     contentBlocks: [
@@ -548,7 +548,7 @@ export const documents = [
     publishedDate: '2026-01-16T10:00:00Z',
     author: 'Kelly Tyko',
     headerImage: {
-      url: 'http://static.photos/cityscape/640x360/142',
+      url: 'http://static.photos/cityscape/640x360/58',
       caption: 'FDA recall notice'
     },
     contentBlocks: [
@@ -615,7 +615,7 @@ export const documents = [
     publishedDate: '2026-01-18T14:00:00Z',
     author: 'Siddharth Cavale',
     headerImage: {
-      url: 'http://static.photos/cityscape/640x360/142',
+      url: 'http://static.photos/cityscape/640x360/59',
       caption: 'Great Value product recall notice'
     },
     contentBlocks: [
@@ -663,7 +663,7 @@ export const documents = [
     publishedDate: '2026-01-19T09:00:00Z',
     author: 'Consumer Reports Staff',
     headerImage: {
-      url: 'http://static.photos/cityscape/640x360/142',
+      url: 'http://static.photos/cityscape/640x360/60',
       caption: 'Consumer Reports analysis'
     },
     contentBlocks: [
@@ -748,7 +748,7 @@ export const documents = [
       avatarUrl: 'img/placeholders/avatar-default.svg'
     },
     headerImage: {
-      url: 'http://static.photos/cityscape/640x360/142',
+      url: 'http://static.photos/cityscape/640x360/61',
       caption: 'Price analysis thread'
     },
     contentBlocks: [
@@ -787,7 +787,7 @@ export const documents = [
     publishedDate: '2026-01-17T06:00:00Z',
     author: 'Jaewon Kang',
     headerImage: {
-      url: 'http://static.photos/cityscape/640x360/142',
+      url: 'http://static.photos/cityscape/640x360/62',
       caption: 'Walmart pricing analysis chart'
     },
     contentBlocks: [
@@ -850,7 +850,7 @@ export const documents = [
     publishedDate: '2026-01-14T08:00:00Z',
     author: 'Cale Guthrie Weissman',
     headerImage: {
-      url: 'http://static.photos/cityscape/640x360/142',
+      url: 'http://static.photos/cityscape/640x360/63',
       caption: 'Target delivery vehicle'
     },
     contentBlocks: [
@@ -887,7 +887,7 @@ export const documents = [
     publishedDate: '2026-01-16T10:00:00Z',
     author: 'Spencer Soper',
     headerImage: {
-      url: 'http://static.photos/cityscape/640x360/142',
+      url: 'http://static.photos/cityscape/640x360/64',
       caption: 'Amazon fulfillment center'
     },
     contentBlocks: [
@@ -929,7 +929,7 @@ export const documents = [
       avatarUrl: 'img/placeholders/avatar-default.svg'
     },
     headerImage: {
-      url: 'http://static.photos/cityscape/640x360/142',
+      url: 'http://static.photos/cityscape/640x360/65',
       caption: 'Reddit delivery discussion'
     },
     contentBlocks: [
@@ -969,7 +969,7 @@ export const documents = [
     publishedDate: '2026-01-18T12:00:00Z',
     author: 'Nathan Bomey',
     headerImage: {
-      url: 'http://static.photos/cityscape/640x360/142',
+      url: 'http://static.photos/cityscape/640x360/66',
       caption: 'Rural Walmart store exterior'
     },
     contentBlocks: [
@@ -1042,7 +1042,7 @@ export const documents = [
       avatarUrl: 'img/placeholders/avatar-default.svg'
     },
     headerImage: {
-      url: 'http://static.photos/cityscape/640x360/142',
+      url: 'http://static.photos/cityscape/640x360/67',
       caption: 'Community protest event page'
     },
     contentBlocks: [
@@ -1081,7 +1081,7 @@ export const documents = [
     publishedDate: '2026-01-19T14:00:00Z',
     author: 'Michael Balsamo',
     headerImage: {
-      url: 'http://static.photos/cityscape/640x360/142',
+      url: 'http://static.photos/cityscape/640x360/68',
       caption: 'State legislators press conference'
     },
     contentBlocks: [
