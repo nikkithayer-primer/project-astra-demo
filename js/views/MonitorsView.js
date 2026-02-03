@@ -983,8 +983,7 @@ export class MonitorsView extends BaseView {
       const expandBtn = document.getElementById(`${headerId}-expand-btn`);
       if (expandBtn) {
         expandBtn.addEventListener('click', () => {
-          // TODO: Implement expand data functionality
-          console.log('Expand data clicked');
+          // Expand data functionality not yet implemented
         });
       }
       

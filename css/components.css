@@ -1,14 +1,13 @@
-/* Primer - Component Styles (Legacy)
+/* Primer - Component Styles
    Compact, information-dense UI components
    
-   NOTE: Many styles have been extracted to dedicated files. The styles below are
-   DUPLICATED in the extracted files and will be removed in a future cleanup pass.
-   The extracted files take precedence (loaded after this file in index.html).
+   This file contains component styles that haven't been extracted to dedicated files yet.
    
    Already extracted to separate files:
    - buttons.css - Button variants and states
-   - badges.css - Tags/badges and status badges
+   - badges.css - Tags/badges and status badges  
    - tables.css - Tables and document table styles
+   - cards.css - Status cards and status overview
    - entity-list.css - Entity list patterns
    - search.css - Search view and filter components
    - charts.css - Chart containers and legends
@@ -19,119 +18,21 @@
    - document-viewer.css - Document viewer split layout
    - dropdown.css - Unified dropdown component
    
-   Still to extract:
-   - stat-cards.css - Stat grid and stat card dropdowns
-   - classification.css - Classification banners and badges
-   - composite-charts.css - Timeline volume composite
-   - network-graph.css - Network graph styles
-   - social-posts.css - Social media post headers (in document-viewer.css)
-   - drag-drop.css - Drag-drop card functionality
-   - modals.css - Modal and toggle components
-   - scope-selector.css - Scope selector component
-   - activity-feed.css - Activity feed styles
-   - entity-card.css - Entity card popover
-   - add-to-project.css - Add to project modal
+   Still in this file (candidates for extraction):
+   - Base card styles (.card, .card-header, .card-body)
+   - Stat grid and stat card dropdowns
+   - Classification banners and badges
+   - Timeline volume composite charts
+   - Network graph styles
+   - Drag-drop card functionality
+   - Modal and toggle components
+   - Scope selector component
+   - Activity feed styles
+   - Entity card popover
+   - Add to project modal
 */
 
-/* Buttons */
-.btn {
-  display: inline-flex;
-  align-items: center;
-  gap: var(--space-sm);
-  padding: var(--space-sm) var(--space-md);
-  background: var(--bg-tertiary);
-  border: 1px solid var(--border-color);
-  border-radius: var(--border-radius);
-  color: var(--text-primary);
-  font-family: var(--font-sans);
-  font-size: var(--text-sm);
-  cursor: pointer;
-  transition: background 0.1s, border-color 0.1s;
-}
-
-.btn:hover {
-  background: var(--bg-hover);
-  border-color: var(--border-color);
-}
-
-.btn:active {
-  background: var(--bg-secondary);
-}
-
-.btn-small {
-  padding: var(--space-sm);
-  font-size: var(--text-xs);
-  border-color: var(--border-subtle);
-  border-radius: var(--border-radius);
-}
-
-.btn-primary {
-  background: var(--accent-primary);
-  border-color: var(--accent-primary);
-  color: white;
-}
-
-.btn-primary:hover {
-  background: var(--accent-hover);
-  border-color: var(--accent-hover);
-}
-
-.btn-icon {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 28px;
-  height: 28px;
-  padding: 0;
-  background: transparent;
-  border: 1px solid transparent;
-  border-radius: var(--border-radius);
-  color: var(--text-muted);
-  cursor: pointer;
-  transition: background 0.15s, border-color 0.15s, color 0.15s;
-  flex-shrink: 0;
-}
-
-.btn-icon:hover {
-  background: var(--bg-hover);
-  color: var(--text-primary);
-}
-
-.btn-icon.active {
-  background: var(--accent-muted);
-  border-color: var(--accent-secondary);
-  color: var(--text-primary);
-}
-
-.btn-ghost {
-  background: transparent;
-  border: 1px solid transparent;
-  color: var(--text-secondary);
-}
-
-.btn-ghost:hover {
-  background: var(--bg-hover);
-  color: var(--text-primary);
-}
-
-.btn-secondary {
-  color: var(--text-secondary);
-}
-
-.btn-secondary:hover {
-  color: var(--text-primary);
-}
-
-.btn-danger {
-  background: var(--accent-danger);
-  border-color: var(--accent-danger);
-  color: white;
-}
-
-.btn-danger:hover {
-  background: #b91c1c;
-  border-color: #b91c1c;
-}
+/* NOTE: Button styles have been moved to buttons.css */
 
 /* Cards */
 .card {
@@ -9026,6 +8927,228 @@ button.tag-color-option.selected {
   opacity: 0.8;
 }
 
+/* Split button styling */
+.text-selection-popover .popover-split-button {
+  display: flex;
+  align-items: stretch;
+}
+
+.text-selection-popover .popover-action-main {
+  border-radius: var(--radius-sm) 0 0 var(--radius-sm);
+  padding-right: var(--space-sm);
+}
+
+.text-selection-popover .popover-action-dropdown {
+  border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+  padding: var(--space-sm) var(--space-xs);
+  border-left: 1px solid var(--border-subtle);
+  min-width: 28px;
+  justify-content: center;
+}
+
+.text-selection-popover .popover-action-dropdown svg {
+  opacity: 0.6;
+}
+
+.text-selection-popover .popover-action-dropdown:hover svg {
+  opacity: 1;
+}
+
+/* Project dropdown */
+.popover-project-dropdown {
+  position: fixed;
+  z-index: 10001;
+  min-width: 180px;
+  max-width: 280px;
+  background: #ffffff;
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-md);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  animation: popoverFadeIn 0.15s ease-out;
+  overflow: hidden;
+}
+
+[data-theme="dark"] .popover-project-dropdown {
+  background: #2a2a2a;
+  border-color: #404040;
+}
+
+.popover-project-dropdown .dropdown-item {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  padding: var(--space-sm) var(--space-md);
+  cursor: pointer;
+  font-size: var(--text-sm);
+  color: var(--text-primary);
+  transition: background-color 0.1s ease;
+}
+
+.popover-project-dropdown .dropdown-item:hover {
+  background: var(--bg-hover);
+}
+
+.popover-project-dropdown .dropdown-item-default {
+  background: var(--accent-primary-subtle);
+}
+
+.popover-project-dropdown .dropdown-item-default:hover {
+  background: var(--accent-primary-subtle);
+  filter: brightness(0.95);
+}
+
+.popover-project-dropdown .dropdown-item-check {
+  color: var(--accent-primary);
+  flex-shrink: 0;
+}
+
+.popover-project-dropdown .dropdown-item-hint {
+  margin-left: auto;
+  font-size: var(--text-xs);
+  color: var(--text-muted);
+}
+
+.popover-project-dropdown .dropdown-item-name {
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.popover-project-dropdown .dropdown-item-count {
+  font-size: var(--text-xs);
+  color: var(--text-muted);
+  background: var(--bg-secondary);
+  padding: 2px 6px;
+  border-radius: var(--radius-sm);
+}
+
+.popover-project-dropdown .dropdown-item-more {
+  color: var(--accent-primary);
+}
+
+.popover-project-dropdown .dropdown-item-more svg {
+  opacity: 0.8;
+}
+
+.popover-project-dropdown .dropdown-divider {
+  height: 1px;
+  background: var(--border-subtle);
+  margin: var(--space-xs) 0;
+}
+
+/* ============================================
+   Add to Project Split Button (reusable)
+   ============================================ */
+
+.add-to-project-split-btn {
+  display: inline-flex;
+  align-items: stretch;
+}
+
+.add-to-project-split-btn .split-btn-main {
+  border-radius: var(--radius-sm) 0 0 var(--radius-sm);
+  border-right: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.add-to-project-split-btn .split-btn-dropdown {
+  border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+  padding-left: var(--space-xs);
+  padding-right: var(--space-xs);
+  min-width: 28px;
+}
+
+.add-to-project-split-btn .split-btn-dropdown svg {
+  opacity: 0.8;
+}
+
+.add-to-project-split-btn .split-btn-dropdown:hover svg {
+  opacity: 1;
+}
+
+/* Dropdown for split button */
+.add-to-project-dropdown {
+  position: fixed;
+  z-index: 10001;
+  min-width: 180px;
+  max-width: 280px;
+  background: #ffffff;
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-md);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  animation: popoverFadeIn 0.15s ease-out;
+  overflow: hidden;
+}
+
+[data-theme="dark"] .add-to-project-dropdown {
+  background: #2a2a2a;
+  border-color: #404040;
+}
+
+.add-to-project-dropdown .dropdown-item {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  padding: var(--space-sm) var(--space-md);
+  cursor: pointer;
+  font-size: var(--text-sm);
+  color: var(--text-primary);
+  transition: background-color 0.1s ease;
+}
+
+.add-to-project-dropdown .dropdown-item:hover {
+  background: var(--bg-hover);
+}
+
+.add-to-project-dropdown .dropdown-item-default {
+  background: var(--accent-primary-subtle);
+}
+
+.add-to-project-dropdown .dropdown-item-default:hover {
+  background: var(--accent-primary-subtle);
+  filter: brightness(0.95);
+}
+
+.add-to-project-dropdown .dropdown-item-check {
+  color: var(--accent-primary);
+  flex-shrink: 0;
+}
+
+.add-to-project-dropdown .dropdown-item-hint {
+  margin-left: auto;
+  font-size: var(--text-xs);
+  color: var(--text-muted);
+}
+
+.add-to-project-dropdown .dropdown-item-name {
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.add-to-project-dropdown .dropdown-item-count {
+  font-size: var(--text-xs);
+  color: var(--text-muted);
+  background: var(--bg-secondary);
+  padding: 2px 6px;
+  border-radius: var(--radius-sm);
+}
+
+.add-to-project-dropdown .dropdown-item-more {
+  color: var(--accent-primary);
+}
+
+.add-to-project-dropdown .dropdown-item-more svg {
+  opacity: 0.8;
+}
+
+.add-to-project-dropdown .dropdown-divider {
+  height: 1px;
+  background: var(--border-subtle);
+  margin: var(--space-xs) 0;
+}
+
 /* Project Picker Dropdown */
 .text-selection-project-picker {
   position: fixed;
@@ -9121,14 +9244,19 @@ button.tag-color-option.selected {
   align-items: center;
   gap: var(--space-sm);
   padding: var(--space-sm) var(--space-md);
-  background: var(--bg-elevated);
-  border: 1px solid var(--border-subtle);
+  background: #ffffff;
+  border: 1px solid var(--border-default);
   border-radius: var(--radius-md);
-  box-shadow: var(--shadow-lg);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15), 0 0 0 1px rgba(0, 0, 0, 0.05);
   font-size: var(--text-sm);
   color: var(--text-primary);
   opacity: 0;
   transition: transform 0.2s ease, opacity 0.2s ease;
+}
+
+[data-theme="dark"] .snippet-toast {
+  background: #2a2a2a;
+  border-color: #404040;
 }
 
 .snippet-toast.visible {

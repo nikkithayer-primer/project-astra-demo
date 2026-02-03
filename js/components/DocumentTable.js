@@ -26,7 +26,13 @@ import {
 } from '../utils/classification.js';
 import { dataStore } from '../data/DataStore.js';
 import { getAddToProjectModal } from './AddToProjectModal.js';
+import { AddToProjectSplitButton, showAddToProjectToast } from './AddToProjectSplitButton.js';
 import { escapeHtml } from '../utils/htmlUtils.js';
+import { 
+  STORAGE_KEY_READ_DOCUMENTS,
+  TOAST_DISPLAY_DURATION,
+  TOAST_FADE_DURATION 
+} from '../utils/constants.js';
 
 // Column configuration
 const COLUMN_CONFIG = {
@@ -179,8 +185,8 @@ const COLUMN_CONFIG = {
   }
 };
 
-// Storage key for read documents
-const READ_DOCS_STORAGE_KEY = 'primer_read_documents';
+// Storage key for read documents (imported from constants)
+const READ_DOCS_STORAGE_KEY = STORAGE_KEY_READ_DOCUMENTS;
 
 export class DocumentTable extends BaseComponent {
   constructor(containerId, options = {}) {
@@ -1137,12 +1143,23 @@ export class DocumentTable extends BaseComponent {
       detailsCloseBtn.addEventListener('click', () => this.closeDetailsPanel());
     }
 
-    // Add to Project button handler (from header)
-    const addToProjectBtn = contentArea.querySelector('#viewer-add-to-project');
-    if (addToProjectBtn) {
-      addToProjectBtn.addEventListener('click', () => {
-        this.openAddToProjectModalForDocument(this.selectedDocument.id);
+    // Initialize Add to Project split button
+    const addToProjectContainer = contentArea.querySelector('#viewer-add-to-project-container');
+    if (addToProjectContainer) {
+      // Clean up previous instance if exists
+      if (this._viewerAddToProjectBtn) {
+        this._viewerAddToProjectBtn.destroy();
+      }
+      
+      this._viewerAddToProjectBtn = new AddToProjectSplitButton({
+        getDocumentIds: () => this.selectedDocument ? [this.selectedDocument.id] : [],
+        onSuccess: (result) => {
+          showAddToProjectToast(result.projectId, result.projectName, result.added, result.isNew);
+        },
+        size: 'small'
       });
+      
+      addToProjectContainer.appendChild(this._viewerAddToProjectBtn.render());
     }
 
     // Focus content area for keyboard navigation (Page Up/Down)
@@ -1664,12 +1681,7 @@ export class DocumentTable extends BaseComponent {
           ${showClassification ? renderClassificationBadge(classification) : ''}
         </div>
         <div class="viewer-toolbar-right">
-          <button class="btn btn-small btn-primary" id="viewer-add-to-project" title="Add to Project">
-            <svg viewBox="0 0 16 16" width="14" height="14" fill="currentColor">
-              <path fill-rule="evenodd" clip-rule="evenodd" d="M2 1C1.44771 1 1 1.44772 1 2V14C1 14.5523 1.44771 15 2 15H14C14.5523 15 15 14.5523 15 14V3.5C15 2.94772 14.5523 2.5 14 2.5H8.26759L7.56446 1.4453C7.37899 1.1671 7.06676 1 6.73241 1H2ZM2 2H6.73241L7.43554 3.0547C7.62101 3.3329 7.93324 3.5 8.26759 3.5H14V4.5H2V2ZM2 5.5V14H14V5.5H2Z"/>
-            </svg>
-            Add to Project
-          </button>
+          <div id="viewer-add-to-project-container"></div>
           <span class="viewer-toolbar-stat" title="Comments">
             <svg viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.5">
               <path d="M14 10c0 .6-.4 1-1 1H5l-3 3V3c0-.6.4-1 1-1h10c.6 0 1 .4 1 1v7z"/>
@@ -2040,13 +2052,7 @@ export class DocumentTable extends BaseComponent {
         <span class="document-selection-count">${selectedCount} selected</span>
         <button class="document-selection-clear">Clear selection</button>
       </div>
-      <div class="document-selection-actions">
-        <button class="btn btn-small btn-primary" id="add-to-project-btn">
-          <svg viewBox="0 0 16 16" width="14" height="14" fill="currentColor">
-            <path fill-rule="evenodd" clip-rule="evenodd" d="M2 1C1.44771 1 1 1.44772 1 2V14C1 14.5523 1.44771 15 2 15H14C14.5523 15 15 14.5523 15 14V3.5C15 2.94772 14.5523 2.5 14 2.5H8.26759L7.56446 1.4453C7.37899 1.1671 7.06676 1 6.73241 1H2ZM2 2H6.73241L7.43554 3.0547C7.62101 3.3329 7.93324 3.5 8.26759 3.5H14V4.5H2V2ZM2 5.5V14H14V5.5H2Z"/>
-          </svg>
-          Add to Project
-        </button>
+      <div class="document-selection-actions" id="selection-add-to-project-container">
       </div>
     `;
     
@@ -2054,9 +2060,26 @@ export class DocumentTable extends BaseComponent {
     const clearBtn = toolbar.querySelector('.document-selection-clear');
     clearBtn?.addEventListener('click', () => this.clearSelection());
     
-    // Add to Project handler
-    const addBtn = toolbar.querySelector('#add-to-project-btn');
-    addBtn?.addEventListener('click', () => this.openAddToProjectModal());
+    // Initialize Add to Project split button
+    const addToProjectContainer = toolbar.querySelector('#selection-add-to-project-container');
+    if (addToProjectContainer) {
+      // Clean up previous instance if exists
+      if (this._selectionAddToProjectBtn) {
+        this._selectionAddToProjectBtn.destroy();
+      }
+      
+      this._selectionAddToProjectBtn = new AddToProjectSplitButton({
+        getDocumentIds: () => this.getSelectedDocumentIds(),
+        onSuccess: (result) => {
+          showAddToProjectToast(result.projectId, result.projectName, result.added, result.isNew);
+          // Clear selection after adding
+          this.clearSelection();
+        },
+        size: 'small'
+      });
+      
+      addToProjectContainer.appendChild(this._selectionAddToProjectBtn.render());
+    }
     
     return toolbar;
   }
@@ -2189,13 +2212,10 @@ export class DocumentTable extends BaseComponent {
     
     const modal = getAddToProjectModal();
     modal.open(selectedIds, (result) => {
-      // Show success feedback (could be a toast)
-      console.log(`Added ${result.added} documents to "${result.projectName}"`);
-      
       // Clear selection after adding
       this.clearSelection();
       
-      // Could show a toast notification here
+      // Show toast notification
       this.showAddToProjectFeedback(result);
     });
   }
@@ -2232,12 +2252,12 @@ export class DocumentTable extends BaseComponent {
     
     document.body.appendChild(toast);
     
-    // Remove after 3 seconds
+    // Remove after display duration
     setTimeout(() => {
       toast.style.opacity = '0';
-      toast.style.transition = 'opacity 0.2s';
-      setTimeout(() => toast.remove(), 200);
-    }, 3000);
+      toast.style.transition = `opacity ${TOAST_FADE_DURATION}ms`;
+      setTimeout(() => toast.remove(), TOAST_FADE_DURATION);
+    }, TOAST_DISPLAY_DURATION);
   }
 
   /**

@@ -63,8 +63,8 @@
 }
 
 .btn-danger:hover {
-  background: #b91c1c;
-  border-color: #b91c1c;
+  background: color-mix(in srgb, var(--accent-danger) 85%, black);
+  border-color: color-mix(in srgb, var(--accent-danger) 85%, black);
 }
 
 /* Style Variants */

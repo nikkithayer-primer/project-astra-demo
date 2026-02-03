@@ -203,8 +203,7 @@ export class DocumentsView extends BaseView {
     const expandDataBtn = document.getElementById('expand-data-btn');
     if (expandDataBtn) {
       this.addListener(expandDataBtn, 'click', () => {
-        // TODO: Implement expand data functionality
-        console.log('Expand data clicked');
+        // Expand data functionality not yet implemented
       });
     }
     

@@ -47,15 +47,13 @@ export class ProjectsView extends BaseView {
         window.location.hash = `#/${projectId}/`;
       },
       onEdit: (projectId) => {
-        // TODO: Open edit modal when implemented
-        console.log('Edit project - coming soon');
+        // Edit modal not yet implemented
       },
       onArchive: (projectId) => {
         this.handleArchiveProject(projectId);
       },
       onCreate: () => {
-        // TODO: Open create modal when implemented
-        console.log('Create project - coming soon');
+        // Create modal not yet implemented
       }
     });
 
@@ -74,8 +72,7 @@ export class ProjectsView extends BaseView {
     const createBtn = this.container.querySelector('#create-project-btn');
     if (createBtn) {
       this.addListener(createBtn, 'click', () => {
-        // TODO: Open create project modal when implemented
-        console.log('Create project - coming soon');
+        // Create project modal not yet implemented
       });
     }
   }

@@ -584,8 +584,7 @@ export class DocumentTableCard extends BaseCardComponent {
     const expandBtn = document.getElementById(`${this.containerId}-expand-data-btn`);
     if (expandBtn) {
       expandBtn.addEventListener('click', () => {
-        // TODO: Implement expand data functionality
-        console.log('Expand data clicked');
+        // Expand data functionality not yet implemented
       });
     }
   }

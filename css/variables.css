@@ -91,6 +91,16 @@
   --status-in-progress-color: #ffb464;
   --status-investigating-color: #b464ff;
   --status-resolved-color: #64c896;
+  
+  /* Shadow scale */
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.1);
+  --shadow-md: 0 4px 8px rgba(0, 0, 0, 0.15);
+  --shadow-lg: 0 4px 12px rgba(0, 0, 0, 0.2);
+  
+  /* Alias variables for backward compatibility */
+  --color-red: var(--accent-danger);
+  --border-default: var(--border-color);
+  --bg-selected: var(--accent-muted);
 }
 
 /* Dark mode palette */
@@ -144,4 +154,14 @@
   --status-in-progress-color: #ffb464;
   --status-investigating-color: #b464ff;
   --status-resolved-color: #64c896;
+  
+  /* Shadow scale (adjusted for dark mode) */
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.3);
+  --shadow-md: 0 4px 8px rgba(0, 0, 0, 0.4);
+  --shadow-lg: 0 4px 12px rgba(0, 0, 0, 0.5);
+  
+  /* Alias variables (same as light mode) */
+  --color-red: var(--accent-danger);
+  --border-default: var(--border-color);
+  --bg-selected: var(--accent-muted);
 }

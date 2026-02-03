@@ -6,6 +6,14 @@
 
 import { getAddSnippetToProjectModal } from './AddSnippetToProjectModal.js';
 import { escapeHtml } from '../utils/htmlUtils.js';
+import { DataService } from '../data/DataService.js';
+import { dataStore } from '../data/DataStore.js';
+import { 
+  UNSORTED_PROJECT_NAME, 
+  MAX_QUICK_ADD_PROJECTS,
+  TOAST_DISPLAY_DURATION,
+  TOAST_FADE_DURATION 
+} from '../utils/constants.js';
 
 /**
  * Source resolvers for different content types.
@@ -98,8 +106,10 @@ const SOURCE_RESOLVERS = [
 class TextSelectionPopover {
   constructor() {
     this.popover = null;
+    this.projectDropdown = null;
     this.selectedText = '';
     this.sourceInfo = null; // { type, documentId, sourceId, label }
+    this.dropdownOpen = false;
     this._boundHandlers = {
       mouseup: null,
       mousedown: null,
@@ -123,12 +133,19 @@ class TextSelectionPopover {
     this.popover = document.createElement('div');
     this.popover.className = 'text-selection-popover';
     this.popover.innerHTML = `
-      <button class="popover-action" data-action="add-to-project">
-        <svg viewBox="0 0 16 16" width="14" height="14" fill="currentColor">
-          <path fill-rule="evenodd" d="M2 1C1.44771 1 1 1.44772 1 2V14C1 14.5523 1.44771 15 2 15H14C14.5523 15 15 14.5523 15 14V3.5C15 2.94772 14.5523 2.5 14 2.5H8.26759L7.56446 1.4453C7.37899 1.1671 7.06676 1 6.73241 1H2ZM2 2H6.73241L7.43554 3.0547C7.62101 3.3329 7.93324 3.5 8.26759 3.5H14V4.5H2V2ZM2 5.5V14H14V5.5H2Z"/>
-        </svg>
-        <span>Add to Project</span>
-      </button>
+      <div class="popover-split-button">
+        <button class="popover-action popover-action-main" data-action="quick-save" title="Save to Unsorted">
+          <svg viewBox="0 0 16 16" width="14" height="14" fill="currentColor">
+            <path fill-rule="evenodd" d="M2 1C1.44771 1 1 1.44772 1 2V14C1 14.5523 1.44771 15 2 15H14C14.5523 15 15 14.5523 15 14V3.5C15 2.94772 14.5523 2.5 14 2.5H8.26759L7.56446 1.4453C7.37899 1.1671 7.06676 1 6.73241 1H2ZM2 2H6.73241L7.43554 3.0547C7.62101 3.3329 7.93324 3.5 8.26759 3.5H14V4.5H2V2ZM2 5.5V14H14V5.5H2Z"/>
+          </svg>
+          <span>Quick Save</span>
+        </button>
+        <button class="popover-action popover-action-dropdown" data-action="toggle-dropdown" title="Choose project">
+          <svg viewBox="0 0 16 16" width="12" height="12" fill="currentColor">
+            <path d="M4.427 6.427l3.396 3.396a.25.25 0 00.354 0l3.396-3.396A.25.25 0 0011.396 6H4.604a.25.25 0 00-.177.427z"/>
+          </svg>
+        </button>
+      </div>
       <button class="popover-action" data-action="send-to-ngt">
         <svg viewBox="0 0 16 16" width="14" height="14" fill="currentColor">
           <path d="M8 0a8 8 0 1 1 0 16A8 8 0 0 1 8 0zM4.5 7.5a.5.5 0 0 0 0 1h5.793l-2.147 2.146a.5.5 0 0 0 .708.708l3-3a.5.5 0 0 0 0-.708l-3-3a.5.5 0 1 0-.708.708L10.293 7.5H4.5z"/>
@@ -139,8 +156,166 @@ class TextSelectionPopover {
     this.popover.style.display = 'none';
     document.body.appendChild(this.popover);
 
+    // Create the dropdown (appended to body for positioning)
+    this._createProjectDropdown();
+
     // Handle action clicks
     this.popover.addEventListener('click', (e) => this._handlePopoverAction(e));
+  }
+
+  /**
+   * Create the project dropdown element
+   */
+  _createProjectDropdown() {
+    this.projectDropdown = document.createElement('div');
+    this.projectDropdown.className = 'popover-project-dropdown';
+    this.projectDropdown.style.display = 'none';
+    document.body.appendChild(this.projectDropdown);
+
+    // Handle dropdown clicks
+    this.projectDropdown.addEventListener('click', (e) => this._handleDropdownClick(e));
+  }
+
+  /**
+   * Get the Unsorted project for the current dataset
+   */
+  _getUnsortedProject() {
+    const projects = DataService.getActiveProjects();
+    return projects.find(p => p.name === UNSORTED_PROJECT_NAME) || null;
+  }
+
+  /**
+   * Render the project dropdown content
+   */
+  _renderDropdownContent() {
+    const projects = DataService.getActiveProjects();
+    const unsortedProject = this._getUnsortedProject();
+    
+    // Filter out Unsorted from the list (it's the default quick-save target)
+    const otherProjects = projects.filter(p => p.name !== UNSORTED_PROJECT_NAME).slice(0, MAX_QUICK_ADD_PROJECTS);
+
+    let html = '';
+    
+    // Unsorted at top with checkmark indicator
+    if (unsortedProject) {
+      html += `
+        <div class="dropdown-item dropdown-item-default" data-project-id="${unsortedProject.id}">
+          <svg class="dropdown-item-check" viewBox="0 0 16 16" width="12" height="12" fill="currentColor">
+            <path d="M13.78 4.22a.75.75 0 0 1 0 1.06l-7.25 7.25a.75.75 0 0 1-1.06 0L2.22 9.28a.75.75 0 0 1 1.06-1.06L6 10.94l6.72-6.72a.75.75 0 0 1 1.06 0z"/>
+          </svg>
+          <span>Unsorted</span>
+          <span class="dropdown-item-hint">default</span>
+        </div>
+      `;
+    }
+
+    // Divider if we have other projects
+    if (otherProjects.length > 0) {
+      html += '<div class="dropdown-divider"></div>';
+      
+      otherProjects.forEach(project => {
+        const snippetCount = project.snippets?.length || 0;
+        html += `
+          <div class="dropdown-item" data-project-id="${project.id}">
+            <span class="dropdown-item-name">${escapeHtml(project.name)}</span>
+            ${snippetCount > 0 ? `<span class="dropdown-item-count">${snippetCount}</span>` : ''}
+          </div>
+        `;
+      });
+    }
+
+    // Always show "Choose Project..." to open full modal
+    html += `
+      <div class="dropdown-divider"></div>
+      <div class="dropdown-item dropdown-item-more" data-action="open-modal">
+        <svg viewBox="0 0 16 16" width="12" height="12" fill="none" stroke="currentColor" stroke-width="1.5">
+          <path d="M8 3v10M3 8h10"/>
+        </svg>
+        <span>Choose Project...</span>
+      </div>
+    `;
+
+    this.projectDropdown.innerHTML = html;
+  }
+
+  /**
+   * Toggle the project dropdown
+   */
+  _toggleDropdown() {
+    if (this.dropdownOpen) {
+      this._hideDropdown();
+    } else {
+      this._showDropdown();
+    }
+  }
+
+  /**
+   * Show the project dropdown
+   */
+  _showDropdown() {
+    this._renderDropdownContent();
+    
+    // Position dropdown below the split button
+    const splitBtn = this.popover.querySelector('.popover-split-button');
+    const btnRect = splitBtn.getBoundingClientRect();
+    
+    this.projectDropdown.style.display = 'block';
+    this.projectDropdown.style.visibility = 'hidden';
+    
+    // Get dropdown dimensions
+    const dropdownRect = this.projectDropdown.getBoundingClientRect();
+    
+    // Position below and aligned with left edge of split button
+    let left = btnRect.left;
+    let top = btnRect.bottom + 4;
+    
+    // Adjust if too far right
+    if (left + dropdownRect.width > window.innerWidth - 16) {
+      left = window.innerWidth - dropdownRect.width - 16;
+    }
+    
+    // Adjust if too far down
+    if (top + dropdownRect.height > window.innerHeight - 16) {
+      top = btnRect.top - dropdownRect.height - 4;
+    }
+    
+    this.projectDropdown.style.left = `${left}px`;
+    this.projectDropdown.style.top = `${top}px`;
+    this.projectDropdown.style.visibility = 'visible';
+    
+    this.dropdownOpen = true;
+  }
+
+  /**
+   * Hide the project dropdown
+   */
+  _hideDropdown() {
+    this.projectDropdown.style.display = 'none';
+    this.dropdownOpen = false;
+  }
+
+  /**
+   * Handle clicks inside the dropdown
+   */
+  _handleDropdownClick(e) {
+    const item = e.target.closest('.dropdown-item');
+    if (!item) return;
+    
+    e.stopPropagation();
+    
+    // Check if it's the "Choose Project..." option
+    if (item.dataset.action === 'open-modal') {
+      this._hideDropdown();
+      this._openAddToProjectModal();
+      return;
+    }
+    
+    // Otherwise, quick-save to the selected project
+    const projectId = item.dataset.projectId;
+    if (projectId) {
+      this._hideDropdown();
+      this._quickSaveToProject(projectId);
+    }
   }
 
   /**
@@ -154,10 +329,16 @@ class TextSelectionPopover {
     };
     document.addEventListener('mouseup', this._boundHandlers.mouseup);
 
-    // Hide on mousedown outside popover
+    // Hide on mousedown outside popover and dropdown
     this._boundHandlers.mousedown = (e) => {
-      if (!this.popover.contains(e.target)) {
+      const inPopover = this.popover.contains(e.target);
+      const inDropdown = this.projectDropdown?.contains(e.target);
+      
+      if (!inPopover && !inDropdown) {
         this.hide();
+      } else if (inPopover && !e.target.closest('[data-action="toggle-dropdown"]') && this.dropdownOpen) {
+        // Clicked in popover but not on dropdown toggle - hide dropdown
+        this._hideDropdown();
       }
     };
     document.addEventListener('mousedown', this._boundHandlers.mousedown);
@@ -268,6 +449,7 @@ class TextSelectionPopover {
    */
   hide() {
     this.popover.style.display = 'none';
+    this._hideDropdown();
     this.selectedText = '';
     this.sourceInfo = null;
   }
@@ -282,11 +464,75 @@ class TextSelectionPopover {
     const action = actionBtn.dataset.action;
     e.stopPropagation();
     
-    if (action === 'add-to-project') {
-      this._openAddToProjectModal();
+    if (action === 'quick-save') {
+      this._quickSave();
+    } else if (action === 'toggle-dropdown') {
+      this._toggleDropdown();
     } else if (action === 'send-to-ngt') {
       this._sendToNGT();
     }
+  }
+
+  /**
+   * Quick save to Unsorted project
+   */
+  _quickSave() {
+    const unsortedProject = this._getUnsortedProject();
+    if (!unsortedProject) {
+      // No Unsorted project, fall back to modal
+      this._openAddToProjectModal();
+      return;
+    }
+    this._quickSaveToProject(unsortedProject.id);
+  }
+
+  /**
+   * Quick save to a specific project
+   */
+  _quickSaveToProject(projectId) {
+    if (!this.selectedText || !this.sourceInfo) {
+      console.error('TextSelectionPopover: No text or source info');
+      return;
+    }
+
+    const project = DataService.getProject(projectId);
+    if (!project) {
+      console.error('TextSelectionPopover: Project not found');
+      return;
+    }
+
+    // Save values before hiding
+    const text = this.selectedText;
+    const sourceInfo = { ...this.sourceInfo };
+
+    // Build snippet data
+    const currentUser = DataService.getCurrentUser();
+    const snippetData = {
+      text: text,
+      sourceType: sourceInfo.type,
+      sourceDocumentId: sourceInfo.documentId,
+      sourceId: sourceInfo.sourceId,
+      sourceLabel: sourceInfo.label,
+      createdBy: currentUser?.id || null
+    };
+
+    // Save to project
+    const result = dataStore.addSnippetToProject(projectId, snippetData);
+
+    // Also add source document if present
+    if (sourceInfo.documentId) {
+      dataStore.addDocumentsToProject(projectId, [sourceInfo.documentId]);
+    }
+
+    // Hide and show success
+    this.hide();
+    
+    if (result.success) {
+      this._showSuccessToast(projectId, project.name, false);
+    }
+
+    // Clear selection
+    window.getSelection().removeAllRanges();
   }
 
   /**
@@ -334,10 +580,7 @@ class TextSelectionPopover {
       return;
     }
 
-    // TODO: Implement NGT integration
-    console.log('Send to NGT:', this.selectedText);
-    
-    // Show confirmation toast
+    // Show confirmation toast (NGT integration not yet implemented)
     this._showNGTToast();
     this.hide();
     
@@ -365,8 +608,8 @@ class TextSelectionPopover {
 
     setTimeout(() => {
       toast.classList.remove('visible');
-      setTimeout(() => toast.remove(), 200);
-    }, 3000);
+      setTimeout(() => toast.remove(), TOAST_FADE_DURATION);
+    }, TOAST_DISPLAY_DURATION);
   }
 
   /**
@@ -392,8 +635,8 @@ class TextSelectionPopover {
 
     setTimeout(() => {
       toast.classList.remove('visible');
-      setTimeout(() => toast.remove(), 200);
-    }, 3000);
+      setTimeout(() => toast.remove(), TOAST_FADE_DURATION);
+    }, TOAST_DISPLAY_DURATION);
   }
 
   /**
@@ -414,6 +657,7 @@ class TextSelectionPopover {
     }
     
     this.popover?.remove();
+    this.projectDropdown?.remove();
   }
 }
 
