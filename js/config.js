@@ -9,9 +9,12 @@
 // This placeholder gets replaced by GitHub Actions during deployment
 export const OPENAI_API_KEY = '__OPENAI_API_KEY_PLACEHOLDER__';
 
+// The placeholder string (used for comparison - intentionally split to avoid sed replacement)
+const PLACEHOLDER = ['__OPENAI_API_KEY', '_PLACEHOLDER__'].join('');
+
 // Check if we have a build-injected key (not the placeholder)
 export function hasInjectedApiKey() {
   return OPENAI_API_KEY && 
-         OPENAI_API_KEY !== '__OPENAI_API_KEY_PLACEHOLDER__' && 
+         OPENAI_API_KEY !== PLACEHOLDER && 
          OPENAI_API_KEY.startsWith('sk-');
 }

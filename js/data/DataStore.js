@@ -786,16 +786,36 @@ class DataStore {
    * @param {Object} project - Project data
    * @param {string} project.name - Project name (required)
    * @param {string} project.description - Project description
+   * @param {string} project.parentProjectId - Parent project ID (optional, for nested projects)
    * @param {string[]} project.documentIds - Initial document IDs
    * @returns {string} The new project's ID
    */
   createProject(project) {
-    return this.createEntity('projects', 'project', {
+    const id = this.createEntity('projects', 'project', {
       name: project.name,
       description: project.description || '',
+      parentProjectId: project.parentProjectId || null,
+      subProjectIds: [],
       documentIds: project.documentIds || [],
+      snippets: project.snippets || [],
+      tagIds: project.tagIds || [],
       status: project.status || 'active'
     });
+
+    // If this is a sub-project, link to parent
+    if (project.parentProjectId) {
+      const parentIdx = this.data.projects.findIndex(p => p.id === project.parentProjectId);
+      if (parentIdx !== -1) {
+        if (!this.data.projects[parentIdx].subProjectIds) {
+          this.data.projects[parentIdx].subProjectIds = [];
+        }
+        this.data.projects[parentIdx].subProjectIds.push(id);
+        this.data.projects[parentIdx].updatedAt = new Date().toISOString();
+        this.save();
+      }
+    }
+
+    return id;
   }
 
   /**
@@ -810,10 +830,61 @@ class DataStore {
 
   /**
    * Delete a project
+   * Removes the project and optionally its sub-projects.
+   * Sub-projects can be promoted to top-level or deleted with the parent.
    * @param {string} id - Project ID
+   * @param {Object} options - Delete options
+   * @param {boolean} options.deleteChildren - If true, delete all sub-projects recursively (default: false, promotes children)
    * @returns {boolean} Success
    */
-  deleteProject(id) {
+  deleteProject(id, options = {}) {
+    const { deleteChildren = false } = options;
+    const project = this.data.projects?.find(p => p.id === id);
+    
+    if (!project) {
+      return false;
+    }
+
+    // Remove from parent's subProjectIds if this is a sub-project
+    if (project.parentProjectId) {
+      const parentIdx = this.data.projects.findIndex(p => p.id === project.parentProjectId);
+      if (parentIdx !== -1) {
+        this.data.projects[parentIdx].subProjectIds = 
+          (this.data.projects[parentIdx].subProjectIds || []).filter(pid => pid !== id);
+        this.data.projects[parentIdx].updatedAt = new Date().toISOString();
+      }
+    }
+
+    // Handle sub-projects
+    const subProjectIds = project.subProjectIds || [];
+    if (subProjectIds.length > 0) {
+      if (deleteChildren) {
+        // Recursively delete all sub-projects
+        subProjectIds.forEach(subId => this.deleteProject(subId, { deleteChildren: true }));
+      } else {
+        // Promote sub-projects to same level as deleted project (or top-level)
+        subProjectIds.forEach(subId => {
+          const subProject = this.data.projects.find(p => p.id === subId);
+          if (subProject) {
+            subProject.parentProjectId = project.parentProjectId || null;
+            subProject.updatedAt = new Date().toISOString();
+            
+            // If promoting to another parent, add to that parent's subProjectIds
+            if (project.parentProjectId) {
+              const newParentIdx = this.data.projects.findIndex(p => p.id === project.parentProjectId);
+              if (newParentIdx !== -1) {
+                if (!this.data.projects[newParentIdx].subProjectIds) {
+                  this.data.projects[newParentIdx].subProjectIds = [];
+                }
+                this.data.projects[newParentIdx].subProjectIds.push(subId);
+              }
+            }
+          }
+        });
+      }
+    }
+
+    // Delete the project itself
     return this.deleteEntity('projects', id);
   }
 
@@ -998,6 +1069,292 @@ class DataStore {
     const projects = this.data.projects || [];
     const project = projects.find(p => p.id === projectId);
     return project?.snippets || [];
+  }
+
+  // ============================================
+  // Project Hierarchy & Movement
+  // ============================================
+
+  /**
+   * Get the full ancestry chain for a project (parent, grandparent, etc.)
+   * Returns array from root to immediate parent (not including the project itself)
+   * @param {string} projectId - Project ID
+   * @returns {Array} Array of ancestor projects, from root to immediate parent
+   */
+  getProjectAncestry(projectId) {
+    const ancestry = [];
+    let current = this.data.projects?.find(p => p.id === projectId);
+    
+    while (current && current.parentProjectId) {
+      const parent = this.data.projects.find(p => p.id === current.parentProjectId);
+      if (parent) {
+        ancestry.unshift(parent); // Add to front so order is root -> immediate parent
+        current = parent;
+      } else {
+        break;
+      }
+    }
+    
+    return ancestry;
+  }
+
+  /**
+   * Check if a project is an ancestor of another project
+   * Used to prevent circular references when moving projects
+   * @param {string} potentialAncestorId - ID of potential ancestor
+   * @param {string} projectId - ID of project to check ancestry for
+   * @returns {boolean} True if potentialAncestorId is an ancestor of projectId
+   */
+  isProjectAncestor(potentialAncestorId, projectId) {
+    const ancestry = this.getProjectAncestry(projectId);
+    return ancestry.some(p => p.id === potentialAncestorId);
+  }
+
+  /**
+   * Move a project under a new parent (or to top-level if newParentId is null)
+   * @param {string} projectId - Project ID to move
+   * @param {string|null} newParentId - New parent project ID, or null for top-level
+   * @returns {Object} Result with success status
+   */
+  moveProjectToParent(projectId, newParentId) {
+    const project = this.data.projects?.find(p => p.id === projectId);
+    if (!project) {
+      return { success: false, error: 'Project not found' };
+    }
+
+    // Prevent moving to self
+    if (newParentId === projectId) {
+      return { success: false, error: 'Cannot move project into itself' };
+    }
+
+    // Prevent circular references - can't move a project into its own descendant
+    if (newParentId) {
+      const newParent = this.data.projects.find(p => p.id === newParentId);
+      if (!newParent) {
+        return { success: false, error: 'Target parent project not found' };
+      }
+      
+      // Check if projectId is an ancestor of newParentId
+      if (this.isProjectAncestor(projectId, newParentId) || projectId === newParentId) {
+        return { success: false, error: 'Cannot move project into its own descendant' };
+      }
+    }
+
+    // Remove from old parent's subProjectIds
+    if (project.parentProjectId) {
+      const oldParent = this.data.projects.find(p => p.id === project.parentProjectId);
+      if (oldParent) {
+        oldParent.subProjectIds = (oldParent.subProjectIds || []).filter(id => id !== projectId);
+        oldParent.updatedAt = new Date().toISOString();
+      }
+    }
+
+    // Add to new parent's subProjectIds
+    if (newParentId) {
+      const newParent = this.data.projects.find(p => p.id === newParentId);
+      if (newParent) {
+        if (!newParent.subProjectIds) {
+          newParent.subProjectIds = [];
+        }
+        newParent.subProjectIds.push(projectId);
+        newParent.updatedAt = new Date().toISOString();
+      }
+    }
+
+    // Update project's parentProjectId
+    project.parentProjectId = newParentId;
+    project.updatedAt = new Date().toISOString();
+    this.save();
+
+    return { success: true };
+  }
+
+  /**
+   * Move documents from one project to another
+   * @param {string} sourceProjectId - Project to move documents from
+   * @param {string} targetProjectId - Project to move documents to
+   * @param {string[]} documentIds - Document IDs to move
+   * @returns {Object} Result with counts
+   */
+  moveDocumentsBetweenProjects(sourceProjectId, targetProjectId, documentIds) {
+    const source = this.data.projects?.find(p => p.id === sourceProjectId);
+    const target = this.data.projects?.find(p => p.id === targetProjectId);
+
+    if (!source) {
+      return { success: false, error: 'Source project not found', moved: 0 };
+    }
+    if (!target) {
+      return { success: false, error: 'Target project not found', moved: 0 };
+    }
+    if (sourceProjectId === targetProjectId) {
+      return { success: false, error: 'Source and target are the same project', moved: 0 };
+    }
+
+    const sourceSet = new Set(source.documentIds || []);
+    const targetSet = new Set(target.documentIds || []);
+    let moved = 0;
+
+    documentIds.forEach(docId => {
+      if (sourceSet.has(docId)) {
+        sourceSet.delete(docId);
+        targetSet.add(docId);
+        moved++;
+      }
+    });
+
+    if (moved > 0) {
+      source.documentIds = [...sourceSet];
+      target.documentIds = [...targetSet];
+      source.updatedAt = target.updatedAt = new Date().toISOString();
+      this.save();
+    }
+
+    return {
+      success: true,
+      moved,
+      sourceTotal: source.documentIds.length,
+      targetTotal: target.documentIds.length
+    };
+  }
+
+  /**
+   * Copy documents from one project to another (keeps in source, adds to target)
+   * @param {string} sourceProjectId - Project to copy documents from
+   * @param {string} targetProjectId - Project to copy documents to
+   * @param {string[]} documentIds - Document IDs to copy
+   * @returns {Object} Result with counts
+   */
+  copyDocumentsBetweenProjects(sourceProjectId, targetProjectId, documentIds) {
+    const source = this.data.projects?.find(p => p.id === sourceProjectId);
+    const target = this.data.projects?.find(p => p.id === targetProjectId);
+
+    if (!source) {
+      return { success: false, error: 'Source project not found', copied: 0 };
+    }
+    if (!target) {
+      return { success: false, error: 'Target project not found', copied: 0 };
+    }
+
+    const sourceSet = new Set(source.documentIds || []);
+    const targetSet = new Set(target.documentIds || []);
+    const initialTargetSize = targetSet.size;
+
+    documentIds.forEach(docId => {
+      if (sourceSet.has(docId)) {
+        targetSet.add(docId);
+      }
+    });
+
+    const copied = targetSet.size - initialTargetSize;
+
+    if (copied > 0) {
+      target.documentIds = [...targetSet];
+      target.updatedAt = new Date().toISOString();
+      this.save();
+    }
+
+    return {
+      success: true,
+      copied,
+      alreadyExisted: documentIds.length - copied,
+      targetTotal: target.documentIds.length
+    };
+  }
+
+  /**
+   * Move snippets from one project to another
+   * @param {string} sourceProjectId - Project to move snippets from
+   * @param {string} targetProjectId - Project to move snippets to
+   * @param {string[]} snippetIds - Snippet IDs to move
+   * @returns {Object} Result with counts
+   */
+  moveSnippetsBetweenProjects(sourceProjectId, targetProjectId, snippetIds) {
+    const source = this.data.projects?.find(p => p.id === sourceProjectId);
+    const target = this.data.projects?.find(p => p.id === targetProjectId);
+
+    if (!source) {
+      return { success: false, error: 'Source project not found', moved: 0 };
+    }
+    if (!target) {
+      return { success: false, error: 'Target project not found', moved: 0 };
+    }
+    if (sourceProjectId === targetProjectId) {
+      return { success: false, error: 'Source and target are the same project', moved: 0 };
+    }
+
+    const snippetIdSet = new Set(snippetIds);
+    const snippetsToMove = (source.snippets || []).filter(s => snippetIdSet.has(s.id));
+    
+    if (snippetsToMove.length === 0) {
+      return { success: true, moved: 0, sourceTotal: (source.snippets || []).length, targetTotal: (target.snippets || []).length };
+    }
+
+    // Remove from source
+    source.snippets = (source.snippets || []).filter(s => !snippetIdSet.has(s.id));
+    
+    // Add to target
+    if (!target.snippets) {
+      target.snippets = [];
+    }
+    target.snippets.push(...snippetsToMove);
+
+    source.updatedAt = target.updatedAt = new Date().toISOString();
+    this.save();
+
+    return {
+      success: true,
+      moved: snippetsToMove.length,
+      sourceTotal: source.snippets.length,
+      targetTotal: target.snippets.length
+    };
+  }
+
+  /**
+   * Copy snippets from one project to another (keeps in source, adds to target with new IDs)
+   * @param {string} sourceProjectId - Project to copy snippets from
+   * @param {string} targetProjectId - Project to copy snippets to
+   * @param {string[]} snippetIds - Snippet IDs to copy
+   * @returns {Object} Result with counts
+   */
+  copySnippetsBetweenProjects(sourceProjectId, targetProjectId, snippetIds) {
+    const source = this.data.projects?.find(p => p.id === sourceProjectId);
+    const target = this.data.projects?.find(p => p.id === targetProjectId);
+
+    if (!source) {
+      return { success: false, error: 'Source project not found', copied: 0 };
+    }
+    if (!target) {
+      return { success: false, error: 'Target project not found', copied: 0 };
+    }
+
+    const snippetIdSet = new Set(snippetIds);
+    const snippetsToCopy = (source.snippets || []).filter(s => snippetIdSet.has(s.id));
+    
+    if (snippetsToCopy.length === 0) {
+      return { success: true, copied: 0, targetTotal: (target.snippets || []).length };
+    }
+
+    // Create copies with new IDs
+    const copiedSnippets = snippetsToCopy.map(snippet => ({
+      ...snippet,
+      id: `snippet-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
+      createdAt: new Date().toISOString()
+    }));
+
+    // Add to target
+    if (!target.snippets) {
+      target.snippets = [];
+    }
+    target.snippets.push(...copiedSnippets);
+
+    target.updatedAt = new Date().toISOString();
+    this.save();
+
+    return {
+      success: true,
+      copied: copiedSnippets.length,
+      targetTotal: target.snippets.length
+    };
   }
 
   // ============================================

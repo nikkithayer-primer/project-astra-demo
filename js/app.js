@@ -1300,7 +1300,28 @@ class App {
     // Mark as summarized
     this.summarizedPagesInContext.add(pageKey);
     
-    // Create a navigation marker message
+    // Check sessionStorage cache first
+    const cacheKey = `ai_summary_${route}_${id || 'list'}`;
+    const cached = sessionStorage.getItem(cacheKey);
+    
+    if (cached) {
+      // Use cached summary
+      const navMsg = document.createElement('div');
+      navMsg.className = 'chat-message assistant chat-navigation-summary';
+      navMsg.innerHTML = `
+        <div class="chat-message-content">
+          <div class="chat-ai-summary">
+            <div class="chat-ai-summary-label">Page Summary</div>
+            <div class="chat-ai-summary-content">${this.formatAIResponse(cached)}</div>
+          </div>
+        </div>
+      `;
+      chatMessages.appendChild(navMsg);
+      chatMessages.scrollTop = chatMessages.scrollHeight;
+      return;
+    }
+    
+    // Create a navigation marker message with loading state
     const navMsg = document.createElement('div');
     navMsg.className = 'chat-message assistant chat-navigation-summary';
     navMsg.innerHTML = `
@@ -1318,6 +1339,10 @@ class App {
     try {
       // Use generateSummaryOnly to avoid adding to conversation history
       const response = await this.chatService.generateSummaryOnly(prompt);
+      
+      // Cache the response
+      sessionStorage.setItem(cacheKey, response);
+      
       const contentEl = navMsg.querySelector('.chat-message-content');
       contentEl.innerHTML = `
         <div class="chat-ai-summary">
@@ -1448,6 +1473,21 @@ class App {
     // Mark as summarized
     this.summarizedPagesInContext.add(pageKey);
     
+    // Check sessionStorage cache first
+    const cacheKey = `ai_summary_${route}_${id || 'list'}`;
+    const cached = sessionStorage.getItem(cacheKey);
+    
+    if (cached) {
+      // Use cached summary
+      contentElement.innerHTML = `
+        <div class="chat-ai-summary">
+          <div class="chat-ai-summary-label">AI Summary</div>
+          <div class="chat-ai-summary-content">${this.formatAIResponse(cached)}</div>
+        </div>
+      `;
+      return;
+    }
+    
     // Show loading state (same typing indicator as chat replies)
     const originalContent = contentElement.innerHTML;
     contentElement.innerHTML = `
@@ -1461,6 +1501,9 @@ class App {
     try {
       // Use generateSummaryOnly to avoid polluting conversation history
       const response = await this.chatService.generateSummaryOnly(prompt);
+      
+      // Cache the response
+      sessionStorage.setItem(cacheKey, response);
       
       // Display the AI summary above the original content
       contentElement.innerHTML = `

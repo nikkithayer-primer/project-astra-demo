@@ -55,7 +55,40 @@ Each context has a "home" route showing its dashboard/overview.
 |-------|------|-------------|
 | `#/workspace/{workspaceId}` | WorkspaceView | Workspace dashboard with cards |
 | `#/monitor/{monitorId}` | MonitorView | Monitor dashboard with alerts |
+| `#/project/{projectId}` | ProjectView | Project dashboard |
 | `#/dashboard` | DashboardView | Global dashboard (all data) |
+
+### Nested Projects
+
+Projects support hierarchical nesting, where projects can contain sub-projects. The URL structure reflects the full path from root to the current project:
+
+```
+#/{rootProjectId}/{childProjectId}/{grandchildProjectId}/
+```
+
+Examples:
+- `#/project-research/` - Top-level project
+- `#/project-research/project-q1-analysis/` - Child project within research
+- `#/project-research/project-q1-analysis/project-china-focus/` - Grandchild project
+- `#/project-research/project-q1-analysis/doc-123/` - Document within nested project
+
+The router validates that the project chain forms a valid parent-child hierarchy. Each project in the URL must be a direct child of the previous project.
+
+**URL Generation:** Use `buildNestedProjectRoute()` from `idUtils.js` or `DataService.getProjectPath()` to generate correct nested URLs:
+
+```javascript
+import { buildNestedProjectRoute } from './utils/idUtils.js';
+import { DataService } from './data/DataService.js';
+
+// Get full path from root to project (including the project itself)
+const projectPath = DataService.getProjectPath(projectId);
+const url = buildNestedProjectRoute(projectPath);
+// Result: #/project-root/project-child/project-grandchild/
+
+// With additional entity (e.g., document)
+const docUrl = buildNestedProjectRoute(projectPath, docId);
+// Result: #/project-root/project-child/doc-123/
+```
 
 ---
 

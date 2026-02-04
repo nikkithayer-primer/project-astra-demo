@@ -3199,6 +3199,155 @@ export const DataService = {
     (dataStore.data?.projects ?? []).filter(p => p.status === 'archived'),
 
   /**
+   * Get top-level (root) projects that have no parent
+   * @param {boolean} includeArchived - Whether to include archived projects (default: false)
+   * @returns {Array} Root projects
+   */
+  getRootProjects: (includeArchived = false) => {
+    return (dataStore.data?.projects ?? []).filter(p => 
+      !p.parentProjectId && (includeArchived || p.status !== 'archived')
+    );
+  },
+
+  /**
+   * Get direct child projects of a parent project
+   * @param {string} projectId - Parent project ID
+   * @param {boolean} includeArchived - Whether to include archived projects (default: false)
+   * @returns {Array} Child projects
+   */
+  getChildProjects: (projectId, includeArchived = false) => {
+    return (dataStore.data?.projects ?? []).filter(p => 
+      p.parentProjectId === projectId && (includeArchived || p.status !== 'archived')
+    );
+  },
+
+  /**
+   * Get all descendant projects (children, grandchildren, etc.) recursively
+   * @param {string} projectId - Ancestor project ID
+   * @param {boolean} includeArchived - Whether to include archived projects (default: false)
+   * @returns {Array} All descendant projects
+   */
+  getDescendantProjects: (projectId, includeArchived = false) => {
+    const descendants = [];
+    const stack = [...DataService.getChildProjects(projectId, includeArchived)];
+    
+    while (stack.length > 0) {
+      const project = stack.pop();
+      descendants.push(project);
+      stack.push(...DataService.getChildProjects(project.id, includeArchived));
+    }
+    
+    return descendants;
+  },
+
+  /**
+   * Get the full ancestry chain for a project (parent, grandparent, etc.)
+   * Returns array from root to immediate parent (not including the project itself)
+   * @param {string} projectId - Project ID
+   * @returns {Array} Array of ancestor projects, from root to immediate parent
+   */
+  getProjectAncestry: (projectId) => {
+    return dataStore.getProjectAncestry(projectId);
+  },
+
+  /**
+   * Get the parent project of a project
+   * @param {string} projectId - Project ID
+   * @returns {Object|null} Parent project or null if top-level
+   */
+  getParentProject: (projectId) => {
+    const project = findById('projects', projectId);
+    if (!project || !project.parentProjectId) return null;
+    return findById('projects', project.parentProjectId);
+  },
+
+  /**
+   * Get sibling projects (same parent) of a project
+   * @param {string} projectId - Project ID
+   * @param {boolean} includeArchived - Whether to include archived projects (default: false)
+   * @returns {Array} Sibling projects (excluding the project itself)
+   */
+  getSiblingProjects: (projectId, includeArchived = false) => {
+    const project = findById('projects', projectId);
+    if (!project) return [];
+    
+    const parentId = project.parentProjectId;
+    return (dataStore.data?.projects ?? []).filter(p => 
+      p.id !== projectId && 
+      p.parentProjectId === parentId && 
+      (includeArchived || p.status !== 'archived')
+    );
+  },
+
+  /**
+   * Build a full path array from root to a project (including the project)
+   * Useful for breadcrumb generation
+   * @param {string} projectId - Project ID
+   * @returns {Array} Array of projects from root to this project
+   */
+  getProjectPath: (projectId) => {
+    const project = findById('projects', projectId);
+    if (!project) return [];
+    
+    const ancestry = dataStore.getProjectAncestry(projectId);
+    return [...ancestry, project];
+  },
+
+  /**
+   * Move a project to a new parent (or to top-level)
+   * @param {string} projectId - Project ID to move
+   * @param {string|null} newParentId - New parent ID, or null for top-level
+   * @returns {Object} Result with success status
+   */
+  moveProjectToParent: (projectId, newParentId) => {
+    return dataStore.moveProjectToParent(projectId, newParentId);
+  },
+
+  /**
+   * Move documents between projects
+   * @param {string} sourceProjectId - Source project ID
+   * @param {string} targetProjectId - Target project ID
+   * @param {string[]} documentIds - Document IDs to move
+   * @returns {Object} Result with counts
+   */
+  moveDocumentsBetweenProjects: (sourceProjectId, targetProjectId, documentIds) => {
+    return dataStore.moveDocumentsBetweenProjects(sourceProjectId, targetProjectId, documentIds);
+  },
+
+  /**
+   * Copy documents between projects
+   * @param {string} sourceProjectId - Source project ID
+   * @param {string} targetProjectId - Target project ID
+   * @param {string[]} documentIds - Document IDs to copy
+   * @returns {Object} Result with counts
+   */
+  copyDocumentsBetweenProjects: (sourceProjectId, targetProjectId, documentIds) => {
+    return dataStore.copyDocumentsBetweenProjects(sourceProjectId, targetProjectId, documentIds);
+  },
+
+  /**
+   * Move snippets between projects
+   * @param {string} sourceProjectId - Source project ID
+   * @param {string} targetProjectId - Target project ID
+   * @param {string[]} snippetIds - Snippet IDs to move
+   * @returns {Object} Result with counts
+   */
+  moveSnippetsBetweenProjects: (sourceProjectId, targetProjectId, snippetIds) => {
+    return dataStore.moveSnippetsBetweenProjects(sourceProjectId, targetProjectId, snippetIds);
+  },
+
+  /**
+   * Copy snippets between projects
+   * @param {string} sourceProjectId - Source project ID
+   * @param {string} targetProjectId - Target project ID
+   * @param {string[]} snippetIds - Snippet IDs to copy
+   * @returns {Object} Result with counts
+   */
+  copySnippetsBetweenProjects: (sourceProjectId, targetProjectId, snippetIds) => {
+    return dataStore.copySnippetsBetweenProjects(sourceProjectId, targetProjectId, snippetIds);
+  },
+
+  /**
    * Get all documents for a project.
    * Projects are purely manual - no scope matching, just explicit documentIds.
    * @param {string} projectId - Project ID

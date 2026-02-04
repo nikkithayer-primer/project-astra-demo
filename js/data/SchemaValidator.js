@@ -282,13 +282,16 @@ const SCHEMAS = {
   projects: {
     idPrefix: 'project-',
     required: ['id', 'name', 'documentIds'],
-    optional: ['description', 'status', 'createdAt', 'updatedAt'],
+    optional: ['description', 'parentProjectId', 'subProjectIds', 'snippets', 'tagIds', 'status', 'createdAt', 'updatedAt'],
     types: {
       name: 'string',
       status: ['active', 'archived']
     },
     references: {
-      documentIds: 'documents'
+      documentIds: 'documents',
+      parentProjectId: 'projects',
+      subProjectIds: 'projects',
+      tagIds: 'tags'
     }
   },
 

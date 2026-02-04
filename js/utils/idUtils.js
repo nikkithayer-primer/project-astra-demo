@@ -108,6 +108,51 @@ export function buildIdRoute(contextId, ...entityIds) {
 }
 
 /**
+ * Check if an ID is a project ID
+ * @param {string} id - The ID to check
+ * @returns {boolean} True if the ID is a project ID
+ */
+export function isProjectId(id) {
+  return id && typeof id === 'string' && id.startsWith('project-');
+}
+
+/**
+ * Build a route URL for a nested project, including its full ancestry
+ * @param {Array} projectPath - Array of project objects or IDs from root to target project
+ * @param {...string} additionalIds - Optional additional entity IDs to append (e.g., document ID)
+ * @returns {string} The hash route URL
+ */
+export function buildNestedProjectRoute(projectPath, ...additionalIds) {
+  if (!projectPath || projectPath.length === 0) {
+    return '#/projects/';
+  }
+  
+  // Extract IDs if objects were passed
+  const projectIds = projectPath.map(p => typeof p === 'string' ? p : p.id);
+  
+  const parts = [...projectIds, ...additionalIds.filter(Boolean)];
+  
+  return `#/${parts.join('/')}/`;
+}
+
+/**
+ * Build a route URL for a project using its ancestry from DataService
+ * This is a convenience wrapper that fetches the ancestry automatically
+ * @param {string} projectId - The project ID to build the route for
+ * @param {Function} getProjectPath - Function to get project path (usually DataService.getProjectPath)
+ * @param {...string} additionalIds - Optional additional entity IDs to append
+ * @returns {string} The hash route URL
+ */
+export function buildProjectRouteWithAncestry(projectId, getProjectPath, ...additionalIds) {
+  if (!projectId || !getProjectPath) {
+    return '#/projects/';
+  }
+  
+  const projectPath = getProjectPath(projectId);
+  return buildNestedProjectRoute(projectPath, ...additionalIds);
+}
+
+/**
  * Parse an ID-based route into its components
  * @param {string} hash - The hash route (without #/)
  * @returns {Object} Parsed route info
@@ -210,7 +255,10 @@ export default {
   getEntityTypeFromId,
   isContextId,
   isViewableEntityId,
+  isProjectId,
   buildIdRoute,
+  buildNestedProjectRoute,
+  buildProjectRouteWithAncestry,
   parseIdRoute,
   getEntityTypeDisplayName,
   getEntityTypePlural

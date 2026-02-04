@@ -567,13 +567,15 @@ User-defined collections for focused analysis. Workspaces support three document
 
 ### Project
 
-Manually curated document collections for research and reporting. Unlike Monitors (automatic) and Workspaces (search-driven), Projects are purely manual - documents are added explicitly by the user.
+Manually curated document collections for research and reporting. Unlike Monitors (automatic) and Workspaces (search-driven), Projects are purely manual - documents are added explicitly by the user. Projects can be nested within other projects to create hierarchical organization (similar to folders).
 
 ```javascript
 {
   id: string,              // Required. Prefix: 'project-'
   name: string,            // Required. Project name
   description: string,     // Optional. Project purpose/notes
+  parentProjectId: string, // Optional. FK to parent Project (null for top-level)
+  subProjectIds: string[], // Auto-managed. FKs to child Projects
   documentIds: string[],   // Required. FKs to Document (manually curated)
   snippets: [              // Optional. Saved text selections from various sources
     {
@@ -601,6 +603,8 @@ Manually curated document collections for research and reporting. Unlike Monitor
 ```
 
 **Key Distinction:** Projects have no `scope` or dynamic matching. The `documentIds` array is the complete, manually-managed document set. All entity views within a project are derived from these documents.
+
+**Nesting:** Projects can be nested via `parentProjectId`. When a project has a parent, it appears as a sub-project. URLs reflect the hierarchy: `#/project-parent/project-child/`. Documents and snippets belong to individual projects and can be moved between projects (including between parent and child).
 
 **Snippets:** Text snippets can be saved to projects via text selection in document views. Snippets preserve a reference to the source document and optional context for navigation back to the original location.
 
@@ -691,6 +695,7 @@ User-defined labels for organizing and filtering entities. Tags can be organized
 - TagGroup → Tags (`tag.groupId`)
 - Narrative → Themes (`theme.parentNarrativeId`)
 - Event → SubEvents (`subEvent.parentEventId`)
+- Project → SubProjects (`project.parentProjectId`)
 - Event → Location (`event.locationId`)
 - Repository → Documents (`document.repositoryId`)
 - Publisher → Documents (`document.publisherId`)

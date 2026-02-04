@@ -402,6 +402,8 @@ export class Router {
    * Routes use entity ID prefixes to determine types:
    *   - #/monitor-001/person-003/ (person within monitor scope)
    *   - #/workspace-001/narr-005/ (narrative within workspace scope)
+   *   - #/project-parent/project-child/ (nested project view)
+   *   - #/project-parent/project-child/doc-123/ (document within nested project)
    *   - #/person-003/ (person in COP scope)
    *   - #/cop/ (COP home)
    *   - #/workspaces (top-level list)
@@ -414,8 +416,9 @@ export class Router {
     
     // Default result structure
     const result = {
-      contextId: null,         // ID of context (monitor-001, workspace-001, etc.)
+      contextId: null,         // ID of context (monitor-001, workspace-001, etc.) - for projects, this is the deepest project
       contextType: null,       // 'monitor' | 'workspace' | 'project' | 'cop'
+      projectChain: [],        // For nested projects: array of project IDs from root to deepest
       entityId: null,          // Primary entity ID being viewed
       entityType: null,        // Entity type derived from ID prefix
       entityChain: [],         // Full chain of entity IDs for nested navigation
@@ -453,14 +456,39 @@ export class Router {
 
     // Check if first segment is a context ID (monitor-, workspace-, project-)
     if (isContextId(firstSegment)) {
-      result.contextId = firstSegment;
       result.contextType = getEntityTypeFromId(firstSegment);
       
-      if (segments.length === 1) {
-        result.isContextHome = true;
+      // For projects, check for nested project chain (multiple consecutive project- IDs)
+      if (result.contextType === 'project') {
+        const projectChain = [];
+        let i = 0;
+        
+        // Collect consecutive project IDs
+        while (i < segments.length && segments[i].startsWith('project-')) {
+          projectChain.push(segments[i]);
+          i++;
+        }
+        
+        result.projectChain = projectChain;
+        result.contextId = projectChain[projectChain.length - 1]; // Deepest project is the context
+        
+        if (i === segments.length) {
+          // Only project IDs in URL - viewing the deepest project's home
+          result.isContextHome = true;
+        } else {
+          // Parse remaining segments as entity chain
+          this._parseEntityChain(segments.slice(i), result);
+        }
       } else {
-        // Parse remaining segments as entity chain
-        this._parseEntityChain(segments.slice(1), result);
+        // Non-project context (monitor, workspace)
+        result.contextId = firstSegment;
+        
+        if (segments.length === 1) {
+          result.isContextHome = true;
+        } else {
+          // Parse remaining segments as entity chain
+          this._parseEntityChain(segments.slice(1), result);
+        }
       }
     } else {
       // No context prefix - treat as COP-scoped
@@ -501,9 +529,10 @@ export class Router {
    * Resolve context to a scope object with document IDs
    * Now accepts a context ID directly and derives type from prefix
    * @param {string} contextId - Context ID (e.g., 'monitor-001') or null for COP
+   * @param {string[]} projectChain - Optional array of project IDs for nested projects
    * @returns {Object} Scope object with type, id, and documentIds
    */
-  resolveContextScope(contextId) {
+  resolveContextScope(contextId, projectChain = []) {
     if (!contextId) {
       return { 
         type: 'cop', 
@@ -551,10 +580,35 @@ export class Router {
         console.warn(`Router: Project ${contextId} not found`);
         return null;
       }
+      
+      // For nested projects, validate the chain and include ancestry info
+      let ancestry = [];
+      let isValidChain = true;
+      
+      if (projectChain.length > 1) {
+        // Validate that the project chain forms a valid parent-child hierarchy
+        for (let i = 1; i < projectChain.length; i++) {
+          const childProject = DataService.getProject(projectChain[i]);
+          if (!childProject || childProject.parentProjectId !== projectChain[i - 1]) {
+            console.warn(`Router: Invalid project hierarchy in URL - ${projectChain[i]} is not a child of ${projectChain[i - 1]}`);
+            isValidChain = false;
+            break;
+          }
+        }
+        
+        if (isValidChain) {
+          // Build ancestry array (all projects except the current one)
+          ancestry = projectChain.slice(0, -1).map(id => DataService.getProject(id)).filter(Boolean);
+        }
+      }
+      
       return { 
         type: 'project', 
         id: contextId, 
         documentIds: project.documentIds || [],
+        projectChain: projectChain,
+        ancestry: ancestry,
+        isValidChain: isValidChain,
         getName: () => project.name || 'Project'
       };
     }
@@ -611,7 +665,7 @@ export class Router {
 
     // Determine the primary route for nav link highlighting
     this.currentRoute = parsed.topLevelRoute || parsed.contextType || 'cop';
-    this.currentContext = this.resolveContextScope(parsed.contextId);
+    this.currentContext = this.resolveContextScope(parsed.contextId, parsed.projectChain || []);
 
     // Destroy current view and clean up sticky header
     try {
