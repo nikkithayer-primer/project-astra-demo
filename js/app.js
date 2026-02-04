@@ -421,10 +421,21 @@ class App {
         <div class="settings-section">
           <h3 class="settings-section-title">AI Assistant</h3>
           
+          ${ChatService.isUsingInjectedKey() ? `
           <div class="settings-row">
             <div class="settings-label">
               <span class="settings-label-text">OpenAI API Key</span>
-              <span class="settings-label-description">Required for AI-powered chat. Your key is stored locally and never sent to our servers.</span>
+              <span class="settings-label-description">API key is configured for this deployment.</span>
+            </div>
+            <div class="settings-api-key-status">
+              <span class="api-key-badge api-key-configured"><svg width="12" height="12" viewBox="0 0 16 16" fill="currentColor"><path d="M13.78 4.22a.75.75 0 010 1.06l-7.25 7.25a.75.75 0 01-1.06 0L2.22 9.28a.75.75 0 011.06-1.06L6 10.94l6.72-6.72a.75.75 0 011.06 0z"/></svg> AI enabled</span>
+            </div>
+          </div>
+          ` : `
+          <div class="settings-row">
+            <div class="settings-label">
+              <span class="settings-label-text">OpenAI API Key</span>
+              <span class="settings-label-description">Required for AI-powered chat. Your key is stored locally in your browser.</span>
             </div>
             <div class="settings-api-key-status">
               ${ChatService.hasApiKey() 
@@ -454,7 +465,10 @@ class App {
             </div>
             <button type="button" class="btn btn-small btn-danger" id="clear-api-key">Clear Key</button>
           </div>
+          ` : ''}
+          `}
           
+          ${ChatService.hasApiKey() ? `
           <div class="settings-row">
             <div class="settings-label">
               <span class="settings-label-text">Auto-Summarize Pages</span>
@@ -659,12 +673,13 @@ class App {
       `;
       statusEl.classList.remove('chat-status-warning');
     } else {
+      // Show demo mode with link to settings for manual key entry
       statusEl.innerHTML = `
         <span class="chat-status-badge chat-status-demo">
           <svg width="10" height="10" viewBox="0 0 16 16" fill="currentColor"><path d="M8 1.5a6.5 6.5 0 100 13 6.5 6.5 0 000-13zM0 8a8 8 0 1116 0A8 8 0 010 8zm9-3a1 1 0 11-2 0 1 1 0 012 0zM8 7a.75.75 0 01.75.75v4a.75.75 0 01-1.5 0v-4A.75.75 0 018 7z"/></svg>
           Demo mode
         </span>
-        <a href="#" class="chat-status-link" onclick="window.app.showSettingsModal(); return false;">Add API key for AI responses</a>
+        <a href="#" class="chat-status-link" onclick="window.app.showSettingsModal(); return false;">Configure API key</a>
       `;
       statusEl.classList.add('chat-status-warning');
     }

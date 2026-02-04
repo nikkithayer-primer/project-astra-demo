@@ -4,6 +4,7 @@
  */
 
 import { DataService } from '../data/DataService.js';
+import { OPENAI_API_KEY, hasInjectedApiKey } from '../config.js';
 
 // ============================================
 // Tool Definitions for OpenAI Function Calling
@@ -628,14 +629,26 @@ export class ChatService {
   }
 
   /**
-   * Get the stored API key
+   * Get the API key (build-injected key takes priority over localStorage)
    */
   static getApiKey() {
+    // First check for build-injected key from config
+    if (hasInjectedApiKey()) {
+      return OPENAI_API_KEY;
+    }
+    // Fall back to localStorage for local development
     return localStorage.getItem('openai_api_key');
   }
 
   /**
-   * Set the API key
+   * Check if using a build-injected API key
+   */
+  static isUsingInjectedKey() {
+    return hasInjectedApiKey();
+  }
+
+  /**
+   * Set the API key (only affects localStorage, not build-injected key)
    */
   static setApiKey(key) {
     if (key) {
@@ -646,7 +659,7 @@ export class ChatService {
   }
 
   /**
-   * Check if API key is configured
+   * Check if API key is configured (either injected or localStorage)
    */
   static hasApiKey() {
     const key = ChatService.getApiKey();
