@@ -643,8 +643,21 @@ export class Router {
    * Uses ID-based routing where types are derived from ID prefixes
    */
   handleRoute() {
-    const fullHash = window.location.hash.slice(2) || 'cop'; // Remove #/
-    
+    const rawHash = (window.location.hash.slice(2) || '').trim();
+    const settings = dataStore.getSettings();
+
+    // No hash or empty path: redirect to dataset's default start page
+    if (!rawHash || rawHash === '/') {
+      let defaultPage = settings.defaultStartPage || 'monitors';
+      if (!settings.copEnabled && defaultPage === 'cop') {
+        defaultPage = 'monitors';
+      }
+      window.location.hash = `#/${defaultPage}`;
+      return;
+    }
+
+    const fullHash = rawHash;
+
     // Separate path from query string
     const queryIndex = fullHash.indexOf('?');
     const hash = queryIndex === -1 ? fullHash : fullHash.slice(0, queryIndex);
@@ -652,9 +665,6 @@ export class Router {
     
     // Parse the route using ID-based parser
     const parsed = this.parseIdBasedRoute(hash);
-
-    // Get settings
-    const settings = dataStore.getSettings();
 
     // Check for COP disabled with COP-scoped route
     if (parsed.contextType === 'cop' && !parsed.topLevelRoute && !settings.copEnabled) {

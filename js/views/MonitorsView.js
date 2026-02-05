@@ -55,7 +55,14 @@ const DEFAULT_MONITOR_VISUALIZATIONS = {
   'Self Checkout Complaints': 'volume',
   'Product Availability Issues': 'volume',
   'Product Safety Alerts': 'narratives',
-  'Competitor Activity Tracker': 'topics'
+  'Competitor Activity Tracker': 'topics',
+  // Singapore MCO dataset
+  'NS Sentiment Tracker': 'faction_sentiment',
+  'PRC Influence Detection': 'narratives',
+  'Malaysia Relations Watch': 'volume',
+  'SAF Incident Watch': 'locations',
+  'Racial Harmony Monitor': 'faction_sentiment',
+  'Coordinated Campaign Detection': 'faction_overlaps'
 };
 
 export class MonitorsView extends BaseView {

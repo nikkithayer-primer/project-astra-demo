@@ -14,12 +14,12 @@ class DataStore {
     
     // Safely read from localStorage with fallbacks
     try {
-      this.currentDataset = localStorage.getItem(this.datasetKey) || 'china-semiconductor';
-      this.currentDatasetName = localStorage.getItem(this.datasetNameKey) || 'China Semiconductor';
+      this.currentDataset = localStorage.getItem(this.datasetKey) || 'singapore-mco';
+      this.currentDatasetName = localStorage.getItem(this.datasetNameKey) || 'Singapore MCO';
     } catch (e) {
       console.error('DataStore: Failed to read from localStorage:', e);
-      this.currentDataset = 'china-semiconductor';
-      this.currentDatasetName = 'China Semiconductor';
+      this.currentDataset = 'singapore-mco';
+      this.currentDatasetName = 'Singapore MCO';
     }
     
     this.data = this.load();
@@ -142,10 +142,10 @@ class DataStore {
     this.data = { ...mockDataModule };
     this.save();
     
-    // Apply dataset-specific default settings if provided, but preserve user settings
+    // Apply dataset-specific default settings if provided; dataset defaults win over stored
     if (defaultSettings) {
-      // Merge: defaults -> dataset defaults -> user's existing settings
-      this.settings = { ...this.getDefaultSettings(), ...defaultSettings, ...this.settings };
+      // Merge: base defaults -> user's stored settings -> dataset defaults (so dataset is respected)
+      this.settings = { ...this.getDefaultSettings(), ...this.settings, ...defaultSettings };
       try {
         localStorage.setItem(this.settingsKey, JSON.stringify(this.settings));
       } catch (e) {

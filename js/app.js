@@ -134,7 +134,7 @@ class App {
    */
   initializeDataset() {
     const currentDatasetId = this.dataStore.getCurrentDataset();
-    const dataset = DATASETS[currentDatasetId] || DATASETS['china-semiconductor'];
+    const dataset = DATASETS[currentDatasetId] || DATASETS['singapore-mco'];
     
     // Load the dataset with its default settings
     this.dataStore.switchDataset(dataset.id, dataset.data, dataset.name, dataset.defaultSettings);

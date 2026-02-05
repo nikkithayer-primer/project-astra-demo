@@ -8943,6 +8943,8 @@ button.tag-color-option.selected {
   padding: var(--space-sm) var(--space-xs);
   border-left: 1px solid var(--border-subtle);
   min-width: 28px;
+  display: flex;
+  align-items: center;
   justify-content: center;
 }
 
@@ -8952,6 +8954,26 @@ button.tag-color-option.selected {
 
 .text-selection-popover .popover-action-dropdown:hover svg {
   opacity: 1;
+}
+
+/* Split button secondary styling (matches btn-secondary) */
+.text-selection-popover .popover-action-secondary {
+  background: var(--bg-tertiary);
+  color: var(--text-secondary);
+  border: 1px solid var(--border-subtle);
+}
+
+.text-selection-popover .popover-action-secondary:hover {
+  background: var(--bg-hover);
+  color: var(--text-primary);
+}
+
+.text-selection-popover .popover-split-button .popover-action-main.popover-action-secondary {
+  border-right: none;
+}
+
+.text-selection-popover .popover-split-button .popover-action-dropdown.popover-action-secondary {
+  border-left: 1px solid var(--border-subtle);
 }
 
 /* Project dropdown */
@@ -9048,7 +9070,7 @@ button.tag-color-option.selected {
 
 .add-to-project-split-btn .split-btn-main {
   border-radius: var(--radius-sm) 0 0 var(--radius-sm);
-  border-right: 1px solid rgba(255, 255, 255, 0.2);
+  border-right: 1px solid var(--border-subtle);
 }
 
 .add-to-project-split-btn .split-btn-dropdown {
@@ -9056,6 +9078,9 @@ button.tag-color-option.selected {
   padding-left: var(--space-xs);
   padding-right: var(--space-xs);
   min-width: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .add-to-project-split-btn .split-btn-dropdown svg {

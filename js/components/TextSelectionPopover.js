@@ -134,13 +134,13 @@ class TextSelectionPopover {
     this.popover.className = 'text-selection-popover';
     this.popover.innerHTML = `
       <div class="popover-split-button">
-        <button class="popover-action popover-action-main" data-action="quick-save" title="Save to Unsorted">
+        <button class="popover-action popover-action-main popover-action-secondary" data-action="quick-save" title="Save to Unsorted">
           <svg viewBox="0 0 16 16" width="14" height="14" fill="currentColor">
             <path fill-rule="evenodd" d="M2 1C1.44771 1 1 1.44772 1 2V14C1 14.5523 1.44771 15 2 15H14C14.5523 15 15 14.5523 15 14V3.5C15 2.94772 14.5523 2.5 14 2.5H8.26759L7.56446 1.4453C7.37899 1.1671 7.06676 1 6.73241 1H2ZM2 2H6.73241L7.43554 3.0547C7.62101 3.3329 7.93324 3.5 8.26759 3.5H14V4.5H2V2ZM2 5.5V14H14V5.5H2Z"/>
           </svg>
-          <span>Quick Save</span>
+          <span>Add to Project</span>
         </button>
-        <button class="popover-action popover-action-dropdown" data-action="toggle-dropdown" title="Choose project">
+        <button class="popover-action popover-action-dropdown popover-action-secondary" data-action="toggle-dropdown" title="Choose project">
           <svg viewBox="0 0 16 16" width="12" height="12" fill="currentColor">
             <path d="M4.427 6.427l3.396 3.396a.25.25 0 00.354 0l3.396-3.396A.25.25 0 0011.396 6H4.604a.25.25 0 00-.177.427z"/>
           </svg>
