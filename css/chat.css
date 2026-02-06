@@ -579,3 +579,13 @@ body.chat-resizing .page-header-entity-image,
 body.chat-resizing .header-description {
   transition: none !important;
 }
+
+/* Search page: hide chat panel and sidebar strip */
+body.search-page .sidebar-strip,
+body.search-page .chat-panel {
+  display: none !important;
+}
+
+body.search-page .content-wrapper {
+  margin-left: 0;
+}

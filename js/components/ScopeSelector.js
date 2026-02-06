@@ -20,7 +20,7 @@ export class ScopeSelector {
    * @param {Function} options.onChange - Callback when scope changes
    * @param {boolean} options.showSaveFilter - Whether to show the save filter button (default: true)
    * @param {boolean} options.showSearchFilters - Whether to show saved search filters accordion (default: true)
-   * @param {boolean} options.showModeToggle - Whether to show simple/advanced mode toggle (default: true)
+   *    * @param {boolean} options.showModeToggle - Whether to show simple/advanced mode toggle (default: false, advanced removed)
    * @param {string} options.defaultMode - Initial mode: 'simple' or 'advanced' (default: 'simple')
    */
   constructor(container, options = {}) {
@@ -29,7 +29,7 @@ export class ScopeSelector {
       onChange: options.onChange || (() => {}),
       showSaveFilter: options.showSaveFilter !== false,
       showSearchFilters: options.showSearchFilters !== false,
-      showModeToggle: options.showModeToggle !== false,
+      showModeToggle: false, // Advanced toggle removed - always simple mode only
       defaultMode: options.defaultMode || 'simple'
     };
     
@@ -95,6 +95,12 @@ export class ScopeSelector {
    * @param {Object} scope - The scope to set
    */
   setScope(scope) {
+    // When advanced toggle is hidden, never use advanced mode
+    if (scope?.mode === 'advanced' && !this.options.showModeToggle) {
+      this.mode = 'simple';
+      // Don't load advanced state; simple scope may be empty
+      return;
+    }
     if (scope?.mode === 'advanced') {
       this.mode = 'advanced';
       this.booleanExpression = scope.booleanExpression || '';
@@ -396,6 +402,10 @@ export class ScopeSelector {
       return;
     }
 
+    // When advanced toggle is removed, always use simple mode
+    if (!this.options.showModeToggle) {
+      this.mode = 'simple';
+    }
     // Destroy existing boolean editor if switching modes
     if (this.booleanEditor && this.mode !== 'advanced') {
       this.booleanEditor.destroy();
@@ -404,29 +414,6 @@ export class ScopeSelector {
 
     this.container.innerHTML = `
       <div class="scope-selector">
-        ${this.options.showModeToggle ? `
-          <!-- Mode Toggle Row -->
-          <div class="scope-mode-toggle-row">
-            <div class="scope-mode-toggle">
-              <button class="scope-mode-btn ${this.mode === 'simple' ? 'active' : ''}" data-mode="simple">
-                Simple
-              </button>
-              <button class="scope-mode-btn ${this.mode === 'advanced' ? 'active' : ''}" data-mode="advanced">
-                Advanced
-              </button>
-            </div>
-            
-            ${this.mode === 'advanced' ? `
-              <button class="scope-tree-toggle ${this.advancedView === 'formatted' ? 'active' : ''}" title="Toggle tree view">
-                <svg viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.5">
-                  <path d="M4 2v12M4 8h8M4 13h8"/>
-                </svg>
-                <span>Format</span>
-              </button>
-            ` : ''}
-          </div>
-        ` : ''}
-        
         <!-- Simple Mode Panel -->
         <div class="scope-mode-panel ${this.mode === 'simple' ? 'active' : ''}" data-panel="simple">
           <!-- Search Input -->
@@ -1251,7 +1238,7 @@ export class ScopeSelector {
           </div>
           <div class="scope-save-dialog-body">
             <p class="scope-save-dialog-description">
-              Save your current selection as a reusable filter. You can apply this filter to monitors 
+              Save your current selection as a reusable filter. You can apply this filter to AI Briefings 
               and other searches throughout the app.
             </p>
             <p class="scope-save-dialog-summary">

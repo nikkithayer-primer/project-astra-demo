@@ -97,7 +97,7 @@ export class MonitorsView extends BaseView {
    */
   getMonitorsTabsConfig() {
     return [
-      { id: 'monitors', label: 'Monitors', href: '#/monitors?tab=monitors' },
+      { id: 'monitors', label: 'AI Briefings', href: '#/monitors?tab=monitors' },
       { id: 'alerts', label: 'Alerts', href: '#/monitors?tab=alerts' }
     ];
   }
@@ -283,11 +283,11 @@ export class MonitorsView extends BaseView {
     
     // Render the page header with tabs and action button
     const headerHtml = PageHeader.render({
-      title: 'Monitors',
+      title: 'AI Briefings',
       subtitle: 'Track entities and narratives with custom alert thresholds',
       tabs: this.getMonitorsTabsConfig(),
       activeTab: activeTab,
-      actions: '<button class="btn btn-small btn-primary" id="new-monitor-btn">+ New Monitor</button>'
+      actions: '<button class="btn btn-small btn-primary" id="new-monitor-btn">+ New AI Briefing</button>'
     });
     
     // Render content based on active tab

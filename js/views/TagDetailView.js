@@ -105,7 +105,7 @@ export class TagDetailView extends BaseView {
     }
     
     if (entities.monitors.length > 0) {
-      sections.push(this.renderSection('Monitors', entities.monitors, 'monitor', (m) => ({
+      sections.push(this.renderSection('AI Briefings', entities.monitors, 'monitor', (m) => ({
         title: m.name,
         href: `#/${m.id}/`,
         subtitle: m.description

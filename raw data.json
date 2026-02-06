@@ -1,0 +1,562 @@
+[
+  {
+    "name": "AOR",
+    "id": "AOR",
+    "filterable_count": 1,
+    "filters": [],
+    "document_count": 5
+  },
+  {
+    "name": "Message Type",
+    "id": "Message Type",
+    "filterable_count": 2,
+    "filters": [],
+    "document_count": 71
+  },
+  {
+    "name": "Author",
+    "id": "author",
+    "filterable_count": "100+",
+    "filters": [],
+    "document_count": 7728
+  },
+  {
+    "name": "Author ID",
+    "id": "author_id_str",
+    "filterable_count": 10,
+    "filters": [],
+    "document_count": 14
+  },
+  {
+    "name": "Author Name",
+    "id": "author_name",
+    "filterable_count": "100+",
+    "filters": [],
+    "document_count": 38639
+  },
+  {
+    "name": "Author Profile URL",
+    "id": "author_profile_url",
+    "filterable_count": 10,
+    "filters": [],
+    "document_count": 14
+  },
+  {
+    "name": "Author Username",
+    "id": "author_username",
+    "filterable_count": "100+",
+    "filters": [],
+    "document_count": 41898
+  },
+  {
+    "name": "Authors",
+    "id": "authors",
+    "filterable_count": 43,
+    "filters": [],
+    "document_count": 10880
+  },
+  {
+    "name": "Axis",
+    "id": "axis",
+    "filterable_count": 3,
+    "filters": [],
+    "document_count": 1656
+  },
+  {
+    "name": "Cable Classification",
+    "id": "cable_classification",
+    "filterable_count": 1,
+    "filters": [],
+    "document_count": 4
+  },
+  {
+    "name": "Cable Classification Data",
+    "id": "cable_classification_plain",
+    "filterable_count": 1,
+    "filters": [],
+    "document_count": 4
+  },
+  {
+    "name": "Cable Precedence",
+    "id": "cable_precedence",
+    "filterable_count": 3,
+    "filters": [],
+    "document_count": 70
+  },
+  {
+    "name": "Cable Precedence Plain",
+    "id": "cable_precedence_plain",
+    "filterable_count": 3,
+    "filters": [],
+    "document_count": 70
+  },
+  {
+    "name": "Category",
+    "id": "category",
+    "filterable_count": 4,
+    "filters": [],
+    "document_count": 113
+  },
+  {
+    "name": "Classification",
+    "id": "classification",
+    "filterable_count": 1,
+    "filters": [],
+    "document_count": 1
+  },
+  {
+    "name": "Confidence Level",
+    "id": "confidence_level",
+    "filterable_count": 1,
+    "filters": [],
+    "document_count": 1
+  },
+  {
+    "name": "Container ID",
+    "id": "container_id_str",
+    "filterable_count": 2,
+    "filters": [],
+    "document_count": 2
+  },
+  {
+    "name": "Container Name",
+    "id": "container_name",
+    "filterable_count": "100+",
+    "filters": [],
+    "document_count": 33156
+  },
+  {
+    "name": "Container Type",
+    "id": "container_type",
+    "filterable_count": 1,
+    "filters": [],
+    "document_count": 12
+  },
+  {
+    "name": "Content Category",
+    "id": "content_category",
+    "filterable_count": 1,
+    "filters": [],
+    "document_count": 100
+  },
+  {
+    "name": "Country",
+    "id": "country",
+    "filterable_count": 12,
+    "filters": [],
+    "document_count": 56
+  },
+  {
+    "name": "Data Source Name",
+    "id": "data_source_name",
+    "filterable_count": 18,
+    "filters": [],
+    "document_count": 978406
+  },
+  {
+    "name": "Discoverer",
+    "id": "discoverer",
+    "filterable_count": 1,
+    "filters": [],
+    "document_count": 1
+  },
+  {
+    "name": "Discovery Data",
+    "id": "discovery_date",
+    "filterable_count": 1,
+    "filters": [],
+    "document_count": 1
+  },
+  {
+    "name": "Document PM",
+    "id": "document_pm",
+    "filterable_count": 1,
+    "filters": [],
+    "document_count": 104
+  },
+  {
+    "name": "Document Scope",
+    "id": "document_scope",
+    "filterable_count": 2,
+    "filters": [],
+    "document_count": 1826
+  },
+  {
+    "name": "Document Type",
+    "id": "document_type",
+    "filterable_count": 3,
+    "filters": [],
+    "document_count": 2218
+  },
+  {
+    "name": "Extracted Animal",
+    "id": "extracted_animal",
+    "filterable_count": "100+",
+    "filters": [],
+    "document_count": 303
+  },
+  {
+    "name": "Extracted Communication Device",
+    "id": "extracted_communication_device",
+    "filterable_count": 66,
+    "filters": [],
+    "document_count": 425
+  },
+  {
+    "name": "Extracted Currency",
+    "id": "extracted_currency",
+    "filterable_count": "100+",
+    "filters": [],
+    "document_count": 353
+  },
+  {
+    "name": "Extracted Date Time Mention",
+    "id": "extracted_date_time_mention",
+    "filterable_count": "100+",
+    "filters": [],
+    "document_count": 5310
+  },
+  {
+    "name": "Extracted Disease",
+    "id": "extracted_disease",
+    "filterable_count": "100+",
+    "filters": [],
+    "document_count": 535
+  },
+  {
+    "name": "Extracted Facility",
+    "id": "extracted_facility",
+    "filterable_count": "100+",
+    "filters": [],
+    "document_count": 655
+  },
+  {
+    "name": "Extracted Incident",
+    "id": "extracted_incident",
+    "filterable_count": "100+",
+    "filters": [],
+    "document_count": 2552
+  },
+  {
+    "name": "Extracted Locations",
+    "id": "extracted_locations",
+    "filterable_count": "100+",
+    "filters": [],
+    "document_count": 676064
+  },
+  {
+    "name": "Extracted Miscellaneous",
+    "id": "extracted_miscellaneous",
+    "filterable_count": "100+",
+    "filters": [],
+    "document_count": 14777
+  },
+  {
+    "name": "Extracted Organism",
+    "id": "extracted_organism",
+    "filterable_count": "100+",
+    "filters": [],
+    "document_count": 283
+  },
+  {
+    "name": "Extracted Organizations",
+    "id": "extracted_organizations",
+    "filterable_count": "100+",
+    "filters": [],
+    "document_count": 383545
+  },
+  {
+    "name": "Extracted People",
+    "id": "extracted_people",
+    "filterable_count": "100+",
+    "filters": [],
+    "document_count": 318737
+  },
+  {
+    "name": "Extracted Substance",
+    "id": "extracted_substance",
+    "filterable_count": "100+",
+    "filters": [],
+    "document_count": 710
+  },
+  {
+    "name": "Extracted Vehicle",
+    "id": "extracted_vehicle",
+    "filterable_count": "100+",
+    "filters": [],
+    "document_count": 458
+  },
+  {
+    "name": "Extracted Weapon",
+    "id": "extracted_weapon",
+    "filterable_count": "100+",
+    "filters": [],
+    "document_count": 395
+  },
+  {
+    "name": "Key Topics",
+    "id": "key_topics",
+    "filterable_count": "100+",
+    "filters": [],
+    "document_count": 178
+  },
+  {
+    "name": "Label",
+    "id": "label",
+    "filterable_count": "100+",
+    "filters": [],
+    "document_count": 922
+  },
+  {
+    "name": "Moon",
+    "id": "moon",
+    "filterable_count": 1,
+    "filters": [],
+    "document_count": 1
+  },
+  {
+    "name": "NOTAM Airport",
+    "id": "notam_airport",
+    "filterable_count": 5,
+    "filters": [],
+    "document_count": 5
+  },
+  {
+    "name": "NOTAM Series ID",
+    "id": "notam_series_id",
+    "filterable_count": 1,
+    "filters": [],
+    "document_count": 1
+  },
+  {
+    "name": "Num Likes",
+    "id": "num_likes",
+    "filterable_count": 1,
+    "filters": [],
+    "document_count": 12
+  },
+  {
+    "name": "Oblast",
+    "id": "oblast",
+    "filterable_count": 4,
+    "filters": [],
+    "document_count": 130
+  },
+  {
+    "name": "Operation Name",
+    "id": "operation_name",
+    "filterable_count": 1,
+    "filters": [],
+    "document_count": 1
+  },
+  {
+    "name": "Orbit Period",
+    "id": "orbit_period",
+    "filterable_count": 1,
+    "filters": [],
+    "document_count": 1
+  },
+  {
+    "name": "Original Filename",
+    "id": "original_filename",
+    "filterable_count": "100+",
+    "filters": [],
+    "document_count": 775
+  },
+  {
+    "name": "Originator",
+    "id": "originator",
+    "filterable_count": 1,
+    "filters": [],
+    "document_count": 1
+  },
+  {
+    "name": "Page Type",
+    "id": "page_type",
+    "filterable_count": 1,
+    "filters": [],
+    "document_count": 7774
+  },
+  {
+    "name": "Parent Document ID",
+    "id": "parent_document_id",
+    "filterable_count": "100+",
+    "filters": [],
+    "document_count": 693
+  },
+  {
+    "name": "Platform",
+    "id": "platform",
+    "filterable_count": 3,
+    "filters": [],
+    "document_count": 16971
+  },
+  {
+    "name": "Provider",
+    "id": "provider",
+    "filterable_count": 2,
+    "filters": [],
+    "document_count": 14
+  },
+  {
+    "name": "Publication Country",
+    "id": "publication_country",
+    "filterable_count": "100+",
+    "filters": [],
+    "document_count": 171972
+  },
+  {
+    "name": "Publication Type",
+    "id": "publication_type",
+    "filterable_count": 11,
+    "filters": [],
+    "document_count": 172131
+  },
+  {
+    "name": "Publication URL",
+    "id": "publication_url",
+    "filterable_count": "100+",
+    "filters": [],
+    "document_count": 138726
+  },
+  {
+    "name": "Region",
+    "id": "region",
+    "filterable_count": 5,
+    "filters": [],
+    "document_count": 1526
+  },
+  {
+    "name": "Report Type",
+    "id": "report_type",
+    "filterable_count": 3,
+    "filters": [],
+    "document_count": 2119
+  },
+  {
+    "name": "Russian Objective",
+    "id": "russian_objective",
+    "filterable_count": 13,
+    "filters": [],
+    "document_count": 2985
+  },
+  {
+    "name": "Section Name",
+    "id": "section_name",
+    "filterable_count": 9,
+    "filters": [],
+    "document_count": 292
+  },
+  {
+    "name": "Section Type",
+    "id": "section_type",
+    "filterable_count": 14,
+    "filters": [],
+    "document_count": 2718
+  },
+  {
+    "name": "Series",
+    "id": "series",
+    "filterable_count": 2,
+    "filters": [],
+    "document_count": 2
+  },
+  {
+    "name": "Source Name",
+    "id": "source_name",
+    "filterable_count": "100+",
+    "filters": [],
+    "document_count": 884108
+  },
+  {
+    "name": "Space",
+    "id": "space",
+    "filterable_count": "100+",
+    "filters": [],
+    "document_count": 7535
+  },
+  {
+    "name": "Space Key",
+    "id": "space_key",
+    "filterable_count": "100+",
+    "filters": [],
+    "document_count": 7533
+  },
+  {
+    "name": "Status",
+    "id": "status",
+    "filterable_count": 1,
+    "filters": [],
+    "document_count": 7774
+  },
+  {
+    "name": "Target Region",
+    "id": "target_region",
+    "filterable_count": 1,
+    "filters": [],
+    "document_count": 1
+  },
+  {
+    "name": "Title PM",
+    "id": "title_pm",
+    "filterable_count": 1,
+    "filters": [],
+    "document_count": 104
+  },
+  {
+    "name": "Top Language",
+    "id": "top_language",
+    "filterable_count": 14,
+    "filters": [],
+    "document_count": 618923
+  },
+  {
+    "name": "Tweet Newline Removal Experimental Group",
+    "id": "tweet_newline_removal_experimental_group",
+    "filterable_count": 2,
+    "filters": [],
+    "document_count": 10798
+  },
+  {
+    "name": "Tweet Newline Removal Topic",
+    "id": "tweet_newline_removal_topic",
+    "filterable_count": 3,
+    "filters": [],
+    "document_count": 10798
+  },
+  {
+    "name": "Tweet Parent Merging Experimental Group",
+    "id": "tweet_parent_merging_experimental_group",
+    "filterable_count": 2,
+    "filters": [],
+    "document_count": 36172
+  },
+  {
+    "name": "Tweet Parent Merging Topic",
+    "id": "tweet_parent_merging_topic",
+    "filterable_count": 3,
+    "filters": [],
+    "document_count": 36172
+  },
+  {
+    "name": "Type",
+    "id": "type",
+    "filterable_count": 1,
+    "filters": [],
+    "document_count": 1
+  },
+  {
+    "name": "User",
+    "id": "user",
+    "filterable_count": 1,
+    "filters": [],
+    "document_count": 1
+  },
+  {
+    "name": "Vendor ID",
+    "id": "vendor_id",
+    "filterable_count": 1,
+    "filters": [],
+    "document_count": 33
+  }
+]

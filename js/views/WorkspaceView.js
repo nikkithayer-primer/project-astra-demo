@@ -6,7 +6,6 @@
 import { DetailViewBase } from './DetailViewBase.js';
 import { DataService } from '../data/DataService.js';
 import { PageHeader } from '../utils/PageHeader.js';
-import { StatCards } from '../components/StatCards.js';
 import {
   CardManager,
   NetworkGraphCard,
@@ -68,10 +67,6 @@ export class WorkspaceView extends DetailViewBase {
       ? '<span class="badge badge-status-paused">Archived</span>'
       : '<span class="badge badge-status-active">Active</span>';
 
-    // Build stats for the header with dropdown support
-    const contextId = this.workspaceId;
-    const statsData = StatCards.buildEntityStatsWithItems(data, contextId);
-
     const headerHtml = PageHeader.render({
       breadcrumbs: [
         { label: 'Workspaces', href: '#/workspaces' },
@@ -81,10 +76,6 @@ export class WorkspaceView extends DetailViewBase {
       badge: statusBadge,
       subtitle: subtitleParts,
       description: workspace.description,
-      stats: statsData,
-      statsMode: 'dropdowns',
-      statsContextId: contextId,
-      tagsContainerId: 'workspace-tags-container',
       tabs: tabsConfig,
       activeTab: activeTab
     });
@@ -106,12 +97,7 @@ export class WorkspaceView extends DetailViewBase {
     const components = this.cardManager.initializeAll();
     Object.assign(this.components, components);
 
-    // Initialize stat card dropdowns
-    this.initStatDropdowns(contextId, this.workspaceId);
-
-    // Initialize tag chips
-    this.initTagChips(workspace, 'workspace');
-  }
+    }
 
   /**
    * Fetch all data for the workspace

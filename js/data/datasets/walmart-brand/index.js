@@ -93,9 +93,7 @@ export const datasetName = 'Walmart Brand';
 
 // Default settings for this dataset
 export const defaultSettings = {
-  copEnabled: true,
   defaultStartPage: 'monitors',
-  defaultViewTab: 'dashboard',
   showClassification: false
 };
 

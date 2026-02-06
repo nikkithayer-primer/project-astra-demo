@@ -68,7 +68,6 @@ export class ThemeView extends DetailViewBase {
       descriptionLink: theme.description 
         ? `<a href="#" class="btn btn-small btn-secondary source-link" data-source-type="theme" data-source-id="${theme.id}">View source</a>` 
         : '',
-      tagsContainerId: 'theme-tags-container',
       tabs: tabsConfig,
       activeTab: activeTab
     });
@@ -100,9 +99,7 @@ export class ThemeView extends DetailViewBase {
     const components = this.cardManager.initializeAll();
     Object.assign(this.components, components);
 
-    // Initialize tag chips
-    this.initTagChips(theme, 'theme');
-  }
+    }
 
   /**
    * Fetch all data related to the theme
