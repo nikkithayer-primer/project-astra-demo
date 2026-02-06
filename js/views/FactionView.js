@@ -6,6 +6,7 @@
 import { DetailViewBase } from './DetailViewBase.js';
 import { DataService } from '../data/DataService.js';
 import { PageHeader } from '../utils/PageHeader.js';
+import { StatCards } from '../components/StatCards.js';
 import {
   CardManager,
   NetworkGraphCard,
@@ -57,6 +58,10 @@ export class FactionView extends DetailViewBase {
       faction.name
     ]);
 
+    // Build stats for the header with dropdown support
+    const contextId = this.context?.id || null;
+    const statsData = StatCards.buildEntityStatsWithItems(data, contextId);
+
     // Build page header with tabs
     const headerHtml = PageHeader.render({
       breadcrumbs,
@@ -67,6 +72,10 @@ export class FactionView extends DetailViewBase {
       descriptionLink: faction.description 
         ? `<a href="#" class="btn btn-small btn-secondary source-link" data-source-type="faction" data-source-id="${faction.id}">View source</a>` 
         : '',
+      tagsContainerId: 'faction-tags-container',
+      stats: statsData,
+      statsMode: 'dropdowns',
+      statsContextId: contextId,
       tabs: tabsConfig,
       activeTab: activeTab
     });
@@ -81,6 +90,9 @@ export class FactionView extends DetailViewBase {
       </div>
     `;
 
+    // Initialize stat card dropdowns
+    this.initStatDropdowns(contextId, this.factionId);
+
     // Initialize card width toggles
     this.initCardWidthToggles('faction', this.factionId);
 
@@ -88,7 +100,9 @@ export class FactionView extends DetailViewBase {
     const components = this.cardManager.initializeAll();
     Object.assign(this.components, components);
 
-    }
+    // Initialize tag chips
+    this.initTagChips(faction, 'faction');
+  }
 
   /**
    * Fetch all data related to the faction

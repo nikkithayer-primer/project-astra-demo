@@ -98,7 +98,7 @@ export class DocumentsView extends BaseView {
     // Build page header using shared utility
     const headerHtml = PageHeader.render({
       breadcrumbs: [
-        { label: 'AI Briefings', href: '#/monitors' },
+        { label: 'Common Operating Picture', href: '#/cop' },
         'Documents'
       ],
       title: 'Documents',

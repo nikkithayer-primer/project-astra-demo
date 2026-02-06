@@ -7,6 +7,7 @@ import { DetailViewBase } from './DetailViewBase.js';
 import { DataService } from '../data/DataService.js';
 import { PageHeader } from '../utils/PageHeader.js';
 import { aggregateFactionSentiment } from '../utils/volumeDataUtils.js';
+import { StatCards } from '../components/StatCards.js';
 import {
   CardManager,
   NetworkGraphCard,
@@ -79,6 +80,10 @@ export class EventView extends DetailViewBase {
     breadcrumbItems.push(this.truncateText(event.text, 40));
     const breadcrumbs = this.buildBreadcrumbs(breadcrumbItems);
 
+    // Build stats for the header with dropdown support
+    const contextId = this.context?.id || null;
+    const statsData = StatCards.buildEntityStatsWithItems(data, contextId);
+
     // Build page header with tabs
     const headerHtml = PageHeader.render({
       breadcrumbs,
@@ -88,6 +93,10 @@ export class EventView extends DetailViewBase {
       descriptionLink: event.description 
         ? `<a href="#" class="btn btn-small btn-secondary source-link" data-source-type="event" data-source-id="${event.id}">View source</a>` 
         : '',
+      tagsContainerId: 'event-tags-container',
+      stats: statsData,
+      statsMode: 'dropdowns',
+      statsContextId: contextId,
       tabs: tabsConfig,
       activeTab: activeTab
     });
@@ -112,6 +121,9 @@ export class EventView extends DetailViewBase {
       </div>
     `;
 
+    // Initialize stat card dropdowns
+    this.initStatDropdowns(contextId, this.eventId);
+
     // Initialize card width toggles
     this.initCardWidthToggles('event', this.eventId);
 
@@ -119,7 +131,9 @@ export class EventView extends DetailViewBase {
     const components = this.cardManager.initializeAll();
     Object.assign(this.components, components);
 
-    }
+    // Initialize tag chips
+    this.initTagChips(event, 'event');
+  }
 
   /**
    * Fetch all data related to the event

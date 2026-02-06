@@ -8,6 +8,7 @@ import { DataService } from '../data/DataService.js';
 import { dataStore } from '../data/DataStore.js';
 import { TimeRangeFilter } from '../components/TimeRangeFilter.js';
 import { ScopeSelector } from '../components/ScopeSelector.js';
+import { PageHeader } from '../utils/PageHeader.js';
 import { formatDate } from '../utils/formatters.js';
 
 export class SearchView extends BaseView {
@@ -71,8 +72,19 @@ export class SearchView extends BaseView {
     const canSearch = hasScope || hasQuery;
     const scopeItemCount = hasScope ? this.getScopeItemCount(currentScope) : 0;
 
+    const headerHtml = PageHeader.render({
+      breadcrumbs: [
+        { label: 'Common Operating Picture', href: '#/cop' },
+        'Search'
+      ],
+      title: 'Search',
+      description: 'Search documents to create a workspace'
+    });
+
     this.container.innerHTML = `
-      <div class="content-area search-page-content">
+      ${headerHtml}
+      
+      <div class="content-area">
         <div class="search-page-container">
           <!-- Text Search Input -->
           <div class="search-bar-row">

@@ -8,6 +8,7 @@ import { BaseView } from './BaseView.js';
 import { DataService } from '../data/DataService.js';
 import { initAllCardToggles } from '../utils/cardWidthToggle.js';
 import { formatDateWithYear } from '../utils/formatters.js';
+import { StatCards } from '../components/StatCards.js';
 import {
   CardManager,
   NarrativeListCard,
@@ -51,13 +52,18 @@ export class DashboardView extends BaseView {
     // Set up card components
     this.setupDashboardCards(dashboardData, stats);
 
+    // Get full entity data for stat card dropdowns
+    const statsEntityData = this.fetchStatsData(tagFilter);
+    const statsData = StatCards.buildDashboardStatsWithItems(statsEntityData);
+
     this.container.innerHTML = `
-      <div class="page-header page-header-with-tabs">
+      <div class="page-header page-header-with-tabs page-header-with-stats">
         <div class="page-header-top-row">
           <div class="page-header-content">
             <h1>${datasetName}</h1>
             <p class="subtitle">${subtitle}</p>
           </div>
+          ${StatCards.renderDropdowns(statsData)}
         </div>
         <div class="page-header-tabs page-header-filters">
           <div class="filter-group mission-filter-group">
@@ -101,6 +107,9 @@ export class DashboardView extends BaseView {
       3: 'half', // Trending Topics - half width
       4: 'half'  // Events & Locations Map - half width
     });
+
+    // Initialize stat card dropdowns
+    this._statDropdowns = StatCards.initDropdowns(this.container);
 
     // Initialize all card components
     const components = this.cardManager.initializeAll();
@@ -425,6 +434,11 @@ export class DashboardView extends BaseView {
   }
 
   destroy() {
+    // Clean up stat dropdowns
+    if (this._statDropdowns) {
+      this._statDropdowns.forEach(d => d.destroy && d.destroy());
+      this._statDropdowns = null;
+    }
     this.cardManager.destroyAll();
     super.destroy();
   }

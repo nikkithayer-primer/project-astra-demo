@@ -14,12 +14,12 @@ class DataStore {
     
     // Safely read from localStorage with fallbacks
     try {
-      this.currentDataset = localStorage.getItem(this.datasetKey) || 'walmart-brand';
-      this.currentDatasetName = localStorage.getItem(this.datasetNameKey) || 'Walmart Brand';
+      this.currentDataset = localStorage.getItem(this.datasetKey) || 'singapore-mco';
+      this.currentDatasetName = localStorage.getItem(this.datasetNameKey) || 'Singapore MCO';
     } catch (e) {
       console.error('DataStore: Failed to read from localStorage:', e);
-      this.currentDataset = 'walmart-brand';
-      this.currentDatasetName = 'Walmart Brand';
+      this.currentDataset = 'singapore-mco';
+      this.currentDatasetName = 'Singapore MCO';
     }
     
     this.data = this.load();
@@ -52,7 +52,9 @@ class DataStore {
    */
   getDefaultSettings() {
     return {
-      defaultStartPage: 'monitors',  // 'monitors' or 'search'
+      copEnabled: true,              // Enable Common Operating Picture (global view)
+      defaultStartPage: 'cop',       // 'cop' or 'monitors'
+      defaultViewTab: 'dashboard',   // 'dashboard' or 'documents' (view tab, not COP)
       showClassification: true,      // Show portion marks and classification
       autoSummary: false,            // Auto-generate AI summary on page navigation
       suggestedQuestions: true       // Show suggested questions in chat

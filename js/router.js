@@ -14,6 +14,7 @@
  * See docs/ROUTING.md for full specification
  */
 
+import { DashboardView } from './views/DashboardView.js';
 import { NarrativeView } from './views/NarrativeView.js';
 import { escapeHtml } from './utils/htmlUtils.js';
 import { ThemeView } from './views/ThemeView.js';
@@ -33,6 +34,8 @@ import { SearchView } from './views/SearchView.js';
 import { ProjectsView } from './views/ProjectsView.js';
 import { ProjectView } from './views/ProjectView.js';
 import { TopicView } from './views/TopicView.js';
+import { TagsView } from './views/TagsView.js';
+import { TagDetailView } from './views/TagDetailView.js';
 import { ActivityFeedView } from './views/ActivityFeedView.js';
 import { initStickyHeader, destroyStickyHeader } from './utils/stickyHeader.js';
 import { TimeRangeFilter } from './components/TimeRangeFilter.js';
@@ -57,13 +60,14 @@ const ENTITY_VIEW_MAP = {
   'organization': { view: OrganizationView, listType: 'entities' },
   'document': { view: DocumentView, listType: 'documents' },
   'topic': { view: TopicView, listType: 'topics' },
+  'tag': { view: TagDetailView, listType: 'tags' },
   'monitor': { view: MonitorView, listType: 'monitors' },
   'workspace': { view: WorkspaceView, listType: 'workspaces' },
   'project': { view: ProjectView, listType: 'projects' }
 };
 
 // Top-level routes that don't follow the ID-based pattern
-const TOP_LEVEL_ROUTES = ['workspaces', 'monitors', 'search', 'projects', 'activity', 'documents', 'tags', 'settings', 'status', 'cop'];
+const TOP_LEVEL_ROUTES = ['workspaces', 'monitors', 'search', 'projects', 'activity', 'documents', 'settings', 'data-model', 'component-demos', 'status', 'cop'];
 
 export class Router {
   constructor(containerId) {
@@ -149,7 +153,7 @@ export class Router {
         <div class="content-area">
           <div class="card">
             <div class="card-body" style="padding: var(--space-2xl); text-align: center;">
-              <p>Try <a href="#/monitors">returning to AI Briefings</a> or refreshing the page.</p>
+              <p>Try <a href="#/cop/">returning to the Common Operating Picture</a> or refreshing the page.</p>
             </div>
           </div>
         </div>
@@ -171,7 +175,12 @@ export class Router {
     try {
       // Get default page from settings
       const settings = dataStore.getSettings();
-      const defaultPage = settings.defaultStartPage || 'monitors';
+      let defaultPage = settings.defaultStartPage || 'monitors';
+      
+      // If COP is disabled and was set as start page, fall back to monitors
+      if (!settings.copEnabled && (defaultPage === 'cop' || defaultPage === 'dashboard')) {
+        defaultPage = 'monitors';
+      }
       
       // Navigate to current hash or default based on settings
       if (!window.location.hash || window.location.hash === '#/') {
@@ -529,7 +538,7 @@ export class Router {
         type: 'cop', 
         id: null, 
         documentIds: null,
-        getName: () => 'All'
+        getName: () => 'Common Operating Picture'
       };
     }
     
@@ -623,7 +632,7 @@ export class Router {
     parts.push(...entityIds.filter(Boolean));
     
     if (parts.length === 0) {
-      return '#/monitors';
+      return '#/cop/';
     }
     
     return `#/${parts.join('/')}/`;
@@ -639,7 +648,10 @@ export class Router {
 
     // No hash or empty path: redirect to dataset's default start page
     if (!rawHash || rawHash === '/') {
-      const defaultPage = settings.defaultStartPage || 'monitors';
+      let defaultPage = settings.defaultStartPage || 'monitors';
+      if (!settings.copEnabled && defaultPage === 'cop') {
+        defaultPage = 'monitors';
+      }
       window.location.hash = `#/${defaultPage}`;
       return;
     }
@@ -654,14 +666,15 @@ export class Router {
     // Parse the route using ID-based parser
     const parsed = this.parseIdBasedRoute(hash);
 
-    // Explicit COP route: redirect to monitors (COP removed)
-    if (parsed.topLevelRoute === 'cop') {
+    // Check for COP disabled with COP-scoped route
+    if (parsed.contextType === 'cop' && !parsed.topLevelRoute && !settings.copEnabled) {
+      // COP is disabled and route requires COP - show 404 or redirect
       window.location.hash = '#/monitors';
       return;
     }
 
     // Determine the primary route for nav link highlighting
-    this.currentRoute = parsed.topLevelRoute || parsed.contextType || 'monitors';
+    this.currentRoute = parsed.topLevelRoute || parsed.contextType || 'cop';
     this.currentContext = this.resolveContextScope(parsed.contextId, parsed.projectChain || []);
 
     // Destroy current view and clean up sticky header
@@ -690,12 +703,14 @@ export class Router {
       console.error('Router: Error updating nav links:', e);
     }
     
-    // Determine tab based on sub-route or query params (default: documents)
-    let tab = 'documents';
+    // Determine tab based on sub-route or query params
+    let tab = 'dashboard';
     if (parsed.subRoute === 'documents') {
       tab = 'documents';
     } else if (queryParams.tab) {
       tab = queryParams.tab;
+    } else if (settings.defaultViewTab) {
+      tab = settings.defaultViewTab;
     }
     
     // Common options with filters and context
@@ -706,29 +721,25 @@ export class Router {
       context: this.currentContext // Pass context scope to views
     };
 
-    // Track if this is the COP home for filter initialization (COP removed; kept for entity-scoped routes)
+    // Track if this is the COP home for filter initialization
     let isCopHome = false;
 
     // Route based on parsed structure
     if (parsed.topLevelRoute) {
       // Handle top-level routes (workspaces, monitors, search, etc.)
       this._handleTopLevelRoute(parsed.topLevelRoute, filterOptions, settings);
-    } else if (parsed.isContextHome || parsed.entityId) {
+    } else if (parsed.isCopHome || parsed.isContextHome || parsed.entityId) {
       // Handle ID-based routes
       this._handleIdBasedRoute(parsed, filterOptions, settings);
       isCopHome = parsed.isCopHome;
     } else {
       // No recognized route - redirect to default
-      const defaultPage = settings.defaultStartPage || 'monitors';
+      let defaultPage = settings.defaultStartPage || 'monitors';
+      if (!settings.copEnabled && defaultPage === 'cop') {
+        defaultPage = 'monitors';
+      }
       window.location.hash = `#/${defaultPage}`;
       return;
-    }
-
-    // Show/hide search-page UI (no header, no chat) when on search route
-    if (this.currentRoute === 'search') {
-      document.body.classList.add('search-page');
-    } else {
-      document.body.classList.remove('search-page');
     }
 
     // Render the view
@@ -736,7 +747,10 @@ export class Router {
       try {
         this.currentView.render();
         
-        // Dashboard filters removed with COP
+        // Initialize COP filters after render (only for COP home)
+        if (isCopHome) {
+          this.initDashboardFilters();
+        }
       } catch (e) {
         console.error(`Router: Error rendering view:`, e);
         this.showErrorPage('Page Error', `An error occurred while loading this page.`);
@@ -765,8 +779,8 @@ export class Router {
    * Handle top-level routes (not scoped to a context)
    */
   _handleTopLevelRoute(route, filterOptions, settings) {
-    // Auto-close chat for search, workspaces, and projects list views
-    if (route === 'search' || route === 'workspaces' || route === 'projects') {
+    // Auto-close chat for workspaces and projects list views
+    if (route === 'workspaces' || route === 'projects') {
       window.app?.toggleChat(false);
     }
     
@@ -795,22 +809,25 @@ export class Router {
         this.currentView = new DocumentsView(this.container, filterOptions);
         break;
         
-      case 'tags':
-        window.location.hash = '#/monitors';
+      case 'data-model':
+        window.location.href = 'data-model.html';
         return;
         
-      case 'cop':
-        // COP removed - redirect to monitors
-        window.location.hash = '#/monitors';
+      case 'component-demos':
+        window.location.href = 'component-demos.html';
         return;
         
       case 'status':
-        window.location.hash = '#/monitors';
+        // Redirect to COP
+        window.location.hash = '#/cop/';
         return;
         
       default:
         // Unknown top-level route - redirect to default
-        const defaultPage = settings.defaultStartPage || 'monitors';
+        let defaultPage = settings.defaultStartPage || 'monitors';
+        if (!settings.copEnabled && defaultPage === 'cop') {
+          defaultPage = 'monitors';
+        }
         window.location.hash = `#/${defaultPage}`;
     }
   }
@@ -822,9 +839,13 @@ export class Router {
   _handleIdBasedRoute(parsed, filterOptions, settings) {
     const { contextId, contextType, entityId, entityType, isCopHome, isContextHome } = parsed;
     
-    // COP home - redirect to monitors (COP removed)
+    // COP home
     if (isCopHome) {
-      window.location.hash = '#/monitors';
+      if (!settings.copEnabled) {
+        window.location.hash = '#/monitors';
+        return;
+      }
+      this.currentView = new DashboardView(this.container, filterOptions);
       return;
     }
     
@@ -846,11 +867,6 @@ export class Router {
     
     // Entity detail view
     if (entityId && entityType) {
-      // Tags removed - redirect to monitors
-      if (entityType === 'tag') {
-        window.location.hash = '#/monitors';
-        return;
-      }
       // Documents require a context - redirect context-less document routes to documents view
       if (entityType === 'document' && !contextId) {
         window.location.hash = `#/documents?doc=${entityId}`;
@@ -882,6 +898,8 @@ export class Router {
       // Check if this link matches the current route/context
       const matches = 
         linkRoute === route ||
+        linkRoute === 'cop' && route === 'cop' ||
+        linkRoute === 'cop/' && route === 'cop' ||
         linkRoute === 'monitors' && (route === 'monitors' || route === 'monitor') ||
         linkRoute === 'workspaces' && (route === 'workspaces' || route === 'workspace') ||
         linkRoute === 'projects' && (route === 'projects' || route === 'project');
@@ -916,7 +934,7 @@ export class Router {
    * @returns {Object} Parsed route with context, entityType, entityId, etc.
    */
   getCurrentRoute() {
-    const fullHash = window.location.hash.slice(2) || 'monitors';
+    const fullHash = window.location.hash.slice(2) || 'cop';
     const queryIndex = fullHash.indexOf('?');
     const hash = queryIndex === -1 ? fullHash : fullHash.slice(0, queryIndex);
     const queryParams = this.parseQueryParams(fullHash);
@@ -945,7 +963,7 @@ export class Router {
    * @returns {string} The full hash URL
    */
   buildUrl(params = {}) {
-    const fullHash = window.location.hash.slice(2) || 'monitors';
+    const fullHash = window.location.hash.slice(2) || 'cop';
     const queryIndex = fullHash.indexOf('?');
     const basePath = queryIndex === -1 ? `#/${fullHash}` : `#/${fullHash.slice(0, queryIndex)}`;
     

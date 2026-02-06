@@ -120,7 +120,7 @@ export class BaseView {
         breadcrumbs.push({ label: 'Workspaces', href: '#/workspaces' });
         breadcrumbs.push({ label: ctx.getName(), href: `#/${ctx.id}/` });
       } else if (ctx.type === 'monitor') {
-        breadcrumbs.push({ label: 'AI Briefings', href: '#/monitors' });
+        breadcrumbs.push({ label: 'Monitors', href: '#/monitors' });
         breadcrumbs.push({ label: ctx.getName(), href: `#/${ctx.id}/` });
       } else if (ctx.type === 'project') {
         breadcrumbs.push({ label: 'Projects', href: '#/projects' });
@@ -401,10 +401,10 @@ export class BaseView {
 
   /**
    * Get the current active tab from options
-   * @returns {string} Current tab ID (defaults to 'documents')
+   * @returns {string} Current tab ID (defaults to 'dashboard')
    */
   getCurrentTab() {
-    return this.options.tab || 'documents';
+    return this.options.tab || 'dashboard';
   }
 
   /**
@@ -415,8 +415,9 @@ export class BaseView {
     const hash = window.location.hash;
     const baseHash = hash.split('?')[0];
     
-    // Build new URL with tab parameter (documents is default, omit from URL)
-    if (tabName === 'documents') {
+    // Build new URL with tab parameter
+    if (tabName === 'dashboard') {
+      // Default tab - no need to include in URL
       window.location.hash = baseHash;
     } else {
       window.location.hash = `${baseHash}?tab=${encodeURIComponent(tabName)}`;
@@ -432,11 +433,15 @@ export class BaseView {
   getTabsConfig(baseHref, hasDocuments = true) {
     if (!hasDocuments) return null;
     
+    const settings = dataStore.getSettings();
     const dashboardTab = { id: 'dashboard', label: 'Dashboard', href: `${baseHref}?tab=dashboard` };
-    const documentsTab = { id: 'documents', label: 'Documents', href: `${baseHref}` };
+    const documentsTab = { id: 'documents', label: 'Documents', href: `${baseHref}?tab=documents` };
     
-    // Documents always first (leftmost), then Dashboard
-    return [documentsTab, dashboardTab];
+    // Order tabs with default tab first (leftmost)
+    if (settings.defaultViewTab === 'documents') {
+      return [documentsTab, dashboardTab];
+    }
+    return [dashboardTab, documentsTab];
   }
 
   /**

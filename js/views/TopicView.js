@@ -6,6 +6,7 @@
 import { DetailViewBase } from './DetailViewBase.js';
 import { DataService } from '../data/DataService.js';
 import { PageHeader } from '../utils/PageHeader.js';
+import { StatCards } from '../components/StatCards.js';
 import {
   CardManager,
   BulletPointsCard,
@@ -65,6 +66,10 @@ export class TopicView extends DetailViewBase {
       topic.headline
     ]);
 
+    // Build stats for the header with dropdown support
+    const contextId = this.context?.id || null;
+    const statsData = StatCards.buildEntityStatsWithItems(data, contextId);
+
     // Build page header with tabs
     const headerHtml = PageHeader.render({
       breadcrumbs,
@@ -74,6 +79,10 @@ export class TopicView extends DetailViewBase {
       descriptionLink: topic.description 
         ? `<a href="#" class="btn btn-small btn-secondary source-link" data-source-type="topic" data-source-id="${topic.id}">View source</a>` 
         : '',
+      tagsContainerId: 'topic-tags-container',
+      stats: statsData,
+      statsMode: 'dropdowns',
+      statsContextId: contextId,
       tabs: tabsConfig,
       activeTab: activeTab
     });
@@ -88,6 +97,9 @@ export class TopicView extends DetailViewBase {
       </div>
     `;
 
+    // Initialize stat card dropdowns
+    this.initStatDropdowns(contextId, this.topicId);
+
     // Initialize card width toggles
     this.initCardWidthToggles('topic', this.topicId);
 
@@ -95,7 +107,9 @@ export class TopicView extends DetailViewBase {
     const components = this.cardManager.initializeAll();
     Object.assign(this.components, components);
 
-    }
+    // Initialize tag chips
+    this.initTagChips(topic, 'topic');
+  }
 
   /**
    * Fetch all data related to the topic

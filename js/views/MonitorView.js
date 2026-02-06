@@ -7,6 +7,7 @@ import { DetailViewBase } from './DetailViewBase.js';
 import { DataService } from '../data/DataService.js';
 import { PageHeader } from '../utils/PageHeader.js';
 import { initAllCardToggles } from '../utils/cardWidthToggle.js';
+import { StatCards } from '../components/StatCards.js';
 import {
   CardManager,
   NetworkGraphCard,
@@ -173,9 +174,13 @@ export class MonitorView extends DetailViewBase {
       scopeLabel ? `<span class="text-muted">Scope: ${scopeLabel}</span>` : ''
     ].filter(Boolean).join(' ');
 
+    // Build stats for the header with dropdown support
+    const contextId = this.monitorId;
+    const statsData = StatCards.buildEntityStatsWithItems(data, contextId);
+
     const headerHtml = PageHeader.render({
       breadcrumbs: [
-        { label: 'AI Briefings', href: '#/monitors' },
+        { label: 'Monitors', href: '#/monitors' },
         monitor.name
       ],
       title: monitor.name,
@@ -184,6 +189,10 @@ export class MonitorView extends DetailViewBase {
         : `<span class="badge badge-status-paused">Paused</span>`,
       subtitle: subtitleParts,
       description: monitor.description,
+      stats: statsData,
+      statsMode: 'dropdowns',
+      statsContextId: contextId,
+      tagsContainerId: 'monitor-tags-container',
       tabs: tabsConfig,
       activeTab: activeTab
     });
@@ -210,6 +219,9 @@ export class MonitorView extends DetailViewBase {
     const components = this.cardManager.initializeAll();
     Object.assign(this.components, components);
 
+    // Initialize stat card dropdowns
+    this.initStatDropdowns(contextId, this.monitorId);
+
     // Set up description toggle for narratives (Dashboard tab)
     if (this.isDashboardTab()) {
       const descToggle = this.container.querySelector('#narrative-desc-toggle');
@@ -221,7 +233,9 @@ export class MonitorView extends DetailViewBase {
       }
     }
 
-    }
+    // Initialize tag chips
+    this.initTagChips(monitor, 'monitor');
+  }
 
   /**
    * Fetch all data related to the monitor
@@ -439,14 +453,18 @@ export class MonitorView extends DetailViewBase {
    * Override getTabsConfig to include Alerts tab for monitors
    */
   getMonitorTabsConfig(baseHref, hasAlerts, hasDocuments) {
-    const tabs = [];
-    if (hasDocuments) {
-      tabs.push({ id: 'documents', label: 'Documents', href: baseHref });
-    }
-    tabs.push({ id: 'dashboard', label: 'Dashboard', href: `${baseHref}?tab=dashboard` });
+    const tabs = [
+      { id: 'dashboard', label: 'Dashboard', href: `${baseHref}?tab=dashboard` }
+    ];
+    
     if (hasAlerts) {
       tabs.push({ id: 'alerts', label: 'Alerts', href: `${baseHref}?tab=alerts` });
     }
+    
+    if (hasDocuments) {
+      tabs.push({ id: 'documents', label: 'Documents', href: `${baseHref}?tab=documents` });
+    }
+    
     return tabs;
   }
 

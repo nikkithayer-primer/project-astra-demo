@@ -101,7 +101,7 @@ export function buildIdRoute(contextId, ...entityIds) {
   parts.push(...entityIds.filter(Boolean));
   
   if (parts.length === 0) {
-    return '#/monitors';
+    return '#/cop/';
   }
   
   return `#/${parts.join('/')}/`;
@@ -220,7 +220,7 @@ export function getEntityTypeDisplayName(type) {
     'alert': 'Alert',
     'user': 'User',
     'tag': 'Tag',
-    'cop': 'All'
+    'cop': 'Common Operating Picture'
   };
   
   return displayNames[type] || type;
