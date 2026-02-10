@@ -28,12 +28,12 @@
 <body>
   <nav class="top-navbar">
     <div class="navbar-left">
-      <a href="index.html#/cop/" class="logo">
+      <a href="index.html#/situational-picture/" class="logo">
         <img src="img/logo.png" alt="Primer" class="logo-img">
       </a>
       
       <div class="navbar-links">
-        <a href="index.html#/cop/" class="nav-link">
+        <a href="index.html#/situational-picture/" class="nav-link">
           <svg class="nav-icon" viewBox="0 0 16 16" fill="none" stroke="var(--text-secondary)" stroke-width="1">
             <rect x="1" y="1" width="6" height="6" rx="1"/>
             <rect x="9" y="1" width="6" height="6" rx="1"/>
@@ -1468,7 +1468,7 @@
             <div class="entity-icon" style="background: rgba(245, 158, 11, 0.2); color: var(--color-faction);">◇</div>
             <div class="entity-info">
               <h3>FactionOverlap</h3>
-              <p>Represents overlapping membership or shared sentiment between factions</p>
+              <p>Represents overlapping membership or shared stance between factions</p>
             </div>
           </header>
           <div class="entity-body">
@@ -1491,7 +1491,7 @@
                 <span class="field-name">sharedSentiment</span>
                 <div class="field-meta">
                   <span class="field-type">object</span>
-                  <p class="field-desc">Shared sentiment by narrative: <code>{ narrativeId: sentimentScore }</code></p>
+                  <p class="field-desc">Shared stance by narrative: <code>{ narrativeId: stanceScore }</code></p>
                 </div>
               </li>
             </ul>
@@ -1658,7 +1658,7 @@
                 <span class="field-name">scope.narrativeIds</span>
                 <div class="field-meta">
                   <span class="field-type">string[] (UUID)</span>
-                  <p class="field-desc">Watch specific narratives for updates, volume spikes, or sentiment changes</p>
+                  <p class="field-desc">Watch specific narratives for updates, volume spikes, or stance changes</p>
                 </div>
               </li>
               <li class="field-item">
@@ -1740,7 +1740,7 @@
                   <span class="field-type required">object</span>
                   <p class="field-desc">Conditions that generate alerts</p>
                   <p class="field-enum">
-                    <code>newNarrative</code> <code>newEvent</code> <code>volumeSpike</code> <code>sentimentShift</code> <code>factionEngagement</code>
+                    <code>newNarrative</code> <code>newEvent</code> <code>volumeSpike</code> <code>stanceShift</code> <code>factionEngagement</code>
                   </p>
                 </div>
               </li>
@@ -1752,7 +1752,7 @@
                 </div>
               </li>
               <li class="field-item">
-                <span class="field-name">triggers.sentimentShift</span>
+                <span class="field-name">triggers.stanceShift</span>
                 <div class="field-meta">
                   <span class="field-type">object</span>
                   <p class="field-desc">Sentiment change trigger { threshold: number, direction: enum }</p>
@@ -1852,7 +1852,7 @@
                   <span class="field-type required">enum</span>
                   <p class="field-desc">Type of trigger that fired</p>
                   <p class="field-enum">
-                    <code>volume_spike</code> <code>sentiment_shift</code> <code>new_narrative</code> <code>new_event</code> <code>faction_engagement</code>
+                    <code>volume_spike</code> <code>stance_shift</code> <code>new_narrative</code> <code>new_event</code> <code>faction_engagement</code>
                   </p>
                 </div>
               </li>
@@ -1926,7 +1926,7 @@
                 <span class="field-name">metadata</span>
                 <div class="field-meta">
                   <span class="field-type">object</span>
-                  <p class="field-desc">Trigger-specific data (e.g., volume count, sentiment delta)</p>
+                  <p class="field-desc">Trigger-specific data (e.g., volume count, stance delta)</p>
                 </div>
               </li>
             </ul>
@@ -3527,7 +3527,7 @@
       <span class="key">"threshold"</span>: <span class="number">500</span>,
       <span class="key">"timeWindow"</span>: <span class="string">"24h"</span>
     },
-    <span class="key">"sentimentShift"</span>: {
+    <span class="key">"stanceShift"</span>: {
       <span class="key">"threshold"</span>: <span class="number">0.15</span>,
       <span class="key">"direction"</span>: <span class="string">"any"</span>
     },

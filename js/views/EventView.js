@@ -6,7 +6,7 @@
 import { DetailViewBase } from './DetailViewBase.js';
 import { DataService } from '../data/DataService.js';
 import { PageHeader } from '../utils/PageHeader.js';
-import { aggregateFactionSentiment } from '../utils/volumeDataUtils.js';
+import { aggregateFactionStance } from '../utils/volumeDataUtils.js';
 import { StatCards } from '../components/StatCards.js';
 import {
   CardManager,
@@ -15,7 +15,7 @@ import {
   MapCard,
   TimelineVolumeCompositeCard,
   TopicListCard,
-  SentimentChartCard,
+  StanceChartCard,
   VennDiagramCard,
   QuotesTableCard,
   ActivitiesTableCard
@@ -169,9 +169,9 @@ export class EventView extends DetailViewBase {
       (topic.documentIds || []).some(dId => eventDocIds.has(dId))
     );
 
-    // Get factions from documents and compute sentiment
-    const sentimentFactions = aggregateFactionSentiment(documents);
-    const factions = sentimentFactions.map(sf => DataService.getFaction(sf.id)).filter(Boolean);
+    // Get factions from documents and compute stance
+    const stanceFactions = aggregateFactionStance(documents);
+    const factions = stanceFactions.map(sf => DataService.getFaction(sf.id)).filter(Boolean);
 
     // Get faction overlaps
     const factionOverlaps = factions.length > 1
@@ -206,7 +206,7 @@ export class EventView extends DetailViewBase {
       narratives, documents, hasNetwork, personIds, orgIds, allEvents,
       events: allEvents,
       publisherData, hasPublisherData, hasVolumeTimeline, topics,
-      factions, sentimentFactions, factionOverlaps, mapLocations,
+      factions, stanceFactions, factionOverlaps, mapLocations,
       narrativeDurations, entities, locations, activity,
       quotes, entityActivities
     };
@@ -287,11 +287,11 @@ export class EventView extends DetailViewBase {
       }));
     }
 
-    // 7. Faction Sentiment (half-width)
-    if (data.sentimentFactions.length > 0) {
-      this.cardManager.add(new SentimentChartCard(this, 'event-sentiment', {
-        title: 'Faction Sentiment',
-        factions: data.sentimentFactions,
+    // 7. Faction Stance (half-width)
+    if (data.stanceFactions.length > 0) {
+      this.cardManager.add(new StanceChartCard(this, 'event-stance', {
+        title: 'Faction Stance',
+        factions: data.stanceFactions,
         halfWidth: true,
         clickRoute: 'faction'
       }));

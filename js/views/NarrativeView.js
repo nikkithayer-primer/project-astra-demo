@@ -12,7 +12,7 @@ import {
   CardManager,
   NetworkGraphCard,
   MapCard,
-  SentimentChartCard,
+  StanceChartCard,
   VennDiagramCard,
   ThemeListCard,
   TimelineVolumeCompositeCard
@@ -59,7 +59,7 @@ export class NarrativeView extends DetailViewBase {
       : null;
     
     const subtitleParts = [
-      `<span class="badge badge-${this.getSentimentClass(narrative.sentiment)}">${this.formatSentiment(narrative.sentiment)}</span>`,
+      `<span class="badge badge-${this.getStanceClass(narrative.stance ?? narrative.sentiment)}">${this.formatStance(narrative.stance ?? narrative.sentiment)}</span>`,
       mission ? `<span class="text-muted ml-2">Mission: ${mission.name}</span>` : ''
     ].filter(Boolean).join('');
 
@@ -181,9 +181,9 @@ export class NarrativeView extends DetailViewBase {
     );
 
     // Build sentiment data for the sentiment chart
-    const sentimentFactions = factionData.map(fd => ({
+    const stanceFactions = factionData.map(fd => ({
       ...fd.faction,
-      sentiment: fd.sentiment
+      stance: fd.stance ?? fd.sentiment
     }));
 
     // Narrative durations for volume/duration toggle (scoped)
@@ -200,7 +200,7 @@ export class NarrativeView extends DetailViewBase {
       publisherVolumeTime, hasPublisherData, hasVolumeTimeline,
       locations, mapLocations, personIds, orgIds, hasNetwork,
       persons, organizations, entities, topics,
-      documents, sentimentFactions, narrativeDurations, activity
+      documents, stanceFactions, narrativeDurations, activity
     };
   }
 
@@ -239,11 +239,11 @@ export class NarrativeView extends DetailViewBase {
       }));
     }
 
-    // Sentiment by Faction (half-width)
-    if (data.sentimentFactions.length > 0) {
-      this.cardManager.add(new SentimentChartCard(this, 'narrative-sentiment-chart', {
-        title: 'Sentiment by Faction',
-        factions: data.sentimentFactions,
+    // Stance by Faction (half-width)
+    if (data.stanceFactions.length > 0) {
+      this.cardManager.add(new StanceChartCard(this, 'narrative-stance-chart', {
+        title: 'Stance by Faction',
+        factions: data.stanceFactions,
         halfWidth: true,
         clickRoute: 'faction'
       }));

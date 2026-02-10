@@ -26,7 +26,7 @@ export class ActivityFeedView extends BaseView {
 
     const headerHtml = PageHeader.render({
       breadcrumbs: [
-        { label: 'Common Operating Picture', href: '#/cop' },
+        { label: 'Situational Picture', href: '#/situational-picture' },
         'Activity'
       ],
       title: 'Activity Feed',

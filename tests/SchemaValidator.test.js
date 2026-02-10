@@ -105,27 +105,27 @@ describe('SchemaValidator', () => {
       });
     });
 
-    describe('sentiment validation', () => {
-      it('accepts valid sentiment value', () => {
+    describe('stance validation', () => {
+      it('accepts valid stance value', () => {
         const entity = { 
           id: 'narr-001', 
           text: 'Test narrative', 
-          sentiment: 0.5 
+          stance: 0.5 
         };
         const result = validator.validateEntity('narratives', entity);
         expect(result.isValid).toBe(true);
       });
 
-      it('accepts boundary sentiment values', () => {
-        const entityMin = { id: 'narr-001', text: 'Test', sentiment: -1 };
-        const entityMax = { id: 'narr-002', text: 'Test', sentiment: 1 };
+      it('accepts boundary stance values', () => {
+        const entityMin = { id: 'narr-001', text: 'Test', stance: -1 };
+        const entityMax = { id: 'narr-002', text: 'Test', stance: 1 };
         
         expect(validator.validateEntity('narratives', entityMin).isValid).toBe(true);
         expect(validator.validateEntity('narratives', entityMax).isValid).toBe(true);
       });
 
-      it('rejects out-of-range sentiment', () => {
-        const entity = { id: 'narr-001', text: 'Test', sentiment: 1.5 };
+      it('rejects out-of-range stance', () => {
+        const entity = { id: 'narr-001', text: 'Test', stance: 1.5 };
         const result = validator.validateEntity('narratives', entity);
         expect(result.isValid).toBe(false);
         expect(result.errors[0].message).toContain('must be <=');
@@ -142,8 +142,8 @@ describe('SchemaValidator', () => {
           publishedDate: '2024-01-01T00:00:00Z',
           publisherId: 'pub-001',
           factionMentions: {
-            'faction-001': { sentiment: 0.5 },
-            'faction-002': { sentiment: -0.3 }
+            'faction-001': { stance: 0.5 },
+            'faction-002': { stance: -0.3 }
           }
         };
         const result = validator.validateEntity('documents', entity);
@@ -159,14 +159,14 @@ describe('SchemaValidator', () => {
           publishedDate: '2024-01-01T00:00:00Z',
           publisherId: 'pub-001',
           factionMentions: {
-            'invalid-key': { sentiment: 0.5 }
+            'invalid-key': { stance: 0.5 }
           }
         };
         const result = validator.validateEntity('documents', entity);
         expect(result.hasWarnings).toBe(true);
       });
 
-      it('rejects invalid sentiment in factionMentions', () => {
+      it('rejects invalid stance in factionMentions', () => {
         const entity = {
           id: 'doc-001',
           documentType: 'news_article',
@@ -175,7 +175,7 @@ describe('SchemaValidator', () => {
           publishedDate: '2024-01-01T00:00:00Z',
           publisherId: 'pub-001',
           factionMentions: {
-            'faction-001': { sentiment: 2.0 }  // Out of range
+            'faction-001': { stance: 2.0 }  // Out of range
           }
         };
         const result = validator.validateEntity('documents', entity);

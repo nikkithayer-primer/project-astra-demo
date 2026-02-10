@@ -8,21 +8,21 @@ export const narratives = [
     text: 'NS duration and policies are unfair compared to regional peers',
     description: 'A persistent narrative questioning the fairness of Singapore\'s 2-year National Service requirement. Critics compare NS obligations with Taiwan (4 months), South Korea (18-21 months), and question why PRs and new citizens face different requirements. The narrative intensifies during training incidents and when career disruption stories circulate.',
     missionId: 'mission-001',
-    sentiment: -0.52,
+    stance: -0.52,
     themeIds: ['sub-001', 'sub-002', 'sub-003'],
     tagIds: ['tag-005', 'tag-mission-001'],
     factionMentions: {
-      'faction-001': { volume: 320, sentiment: 0.72 },
-      'faction-002': { volume: 580, sentiment: -0.78 },
-      'faction-007': { volume: 450, sentiment: -0.25 }
+      'faction-001': { volume: 320, stance: 0.72 },
+      'faction-002': { volume: 580, stance: -0.78 },
+      'faction-007': { volume: 450, stance: -0.25 }
     },
     publisherVolumes: {
-      'pub-hwz': { volume: 285, sentiment: -0.62 },
-      'pub-reddit': { volume: 165, sentiment: -0.55 },
-      'pub-x': { volume: 145, sentiment: -0.48 },
-      'pub-tiktok': { volume: 220, sentiment: -0.58 },
-      'pub-facebook': { volume: 180, sentiment: -0.42 },
-      'pub-sg-mothership': { volume: 85, sentiment: -0.35 }
+      'pub-hwz': { volume: 285, stance: -0.62 },
+      'pub-reddit': { volume: 165, stance: -0.55 },
+      'pub-x': { volume: 145, stance: -0.48 },
+      'pub-tiktok': { volume: 220, stance: -0.58 },
+      'pub-facebook': { volume: 180, stance: -0.42 },
+      'pub-sg-mothership': { volume: 85, stance: -0.35 }
     },
     factionSources: {
       'faction-001': { 'pub-facebook': 120, 'pub-x': 95, 'pub-sg-cna': 65, 'pub-sg-st': 40 },
@@ -49,22 +49,22 @@ export const narratives = [
     text: 'SAF training standards questioned after fatal incidents',
     description: 'Narrative questioning SAF training safety following NSF fatalities. Critics argue that incidents reveal systemic problems, while defenders emphasize the inherent risks of military training and continuous safety improvements. The narrative peaks after each incident and triggers broader debates about military culture.',
     missionId: 'mission-002',
-    sentiment: -0.58,
+    stance: -0.58,
     themeIds: ['sub-004', 'sub-005'],
     tagIds: ['tag-004', 'tag-mission-002'],
     factionMentions: {
-      'faction-001': { volume: 185, sentiment: 0.45 },
-      'faction-002': { volume: 420, sentiment: -0.82 },
-      'faction-006': { volume: 280, sentiment: -0.68 },
-      'faction-007': { volume: 520, sentiment: -0.45 }
+      'faction-001': { volume: 185, stance: 0.45 },
+      'faction-002': { volume: 420, stance: -0.82 },
+      'faction-006': { volume: 280, stance: -0.68 },
+      'faction-007': { volume: 520, stance: -0.45 }
     },
     publisherVolumes: {
-      'pub-sg-cna': { volume: 125, sentiment: -0.35 },
-      'pub-sg-st': { volume: 115, sentiment: -0.38 },
-      'pub-hwz': { volume: 320, sentiment: -0.72 },
-      'pub-reddit': { volume: 185, sentiment: -0.65 },
-      'pub-facebook': { volume: 245, sentiment: -0.52 },
-      'pub-x': { volume: 165, sentiment: -0.58 }
+      'pub-sg-cna': { volume: 125, stance: -0.35 },
+      'pub-sg-st': { volume: 115, stance: -0.38 },
+      'pub-hwz': { volume: 320, stance: -0.72 },
+      'pub-reddit': { volume: 185, stance: -0.65 },
+      'pub-facebook': { volume: 245, stance: -0.52 },
+      'pub-x': { volume: 165, stance: -0.58 }
     },
     factionSources: {
       'faction-001': { 'pub-sg-cna': 85, 'pub-sg-st': 72, 'pub-facebook': 65 },
@@ -90,22 +90,22 @@ export const narratives = [
     text: 'Singapore is becoming a US proxy in Southeast Asia',
     description: 'Chinese state media and aligned voices push narrative that Singapore is abandoning neutrality to become a US strategic partner, citing defence agreements, military exercises, and statements critical of China. The narrative questions Singapore\'s independence and suggests alignment with "Western containment" of China.',
     missionId: 'mission-003',
-    sentiment: -0.62,
+    stance: -0.62,
     themeIds: ['sub-006', 'sub-007'],
     tagIds: ['tag-004', 'tag-mission-003', 'tag-origin-002'],
     factionMentions: {
-      'faction-001': { volume: 145, sentiment: -0.72 },
-      'faction-003': { volume: 385, sentiment: 0.82 },
-      'faction-004': { volume: 165, sentiment: 0.78 },
-      'faction-007': { volume: 85, sentiment: -0.35 }
+      'faction-001': { volume: 145, stance: -0.72 },
+      'faction-003': { volume: 385, stance: 0.82 },
+      'faction-004': { volume: 165, stance: 0.78 },
+      'faction-007': { volume: 85, stance: -0.35 }
     },
     publisherVolumes: {
-      'pub-reg-globaltimes': { volume: 125, sentiment: 0.75 },
-      'pub-reg-xinhua': { volume: 85, sentiment: 0.68 },
-      'pub-wechat': { volume: 145, sentiment: 0.72 },
-      'pub-weibo': { volume: 165, sentiment: 0.78 },
-      'pub-x': { volume: 95, sentiment: -0.42 },
-      'pub-sg-cna': { volume: 45, sentiment: -0.55 }
+      'pub-reg-globaltimes': { volume: 125, stance: 0.75 },
+      'pub-reg-xinhua': { volume: 85, stance: 0.68 },
+      'pub-wechat': { volume: 145, stance: 0.72 },
+      'pub-weibo': { volume: 165, stance: 0.78 },
+      'pub-x': { volume: 95, stance: -0.42 },
+      'pub-sg-cna': { volume: 45, stance: -0.55 }
     },
     factionSources: {
       'faction-001': { 'pub-sg-cna': 75, 'pub-sg-st': 55, 'pub-x': 45 },
@@ -131,22 +131,22 @@ export const narratives = [
     text: 'Foreign talent policies disadvantage Singaporean workers',
     description: 'Persistent narrative claiming CECA and liberal Employment Pass policies displace Singaporean PMETs. Peaks during employment data releases and high-profile cases of local workers losing jobs to foreigners. Intersects with immigration concerns and questions about government priorities.',
     missionId: 'mission-004',
-    sentiment: -0.55,
+    stance: -0.55,
     themeIds: ['sub-008', 'sub-009'],
     tagIds: ['tag-005', 'tag-mission-004'],
     factionMentions: {
-      'faction-001': { volume: 95, sentiment: 0.45 },
-      'faction-006': { volume: 485, sentiment: -0.78 },
-      'faction-007': { volume: 380, sentiment: -0.42 },
-      'faction-008': { volume: 145, sentiment: -0.85 }
+      'faction-001': { volume: 95, stance: 0.45 },
+      'faction-006': { volume: 485, stance: -0.78 },
+      'faction-007': { volume: 380, stance: -0.42 },
+      'faction-008': { volume: 145, stance: -0.85 }
     },
     publisherVolumes: {
-      'pub-hwz': { volume: 365, sentiment: -0.72 },
-      'pub-facebook': { volume: 285, sentiment: -0.55 },
-      'pub-x': { volume: 195, sentiment: -0.62 },
-      'pub-tiktok': { volume: 145, sentiment: -0.58 },
-      'pub-sg-toc': { volume: 85, sentiment: -0.65 },
-      'pub-reddit': { volume: 125, sentiment: -0.52 }
+      'pub-hwz': { volume: 365, stance: -0.72 },
+      'pub-facebook': { volume: 285, stance: -0.55 },
+      'pub-x': { volume: 195, stance: -0.62 },
+      'pub-tiktok': { volume: 145, stance: -0.58 },
+      'pub-sg-toc': { volume: 85, stance: -0.65 },
+      'pub-reddit': { volume: 125, stance: -0.52 }
     },
     factionSources: {
       'faction-001': { 'pub-sg-cna': 55, 'pub-sg-st': 45, 'pub-facebook': 35 },
@@ -172,21 +172,21 @@ export const narratives = [
     text: 'Malaysia water agreements are unfair to Johor',
     description: 'Malaysian nationalist voices argue the 1962 Water Agreement exploits Johor, selling water too cheaply to Singapore. The narrative resurfaces during bilateral meetings and water price discussions, sometimes amplified by politicians and nationalist media.',
     missionId: 'mission-005',
-    sentiment: -0.48,
+    stance: -0.48,
     themeIds: ['sub-010', 'sub-011'],
     tagIds: ['tag-005', 'tag-mission-005', 'tag-origin-003'],
     factionMentions: {
-      'faction-001': { volume: 125, sentiment: 0.55 },
-      'faction-005': { volume: 345, sentiment: -0.72 },
-      'faction-007': { volume: 185, sentiment: 0.35 }
+      'faction-001': { volume: 125, stance: 0.55 },
+      'faction-005': { volume: 345, stance: -0.72 },
+      'faction-007': { volume: 185, stance: 0.35 }
     },
     publisherVolumes: {
-      'pub-reg-thestar': { volume: 95, sentiment: -0.45 },
-      'pub-reg-nst': { volume: 85, sentiment: -0.52 },
-      'pub-reg-bernama': { volume: 65, sentiment: -0.38 },
-      'pub-facebook': { volume: 165, sentiment: -0.55 },
-      'pub-x': { volume: 125, sentiment: -0.48 },
-      'pub-sg-cna': { volume: 75, sentiment: 0.42 }
+      'pub-reg-thestar': { volume: 95, stance: -0.45 },
+      'pub-reg-nst': { volume: 85, stance: -0.52 },
+      'pub-reg-bernama': { volume: 65, stance: -0.38 },
+      'pub-facebook': { volume: 165, stance: -0.55 },
+      'pub-x': { volume: 125, stance: -0.48 },
+      'pub-sg-cna': { volume: 75, stance: 0.42 }
     },
     factionSources: {
       'faction-001': { 'pub-sg-cna': 85, 'pub-sg-st': 65, 'pub-facebook': 45 },
@@ -211,22 +211,22 @@ export const narratives = [
     text: 'South China Sea tensions threaten Singapore\'s maritime security',
     description: 'Narrative examining implications of increased PLA Navy presence and assertive Chinese actions in the South China Sea for Singapore\'s strategic position and sea lines of communication. Includes concerns about regional stability and freedom of navigation.',
     missionId: 'mission-005',
-    sentiment: -0.42,
+    stance: -0.42,
     themeIds: ['sub-012', 'sub-013'],
     tagIds: ['tag-005', 'tag-mission-005'],
     factionMentions: {
-      'faction-001': { volume: 195, sentiment: 0.48 },
-      'faction-003': { volume: 245, sentiment: 0.72 },
-      'faction-004': { volume: 85, sentiment: 0.68 },
-      'faction-007': { volume: 165, sentiment: -0.35 }
+      'faction-001': { volume: 195, stance: 0.48 },
+      'faction-003': { volume: 245, stance: 0.72 },
+      'faction-004': { volume: 85, stance: 0.68 },
+      'faction-007': { volume: 165, stance: -0.35 }
     },
     publisherVolumes: {
-      'pub-sg-cna': { volume: 125, sentiment: -0.35 },
-      'pub-sg-st': { volume: 95, sentiment: -0.38 },
-      'pub-int-reuters': { volume: 85, sentiment: -0.28 },
-      'pub-reg-scmp': { volume: 75, sentiment: -0.22 },
-      'pub-reg-globaltimes': { volume: 65, sentiment: 0.72 },
-      'pub-x': { volume: 145, sentiment: -0.45 }
+      'pub-sg-cna': { volume: 125, stance: -0.35 },
+      'pub-sg-st': { volume: 95, stance: -0.38 },
+      'pub-int-reuters': { volume: 85, stance: -0.28 },
+      'pub-reg-scmp': { volume: 75, stance: -0.22 },
+      'pub-reg-globaltimes': { volume: 65, stance: 0.72 },
+      'pub-x': { volume: 145, stance: -0.45 }
     },
     factionSources: {
       'faction-001': { 'pub-sg-cna': 95, 'pub-sg-st': 75, 'pub-int-reuters': 55 },
@@ -252,20 +252,20 @@ export const narratives = [
     text: 'Racial and religious tensions exploited by provocateurs',
     description: 'Monitoring of attempts to stoke racial and religious tensions in Singapore, including inflammatory social media posts, incidents at religious sites, and coordinated campaigns to divide communities along ethnic or religious lines.',
     missionId: 'mission-004',
-    sentiment: -0.68,
+    stance: -0.68,
     themeIds: ['sub-014', 'sub-015'],
     tagIds: ['tag-004', 'tag-mission-004'],
     factionMentions: {
-      'faction-001': { volume: 85, sentiment: 0.65 },
-      'faction-007': { volume: 285, sentiment: -0.55 },
-      'faction-008': { volume: 165, sentiment: -0.88 }
+      'faction-001': { volume: 85, stance: 0.65 },
+      'faction-007': { volume: 285, stance: -0.55 },
+      'faction-008': { volume: 165, stance: -0.88 }
     },
     publisherVolumes: {
-      'pub-facebook': { volume: 185, sentiment: -0.62 },
-      'pub-telegram': { volume: 95, sentiment: -0.78 },
-      'pub-hwz': { volume: 125, sentiment: -0.55 },
-      'pub-x': { volume: 145, sentiment: -0.58 },
-      'pub-sg-cna': { volume: 65, sentiment: -0.35 }
+      'pub-facebook': { volume: 185, stance: -0.62 },
+      'pub-telegram': { volume: 95, stance: -0.78 },
+      'pub-hwz': { volume: 125, stance: -0.55 },
+      'pub-x': { volume: 145, stance: -0.58 },
+      'pub-sg-cna': { volume: 65, stance: -0.35 }
     },
     factionSources: {
       'faction-001': { 'pub-sg-cna': 55, 'pub-sg-st': 45, 'pub-facebook': 35 },
@@ -290,20 +290,20 @@ export const narratives = [
     text: 'Coordinated campaign undermines confidence in NS system',
     description: 'Detection of coordinated inauthentic behavior targeting National Service across multiple platforms. Network analysis suggests foreign involvement with messaging designed to erode support for conscription and military service among young Singaporeans.',
     missionId: 'mission-003',
-    sentiment: -0.72,
+    stance: -0.72,
     themeIds: ['sub-016', 'sub-017'],
     tagIds: ['tag-004', 'tag-mission-003', 'tag-origin-004'],
     factionMentions: {
-      'faction-001': { volume: 95, sentiment: 0.72 },
-      'faction-002': { volume: 185, sentiment: -0.45 },
-      'faction-004': { volume: 145, sentiment: 0.68 },
-      'faction-007': { volume: 65, sentiment: -0.28 }
+      'faction-001': { volume: 95, stance: 0.72 },
+      'faction-002': { volume: 185, stance: -0.45 },
+      'faction-004': { volume: 145, stance: 0.68 },
+      'faction-007': { volume: 65, stance: -0.28 }
     },
     publisherVolumes: {
-      'pub-x': { volume: 165, sentiment: -0.55 },
-      'pub-tiktok': { volume: 125, sentiment: -0.62 },
-      'pub-telegram': { volume: 85, sentiment: -0.72 },
-      'pub-hwz': { volume: 95, sentiment: -0.48 }
+      'pub-x': { volume: 165, stance: -0.55 },
+      'pub-tiktok': { volume: 125, stance: -0.62 },
+      'pub-telegram': { volume: 85, stance: -0.72 },
+      'pub-hwz': { volume: 95, stance: -0.48 }
     },
     factionSources: {
       'faction-001': { 'pub-sg-cna': 55, 'pub-facebook': 45 },
@@ -329,21 +329,21 @@ export const narratives = [
     text: 'Total Defence portrayed as outdated propaganda',
     description: 'Critics characterize Total Defence concept as Cold War relic and propaganda exercise rather than genuine preparedness framework. The narrative questions relevance of civil defence exercises and suggests psychological defence is government messaging.',
     missionId: 'mission-006',
-    sentiment: -0.45,
+    stance: -0.45,
     themeIds: ['sub-018', 'sub-019'],
     tagIds: ['tag-005', 'tag-mission-006'],
     factionMentions: {
-      'faction-001': { volume: 165, sentiment: 0.78 },
-      'faction-002': { volume: 95, sentiment: -0.55 },
-      'faction-006': { volume: 185, sentiment: -0.65 },
-      'faction-007': { volume: 225, sentiment: 0.25 }
+      'faction-001': { volume: 165, stance: 0.78 },
+      'faction-002': { volume: 95, stance: -0.55 },
+      'faction-006': { volume: 185, stance: -0.65 },
+      'faction-007': { volume: 225, stance: 0.25 }
     },
     publisherVolumes: {
-      'pub-reddit': { volume: 125, sentiment: -0.52 },
-      'pub-hwz': { volume: 145, sentiment: -0.48 },
-      'pub-x': { volume: 95, sentiment: -0.45 },
-      'pub-sg-cna': { volume: 85, sentiment: 0.55 },
-      'pub-sg-st': { volume: 75, sentiment: 0.48 }
+      'pub-reddit': { volume: 125, stance: -0.52 },
+      'pub-hwz': { volume: 145, stance: -0.48 },
+      'pub-x': { volume: 95, stance: -0.45 },
+      'pub-sg-cna': { volume: 85, stance: 0.55 },
+      'pub-sg-st': { volume: 75, stance: 0.48 }
     },
     factionSources: {
       'faction-001': { 'pub-sg-cna': 85, 'pub-sg-st': 75, 'pub-facebook': 55 },
@@ -369,19 +369,19 @@ export const narratives = [
     text: 'SAF modernization demonstrates strong defence capabilities',
     description: 'Positive narrative highlighting SAF equipment acquisitions, technology development, and operational capabilities. Counters negative narratives by showcasing defence investments, successful exercises, and professional military development.',
     missionId: 'mission-002',
-    sentiment: 0.65,
+    stance: 0.65,
     themeIds: ['sub-020', 'sub-021'],
     tagIds: ['tag-006', 'tag-mission-002'],
     factionMentions: {
-      'faction-001': { volume: 385, sentiment: 0.82 },
-      'faction-007': { volume: 285, sentiment: 0.58 }
+      'faction-001': { volume: 385, stance: 0.82 },
+      'faction-007': { volume: 285, stance: 0.58 }
     },
     publisherVolumes: {
-      'pub-sg-cna': { volume: 145, sentiment: 0.72 },
-      'pub-sg-st': { volume: 125, sentiment: 0.68 },
-      'pub-facebook': { volume: 185, sentiment: 0.55 },
-      'pub-youtube': { volume: 95, sentiment: 0.62 },
-      'pub-x': { volume: 125, sentiment: 0.48 }
+      'pub-sg-cna': { volume: 145, stance: 0.72 },
+      'pub-sg-st': { volume: 125, stance: 0.68 },
+      'pub-facebook': { volume: 185, stance: 0.55 },
+      'pub-youtube': { volume: 95, stance: 0.62 },
+      'pub-x': { volume: 125, stance: 0.48 }
     },
     factionSources: {
       'faction-001': { 'pub-sg-cna': 125, 'pub-sg-st': 105, 'pub-facebook': 145, 'pub-youtube': 75 },

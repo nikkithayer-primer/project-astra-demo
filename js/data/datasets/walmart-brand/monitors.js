@@ -18,7 +18,7 @@ export const monitors = [
     },
     triggers: {
       volumeSpike: { threshold: 500, timeWindow: '24h' },
-      sentimentShift: { threshold: 0.2, direction: 'negative' },
+      stanceShift: { threshold: 0.2, direction: 'negative' },
       newNarrative: true
     },
     options: {
@@ -41,7 +41,7 @@ export const monitors = [
     },
     triggers: {
       volumeSpike: { threshold: 300, timeWindow: '24h' },
-      sentimentShift: { threshold: 0.15, direction: 'negative' }
+      stanceShift: { threshold: 0.15, direction: 'negative' }
     },
     options: {
       includeThemes: true,
@@ -63,7 +63,7 @@ export const monitors = [
     },
     triggers: {
       volumeSpike: { threshold: 400, timeWindow: '24h' },
-      sentimentShift: { threshold: 0.2, direction: 'negative' },
+      stanceShift: { threshold: 0.2, direction: 'negative' },
       factionEngagement: true
     },
     options: {
@@ -109,7 +109,7 @@ export const monitors = [
     },
     triggers: {
       volumeSpike: { threshold: 350, timeWindow: '24h' },
-      sentimentShift: { threshold: 0.15, direction: 'any' }
+      stanceShift: { threshold: 0.15, direction: 'any' }
     },
     options: {
       includeThemes: true,
@@ -153,7 +153,7 @@ export const monitors = [
     },
     triggers: {
       volumeSpike: { threshold: 250, timeWindow: '24h' },
-      sentimentShift: { threshold: 0.2, direction: 'negative' },
+      stanceShift: { threshold: 0.2, direction: 'negative' },
       newEvent: true
     },
     options: {
@@ -300,7 +300,7 @@ export const alerts = [
   {
     id: 'alert-008',
     monitorId: 'monitor-005',
-    type: 'sentiment_shift',
+    type: 'stance_shift',
     title: 'Sentiment shift: Price comparison with Aldi',
     description: 'Viral price comparison TikTok shows Walmart losing to Aldi US on most items - 4.8M views',
     triggeredAt: '2026-01-17T16:00:00Z',

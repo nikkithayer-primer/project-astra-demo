@@ -43,7 +43,7 @@ export class ThemeList extends BaseItemList {
         <div class="narrative-content">
           <div class="narrative-title-row">
             <span class="narrative-text">${this.getItemTitle(item)}</span>
-            <span class="badge badge-${this.getSentimentClass(item.sentiment)}">${this.formatSentiment(item.sentiment)}</span>
+            <span class="badge badge-${this.getStanceClass(item.stance ?? item.sentiment)}">${this.formatStance(item.stance ?? item.sentiment)}</span>
           </div>
           ${item.description && this.showDescription ? `
             <p class="narrative-description">

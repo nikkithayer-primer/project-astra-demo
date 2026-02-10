@@ -23,7 +23,7 @@ export const monitors = [
       newNarrative: true,
       newEvent: true,
       volumeSpike: { threshold: 400, timeWindow: '24h' },
-      sentimentShift: { threshold: 0.15, direction: 'negative' },
+      stanceShift: { threshold: 0.15, direction: 'negative' },
       factionEngagement: { factionIds: ['faction-002'], threshold: 150 }
     },
     enabled: true,
@@ -50,7 +50,7 @@ export const monitors = [
       newNarrative: true,
       newEvent: true,
       volumeSpike: { threshold: 300, timeWindow: '12h' },
-      sentimentShift: { threshold: 0.20, direction: 'negative' },
+      stanceShift: { threshold: 0.20, direction: 'negative' },
       factionEngagement: null
     },
     enabled: true,
@@ -78,7 +78,7 @@ export const monitors = [
       newNarrative: true,
       newEvent: true,
       volumeSpike: { threshold: 250, timeWindow: '24h' },
-      sentimentShift: { threshold: 0.15, direction: 'any' },
+      stanceShift: { threshold: 0.15, direction: 'any' },
       factionEngagement: { factionIds: ['faction-003', 'faction-004'], threshold: 100 }
     },
     enabled: true,
@@ -104,7 +104,7 @@ export const monitors = [
       newNarrative: true,
       newEvent: true,
       volumeSpike: { threshold: 200, timeWindow: '12h' },
-      sentimentShift: { threshold: 0.20, direction: 'negative' },
+      stanceShift: { threshold: 0.20, direction: 'negative' },
       factionEngagement: { factionIds: ['faction-008'], threshold: 50 }
     },
     enabled: true,
@@ -132,7 +132,7 @@ export const monitors = [
       newNarrative: true,
       newEvent: true,
       volumeSpike: { threshold: 300, timeWindow: '24h' },
-      sentimentShift: { threshold: 0.15, direction: 'negative' },
+      stanceShift: { threshold: 0.15, direction: 'negative' },
       factionEngagement: { factionIds: ['faction-005'], threshold: 80 }
     },
     enabled: true,
@@ -158,7 +158,7 @@ export const monitors = [
       newNarrative: true,
       newEvent: false,
       volumeSpike: { threshold: 150, timeWindow: '12h' },
-      sentimentShift: null,
+      stanceShift: null,
       factionEngagement: { factionIds: ['faction-004'], threshold: 30 }
     },
     enabled: true,

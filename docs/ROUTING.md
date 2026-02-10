@@ -317,7 +317,7 @@ Query parameters are used for non-navigation state:
 |-----------|-------|---------|
 | `sort` | Sort order for lists | `?sort=date` |
 | `page` | Pagination | `?page=2` |
-| `filter` | Quick filters | `?filter=high-sentiment` |
+| `filter` | Quick filters | `?filter=high-stance` |
 
 **Not used for:**
 - Context (use path segments)

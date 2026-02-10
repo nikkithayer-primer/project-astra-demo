@@ -15,15 +15,15 @@ Documents (ingested, each has extracted entities + factions)
 Narratives, Themes, Topics (derived from document clusters)
 ```
 
-**Key principle:** Documents are the atomic unit of measurement. Faction volume, sentiment, and publisher breakdowns are **computed by aggregating across documents**, not stored as hand-crafted values on narratives.
+**Key principle:** Documents are the atomic unit of measurement. Faction volume, stance, and publisher breakdowns are **computed by aggregating across documents**, not stored as hand-crafted values on narratives.
 
 ### What Gets Extracted Per Document (Ingest)
 - People, Organizations, Locations, Events mentioned
-- Factions detected and their sentiment in this document
+- Factions detected and their stance in this document
 - Publisher source
 
 ### What Gets Computed (Aggregation via DataService)
-- Narrative/Theme faction data → count docs per faction, average sentiment
+- Narrative/Theme faction data → count docs per faction, average stance
 - Volume over time → group docs by date, count per faction/publisher
 - Faction sources → group by (faction, publisher), count docs
 
@@ -85,7 +85,7 @@ Disinformation or propaganda narrative being tracked. Faction engagement data is
   missionId: string,       // DEPRECATED. Use tagIds with Mission group tags instead
   text: string,            // Required. Short title identifying the narrative
   description: string,     // Optional. Detailed description
-  sentiment: number,       // Optional. -1.0 to 1.0 (editorial/manual assessment)
+  stance: number,           // Optional. -1.0 to 1.0 (editorial/manual assessment)
   tagIds: string[],        // Optional. FKs to Tag (includes Mission tags)
   themeIds: string[],      // Auto-managed. FKs to Theme
   personIds: string[],         // Optional. FKs to Person
@@ -113,7 +113,7 @@ Sub-components or variations of a parent narrative. Like narratives, faction dat
   id: string,              // Required. Prefix: 'sub-'
   parentNarrativeId: string, // Required. FK to Narrative
   text: string,            // Required. Theme title
-  sentiment: number,       // Optional. -1.0 to 1.0 (editorial/manual assessment)
+  stance: number,          // Optional. -1.0 to 1.0 (editorial/manual assessment)
   personIds: string[],
   organizationIds: string[],
   locationIds: string[],
@@ -156,7 +156,7 @@ Represents overlapping membership between factions. No ID prefix (identified by 
 {
   factionIds: string[],    // Required. Two faction IDs
   overlapSize: number,     // Optional. Shared member count
-  sharedSentiment: {       // Optional. Shared sentiment by narrative
+  sharedStance: {          // Optional. Shared stance by narrative
     [narrativeId]: number  // -1.0 to 1.0
   }
 }
@@ -221,7 +221,7 @@ Individuals mentioned in narratives.
   relatedLocationIds: string[],     // Optional. FKs to Location
   relatedEventIds: string[],        // Optional. FKs to Event
   documentIds: string[],            // Optional. FKs to Document
-  factionSentiment: {      // Optional. How factions view this person
+  factionStance: {         // Optional. How factions view this person
     [factionId]: number    // -1.0 (negative) to 1.0 (positive)
   },
   createdAt: datetime,
@@ -245,7 +245,7 @@ Organizations mentioned in narratives.
   affiliatedFactionIds: string[],   // Optional. FKs to Faction
   relatedLocationIds: string[],     // Optional. FKs to Location
   documentIds: string[],            // Optional. FKs to Document
-  factionSentiment: {      // Optional. How factions view this org
+  factionStance: {         // Optional. How factions view this org
     [factionId]: number    // -1.0 to 1.0
   },
   createdAt: datetime,
@@ -280,7 +280,7 @@ Aggregated story clusters from documents.
 
 ### Document
 
-Source documents (news articles, social posts, internal reports). **Documents are the source of truth for faction volume and sentiment.**
+Source documents (news articles, social posts, internal reports). **Documents are the source of truth for faction volume and stance.**
 
 ```javascript
 {
@@ -351,10 +351,10 @@ Source documents (news articles, social posts, internal reports). **Documents ar
   locationIds: string[],       // Optional. FKs to Location
   eventIds: string[],          // Optional. FKs to Event
   
-  // Faction extraction (from ingest) - SOURCE OF TRUTH for volume/sentiment
+  // Faction extraction (from ingest) - SOURCE OF TRUTH for volume/stance
   factionMentions: {           // Required. Which factions this document relates to
     [factionId]: {
-      sentiment: number        // -1.0 to 1.0, how this doc portrays this faction
+      stance: number          // -1.0 to 1.0, how this doc portrays this faction
     }
   },
   
@@ -482,7 +482,7 @@ Automated tracking configuration for entities and conditions. Monitors query doc
       threshold: number,
       timeWindow: string   // e.g. '24h', '12h'
     },
-    sentimentShift: {
+    stanceShift: {
       threshold: number,
       direction: 'positive' | 'negative' | 'any'
     },
@@ -507,7 +507,7 @@ Generated when monitor conditions are met.
   id: string,              // Required. Prefix: 'alert-'
   monitorId: string,       // Required. FK to Monitor
   type: enum,              // Required. 'volume_spike' | 'new_event' | 'new_narrative' | 
-                           //           'sentiment_shift' | 'faction_engagement'
+                           //           'stance_shift' | 'faction_engagement'
   title: string,           // Required. Alert title
   description: string,     // Optional. Alert details (supports entity linking)
   triggeredAt: datetime,   // Required. When alert was generated
@@ -752,14 +752,14 @@ dataStore.createSearchFilter(filter)
 
 ## DataService Aggregation Methods
 
-Faction volume, sentiment, and breakdowns are computed from documents:
+Faction volume, stance, and breakdowns are computed from documents:
 
 ```javascript
 import { DataService } from './js/data/DataService.js';
 
-// Get faction volume + sentiment for a narrative (aggregated from docs)
+// Get faction volume + stance for a narrative (aggregated from docs)
 const factionMentions = DataService.getAggregateFactionMentionsForNarrative(narrativeId);
-// Returns: { 'faction-001': { volume: 16, sentiment: 0.58 }, ... }
+// Returns: { 'faction-001': { volume: 16, stance: 0.58 }, ... }
 
 // Get volume over time (docs grouped by date)
 const volumeOverTime = DataService.getVolumeOverTimeForNarrative(narrativeId);
@@ -771,7 +771,7 @@ const factionSources = DataService.getFactionSourcesForNarrative(narrativeId);
 
 // Get publisher volume breakdown
 const publisherVolumes = DataService.getAggregatePublisherVolumesForNarrative(narrativeId);
-// Returns: { 'pub-x': { volume: 12, sentiment: -0.35 }, ... }
+// Returns: { 'pub-x': { volume: 12, stance: -0.35 }, ... }
 
 // Aggregate across mission or all narratives
 const missionVolume = DataService.getAggregateVolumeOverTime(missionId);
@@ -782,9 +782,9 @@ const allVolume = DataService.getAggregateVolumeOverTime(); // all missions
 
 **Volume** = count of documents per faction/publisher per time period
 
-**Sentiment** = average of document sentiments, weighted equally:
+**Stance** = average of document stances, weighted equally:
 ```javascript
-sentiment = sum(doc.factionMentions[factionId].sentiment) / count
+stance = sum(doc.factionMentions[factionId].stance) / count
 ```
 
 ### Quote and Activity Aggregation
@@ -820,7 +820,7 @@ Dataset files are in `js/data/datasets/{dataset-name}/`:
 - `factions.js` - Factions and FactionOverlaps
 - `locations.js` - Locations
 - `events.js` - Events
-- `documents.js` - **Source of truth for faction volume/sentiment**
+- `documents.js` - **Source of truth for faction volume/stance**
 - `publishers.js` - Publishers and PublisherCategories
 - `monitors.js` - Monitors and Alerts
 - `missions.js` - Missions

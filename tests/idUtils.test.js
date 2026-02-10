@@ -133,10 +133,10 @@ describe('idUtils', () => {
       expect(buildIdRoute(null, 'narr-001', 'person-002')).toBe('#/narr-001/person-002/');
     });
 
-    it('returns COP home for empty routes', () => {
-      expect(buildIdRoute(null)).toBe('#/cop/');
-      expect(buildIdRoute(null, null)).toBe('#/cop/');
-      expect(buildIdRoute(null, '')).toBe('#/cop/');
+    it('returns Situational Picture home for empty routes', () => {
+      expect(buildIdRoute(null)).toBe('#/situational-picture/');
+      expect(buildIdRoute(null, null)).toBe('#/situational-picture/');
+      expect(buildIdRoute(null, '')).toBe('#/situational-picture/');
     });
 
     it('filters out falsy entity IDs', () => {
@@ -163,30 +163,30 @@ describe('idUtils', () => {
       expect(result.primaryEntityId).toBe(null);
     });
 
-    it('parses COP route', () => {
-      const result = parseIdRoute('cop');
-      expect(result.contextType).toBe('cop');
-      expect(result.isCopHome).toBe(true);
+    it('parses Situational Picture route', () => {
+      const result = parseIdRoute('situational-picture');
+      expect(result.contextType).toBe('situational-picture');
+      expect(result.isSituationalPictureHome).toBe(true);
       expect(result.contextId).toBe(null);
     });
 
-    it('parses COP route with entity', () => {
-      const result = parseIdRoute('cop/person-003');
-      expect(result.contextType).toBe('cop');
-      expect(result.isCopHome).toBe(false);
+    it('parses Situational Picture route with entity', () => {
+      const result = parseIdRoute('situational-picture/person-003');
+      expect(result.contextType).toBe('situational-picture');
+      expect(result.isSituationalPictureHome).toBe(false);
       expect(result.primaryEntityId).toBe('person-003');
       expect(result.entityIds).toEqual(['person-003']);
     });
 
-    it('parses empty route as COP home', () => {
+    it('parses empty route as Situational Picture home', () => {
       const result = parseIdRoute('');
-      expect(result.contextType).toBe('cop');
-      expect(result.isCopHome).toBe(true);
+      expect(result.contextType).toBe('situational-picture');
+      expect(result.isSituationalPictureHome).toBe(true);
     });
 
-    it('parses route without context prefix as COP-scoped', () => {
+    it('parses route without context prefix as situational-picture-scoped', () => {
       const result = parseIdRoute('person-003');
-      expect(result.contextType).toBe('cop');
+      expect(result.contextType).toBe('situational-picture');
       expect(result.contextId).toBe(null);
       expect(result.primaryEntityId).toBe('person-003');
     });
@@ -207,7 +207,7 @@ describe('idUtils', () => {
       expect(getEntityTypeDisplayName('monitor')).toBe('Monitor');
       expect(getEntityTypeDisplayName('narrative')).toBe('Narrative');
       expect(getEntityTypeDisplayName('searchFilter')).toBe('Search Filter');
-      expect(getEntityTypeDisplayName('cop')).toBe('Common Operating Picture');
+      expect(getEntityTypeDisplayName('situational-picture')).toBe('Situational Picture');
     });
 
     it('returns original type for unknown types', () => {

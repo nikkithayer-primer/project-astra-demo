@@ -49,7 +49,7 @@ const tools = [
     type: 'function',
     function: {
       name: 'get_narrative_details',
-      description: 'Get full details about a narrative including its themes, sentiment, volume, and linked entities',
+      description: 'Get full details about a narrative including its themes, stance, volume, and linked entities',
       parameters: {
         type: 'object',
         properties: {
@@ -63,7 +63,7 @@ const tools = [
     type: 'function',
     function: {
       name: 'get_theme_details',
-      description: 'Get details about a theme (sub-narrative) including its parent narrative and sentiment',
+      description: 'Get details about a theme (sub-narrative) including its parent narrative and stance',
       parameters: {
         type: 'object',
         properties: {
@@ -91,7 +91,7 @@ const tools = [
     type: 'function',
     function: {
       name: 'get_faction_details',
-      description: 'Get faction details including affiliated entities, narratives they appear in, and sentiment',
+      description: 'Get faction details including affiliated entities, narratives they appear in, and stance',
       parameters: {
         type: 'object',
         properties: {
@@ -147,7 +147,7 @@ const tools = [
     type: 'function',
     function: {
       name: 'compare_factions',
-      description: 'Compare two factions by their narratives, sentiment, and activity',
+      description: 'Compare two factions by their narratives, stance, and activity',
       parameters: {
         type: 'object',
         properties: {
@@ -269,7 +269,7 @@ function createFunctionHandlers(router) {
         const faction = DataService.getFaction(factionId);
         factionData[faction?.name || factionId] = {
           volume: data.volume,
-          sentiment: data.sentiment
+          stance: data.stance ?? data.sentiment
         };
       }
       
@@ -277,8 +277,8 @@ function createFunctionHandlers(router) {
         id: narrative.id,
         title: narrative.text,
         description: narrative.description,
-        sentiment: narrative.sentiment,
-        themes: themes.map(t => ({ id: t.id, title: t.text, sentiment: t.sentiment })),
+        stance: narrative.stance ?? narrative.sentiment,
+        themes: themes.map(t => ({ id: t.id, title: t.text, stance: t.stance ?? t.sentiment })),
         factionEngagement: factionData,
         documentCount: docs.length,
         recentDocuments: docs.slice(0, 5).map(d => ({ id: d.id, title: d.title, date: d.publishedDate }))
@@ -295,7 +295,7 @@ function createFunctionHandlers(router) {
       return {
         id: theme.id,
         title: theme.text,
-        sentiment: theme.sentiment,
+        stance: theme.stance ?? theme.sentiment,
         parentNarrative: parentNarrative ? { id: parentNarrative.id, title: parentNarrative.text } : null,
         documentCount: docs.length,
         recentDocuments: docs.slice(0, 5).map(d => ({ id: d.id, title: d.title }))
@@ -319,7 +319,7 @@ function createFunctionHandlers(router) {
       return narratives.map(n => ({
         id: n.id,
         title: n.text,
-        sentiment: n.sentiment,
+        stance: n.stance ?? n.sentiment,
         description: n.description?.substring(0, 200)
       }));
     },
@@ -338,7 +338,7 @@ function createFunctionHandlers(router) {
         description: faction.description,
         memberCount: faction.memberCount,
         narrativeCount: narratives.length,
-        topNarratives: narratives.slice(0, 5).map(n => ({ id: n.id, title: n.text, sentiment: n.sentiment })),
+        topNarratives: narratives.slice(0, 5).map(n => ({ id: n.id, title: n.text, stance: n.stance ?? n.sentiment })),
         affiliatedPeople: people.slice(0, 10).map(p => ({ id: p.id, name: p.name, role: p.role })),
         affiliatedOrganizations: orgs.slice(0, 10).map(o => ({ id: o.id, name: o.name, type: o.type }))
       };
@@ -467,7 +467,7 @@ function createFunctionHandlers(router) {
       return narratives.map(n => ({
         id: n.id,
         title: n.text,
-        sentiment: n.sentiment,
+        stance: n.stance ?? n.sentiment,
         themeCount: DataService.getThemesForNarrative(n.id).length
       }));
     },
@@ -504,7 +504,7 @@ function buildPageContext(route, id) {
           context.narrative = {
             id: narrative.id,
             title: narrative.text,
-            sentiment: narrative.sentiment,
+            stance: narrative.stance ?? narrative.sentiment,
             description: narrative.description
           };
         }
@@ -748,14 +748,15 @@ export class ChatService {
       if (narrative) {
         contextStr += `## Narrative Details\n`;
         contextStr += `- Title: ${narrative.text}\n`;
-        contextStr += `- Sentiment: ${narrative.sentiment} (${narrative.sentiment > 0 ? 'positive/favorable' : narrative.sentiment < 0 ? 'negative/critical' : 'neutral'})\n`;
+        const s = narrative.stance ?? narrative.sentiment;
+        contextStr += `- Stance: ${s} (${s > 0 ? 'positive/favorable' : s < 0 ? 'negative/critical' : 'neutral'})\n`;
         if (narrative.description) contextStr += `- Description: ${narrative.description}\n`;
         
         const themes = DataService.getThemesForNarrative(id);
         if (themes.length > 0) {
           contextStr += `\n## Themes (${themes.length})\n`;
           themes.slice(0, 5).forEach(t => {
-            contextStr += `- ${t.text} (sentiment: ${t.sentiment})\n`;
+            contextStr += `- ${t.text} (stance: ${t.stance ?? t.sentiment})\n`;
           });
         }
         
@@ -773,7 +774,7 @@ export class ChatService {
           contextStr += `\n## Faction Engagement\n`;
           for (const [factionId, data] of Object.entries(factionMentions)) {
             const faction = DataService.getFaction(factionId);
-            contextStr += `- ${faction?.name || factionId}: ${data.volume} mentions, sentiment ${data.sentiment}\n`;
+            contextStr += `- ${faction?.name || factionId}: ${data.volume} mentions, stance ${data.stance ?? data.sentiment}\n`;
           }
         }
       }
@@ -809,7 +810,7 @@ export class ChatService {
         if (narratives.length > 0) {
           contextStr += `\n## Active Narratives (${narratives.length})\n`;
           narratives.slice(0, 5).forEach(n => {
-            contextStr += `- ${n.text} (sentiment: ${n.sentiment})\n`;
+            contextStr += `- ${n.text} (stance: ${n.stance ?? n.sentiment})\n`;
           });
         }
         
@@ -843,7 +844,7 @@ export class ChatService {
       if (narratives.length > 0) {
         contextStr += `\n## Top Narratives\n`;
         narratives.slice(0, 5).forEach(n => {
-          contextStr += `- ${n.text} (sentiment: ${n.sentiment})\n`;
+          contextStr += `- ${n.text} (stance: ${n.stance ?? n.sentiment})\n`;
         });
       }
     }
@@ -1121,9 +1122,9 @@ Guidelines:
     if (context.orgCount > 0) {
       prompt += `- ${context.orgCount} organizations mentioned\n`;
     }
-    if (context.sentiment !== undefined) {
-      const sentimentLabel = context.sentiment > 0.2 ? 'positive' : context.sentiment < -0.2 ? 'negative' : 'neutral';
-      prompt += `- Overall sentiment: ${sentimentLabel} (${context.sentiment.toFixed(2)})\n`;
+    if (context.stance !== undefined) {
+      const stanceLabel = context.stance > 0.2 ? 'positive' : context.stance < -0.2 ? 'negative' : 'neutral';
+      prompt += `- Overall stance: ${stanceLabel} (${context.stance.toFixed(2)})\n`;
     }
     if (context.hasRecentActivity) {
       prompt += `- Has recent activity (documents in last 7 days)\n`;

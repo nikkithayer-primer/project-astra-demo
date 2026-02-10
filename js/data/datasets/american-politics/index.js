@@ -102,8 +102,8 @@ export const datasetName = 'American Politics';
 
 // Default settings for this dataset
 export const defaultSettings = {
-  copEnabled: true,
-  defaultStartPage: 'cop',
+  situationalPictureEnabled: true,
+  defaultStartPage: 'situational-picture',
   defaultViewTab: 'dashboard',
   showClassification: true
 };

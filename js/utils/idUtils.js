@@ -101,7 +101,7 @@ export function buildIdRoute(contextId, ...entityIds) {
   parts.push(...entityIds.filter(Boolean));
   
   if (parts.length === 0) {
-    return '#/cop/';
+    return '#/situational-picture/';
   }
   
   return `#/${parts.join('/')}/`;
@@ -166,13 +166,13 @@ export function parseIdRoute(hash) {
     entityIds: [],
     primaryEntityId: null,
     primaryEntityType: null,
-    isCopHome: false,
+    isSituationalPictureHome: false,
     isContextHome: false
   };
   
-  if (segments.length === 0 || segments[0] === 'cop') {
-    result.isCopHome = segments.length <= 1;
-    result.contextType = 'cop';
+  if (segments.length === 0 || segments[0] === 'situational-picture') {
+    result.isSituationalPictureHome = segments.length <= 1;
+    result.contextType = 'situational-picture';
     result.entityIds = segments.slice(1);
   } else if (isContextId(segments[0])) {
     result.contextId = segments[0];
@@ -180,8 +180,8 @@ export function parseIdRoute(hash) {
     result.isContextHome = segments.length === 1;
     result.entityIds = segments.slice(1);
   } else {
-    // No context prefix - treat as COP-scoped
-    result.contextType = 'cop';
+    // No context prefix - treat as situational picture scope
+    result.contextType = 'situational-picture';
     result.entityIds = segments;
   }
   
@@ -220,7 +220,7 @@ export function getEntityTypeDisplayName(type) {
     'alert': 'Alert',
     'user': 'User',
     'tag': 'Tag',
-    'cop': 'Common Operating Picture'
+    'situational-picture': 'Situational Picture'
   };
   
   return displayNames[type] || type;

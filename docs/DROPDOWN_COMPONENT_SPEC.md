@@ -258,7 +258,7 @@ renderClassificationFilter() {
 ## Native `<select>` Guidelines
 
 Continue using native `<select>` for:
-- Mission dropdown (COP)
+- Mission dropdown (Situational Picture)
 - Document type filter
 - Entity type filter
 - Any simple single-select with < 10 options

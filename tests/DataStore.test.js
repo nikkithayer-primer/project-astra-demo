@@ -266,7 +266,7 @@ describe('DataStore', () => {
       const id = dataStore.createNarrative({
         text: 'Test narrative',
         missionId: 'mission-1',
-        sentiment: 'positive',
+        stance: 0.5,
         factionMentions: { f1: { volume: 100 } }
       });
       

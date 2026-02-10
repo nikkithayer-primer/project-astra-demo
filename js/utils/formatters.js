@@ -5,44 +5,43 @@
  */
 
 /**
- * Normalize sentiment value to -1 to 1 range
- * @param {number} sentiment
+ * Normalize stance value to -1 to 1 range
+ * @param {number} stance
  * @returns {number} Value between -1 and 1
  */
-export function normalizeSentiment(sentiment) {
-  if (typeof sentiment === 'string') {
-    // Handle numeric strings
-    const parsed = parseFloat(sentiment);
+export function normalizeStance(stance) {
+  if (typeof stance === 'string') {
+    const parsed = parseFloat(stance);
     if (!isNaN(parsed)) {
       return Math.max(-1, Math.min(1, parsed));
     }
     return 0;
   }
-  if (typeof sentiment !== 'number' || isNaN(sentiment)) {
+  if (typeof stance !== 'number' || isNaN(stance)) {
     return 0;
   }
-  return Math.max(-1, Math.min(1, sentiment));
+  return Math.max(-1, Math.min(1, stance));
 }
 
 /**
- * Get sentiment CSS class based on numeric sentiment value
- * @param {number} sentiment
+ * Get stance CSS class based on numeric stance value
+ * @param {number} stance
  * @returns {string} CSS class suffix ('positive', 'neutral', or 'negative')
  */
-export function getSentimentClass(sentiment) {
-  const value = normalizeSentiment(sentiment);
+export function getStanceClass(stance) {
+  const value = normalizeStance(stance);
   if (value < -0.2) return 'negative';
   if (value > 0.2) return 'positive';
   return 'neutral';
 }
 
 /**
- * Format sentiment value for display as a label
- * @param {number|string} sentiment
- * @returns {string} Human-readable sentiment label
+ * Format stance value for display as a label
+ * @param {number|string} stance
+ * @returns {string} Human-readable stance label
  */
-export function formatSentiment(sentiment) {
-  const value = normalizeSentiment(sentiment);
+export function formatStance(stance) {
+  const value = normalizeStance(stance);
   if (value <= -0.6) return 'Very Negative';
   if (value <= -0.2) return 'Negative';
   if (value < 0.2) return 'Neutral';
@@ -51,30 +50,27 @@ export function formatSentiment(sentiment) {
 }
 
 /**
- * Format sentiment value as a number string
- * @param {number|string} sentiment
+ * Format stance value as a number string
+ * @param {number|string} stance
  * @returns {string} Formatted number (e.g., "+0.75", "-0.25", "0.00")
  */
-export function formatSentimentValue(sentiment) {
-  const value = normalizeSentiment(sentiment);
+export function formatStanceValue(stance) {
+  const value = normalizeStance(stance);
   const sign = value > 0 ? '+' : '';
   return `${sign}${value.toFixed(2)}`;
 }
 
 /**
- * Get sentiment color based on numeric sentiment value
- * @param {number} sentiment - Numeric value from -1 to 1
+ * Get stance color based on numeric stance value
+ * @param {number} stance - Numeric value from -1 to 1
  * @returns {string} CSS color value
  */
-export function getSentimentColor(sentiment) {
-  const value = normalizeSentiment(sentiment);
-  
-  // Simple binary: negative = red, positive = green
+export function getStanceColor(stance) {
+  const value = normalizeStance(stance);
   if (value < 0) {
-    return '#E57373'; // var(--sentiment-negative)
-  } else {
-    return '#66BB6A'; // var(--sentiment-positive)
+    return '#E57373'; // var(--stance-negative)
   }
+  return '#66BB6A'; // var(--stance-positive)
 }
 
 /**

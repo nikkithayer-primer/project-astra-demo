@@ -187,8 +187,8 @@ class App {
     const settings = this.dataStore.getSettings();
     let defaultPage = settings.defaultStartPage || 'monitors';
     
-    // If COP is disabled and was set as start page, fall back to monitors
-    if (!settings.copEnabled && (defaultPage === 'cop' || defaultPage === 'dashboard')) {
+    // If Situational Picture is disabled and was set as start page, fall back to monitors
+    if (!settings.situationalPictureEnabled && (defaultPage === 'situational-picture' || defaultPage === 'dashboard')) {
       defaultPage = 'monitors';
     }
     
@@ -370,11 +370,11 @@ class App {
           
           <div class="settings-row">
             <div class="settings-label">
-              <span class="settings-label-text">Enable Common Operating Picture</span>
-              <span class="settings-label-description">Show COP in navigation and enable it as a start page option.</span>
+              <span class="settings-label-text">Enable Situational Picture</span>
+              <span class="settings-label-description">Show Situational Picture in navigation and enable it as a start page option.</span>
             </div>
             <label class="toggle-switch">
-              <input type="checkbox" id="setting-cop-enabled" ${settings.copEnabled ? 'checked' : ''}>
+              <input type="checkbox" id="setting-situational-picture-enabled" ${settings.situationalPictureEnabled ? 'checked' : ''}>
               <span class="toggle-slider"></span>
             </label>
           </div>
@@ -385,7 +385,7 @@ class App {
               <span class="settings-label-description">Page to show when opening the app</span>
             </div>
             <select id="setting-start-page" class="settings-select">
-              <option value="cop" ${settings.defaultStartPage === 'cop' ? 'selected' : ''} ${!settings.copEnabled ? 'disabled' : ''}>Common Operating Picture</option>
+              <option value="situational-picture" ${settings.defaultStartPage === 'situational-picture' ? 'selected' : ''} ${!settings.situationalPictureEnabled ? 'disabled' : ''}>Situational Picture</option>
               <option value="monitors" ${settings.defaultStartPage === 'monitors' ? 'selected' : ''}>Monitors</option>
               <option value="search" ${settings.defaultStartPage === 'search' ? 'selected' : ''}>Search</option>
             </select>
@@ -499,17 +499,17 @@ class App {
       </div>
     `);
     
-    // Handle COP toggle enabling/disabling COP as start page option
-    const copToggle = document.getElementById('setting-cop-enabled');
+    // Handle Situational Picture toggle enabling/disabling it as start page option
+    const situationalPictureToggle = document.getElementById('setting-situational-picture-enabled');
     const startPageSelect = document.getElementById('setting-start-page');
-    const copOption = startPageSelect?.querySelector('option[value="cop"]');
+    const situationalPictureOption = startPageSelect?.querySelector('option[value="situational-picture"]');
     
-    copToggle?.addEventListener('change', () => {
-      if (copOption) {
-        copOption.disabled = !copToggle.checked;
+    situationalPictureToggle?.addEventListener('change', () => {
+      if (situationalPictureOption) {
+        situationalPictureOption.disabled = !situationalPictureToggle.checked;
       }
-      // If COP was selected but is now disabled, switch to monitors
-      if (!copToggle.checked && startPageSelect?.value === 'cop') {
+      // If Situational Picture was selected but is now disabled, switch to monitors
+      if (!situationalPictureToggle.checked && startPageSelect?.value === 'situational-picture') {
         startPageSelect.value = 'monitors';
       }
     });
@@ -545,20 +545,20 @@ class App {
    * Save settings from the modal
    */
   saveSettings() {
-    const copEnabled = document.getElementById('setting-cop-enabled')?.checked ?? true;
-    let defaultStartPage = document.getElementById('setting-start-page')?.value || 'cop';
+    const situationalPictureEnabled = document.getElementById('setting-situational-picture-enabled')?.checked ?? true;
+    let defaultStartPage = document.getElementById('setting-start-page')?.value || 'situational-picture';
     const defaultViewTab = document.getElementById('setting-default-tab')?.value || 'dashboard';
     const showClassification = document.getElementById('setting-show-classification')?.checked ?? true;
     const autoSummary = document.getElementById('setting-auto-summary')?.checked ?? false;
     const suggestedQuestions = document.getElementById('setting-suggested-questions')?.checked ?? true;
     
-    // If COP is disabled and was selected as start page, fall back to monitors
-    if (!copEnabled && defaultStartPage === 'cop') {
+    // If Situational Picture is disabled and was selected as start page, fall back to monitors
+    if (!situationalPictureEnabled && defaultStartPage === 'situational-picture') {
       defaultStartPage = 'monitors';
     }
     
     this.dataStore.updateSettings({
-      copEnabled,
+      situationalPictureEnabled,
       defaultStartPage,
       defaultViewTab,
       showClassification,
@@ -596,13 +596,13 @@ class App {
    */
   updateNavigationForSettings() {
     const settings = this.dataStore.getSettings();
-    const copLink = document.querySelector('.nav-link[href="#/cop/"]');
+    const situationalPictureLink = document.querySelector('.nav-link[href="#/situational-picture/"]');
     
-    if (copLink) {
-      if (settings.copEnabled) {
-        copLink.classList.remove('hidden');
+    if (situationalPictureLink) {
+      if (settings.situationalPictureEnabled) {
+        situationalPictureLink.classList.remove('hidden');
       } else {
-        copLink.classList.add('hidden');
+        situationalPictureLink.classList.add('hidden');
       }
     }
   }
@@ -1196,8 +1196,8 @@ class App {
 
   /**
    * Get the current chat context key
-   * Chat conversations are bounded by context (workspace, monitor, project, cop, dashboard)
-   * @returns {string} Context key like "workspace-workspace-001" or "cop"
+   * Chat conversations are bounded by context (workspace, monitor, project, situational-picture, dashboard)
+   * @returns {string} Context key like "workspace-workspace-001" or "situational-picture"
    */
   getChatContextKey() {
     if (!this.router) return 'default';
@@ -1526,7 +1526,7 @@ class App {
   getAutoSummaryPrompt(route, id) {
     switch (route) {
       case 'narrative':
-        return 'Give me a brief 2-3 sentence summary of this narrative, including key themes and the overall sentiment.';
+        return 'Give me a brief 2-3 sentence summary of this narrative, including key themes and the overall stance.';
       case 'theme':
         return 'Briefly summarize this theme and how it relates to its parent narrative.';
       case 'faction':
@@ -1625,7 +1625,7 @@ class App {
         if (!narrative) return null;
         context.name = narrative.text;
         context.description = narrative.description;
-        context.sentiment = narrative.sentiment;
+        context.stance = narrative.stance ?? narrative.sentiment;
         context.themeCount = DataService.getThemesForNarrative(id).length;
         context.factionCount = Object.keys(DataService.getAggregateFactionMentionsForNarrative(id) || {}).length;
         context.documentCount = DataService.getDocumentsForNarrative(id).length;
@@ -1641,7 +1641,7 @@ class App {
         const theme = DataService.getTheme(id);
         if (!theme) return null;
         context.name = theme.text;
-        context.sentiment = theme.sentiment;
+        context.stance = theme.stance ?? theme.sentiment;
         const parent = DataService.getNarrative(theme.parentNarrativeId);
         context.parentNarrative = parent?.text;
         context.documentCount = DataService.getDocumentsForTheme(id).length;
@@ -1703,7 +1703,7 @@ class App {
         break;
       }
       case 'dashboard':
-      case 'cop':
+      case 'situational-picture':
       case 'monitor':
       case 'monitors': {
         context.type = 'dashboard overview';
@@ -1760,7 +1760,7 @@ class App {
         return [
           'What narratives is this faction most active in?',
           'Who are the key people affiliated with this faction?',
-          'How does this faction\'s sentiment compare to others?'
+          'How does this faction\'s stance compare to others?'
         ];
       case 'person':
         return [
@@ -1820,7 +1820,7 @@ class App {
     const sparklineElements = container.querySelectorAll('.chat-sparkline');
     sparklineElements.forEach(el => {
       const valuesStr = el.dataset.values;
-      const sentiment = parseFloat(el.dataset.sentiment) || 0;
+      const stance = parseFloat(el.dataset.stance ?? el.dataset.sentiment) || 0;
       
       if (!valuesStr) return;
       
@@ -1844,8 +1844,8 @@ class App {
       
       // Color based on sentiment
       let color = '#888';
-      if (sentiment > 0.2) color = 'var(--sentiment-positive, #66BB6A)';
-      else if (sentiment < -0.2) color = 'var(--sentiment-negative, #E57373)';
+      if (stance > 0.2) color = 'var(--stance-positive, #66BB6A)';
+      else if (stance < -0.2) color = 'var(--stance-negative, #E57373)';
       
       el.innerHTML = `<svg viewBox="0 0 ${width} ${height}" width="${width}" height="${height}">
         <polyline points="${points}" fill="none" stroke="${color}" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
@@ -1954,7 +1954,7 @@ class App {
       listHtml += `<div class="chat-narrative-meta">`;
       listHtml += `<span class="chat-narrative-volume">${volumeDisplay} mentions</span>`;
       if (sparklineData.length > 1) {
-        listHtml += `<span class="chat-sparkline" data-values="${sparklineData.join(',')}" data-sentiment="${n.sentiment || 0}"></span>`;
+        listHtml += `<span class="chat-sparkline" data-values="${sparklineData.join(',')}" data-stance="${(n.stance ?? n.sentiment) ?? 0}"></span>`;
       }
       listHtml += `</div>`;
       
@@ -2004,12 +2004,12 @@ class App {
     
     const themes = DataService.getThemesForNarrative(id);
     const factions = DataService.getFactionsForNarrative(id);
-    const sentiment = narrative.sentiment || 0;
-    const sentimentLabel = sentiment > 0.2 ? 'positive' : sentiment < -0.2 ? 'negative' : 'neutral';
+    const stanceVal = narrative.stance ?? narrative.sentiment ?? 0;
+    const stanceLabel = stanceVal > 0.2 ? 'positive' : stanceVal < -0.2 ? 'negative' : 'neutral';
     
     return `<strong>Narrative: ${this.escapeHtml(narrative.title || narrative.text?.substring(0, 50) + '...')}</strong><br><br>` +
       `<strong>Status:</strong> ${narrative.status || 'unknown'}<br>` +
-      `<strong>Sentiment:</strong> ${sentimentLabel} (${(sentiment * 100).toFixed(0)}%)<br>` +
+      `<strong>Stance:</strong> ${stanceLabel} (${(stanceVal * 100).toFixed(0)}%)<br>` +
       `<strong>Themes:</strong> ${themes.length}<br>` +
       `<strong>Factions involved:</strong> ${factions.length}`;
   }
@@ -2315,11 +2315,11 @@ class App {
     
     // Context-aware placeholder responses
     if (lowerMessage.includes('narrative') || lowerMessage.includes('story')) {
-      return "Several narratives match this query. A full implementation would analyze the narrative database and provide insights on themes, sentiment trends, and faction involvement. Explore narratives using the sidebar navigation.";
+      return "Several narratives match this query. A full implementation would analyze the narrative database and provide insights on themes, stance trends, and faction involvement. Explore narratives using the sidebar navigation.";
     }
     
     if (lowerMessage.includes('faction') || lowerMessage.includes('group')) {
-      return "Faction analysis is a key feature of Primer. This would typically include breakdowns of faction activities, associated narratives, and sentiment patterns. Check the Factions view for detailed faction information.";
+      return "Faction analysis is a key feature of Primer. This would typically include breakdowns of faction activities, associated narratives, and stance patterns. Check the Factions view for detailed faction information.";
     }
     
     if (lowerMessage.includes('event') || lowerMessage.includes('timeline')) {

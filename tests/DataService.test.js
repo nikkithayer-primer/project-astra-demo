@@ -63,7 +63,7 @@ describe('DataService', () => {
           id: 'sub-1',
           text: 'Theme one',
           parentNarrativeId: 'narr-1',
-          factionMentions: { 'faction-1': { volume: 30, sentiment: 0.2 } }
+          factionMentions: { 'faction-1': { volume: 30, stance: 0.2 } }
         }
       ],
       factions: [
@@ -98,8 +98,8 @@ describe('DataService', () => {
           publishedDate: '2024-01-01',
           narrativeIds: ['narr-1'],
           factionMentions: {
-            'faction-1': { sentiment: 0.5 },
-            'faction-2': { sentiment: -0.3 }
+            'faction-1': { stance: 0.5 },
+            'faction-2': { stance: -0.3 }
           }
         },
         { 
@@ -109,8 +109,8 @@ describe('DataService', () => {
           publishedDate: '2024-01-02',
           narrativeIds: ['narr-1'],
           factionMentions: {
-            'faction-1': { sentiment: 0.6 },
-            'faction-2': { sentiment: -0.2 }
+            'faction-1': { stance: 0.6 },
+            'faction-2': { stance: -0.2 }
           }
         },
         { 
@@ -120,7 +120,7 @@ describe('DataService', () => {
           publishedDate: '2024-01-03',
           narrativeIds: ['narr-2'],
           factionMentions: {
-            'faction-1': { sentiment: -0.2 }
+            'faction-1': { stance: -0.2 }
           }
         }
       ],
@@ -193,12 +193,12 @@ describe('DataService', () => {
   });
 
   describe('getFactionsForNarrative', () => {
-    it('returns factions with volume and sentiment data', () => {
+    it('returns factions with volume and stance data', () => {
       const result = DataService.getFactionsForNarrative('narr-1');
       expect(result.length).toBe(2);
       expect(result[0].faction).toBeDefined();
       expect(result[0].volume).toBeDefined();
-      expect(result[0].sentiment).toBeDefined();
+      expect(result[0].stance).toBeDefined();
     });
 
     it('returns empty array for narrative without factions', () => {

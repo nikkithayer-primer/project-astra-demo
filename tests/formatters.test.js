@@ -2,11 +2,11 @@ import { describe, it, expect, vi, beforeEach } from 'vitest';
 import {
   formatNumber,
   truncateText,
-  getSentimentClass,
-  normalizeSentiment,
-  formatSentiment,
-  formatSentimentValue,
-  getSentimentColor,
+  getStanceClass,
+  normalizeStance,
+  formatStance,
+  formatStanceValue,
+  getStanceColor,
   formatStatus,
   STATUS_LABELS
 } from '../js/utils/formatters.js';
@@ -84,126 +84,126 @@ describe('formatters', () => {
     });
   });
 
-  describe('normalizeSentiment', () => {
+  describe('normalizeStance', () => {
     it('clamps values to -1 to 1 range', () => {
-      expect(normalizeSentiment(0.5)).toBe(0.5);
-      expect(normalizeSentiment(-0.5)).toBe(-0.5);
-      expect(normalizeSentiment(2)).toBe(1);
-      expect(normalizeSentiment(-2)).toBe(-1);
+      expect(normalizeStance(0.5)).toBe(0.5);
+      expect(normalizeStance(-0.5)).toBe(-0.5);
+      expect(normalizeStance(2)).toBe(1);
+      expect(normalizeStance(-2)).toBe(-1);
     });
 
     it('handles string numbers', () => {
-      expect(normalizeSentiment('0.5')).toBe(0.5);
-      expect(normalizeSentiment('-0.75')).toBe(-0.75);
-      expect(normalizeSentiment('1.5')).toBe(1);
+      expect(normalizeStance('0.5')).toBe(0.5);
+      expect(normalizeStance('-0.75')).toBe(-0.75);
+      expect(normalizeStance('1.5')).toBe(1);
     });
 
     it('returns 0 for invalid inputs', () => {
-      expect(normalizeSentiment('not a number')).toBe(0);
-      expect(normalizeSentiment(null)).toBe(0);
-      expect(normalizeSentiment(undefined)).toBe(0);
-      expect(normalizeSentiment(NaN)).toBe(0);
+      expect(normalizeStance('not a number')).toBe(0);
+      expect(normalizeStance(null)).toBe(0);
+      expect(normalizeStance(undefined)).toBe(0);
+      expect(normalizeStance(NaN)).toBe(0);
     });
 
     it('handles edge cases', () => {
-      expect(normalizeSentiment(0)).toBe(0);
-      expect(normalizeSentiment(1)).toBe(1);
-      expect(normalizeSentiment(-1)).toBe(-1);
+      expect(normalizeStance(0)).toBe(0);
+      expect(normalizeStance(1)).toBe(1);
+      expect(normalizeStance(-1)).toBe(-1);
     });
   });
 
-  describe('getSentimentClass', () => {
+  describe('getStanceClass', () => {
     it('returns negative for values below -0.2', () => {
-      expect(getSentimentClass(-0.5)).toBe('negative');
-      expect(getSentimentClass(-1)).toBe('negative');
-      expect(getSentimentClass(-0.21)).toBe('negative');
+      expect(getStanceClass(-0.5)).toBe('negative');
+      expect(getStanceClass(-1)).toBe('negative');
+      expect(getStanceClass(-0.21)).toBe('negative');
     });
 
     it('returns positive for values above 0.2', () => {
-      expect(getSentimentClass(0.5)).toBe('positive');
-      expect(getSentimentClass(1)).toBe('positive');
-      expect(getSentimentClass(0.21)).toBe('positive');
+      expect(getStanceClass(0.5)).toBe('positive');
+      expect(getStanceClass(1)).toBe('positive');
+      expect(getStanceClass(0.21)).toBe('positive');
     });
 
     it('returns neutral for values between -0.2 and 0.2', () => {
-      expect(getSentimentClass(0)).toBe('neutral');
-      expect(getSentimentClass(0.2)).toBe('neutral');
-      expect(getSentimentClass(-0.2)).toBe('neutral');
-      expect(getSentimentClass(0.1)).toBe('neutral');
-      expect(getSentimentClass(-0.1)).toBe('neutral');
+      expect(getStanceClass(0)).toBe('neutral');
+      expect(getStanceClass(0.2)).toBe('neutral');
+      expect(getStanceClass(-0.2)).toBe('neutral');
+      expect(getStanceClass(0.1)).toBe('neutral');
+      expect(getStanceClass(-0.1)).toBe('neutral');
     });
 
     it('normalizes values before classification', () => {
-      expect(getSentimentClass(5)).toBe('positive');
-      expect(getSentimentClass(-5)).toBe('negative');
-      expect(getSentimentClass('0.5')).toBe('positive');
+      expect(getStanceClass(5)).toBe('positive');
+      expect(getStanceClass(-5)).toBe('negative');
+      expect(getStanceClass('0.5')).toBe('positive');
     });
   });
 
-  describe('formatSentiment', () => {
+  describe('formatStance', () => {
     it('returns Very Negative for values <= -0.6', () => {
-      expect(formatSentiment(-0.6)).toBe('Very Negative');
-      expect(formatSentiment(-1)).toBe('Very Negative');
-      expect(formatSentiment(-0.8)).toBe('Very Negative');
+      expect(formatStance(-0.6)).toBe('Very Negative');
+      expect(formatStance(-1)).toBe('Very Negative');
+      expect(formatStance(-0.8)).toBe('Very Negative');
     });
 
     it('returns Negative for values <= -0.2', () => {
-      expect(formatSentiment(-0.3)).toBe('Negative');
-      expect(formatSentiment(-0.5)).toBe('Negative');
-      expect(formatSentiment(-0.21)).toBe('Negative');
+      expect(formatStance(-0.3)).toBe('Negative');
+      expect(formatStance(-0.5)).toBe('Negative');
+      expect(formatStance(-0.21)).toBe('Negative');
     });
 
     it('returns Neutral for values between -0.2 and 0.2', () => {
-      expect(formatSentiment(0)).toBe('Neutral');
-      expect(formatSentiment(0.1)).toBe('Neutral');
-      expect(formatSentiment(-0.1)).toBe('Neutral');
+      expect(formatStance(0)).toBe('Neutral');
+      expect(formatStance(0.1)).toBe('Neutral');
+      expect(formatStance(-0.1)).toBe('Neutral');
     });
 
     it('returns Positive for values < 0.6', () => {
-      expect(formatSentiment(0.3)).toBe('Positive');
-      expect(formatSentiment(0.5)).toBe('Positive');
+      expect(formatStance(0.3)).toBe('Positive');
+      expect(formatStance(0.5)).toBe('Positive');
     });
 
     it('returns Very Positive for values >= 0.6', () => {
-      expect(formatSentiment(0.6)).toBe('Very Positive');
-      expect(formatSentiment(1)).toBe('Very Positive');
-      expect(formatSentiment(0.8)).toBe('Very Positive');
+      expect(formatStance(0.6)).toBe('Very Positive');
+      expect(formatStance(1)).toBe('Very Positive');
+      expect(formatStance(0.8)).toBe('Very Positive');
     });
   });
 
-  describe('formatSentimentValue', () => {
+  describe('formatStanceValue', () => {
     it('formats positive values with + sign', () => {
-      expect(formatSentimentValue(0.5)).toBe('+0.50');
-      expect(formatSentimentValue(0.75)).toBe('+0.75');
-      expect(formatSentimentValue(1)).toBe('+1.00');
+      expect(formatStanceValue(0.5)).toBe('+0.50');
+      expect(formatStanceValue(0.75)).toBe('+0.75');
+      expect(formatStanceValue(1)).toBe('+1.00');
     });
 
     it('formats negative values without extra sign', () => {
-      expect(formatSentimentValue(-0.5)).toBe('-0.50');
-      expect(formatSentimentValue(-0.25)).toBe('-0.25');
+      expect(formatStanceValue(-0.5)).toBe('-0.50');
+      expect(formatStanceValue(-0.25)).toBe('-0.25');
     });
 
     it('formats zero without sign', () => {
-      expect(formatSentimentValue(0)).toBe('0.00');
+      expect(formatStanceValue(0)).toBe('0.00');
     });
 
     it('handles string inputs', () => {
-      expect(formatSentimentValue('0.5')).toBe('+0.50');
-      expect(formatSentimentValue('-0.3')).toBe('-0.30');
+      expect(formatStanceValue('0.5')).toBe('+0.50');
+      expect(formatStanceValue('-0.3')).toBe('-0.30');
     });
   });
 
-  describe('getSentimentColor', () => {
-    it('returns red for negative sentiment', () => {
-      expect(getSentimentColor(-0.5)).toBe('#E57373');
-      expect(getSentimentColor(-0.1)).toBe('#E57373');
-      expect(getSentimentColor(-1)).toBe('#E57373');
+  describe('getStanceColor', () => {
+    it('returns red for negative stance', () => {
+      expect(getStanceColor(-0.5)).toBe('#E57373');
+      expect(getStanceColor(-0.1)).toBe('#E57373');
+      expect(getStanceColor(-1)).toBe('#E57373');
     });
 
-    it('returns green for positive and zero sentiment', () => {
-      expect(getSentimentColor(0.5)).toBe('#66BB6A');
-      expect(getSentimentColor(0)).toBe('#66BB6A');
-      expect(getSentimentColor(1)).toBe('#66BB6A');
+    it('returns green for positive and zero stance', () => {
+      expect(getStanceColor(0.5)).toBe('#66BB6A');
+      expect(getStanceColor(0)).toBe('#66BB6A');
+      expect(getStanceColor(1)).toBe('#66BB6A');
     });
   });
 

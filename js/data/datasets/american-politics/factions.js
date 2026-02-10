@@ -192,26 +192,26 @@ export const factionOverlaps = [
   {
     factionIds: ['faction-005', 'faction-006'],
     overlapSize: 3000000,
-    sharedSentiment: { 'narr-003': -0.48 }
+    sharedStance: { 'narr-003': -0.48 }
   },
   {
     factionIds: ['faction-009', 'faction-001'],
     overlapSize: 5000000,
-    sharedSentiment: { 'narr-005': 0.82, 'narr-009': 0.75 }
+    sharedStance: { 'narr-005': 0.82, 'narr-009': 0.75 }
   },
   {
     factionIds: ['faction-008', 'faction-002'],
     overlapSize: 200000,
-    sharedSentiment: { 'narr-006': -0.65 }
+    sharedStance: { 'narr-006': -0.65 }
   },
   {
     factionIds: ['faction-011', 'faction-006'],
     overlapSize: 2000000,
-    sharedSentiment: { 'narr-003': -0.55, 'narr-010': -0.72 }
+    sharedStance: { 'narr-003': -0.55, 'narr-010': -0.72 }
   },
   {
     factionIds: ['faction-013', 'faction-003'],
     overlapSize: 1000000,
-    sharedSentiment: { 'narr-006': -0.58, 'narr-008': -0.62 }
+    sharedStance: { 'narr-006': -0.58, 'narr-008': -0.62 }
   }
 ];

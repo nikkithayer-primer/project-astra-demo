@@ -161,10 +161,10 @@ export const documents = [
     locationIds: ['loc-001'],
     eventIds: ['event-001'],
     factionMentions: {
-      'faction-001': { sentiment: 0.75 },
-      'faction-002': { sentiment: -0.58 },
-      'faction-003': { sentiment: 0.12 },
-      'faction-011': { sentiment: 0.85 }
+      'faction-001': { stance: 0.75 },
+      'faction-002': { stance: -0.58 },
+      'faction-003': { stance: 0.12 },
+      'faction-011': { stance: 0.85 }
     },
     tagIds: ['tag-002'],
     highlights: [
@@ -327,10 +327,10 @@ export const documents = [
     locationIds: ['loc-001'],
     eventIds: ['event-001'],
     factionMentions: {
-      'faction-001': { sentiment: 0.72 },
-      'faction-002': { sentiment: -0.55 },
-      'faction-003': { sentiment: 0.18 },
-      'faction-011': { sentiment: 0.85 }
+      'faction-001': { stance: 0.72 },
+      'faction-002': { stance: -0.55 },
+      'faction-003': { stance: 0.18 },
+      'faction-011': { stance: 0.85 }
     },
     tagIds: ['tag-003'],
     highlights: [],
@@ -470,10 +470,10 @@ export const documents = [
     locationIds: [],
     eventIds: [],
     factionMentions: {
-      'faction-001': { sentiment: 0.77 },
-      'faction-002': { sentiment: -0.62 },
-      'faction-003': { sentiment: 0.15 },
-      'faction-011': { sentiment: 0.85 }
+      'faction-001': { stance: 0.77 },
+      'faction-002': { stance: -0.62 },
+      'faction-003': { stance: 0.15 },
+      'faction-011': { stance: 0.85 }
     },
     tagIds: ['tag-001'],
     highlights: [
@@ -603,10 +603,10 @@ export const documents = [
     locationIds: ['loc-004'],
     eventIds: [],
     factionMentions: {
-      'faction-001': { sentiment: 0.74 },
-      'faction-002': { sentiment: -0.59 },
-      'faction-003': { sentiment: 0.16 },
-      'faction-011': { sentiment: 0.85 }
+      'faction-001': { stance: 0.74 },
+      'faction-002': { stance: -0.59 },
+      'faction-003': { stance: 0.16 },
+      'faction-011': { stance: 0.85 }
     },
     tagIds: ['tag-002'],
     highlights: [],
@@ -721,12 +721,12 @@ export const documents = [
     locationIds: ['loc-005'],
     eventIds: ['event-003'],
     factionMentions: {
-      'faction-001': { sentiment: -0.82 },
-      'faction-002': { sentiment: 0.71 },
-      'faction-004': { sentiment: -0.68 },
-      'faction-006': { sentiment: -0.45 },
-      'faction-007': { sentiment: -0.52 },
-      'faction-013': { sentiment: -0.68 }
+      'faction-001': { stance: -0.82 },
+      'faction-002': { stance: 0.71 },
+      'faction-004': { stance: -0.68 },
+      'faction-006': { stance: -0.45 },
+      'faction-007': { stance: -0.52 },
+      'faction-013': { stance: -0.68 }
     },
     tagIds: ['tag-003'],
     highlights: [
@@ -864,12 +864,12 @@ export const documents = [
     locationIds: ['loc-003'],
     eventIds: ['event-004'],
     factionMentions: {
-      'faction-001': { sentiment: -0.79 },
-      'faction-002': { sentiment: 0.73 },
-      'faction-004': { sentiment: -0.65 },
-      'faction-006': { sentiment: -0.44 },
-      'faction-007': { sentiment: -0.52 },
-      'faction-013': { sentiment: -0.68 }
+      'faction-001': { stance: -0.79 },
+      'faction-002': { stance: 0.73 },
+      'faction-004': { stance: -0.65 },
+      'faction-006': { stance: -0.44 },
+      'faction-007': { stance: -0.52 },
+      'faction-013': { stance: -0.68 }
     },
     tagIds: ['tag-001'],
     highlights: [],
@@ -983,12 +983,12 @@ export const documents = [
     locationIds: ['loc-004'],
     eventIds: [],
     factionMentions: {
-      'faction-001': { sentiment: -0.84 },
-      'faction-002': { sentiment: 0.69 },
-      'faction-004': { sentiment: -0.71 },
-      'faction-006': { sentiment: -0.47 },
-      'faction-007': { sentiment: -0.52 },
-      'faction-013': { sentiment: -0.68 }
+      'faction-001': { stance: -0.84 },
+      'faction-002': { stance: 0.69 },
+      'faction-004': { stance: -0.71 },
+      'faction-006': { stance: -0.47 },
+      'faction-007': { stance: -0.52 },
+      'faction-013': { stance: -0.68 }
     },
     tagIds: ['tag-002'],
     highlights: [],
@@ -1117,12 +1117,12 @@ export const documents = [
     locationIds: ['loc-004'],
     eventIds: [],
     factionMentions: {
-      'faction-001': { sentiment: -0.81 },
-      'faction-002': { sentiment: 0.74 },
-      'faction-004': { sentiment: -0.66 },
-      'faction-006': { sentiment: -0.43 },
-      'faction-007': { sentiment: -0.52 },
-      'faction-013': { sentiment: -0.68 }
+      'faction-001': { stance: -0.81 },
+      'faction-002': { stance: 0.74 },
+      'faction-004': { stance: -0.66 },
+      'faction-006': { stance: -0.43 },
+      'faction-007': { stance: -0.52 },
+      'faction-013': { stance: -0.68 }
     },
     tagIds: ['tag-003'],
     highlights: [],
@@ -1242,11 +1242,11 @@ export const documents = [
     locationIds: ['loc-006'],
     eventIds: ['event-006'],
     factionMentions: {
-      'faction-001': { sentiment: 0.76 },
-      'faction-002': { sentiment: -0.48 },
-      'faction-003': { sentiment: 0.25 },
-      'faction-005': { sentiment: 0.68 },
-      'faction-011': { sentiment: 0.82 }
+      'faction-001': { stance: 0.76 },
+      'faction-002': { stance: -0.48 },
+      'faction-003': { stance: 0.25 },
+      'faction-005': { stance: 0.68 },
+      'faction-011': { stance: 0.82 }
     },
     highlights: [
       {
@@ -1352,11 +1352,11 @@ export const documents = [
     locationIds: ['loc-006'],
     eventIds: ['event-007'],
     factionMentions: {
-      'faction-001': { sentiment: 0.73 },
-      'faction-002': { sentiment: -0.51 },
-      'faction-003': { sentiment: 0.24 },
-      'faction-005': { sentiment: 0.70 },
-      'faction-011': { sentiment: 0.82 }
+      'faction-001': { stance: 0.73 },
+      'faction-002': { stance: -0.51 },
+      'faction-003': { stance: 0.24 },
+      'faction-005': { stance: 0.70 },
+      'faction-011': { stance: 0.82 }
     },
     tagIds: ['tag-001'],
     highlights: [],
@@ -1439,11 +1439,11 @@ export const documents = [
     locationIds: [],
     eventIds: [],
     factionMentions: {
-      'faction-001': { sentiment: 0.78 },
-      'faction-002': { sentiment: -0.46 },
-      'faction-003': { sentiment: 0.27 },
-      'faction-005': { sentiment: 0.66 },
-      'faction-011': { sentiment: 0.82 }
+      'faction-001': { stance: 0.78 },
+      'faction-002': { stance: -0.46 },
+      'faction-003': { stance: 0.27 },
+      'faction-005': { stance: 0.66 },
+      'faction-011': { stance: 0.82 }
     },
     tagIds: ['tag-002'],
     highlights: [],
@@ -1542,12 +1542,12 @@ export const documents = [
     locationIds: ['loc-001'],
     eventIds: ['event-008'],
     factionMentions: {
-      'faction-001': { sentiment: -0.68 },
-      'faction-002': { sentiment: 0.75 },
-      'faction-003': { sentiment: -0.18 },
-      'faction-006': { sentiment: -0.55 },
-      'faction-011': { sentiment: 0.75 },
-      'faction-013': { sentiment: -0.68 }
+      'faction-001': { stance: -0.68 },
+      'faction-002': { stance: 0.75 },
+      'faction-003': { stance: -0.18 },
+      'faction-006': { stance: -0.55 },
+      'faction-011': { stance: 0.75 },
+      'faction-013': { stance: -0.68 }
     },
     tagIds: ['tag-003'],
     highlights: [
@@ -1667,12 +1667,12 @@ export const documents = [
     locationIds: ['loc-004', 'loc-001'],
     eventIds: ['event-009'],
     factionMentions: {
-      'faction-001': { sentiment: -0.71 },
-      'faction-002': { sentiment: 0.73 },
-      'faction-003': { sentiment: -0.21 },
-      'faction-006': { sentiment: -0.53 },
-      'faction-011': { sentiment: 0.75 },
-      'faction-013': { sentiment: -0.68 }
+      'faction-001': { stance: -0.71 },
+      'faction-002': { stance: 0.73 },
+      'faction-003': { stance: -0.21 },
+      'faction-006': { stance: -0.53 },
+      'faction-011': { stance: 0.75 },
+      'faction-013': { stance: -0.68 }
     },
     tagIds: ['tag-001'],
     highlights: [],
@@ -1705,12 +1705,12 @@ export const documents = [
     locationIds: ['loc-001'],
     eventIds: [],
     factionMentions: {
-      'faction-001': { sentiment: -0.66 },
-      'faction-002': { sentiment: 0.77 },
-      'faction-003': { sentiment: -0.16 },
-      'faction-006': { sentiment: -0.57 },
-      'faction-011': { sentiment: 0.75 },
-      'faction-013': { sentiment: -0.68 }
+      'faction-001': { stance: -0.66 },
+      'faction-002': { stance: 0.77 },
+      'faction-003': { stance: -0.16 },
+      'faction-006': { stance: -0.57 },
+      'faction-011': { stance: 0.75 },
+      'faction-013': { stance: -0.68 }
     },
     tagIds: ['tag-002'],
     highlights: [],
@@ -1797,11 +1797,11 @@ export const documents = [
     locationIds: ['loc-007'],
     eventIds: ['event-010'],
     factionMentions: {
-      'faction-001': { sentiment: -0.75 },
-      'faction-002': { sentiment: 0.71 },
-      'faction-003': { sentiment: -0.22 },
-      'faction-006': { sentiment: -0.48 },
-      'faction-013': { sentiment: -0.68 }
+      'faction-001': { stance: -0.75 },
+      'faction-002': { stance: 0.71 },
+      'faction-003': { stance: -0.22 },
+      'faction-006': { stance: -0.48 },
+      'faction-013': { stance: -0.68 }
     },
     tagIds: ['tag-003'],
     highlights: [],
@@ -1902,11 +1902,11 @@ export const documents = [
     locationIds: ['loc-007', 'loc-004'],
     eventIds: ['event-010', 'event-011'],
     factionMentions: {
-      'faction-001': { sentiment: -0.77 },
-      'faction-002': { sentiment: 0.69 },
-      'faction-003': { sentiment: -0.24 },
-      'faction-006': { sentiment: -0.51 },
-      'faction-013': { sentiment: -0.68 }
+      'faction-001': { stance: -0.77 },
+      'faction-002': { stance: 0.69 },
+      'faction-003': { stance: -0.24 },
+      'faction-006': { stance: -0.51 },
+      'faction-013': { stance: -0.68 }
     },
     highlights: [
       {
@@ -2013,11 +2013,11 @@ export const documents = [
     locationIds: ['loc-004'],
     eventIds: ['event-011'],
     factionMentions: {
-      'faction-001': { sentiment: -0.73 },
-      'faction-002': { sentiment: 0.74 },
-      'faction-003': { sentiment: -0.19 },
-      'faction-006': { sentiment: -0.46 },
-      'faction-013': { sentiment: -0.68 }
+      'faction-001': { stance: -0.73 },
+      'faction-002': { stance: 0.74 },
+      'faction-003': { stance: -0.19 },
+      'faction-006': { stance: -0.46 },
+      'faction-013': { stance: -0.68 }
     },
     highlights: [],
     comments: []
@@ -2101,11 +2101,11 @@ export const documents = [
     locationIds: ['loc-002'],
     eventIds: ['event-012'],
     factionMentions: {
-      'faction-001': { sentiment: 0.78 },
-      'faction-002': { sentiment: -0.68 },
-      'faction-005': { sentiment: 0.62 },
-      'faction-008': { sentiment: 0.15 },
-      'faction-011': { sentiment: 0.75 }
+      'faction-001': { stance: 0.78 },
+      'faction-002': { stance: -0.68 },
+      'faction-005': { stance: 0.62 },
+      'faction-008': { stance: 0.15 },
+      'faction-011': { stance: 0.75 }
     },
     highlights: [],
     comments: []
@@ -2181,11 +2181,11 @@ export const documents = [
     locationIds: ['loc-008'],
     eventIds: [],
     factionMentions: {
-      'faction-001': { sentiment: 0.81 },
-      'faction-002': { sentiment: -0.66 },
-      'faction-005': { sentiment: 0.59 },
-      'faction-008': { sentiment: 0.15 },
-      'faction-011': { sentiment: 0.75 }
+      'faction-001': { stance: 0.81 },
+      'faction-002': { stance: -0.66 },
+      'faction-005': { stance: 0.59 },
+      'faction-008': { stance: 0.15 },
+      'faction-011': { stance: 0.75 }
     },
     highlights: [],
     comments: []
@@ -2270,11 +2270,11 @@ export const documents = [
     locationIds: ['loc-009'],
     eventIds: ['event-013'],
     factionMentions: {
-      'faction-001': { sentiment: -0.45 },
-      'faction-005': { sentiment: 0.58 },
-      'faction-006': { sentiment: -0.38 },
-      'faction-007': { sentiment: -0.52 },
-      'faction-009': { sentiment: 0.22 }
+      'faction-001': { stance: -0.45 },
+      'faction-005': { stance: 0.58 },
+      'faction-006': { stance: -0.38 },
+      'faction-007': { stance: -0.52 },
+      'faction-009': { stance: 0.22 }
     },
     highlights: [
       {
@@ -2368,11 +2368,11 @@ export const documents = [
     locationIds: ['loc-009', 'loc-010'],
     eventIds: ['event-013'],
     factionMentions: {
-      'faction-001': { sentiment: -0.43 },
-      'faction-005': { sentiment: 0.61 },
-      'faction-006': { sentiment: -0.36 },
-      'faction-007': { sentiment: -0.52 },
-      'faction-009': { sentiment: 0.22 }
+      'faction-001': { stance: -0.43 },
+      'faction-005': { stance: 0.61 },
+      'faction-006': { stance: -0.36 },
+      'faction-007': { stance: -0.52 },
+      'faction-009': { stance: 0.22 }
     },
     highlights: [],
     comments: []
@@ -2470,11 +2470,11 @@ export const documents = [
     locationIds: ['loc-009'],
     eventIds: ['event-014'],
     factionMentions: {
-      'faction-001': { sentiment: -0.47 },
-      'faction-005': { sentiment: 0.56 },
-      'faction-006': { sentiment: -0.41 },
-      'faction-007': { sentiment: -0.52 },
-      'faction-009': { sentiment: 0.22 }
+      'faction-001': { stance: -0.47 },
+      'faction-005': { stance: 0.56 },
+      'faction-006': { stance: -0.41 },
+      'faction-007': { stance: -0.52 },
+      'faction-009': { stance: 0.22 }
     },
     highlights: [],
     comments: []
@@ -2533,10 +2533,10 @@ export const documents = [
     locationIds: [],
     eventIds: [],
     factionMentions: {
-      'faction-001': { sentiment: 0.73 },
-      'faction-002': { sentiment: -0.61 },
-      'faction-003': { sentiment: 0.14 },
-      'faction-011': { sentiment: 0.85 }
+      'faction-001': { stance: 0.73 },
+      'faction-002': { stance: -0.61 },
+      'faction-003': { stance: 0.14 },
+      'faction-011': { stance: 0.85 }
     },
     highlights: [],
     comments: []
@@ -2594,10 +2594,10 @@ export const documents = [
     locationIds: [],
     eventIds: [],
     factionMentions: {
-      'faction-001': { sentiment: 0.76 },
-      'faction-011': { sentiment: 0.85 },
-      'faction-002': { sentiment: -0.57 },
-      'faction-003': { sentiment: 0.17 }
+      'faction-001': { stance: 0.76 },
+      'faction-011': { stance: 0.85 },
+      'faction-002': { stance: -0.57 },
+      'faction-003': { stance: 0.17 }
     },
     highlights: [],
     comments: []
@@ -2635,10 +2635,10 @@ export const documents = [
     locationIds: ['loc-001'],
     eventIds: ['event-002'],
     factionMentions: {
-      'faction-001': { sentiment: 0.78 },
-      'faction-002': { sentiment: -0.56 },
-      'faction-003': { sentiment: 0.13 },
-      'faction-011': { sentiment: 0.85 }
+      'faction-001': { stance: 0.78 },
+      'faction-002': { stance: -0.56 },
+      'faction-003': { stance: 0.13 },
+      'faction-011': { stance: 0.85 }
     },
     highlights: [],
     comments: []
@@ -2676,15 +2676,15 @@ export const documents = [
     locationIds: [],
     eventIds: [],
     factionMentions: {
-      'faction-001': { sentiment: 0.24 },
-      'faction-002': { sentiment: -0.12 },
-      'faction-003': { sentiment: 0.21 },
-      'faction-004': { sentiment: -0.65 },
-      'faction-005': { sentiment: 0.67 },
-      'faction-006': { sentiment: -0.44 },
-      'faction-007': { sentiment: -0.52 },
-      'faction-011': { sentiment: 0.85 },
-      'faction-013': { sentiment: -0.68 }
+      'faction-001': { stance: 0.24 },
+      'faction-002': { stance: -0.12 },
+      'faction-003': { stance: 0.21 },
+      'faction-004': { stance: -0.65 },
+      'faction-005': { stance: 0.67 },
+      'faction-006': { stance: -0.44 },
+      'faction-007': { stance: -0.52 },
+      'faction-011': { stance: 0.85 },
+      'faction-013': { stance: -0.68 }
     },
     highlights: [],
     comments: []
@@ -2722,14 +2722,14 @@ export const documents = [
     locationIds: ['loc-004'],
     eventIds: [],
     factionMentions: {
-      'faction-001': { sentiment: -0.02 },
-      'faction-002': { sentiment: 0.06 },
-      'faction-003': { sentiment: 0.14 },
-      'faction-004': { sentiment: -0.68 },
-      'faction-006': { sentiment: -0.46 },
-      'faction-007': { sentiment: -0.52 },
-      'faction-011': { sentiment: 0.85 },
-      'faction-013': { sentiment: -0.68 }
+      'faction-001': { stance: -0.02 },
+      'faction-002': { stance: 0.06 },
+      'faction-003': { stance: 0.14 },
+      'faction-004': { stance: -0.68 },
+      'faction-006': { stance: -0.46 },
+      'faction-007': { stance: -0.52 },
+      'faction-011': { stance: 0.85 },
+      'faction-013': { stance: -0.68 }
     },
     highlights: [],
     comments: []
@@ -2767,12 +2767,12 @@ export const documents = [
     locationIds: ['loc-003'],
     eventIds: ['event-004'],
     factionMentions: {
-      'faction-001': { sentiment: -0.83 },
-      'faction-002': { sentiment: 0.72 },
-      'faction-004': { sentiment: -0.69 },
-      'faction-006': { sentiment: -0.46 },
-      'faction-007': { sentiment: -0.52 },
-      'faction-013': { sentiment: -0.68 }
+      'faction-001': { stance: -0.83 },
+      'faction-002': { stance: 0.72 },
+      'faction-004': { stance: -0.69 },
+      'faction-006': { stance: -0.46 },
+      'faction-007': { stance: -0.52 },
+      'faction-013': { stance: -0.68 }
     },
     highlights: [],
     comments: []
@@ -2810,10 +2810,10 @@ export const documents = [
     locationIds: [],
     eventIds: ['event-002'],
     factionMentions: {
-      'faction-001': { sentiment: 0.75 },
-      'faction-002': { sentiment: -0.63 },
-      'faction-003': { sentiment: 0.16 },
-      'faction-011': { sentiment: 0.85 }
+      'faction-001': { stance: 0.75 },
+      'faction-002': { stance: -0.63 },
+      'faction-003': { stance: 0.16 },
+      'faction-011': { stance: 0.85 }
     },
     highlights: [],
     comments: []
@@ -2871,11 +2871,11 @@ export const documents = [
     locationIds: ['loc-009'],
     eventIds: ['event-013'],
     factionMentions: {
-      'faction-001': { sentiment: -0.44 },
-      'faction-005': { sentiment: 0.59 },
-      'faction-006': { sentiment: -0.39 },
-      'faction-007': { sentiment: -0.52 },
-      'faction-009': { sentiment: 0.22 }
+      'faction-001': { stance: -0.44 },
+      'faction-005': { stance: 0.59 },
+      'faction-006': { stance: -0.39 },
+      'faction-007': { stance: -0.52 },
+      'faction-009': { stance: 0.22 }
     },
     highlights: [],
     comments: []
@@ -2982,10 +2982,10 @@ export const documents = [
     locationIds: ['loc-001', 'loc-002'],
     eventIds: ['event-001', 'event-002'],
     factionMentions: {
-      'faction-001': { sentiment: 0.08 },
-      'faction-002': { sentiment: -0.12 },
-      'faction-003': { sentiment: 0.05 },
-      'faction-011': { sentiment: 0.85 }
+      'faction-001': { stance: 0.08 },
+      'faction-002': { stance: -0.12 },
+      'faction-003': { stance: 0.05 },
+      'faction-011': { stance: 0.85 }
     },
     highlights: [
       {
@@ -3074,13 +3074,13 @@ export const documents = [
       }
     ],
     factionMentions: {
-      'faction-001': { sentiment: -0.14 },
-      'faction-002': { sentiment: 0.11 },
-      'faction-004': { sentiment: -0.08 },
-      'faction-006': { sentiment: -0.06 },
-      'faction-007': { sentiment: -0.52 },
-      'faction-011': { sentiment: 0.75 },
-      'faction-013': { sentiment: -0.68 }
+      'faction-001': { stance: -0.14 },
+      'faction-002': { stance: 0.11 },
+      'faction-004': { stance: -0.08 },
+      'faction-006': { stance: -0.06 },
+      'faction-007': { stance: -0.52 },
+      'faction-011': { stance: 0.75 },
+      'faction-013': { stance: -0.68 }
     },
     highlights: [
       {
@@ -3205,11 +3205,11 @@ export const documents = [
       }
     ],
     factionMentions: {
-      'faction-001': { sentiment: 0.12 },
-      'faction-002': { sentiment: -0.09 },
-      'faction-003': { sentiment: 0.06 },
-      'faction-005': { sentiment: 0.14 },
-      'faction-011': { sentiment: 0.82 }
+      'faction-001': { stance: 0.12 },
+      'faction-002': { stance: -0.09 },
+      'faction-003': { stance: 0.06 },
+      'faction-005': { stance: 0.14 },
+      'faction-011': { stance: 0.82 }
     },
     highlights: [
       {
@@ -3334,11 +3334,11 @@ export const documents = [
       }
     ],
     factionMentions: {
-      'faction-001': { sentiment: -0.11 },
-      'faction-002': { sentiment: 0.08 },
-      'faction-003': { sentiment: -0.05 },
-      'faction-006': { sentiment: -0.13 },
-      'faction-013': { sentiment: -0.68 }
+      'faction-001': { stance: -0.11 },
+      'faction-002': { stance: 0.08 },
+      'faction-003': { stance: -0.05 },
+      'faction-006': { stance: -0.13 },
+      'faction-013': { stance: -0.68 }
     },
     highlights: [
       {
@@ -3462,11 +3462,11 @@ export const documents = [
       }
     ],
     factionMentions: {
-      'faction-001': { sentiment: -0.07 },
-      'faction-005': { sentiment: 0.10 },
-      'faction-006': { sentiment: -0.04 },
-      'faction-007': { sentiment: -0.52 },
-      'faction-009': { sentiment: 0.22 }
+      'faction-001': { stance: -0.07 },
+      'faction-005': { stance: 0.10 },
+      'faction-006': { stance: -0.04 },
+      'faction-007': { stance: -0.52 },
+      'faction-009': { stance: 0.22 }
     },
     highlights: [
       {
@@ -3615,11 +3615,11 @@ export const documents = [
       }
     ],
     factionMentions: {
-      'faction-002': { sentiment: -0.55 },
-      'faction-005': { sentiment: -0.72 },
-      'faction-006': { sentiment: 0.35 },
-      'faction-008': { sentiment: 0.15 },
-      'faction-009': { sentiment: 0.22 }
+      'faction-002': { stance: -0.55 },
+      'faction-005': { stance: -0.72 },
+      'faction-006': { stance: 0.35 },
+      'faction-008': { stance: 0.15 },
+      'faction-009': { stance: 0.22 }
     },
     highlights: [],
     comments: []
@@ -3675,10 +3675,10 @@ export const documents = [
       }
     ],
     factionMentions: {
-      'faction-003': { sentiment: -0.42 },
-      'faction-005': { sentiment: -0.65 },
-      'faction-008': { sentiment: 0.15 },
-      'faction-009': { sentiment: 0.22 }
+      'faction-003': { stance: -0.42 },
+      'faction-005': { stance: -0.65 },
+      'faction-008': { stance: 0.15 },
+      'faction-009': { stance: 0.22 }
     },
     highlights: [],
     comments: []
@@ -3748,10 +3748,10 @@ export const documents = [
       }
     ],
     factionMentions: {
-      'faction-006': { sentiment: 0.72 },
-      'faction-010': { sentiment: -0.35 },
-      'faction-012': { sentiment: -0.42 },
-      'faction-016': { sentiment: 0.32 }
+      'faction-006': { stance: 0.72 },
+      'faction-010': { stance: -0.35 },
+      'faction-012': { stance: -0.42 },
+      'faction-016': { stance: 0.32 }
     },
     highlights: [],
     comments: []
@@ -3812,11 +3812,11 @@ export const documents = [
       }
     ],
     factionMentions: {
-      'faction-002': { sentiment: 0.58 },
-      'faction-006': { sentiment: -0.45 },
-      'faction-010': { sentiment: -0.35 },
-      'faction-012': { sentiment: -0.42 },
-      'faction-016': { sentiment: 0.32 }
+      'faction-002': { stance: 0.58 },
+      'faction-006': { stance: -0.45 },
+      'faction-010': { stance: -0.35 },
+      'faction-012': { stance: -0.42 },
+      'faction-016': { stance: 0.32 }
     },
     highlights: [],
     comments: []
@@ -3887,10 +3887,10 @@ export const documents = [
       }
     ],
     factionMentions: {
-      'faction-001': { sentiment: 0.75 },
-      'faction-002': { sentiment: -0.78 },
-      'faction-004': { sentiment: 0.82 },
-      'faction-015': { sentiment: -0.48 }
+      'faction-001': { stance: 0.75 },
+      'faction-002': { stance: -0.78 },
+      'faction-004': { stance: 0.82 },
+      'faction-015': { stance: -0.48 }
     },
     highlights: [],
     comments: []
@@ -3961,9 +3961,9 @@ export const documents = [
       }
     ],
     factionMentions: {
-      'faction-002': { sentiment: -0.65 },
-      'faction-005': { sentiment: -0.58 },
-      'faction-015': { sentiment: -0.48 }
+      'faction-002': { stance: -0.65 },
+      'faction-005': { stance: -0.58 },
+      'faction-015': { stance: -0.48 }
     },
     highlights: [],
     comments: []
@@ -3993,8 +3993,8 @@ export const documents = [
     quotes: [],
     activities: [],
     factionMentions: {
-      'faction-003': { sentiment: -0.35 },
-      'faction-015': { sentiment: -0.48 }
+      'faction-003': { stance: -0.35 },
+      'faction-015': { stance: -0.48 }
     },
     highlights: [],
     comments: []
@@ -4059,10 +4059,10 @@ export const documents = [
       }
     ],
     factionMentions: {
-      'faction-005': { sentiment: -0.68 },
-      'faction-006': { sentiment: 0.42 },
-      'faction-008': { sentiment: 0.15 },
-      'faction-009': { sentiment: 0.22 }
+      'faction-005': { stance: -0.68 },
+      'faction-006': { stance: 0.42 },
+      'faction-008': { stance: 0.15 },
+      'faction-009': { stance: 0.22 }
     },
     highlights: [],
     comments: []
@@ -4133,10 +4133,10 @@ export const documents = [
       }
     ],
     factionMentions: {
-      'faction-005': { sentiment: 0.85 },
-      'faction-006': { sentiment: 0.72 },
-      'faction-009': { sentiment: 0.22 },
-      'faction-014': { sentiment: 0.55 }
+      'faction-005': { stance: 0.85 },
+      'faction-006': { stance: 0.72 },
+      'faction-009': { stance: 0.22 },
+      'faction-014': { stance: 0.55 }
     },
     highlights: [],
     comments: []
@@ -4192,10 +4192,10 @@ export const documents = [
       }
     ],
     factionMentions: {
-      'faction-003': { sentiment: -0.38 },
-      'faction-005': { sentiment: 0.55 },
-      'faction-009': { sentiment: 0.22 },
-      'faction-014': { sentiment: 0.55 }
+      'faction-003': { stance: -0.38 },
+      'faction-005': { stance: 0.55 },
+      'faction-009': { stance: 0.22 },
+      'faction-014': { stance: 0.55 }
     },
     highlights: [],
     comments: []
@@ -4266,9 +4266,9 @@ export const documents = [
       }
     ],
     factionMentions: {
-      'faction-006': { sentiment: 0.78 },
-      'faction-009': { sentiment: 0.22 },
-      'faction-014': { sentiment: 0.55 }
+      'faction-006': { stance: 0.78 },
+      'faction-009': { stance: 0.22 },
+      'faction-014': { stance: 0.55 }
     },
     highlights: [],
     comments: []
@@ -4339,9 +4339,9 @@ export const documents = [
       }
     ],
     factionMentions: {
-      'faction-001': { sentiment: 0.82 },
-      'faction-004': { sentiment: 0.85 },
-      'faction-015': { sentiment: -0.48 }
+      'faction-001': { stance: 0.82 },
+      'faction-004': { stance: 0.85 },
+      'faction-015': { stance: -0.48 }
     },
     highlights: [],
     comments: []
@@ -4371,9 +4371,9 @@ export const documents = [
     quotes: [],
     activities: [],
     factionMentions: {
-      'faction-002': { sentiment: -0.52 },
-      'faction-005': { sentiment: -0.48 },
-      'faction-015': { sentiment: -0.48 }
+      'faction-002': { stance: -0.52 },
+      'faction-005': { stance: -0.48 },
+      'faction-015': { stance: -0.48 }
     },
     highlights: [],
     comments: []
@@ -4434,11 +4434,11 @@ export const documents = [
       }
     ],
     factionMentions: {
-      'faction-002': { sentiment: -0.42 },
-      'faction-006': { sentiment: -0.55 },
-      'faction-010': { sentiment: -0.35 },
-      'faction-012': { sentiment: -0.42 },
-      'faction-016': { sentiment: 0.32 }
+      'faction-002': { stance: -0.42 },
+      'faction-006': { stance: -0.55 },
+      'faction-010': { stance: -0.35 },
+      'faction-012': { stance: -0.42 },
+      'faction-016': { stance: 0.32 }
     },
     highlights: [],
     comments: []
@@ -4508,10 +4508,10 @@ export const documents = [
       }
     ],
     factionMentions: {
-      'faction-001': { sentiment: -0.62 },
-      'faction-006': { sentiment: -0.48 },
-      'faction-007': { sentiment: -0.52 },
-      'faction-013': { sentiment: -0.68 }
+      'faction-001': { stance: -0.62 },
+      'faction-006': { stance: -0.48 },
+      'faction-007': { stance: -0.52 },
+      'faction-013': { stance: -0.68 }
     },
     highlights: [],
     comments: []
@@ -4582,10 +4582,10 @@ export const documents = [
       }
     ],
     factionMentions: {
-      'faction-003': { sentiment: 0.55 },
-      'faction-005': { sentiment: 0.62 },
-      'faction-009': { sentiment: 0.22 },
-      'faction-014': { sentiment: 0.55 }
+      'faction-003': { stance: 0.55 },
+      'faction-005': { stance: 0.62 },
+      'faction-009': { stance: 0.22 },
+      'faction-014': { stance: 0.55 }
     },
     highlights: [],
     comments: []
@@ -4656,9 +4656,9 @@ export const documents = [
       }
     ],
     factionMentions: {
-      'faction-003': { sentiment: 0.42 },
-      'faction-009': { sentiment: 0.22 },
-      'faction-014': { sentiment: 0.55 }
+      'faction-003': { stance: 0.42 },
+      'faction-009': { stance: 0.22 },
+      'faction-014': { stance: 0.55 }
     },
     highlights: [],
     comments: []
@@ -4729,10 +4729,10 @@ export const documents = [
       }
     ],
     factionMentions: {
-      'faction-002': { sentiment: 0.65 },
-      'faction-005': { sentiment: 0.72 },
-      'faction-008': { sentiment: 0.15 },
-      'faction-009': { sentiment: 0.22 }
+      'faction-002': { stance: 0.65 },
+      'faction-005': { stance: 0.72 },
+      'faction-008': { stance: 0.15 },
+      'faction-009': { stance: 0.22 }
     },
     highlights: [],
     comments: []
@@ -4787,9 +4787,9 @@ export const documents = [
       }
     ],
     factionMentions: {
-      'faction-001': { sentiment: 0.78 },
-      'faction-003': { sentiment: 0.45 },
-      'faction-011': { sentiment: 0.85 }
+      'faction-001': { stance: 0.78 },
+      'faction-003': { stance: 0.45 },
+      'faction-011': { stance: 0.85 }
     },
     highlights: [],
     comments: []
@@ -4850,11 +4850,11 @@ export const documents = [
       }
     ],
     factionMentions: {
-      'faction-002': { sentiment: -0.35 },
-      'faction-006': { sentiment: -0.42 },
-      'faction-010': { sentiment: -0.35 },
-      'faction-012': { sentiment: -0.42 },
-      'faction-016': { sentiment: 0.32 }
+      'faction-002': { stance: -0.35 },
+      'faction-006': { stance: -0.42 },
+      'faction-010': { stance: -0.35 },
+      'faction-012': { stance: -0.42 },
+      'faction-016': { stance: 0.32 }
     },
     highlights: [],
     comments: []
@@ -4925,10 +4925,10 @@ export const documents = [
       }
     ],
     factionMentions: {
-      'faction-005': { sentiment: 0.82 },
-      'faction-006': { sentiment: 0.68 },
-      'faction-009': { sentiment: 0.22 },
-      'faction-014': { sentiment: 0.55 }
+      'faction-005': { stance: 0.82 },
+      'faction-006': { stance: 0.68 },
+      'faction-009': { stance: 0.22 },
+      'faction-014': { stance: 0.55 }
     },
     highlights: [],
     comments: []
@@ -4999,9 +4999,9 @@ export const documents = [
       }
     ],
     factionMentions: {
-      'faction-005': { sentiment: 0.45 },
-      'faction-008': { sentiment: 0.15 },
-      'faction-009': { sentiment: 0.22 }
+      'faction-005': { stance: 0.45 },
+      'faction-008': { stance: 0.15 },
+      'faction-009': { stance: 0.22 }
     },
     highlights: [],
     comments: []
@@ -5031,9 +5031,9 @@ export const documents = [
     quotes: [],
     activities: [],
     factionMentions: {
-      'faction-001': { sentiment: -0.35 },
-      'faction-002': { sentiment: 0.42 },
-      'faction-015': { sentiment: -0.48 }
+      'faction-001': { stance: -0.35 },
+      'faction-002': { stance: 0.42 },
+      'faction-015': { stance: -0.48 }
     },
     highlights: [],
     comments: []
@@ -5098,11 +5098,11 @@ export const documents = [
       }
     ],
     factionMentions: {
-      'faction-005': { sentiment: 0.72 },
-      'faction-006': { sentiment: 0.65 },
-      'faction-007': { sentiment: -0.52 },
-      'faction-009': { sentiment: 0.22 },
-      'faction-014': { sentiment: 0.55 }
+      'faction-005': { stance: 0.72 },
+      'faction-006': { stance: 0.65 },
+      'faction-007': { stance: -0.52 },
+      'faction-009': { stance: 0.22 },
+      'faction-014': { stance: 0.55 }
     },
     highlights: [],
     comments: []
@@ -5188,10 +5188,10 @@ export const documents = [
       }
     ],
     factionMentions: {
-      'faction-006': { sentiment: 0.75 },
-      'faction-010': { sentiment: -0.35 },
-      'faction-012': { sentiment: -0.42 },
-      'faction-016': { sentiment: 0.32 }
+      'faction-006': { stance: 0.75 },
+      'faction-010': { stance: -0.35 },
+      'faction-012': { stance: -0.42 },
+      'faction-016': { stance: 0.32 }
     },
     highlights: [],
     comments: []
@@ -5222,8 +5222,8 @@ export const documents = [
     locationIds: ['loc-001'],
     eventIds: [],
     factionMentions: {
-      'faction-003': { sentiment: 0.45 },
-      'faction-006': { sentiment: 0.35 }
+      'faction-003': { stance: 0.45 },
+      'faction-006': { stance: 0.35 }
     },
     metrics: { likes: 4850, comments: 892, platform: 'reddit' },
     highlights: [],
@@ -5254,8 +5254,8 @@ export const documents = [
     locationIds: ['loc-003'],
     eventIds: [],
     factionMentions: {
-      'faction-002': { sentiment: 0.55 },
-      'faction-001': { sentiment: -0.62 }
+      'faction-002': { stance: 0.55 },
+      'faction-001': { stance: -0.62 }
     },
     metrics: { likes: 8920, comments: 1450, shares: 3200, platform: 'x' },
     highlights: [],
@@ -5286,8 +5286,8 @@ export const documents = [
     locationIds: ['loc-001'],
     eventIds: [],
     factionMentions: {
-      'faction-001': { sentiment: 0.85 },
-      'faction-004': { sentiment: 0.78 }
+      'faction-001': { stance: 0.85 },
+      'faction-004': { stance: 0.78 }
     },
     metrics: { likes: 125000, comments: 8500, shares: 32000, platform: 'weibo' },
     highlights: [],
@@ -5323,8 +5323,8 @@ export const documents = [
     locationIds: ['loc-012'],
     eventIds: [],
     factionMentions: {
-      'faction-006': { sentiment: 0.45 },
-      'faction-003': { sentiment: 0.32 }
+      'faction-006': { stance: 0.45 },
+      'faction-003': { stance: 0.32 }
     },
     metrics: { views: 2800000, likes: 185000, shares: 72000, comments: 24000, platform: 'tiktok' },
     highlights: [],
@@ -5355,8 +5355,8 @@ export const documents = [
     locationIds: ['loc-012'],
     eventIds: [],
     factionMentions: {
-      'faction-006': { sentiment: -0.55 },
-      'faction-003': { sentiment: 0.25 }
+      'faction-006': { stance: -0.55 },
+      'faction-003': { stance: 0.25 }
     },
     metrics: { likes: 6720, comments: 1850, platform: 'reddit' },
     highlights: [],
@@ -5387,8 +5387,8 @@ export const documents = [
     locationIds: ['loc-002'],
     eventIds: [],
     factionMentions: {
-      'faction-002': { sentiment: 0.65 },
-      'faction-001': { sentiment: -0.72 }
+      'faction-002': { stance: 0.65 },
+      'faction-001': { stance: -0.72 }
     },
     metrics: { likes: 12400, comments: 2850, shares: 5600, platform: 'x' },
     highlights: [],
@@ -5419,8 +5419,8 @@ export const documents = [
     locationIds: ['loc-002'],
     eventIds: [],
     factionMentions: {
-      'faction-001': { sentiment: 0.92 },
-      'faction-004': { sentiment: 0.85 }
+      'faction-001': { stance: 0.92 },
+      'faction-004': { stance: 0.85 }
     },
     metrics: { likes: 285000, comments: 42000, shares: 95000, platform: 'weibo' },
     highlights: [],
@@ -5456,8 +5456,8 @@ export const documents = [
     locationIds: ['loc-012'],
     eventIds: [],
     factionMentions: {
-      'faction-006': { sentiment: -0.45 },
-      'faction-003': { sentiment: 0.35 }
+      'faction-006': { stance: -0.45 },
+      'faction-003': { stance: 0.35 }
     },
     metrics: { views: 3200000, likes: 245000, shares: 85000, comments: 32000, platform: 'tiktok' },
     highlights: [],
@@ -5488,8 +5488,8 @@ export const documents = [
     locationIds: [],
     eventIds: [],
     factionMentions: {
-      'faction-002': { sentiment: 0.72 },
-      'faction-003': { sentiment: 0.45 }
+      'faction-002': { stance: 0.72 },
+      'faction-003': { stance: 0.45 }
     },
     metrics: { likes: 8450, comments: 2120, platform: 'reddit' },
     highlights: [],
@@ -5520,8 +5520,8 @@ export const documents = [
     locationIds: ['loc-011'],
     eventIds: [],
     factionMentions: {
-      'faction-006': { sentiment: -0.55 },
-      'faction-002': { sentiment: 0.35 }
+      'faction-006': { stance: -0.55 },
+      'faction-002': { stance: 0.35 }
     },
     metrics: { likes: 7850, comments: 1650, shares: 3200, platform: 'x' },
     highlights: [],
@@ -5546,7 +5546,7 @@ export const documents = [
     narrativeIds: ['narr-001'],
     eventIds: ['event-001'],
     factionMentions: {
-      'faction-001': { sentiment: 0.7 }
+      'faction-001': { stance: 0.7 }
     },
     structuredData: {
       recordType: 'corporate_record',
@@ -5583,7 +5583,7 @@ export const documents = [
     narrativeIds: ['narr-002'],
     eventIds: ['event-003', 'event-004'],
     factionMentions: {
-      'faction-002': { sentiment: 0.5 }
+      'faction-002': { stance: 0.5 }
     },
     structuredData: {
       recordType: 'corporate_record',
@@ -5620,8 +5620,8 @@ export const documents = [
     narrativeIds: ['narr-004'],
     eventIds: ['event-002', 'event-008'],
     factionMentions: {
-      'faction-001': { sentiment: 0.6 },
-      'faction-004': { sentiment: 0.7 }
+      'faction-001': { stance: 0.6 },
+      'faction-004': { stance: 0.7 }
     },
     structuredData: {
       recordType: 'corporate_record',
@@ -5658,7 +5658,7 @@ export const documents = [
     narrativeIds: ['narr-005'],
     eventIds: ['event-010'],
     factionMentions: {
-      'faction-001': { sentiment: 0.65 }
+      'faction-001': { stance: 0.65 }
     },
     structuredData: {
       recordType: 'corporate_record',
@@ -5695,7 +5695,7 @@ export const documents = [
     narrativeIds: ['narr-008'],
     eventIds: ['event-015', 'event-026'],
     factionMentions: {
-      'faction-005': { sentiment: 0.6 }
+      'faction-005': { stance: 0.6 }
     },
     structuredData: {
       recordType: 'corporate_record',
@@ -5732,8 +5732,8 @@ export const documents = [
     narrativeIds: ['narr-007'],
     eventIds: ['event-013'],
     factionMentions: {
-      'faction-005': { sentiment: 0.5 },
-      'faction-006': { sentiment: 0.4 }
+      'faction-005': { stance: 0.5 },
+      'faction-006': { stance: 0.4 }
     },
     structuredData: {
       recordType: 'corporate_record',
@@ -5770,8 +5770,8 @@ export const documents = [
     narrativeIds: ['narr-011'],
     eventIds: ['event-021'],
     factionMentions: {
-      'faction-005': { sentiment: 0.7 },
-      'faction-009': { sentiment: 0.4 }
+      'faction-005': { stance: 0.7 },
+      'faction-009': { stance: 0.4 }
     },
     structuredData: {
       recordType: 'corporate_record',
@@ -5812,7 +5812,7 @@ export const documents = [
     narrativeIds: ['narr-008'],
     eventIds: [],
     factionMentions: {
-      'faction-005': { sentiment: 0.6 }
+      'faction-005': { stance: 0.6 }
     },
     structuredData: {
       recordType: 'political_finance',
@@ -5884,7 +5884,7 @@ export const documents = [
     narrativeIds: [],
     eventIds: [],
     factionMentions: {
-      'faction-001': { sentiment: 0.3 }
+      'faction-001': { stance: 0.3 }
     },
     structuredData: {
       recordType: 'political_finance',
@@ -5958,7 +5958,7 @@ export const documents = [
     narrativeIds: ['narr-009'],
     eventIds: ['event-016', 'event-017'],
     factionMentions: {
-      'faction-006': { sentiment: 0.4 }
+      'faction-006': { stance: 0.4 }
     },
     structuredData: {
       recordType: 'political_finance',
@@ -5996,7 +5996,7 @@ export const documents = [
     narrativeIds: [],
     eventIds: [],
     factionMentions: {
-      'faction-005': { sentiment: 0.5 }
+      'faction-005': { stance: 0.5 }
     },
     structuredData: {
       recordType: 'political_finance',
@@ -6038,8 +6038,8 @@ export const documents = [
     eventIds: ['event-001'],
     narrativeIds: ['narr-001'],
     factionMentions: {
-      'faction-001': { sentiment: 0.8 },
-      'faction-004': { sentiment: 0.9 }
+      'faction-001': { stance: 0.8 },
+      'faction-004': { stance: 0.9 }
     },
     structuredData: {
       recordType: 'event_attendance',
@@ -6075,7 +6075,7 @@ export const documents = [
     eventIds: ['event-004'],
     narrativeIds: ['narr-002'],
     factionMentions: {
-      'faction-006': { sentiment: 0.3 }
+      'faction-006': { stance: 0.3 }
     },
     structuredData: {
       recordType: 'event_attendance',
@@ -6111,8 +6111,8 @@ export const documents = [
     eventIds: ['event-006', 'event-007'],
     narrativeIds: ['narr-003'],
     factionMentions: {
-      'faction-001': { sentiment: 0.9 },
-      'faction-004': { sentiment: 0.85 }
+      'faction-001': { stance: 0.9 },
+      'faction-004': { stance: 0.85 }
     },
     structuredData: {
       recordType: 'event_attendance',
@@ -6148,8 +6148,8 @@ export const documents = [
     eventIds: ['event-002'],
     narrativeIds: ['narr-001', 'narr-004'],
     factionMentions: {
-      'faction-001': { sentiment: 0.85 },
-      'faction-004': { sentiment: 0.9 }
+      'faction-001': { stance: 0.85 },
+      'faction-004': { stance: 0.9 }
     },
     structuredData: {
       recordType: 'event_attendance',
@@ -6185,7 +6185,7 @@ export const documents = [
     eventIds: ['event-013'],
     narrativeIds: ['narr-007'],
     factionMentions: {
-      'faction-005': { sentiment: 0.4 }
+      'faction-005': { stance: 0.4 }
     },
     structuredData: {
       recordType: 'event_attendance',
@@ -6221,8 +6221,8 @@ export const documents = [
     eventIds: ['event-015', 'event-020'],
     narrativeIds: ['narr-008'],
     factionMentions: {
-      'faction-005': { sentiment: -0.3 },
-      'faction-009': { sentiment: -0.2 }
+      'faction-005': { stance: -0.3 },
+      'faction-009': { stance: -0.2 }
     },
     structuredData: {
       recordType: 'event_attendance',
@@ -6258,8 +6258,8 @@ export const documents = [
     eventIds: ['event-021'],
     narrativeIds: ['narr-011'],
     factionMentions: {
-      'faction-005': { sentiment: 0.8 },
-      'faction-009': { sentiment: 0.6 }
+      'faction-005': { stance: 0.8 },
+      'faction-009': { stance: 0.6 }
     },
     structuredData: {
       recordType: 'event_attendance',

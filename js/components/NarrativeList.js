@@ -159,7 +159,7 @@ export class NarrativeList extends BaseItemList {
                 </div>
                 <div class="subnarrative-content">
                   <span class="subnarrative-text">${sub.text}</span>
-                  <span class="badge badge-${this.getSentimentClass(sub.sentiment)}">${this.formatSentiment(sub.sentiment)}</span>
+                  <span class="badge badge-${this.getStanceClass(sub.stance ?? sub.sentiment)}">${this.formatStance(sub.stance ?? sub.sentiment)}</span>
                   ${this.showDescription ? `
                     ${subOriginatedDate ? `<p class="narrative-originated">Originated: ${subOriginatedDate}</p>` : ''}
                     ${sub.description ? `<p class="narrative-description">${sub.description}</p>` : ''}
@@ -210,7 +210,7 @@ export class NarrativeList extends BaseItemList {
       data.push({
         values: this.getSparklineValues(narrative),
         color: this.getSparklineColor(narrative),
-        sentiment: narrative.sentiment
+        stance: narrative.stance ?? narrative.sentiment
       });
       
       // Add theme sparkline data if expanded
@@ -220,7 +220,7 @@ export class NarrativeList extends BaseItemList {
           data.push({
             values: this.getSparklineValues(sub),
             color: this.getSparklineColor(sub),
-            sentiment: sub.sentiment
+            stance: sub.stance ?? sub.sentiment
           });
         });
       }

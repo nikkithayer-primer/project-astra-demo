@@ -8,22 +8,22 @@ export const narratives = [
     text: 'SMIC achieves 5nm chip production using DUV lithography workaround',
     description: 'Semiconductor Manufacturing International Corporation (SMIC) has reportedly achieved 5nm chip production despite lacking access to ASML\'s extreme ultraviolet (EUV) lithography machines. Industry analysts confirm SMIC is using multi-patterning techniques with older deep ultraviolet (DUV) equipment, though at significantly lower yields and higher costs than competitors. The breakthrough raises questions about the effectiveness of export controls and demonstrates Chinese determination to achieve semiconductor self-sufficiency.',
     missionId: 'mission-003',
-    sentiment: 0.42,
+    stance: 0.42,
     themeIds: ['sub-001', 'sub-002', 'sub-003'],
     factionMentions: {
-      'faction-001': { volume: 520, sentiment: 0.78 },
-      'faction-002': { volume: 380, sentiment: -0.65 },
-      'faction-003': { volume: 290, sentiment: 0.15 }
+      'faction-001': { volume: 520, stance: 0.78 },
+      'faction-002': { volume: 380, stance: -0.65 },
+      'faction-003': { volume: 290, stance: 0.15 }
     },
     publisherVolumes: {
-      'pub-semiengi': { volume: 85, sentiment: 0.12 },
-      'pub-eetimes': { volume: 72, sentiment: 0.08 },
-      'pub-scmp': { volume: 145, sentiment: 0.55 },
-      'pub-xinhua': { volume: 120, sentiment: 0.82 },
-      'pub-bloomberg': { volume: 95, sentiment: -0.15 },
-      'pub-reuters': { volume: 88, sentiment: -0.08 },
-      'pub-x': { volume: 185, sentiment: 0.25 },
-      'pub-linkedin': { volume: 65, sentiment: 0.18 }
+      'pub-semiengi': { volume: 85, stance: 0.12 },
+      'pub-eetimes': { volume: 72, stance: 0.08 },
+      'pub-scmp': { volume: 145, stance: 0.55 },
+      'pub-xinhua': { volume: 120, stance: 0.82 },
+      'pub-bloomberg': { volume: 95, stance: -0.15 },
+      'pub-reuters': { volume: 88, stance: -0.08 },
+      'pub-x': { volume: 185, stance: 0.25 },
+      'pub-linkedin': { volume: 65, stance: 0.18 }
     },
     factionSources: {
       'faction-001': { 'pub-xinhua': 110, 'pub-scmp': 95, 'pub-cgtn': 85, 'pub-weibo': 120, 'pub-x': 75, 'pub-globaltimes': 35 },
@@ -52,23 +52,23 @@ export const narratives = [
     text: 'US tightens ASML export restrictions, blocking all advanced lithography to China',
     description: 'The Biden administration has pressured the Netherlands to expand export controls on ASML, now blocking shipments of not just EUV but also advanced DUV lithography systems to China. ASML reported the restrictions will reduce their China revenue by $2.5 billion annually. The Dutch government acquiesced after months of negotiations, with Chinese officials condemning the move as "technological hegemony." Industry analysts warn the restrictions may accelerate Chinese efforts to develop indigenous lithography equipment.',
     missionId: 'mission-002',
-    sentiment: -0.48,
+    stance: -0.48,
     themeIds: ['sub-004', 'sub-005', 'sub-006'],
     factionMentions: {
-      'faction-001': { volume: 385, sentiment: -0.82 },
-      'faction-002': { volume: 445, sentiment: 0.72 },
-      'faction-004': { volume: 220, sentiment: -0.68 },
-      'faction-006': { volume: 165, sentiment: -0.45 }
+      'faction-001': { volume: 385, stance: -0.82 },
+      'faction-002': { volume: 445, stance: 0.72 },
+      'faction-004': { volume: 220, stance: -0.68 },
+      'faction-006': { volume: 165, stance: -0.45 }
     },
     publisherVolumes: {
-      'pub-bloomberg': { volume: 125, sentiment: -0.22 },
-      'pub-reuters': { volume: 115, sentiment: -0.18 },
-      'pub-wsj': { volume: 98, sentiment: 0.35 },
-      'pub-ft': { volume: 88, sentiment: -0.12 },
-      'pub-xinhua': { volume: 165, sentiment: -0.85 },
-      'pub-globaltimes': { volume: 142, sentiment: -0.92 },
-      'pub-x': { volume: 245, sentiment: -0.35 },
-      'pub-linkedin': { volume: 78, sentiment: -0.25 }
+      'pub-bloomberg': { volume: 125, stance: -0.22 },
+      'pub-reuters': { volume: 115, stance: -0.18 },
+      'pub-wsj': { volume: 98, stance: 0.35 },
+      'pub-ft': { volume: 88, stance: -0.12 },
+      'pub-xinhua': { volume: 165, stance: -0.85 },
+      'pub-globaltimes': { volume: 142, stance: -0.92 },
+      'pub-x': { volume: 245, stance: -0.35 },
+      'pub-linkedin': { volume: 78, stance: -0.25 }
     },
     factionSources: {
       'faction-001': { 'pub-xinhua': 145, 'pub-globaltimes': 125, 'pub-cgtn': 85, 'pub-weibo': 95, 'pub-x': 65 },
@@ -97,23 +97,23 @@ export const narratives = [
     text: 'China announces $47 billion semiconductor investment fund, third phase of "Big Fund"',
     description: 'China has launched the third phase of its National Integrated Circuit Industry Investment Fund, commonly known as the "Big Fund," with 340 billion yuan ($47 billion) in new capital. This is the largest tranche yet, exceeding the combined total of the first two phases. The fund will prioritize advanced packaging, chipmaking equipment, and EDA software development. Major state-owned enterprises and regional governments are contributing, signaling intensified commitment to semiconductor self-sufficiency amid US export controls.',
     missionId: 'mission-001',
-    sentiment: 0.35,
+    stance: 0.35,
     themeIds: ['sub-007', 'sub-008', 'sub-009'],
     factionMentions: {
-      'faction-001': { volume: 425, sentiment: 0.85 },
-      'faction-002': { volume: 285, sentiment: -0.55 },
-      'faction-003': { volume: 195, sentiment: 0.22 },
-      'faction-005': { volume: 145, sentiment: 0.65 }
+      'faction-001': { volume: 425, stance: 0.85 },
+      'faction-002': { volume: 285, stance: -0.55 },
+      'faction-003': { volume: 195, stance: 0.22 },
+      'faction-005': { volume: 145, stance: 0.65 }
     },
     publisherVolumes: {
-      'pub-xinhua': { volume: 185, sentiment: 0.92 },
-      'pub-caixin': { volume: 145, sentiment: 0.75 },
-      'pub-scmp': { volume: 125, sentiment: 0.58 },
-      'pub-bloomberg': { volume: 115, sentiment: -0.25 },
-      'pub-reuters': { volume: 98, sentiment: -0.18 },
-      'pub-ft': { volume: 85, sentiment: -0.22 },
-      'pub-x': { volume: 165, sentiment: 0.28 },
-      'pub-weibo': { volume: 142, sentiment: 0.82 }
+      'pub-xinhua': { volume: 185, stance: 0.92 },
+      'pub-caixin': { volume: 145, stance: 0.75 },
+      'pub-scmp': { volume: 125, stance: 0.58 },
+      'pub-bloomberg': { volume: 115, stance: -0.25 },
+      'pub-reuters': { volume: 98, stance: -0.18 },
+      'pub-ft': { volume: 85, stance: -0.22 },
+      'pub-x': { volume: 165, stance: 0.28 },
+      'pub-weibo': { volume: 142, stance: 0.82 }
     },
     factionSources: {
       'faction-001': { 'pub-xinhua': 165, 'pub-caixin': 125, 'pub-cgtn': 95, 'pub-weibo': 135, 'pub-scmp': 85 },
@@ -140,22 +140,22 @@ export const narratives = [
     text: 'Huawei stockpiles semiconductor equipment ahead of expanded US sanctions',
     description: 'Multiple reports indicate Huawei has been aggressively stockpiling semiconductor manufacturing equipment and components in anticipation of expanded US export controls. Sources cite warehouses in Shenzhen containing billions of dollars worth of equipment from ASML, Applied Materials, and Lam Research purchased before restrictions took effect. US officials are investigating whether sanctions were circumvented through third-party intermediaries. Huawei denies any improper conduct.',
     missionId: 'mission-002',
-    sentiment: -0.52,
+    stance: -0.52,
     themeIds: ['sub-010', 'sub-011'],
     factionMentions: {
-      'faction-001': { volume: 285, sentiment: -0.72 },
-      'faction-002': { volume: 365, sentiment: 0.68 },
-      'faction-003': { volume: 165, sentiment: -0.15 },
-      'faction-006': { volume: 125, sentiment: -0.48 }
+      'faction-001': { volume: 285, stance: -0.72 },
+      'faction-002': { volume: 365, stance: 0.68 },
+      'faction-003': { volume: 165, stance: -0.15 },
+      'faction-006': { volume: 125, stance: -0.48 }
     },
     publisherVolumes: {
-      'pub-bloomberg': { volume: 145, sentiment: -0.35 },
-      'pub-wsj': { volume: 132, sentiment: 0.42 },
-      'pub-reuters': { volume: 115, sentiment: -0.22 },
-      'pub-xinhua': { volume: 95, sentiment: -0.78 },
-      'pub-scmp': { volume: 88, sentiment: -0.45 },
-      'pub-x': { volume: 178, sentiment: -0.38 },
-      'pub-linkedin': { volume: 65, sentiment: -0.28 }
+      'pub-bloomberg': { volume: 145, stance: -0.35 },
+      'pub-wsj': { volume: 132, stance: 0.42 },
+      'pub-reuters': { volume: 115, stance: -0.22 },
+      'pub-xinhua': { volume: 95, stance: -0.78 },
+      'pub-scmp': { volume: 88, stance: -0.45 },
+      'pub-x': { volume: 178, stance: -0.38 },
+      'pub-linkedin': { volume: 65, stance: -0.28 }
     },
     factionSources: {
       'faction-001': { 'pub-xinhua': 85, 'pub-scmp': 72, 'pub-cgtn': 58, 'pub-weibo': 70 },
@@ -183,22 +183,22 @@ export const narratives = [
     text: 'YMTC flash memory chips found in consumer devices despite US blacklist',
     description: 'Researchers have discovered flash memory chips manufactured by Yangtze Memory Technologies Co. (YMTC) in consumer electronics sold globally, despite the company being placed on the US Entity List in late 2022. The chips were found in products from multiple brands through supply chain analysis. YMTC\'s 232-layer NAND technology has proven competitive with Samsung and SK Hynix offerings. The discovery has reignited debates about the enforcement and effectiveness of semiconductor export controls.',
     missionId: 'mission-003',
-    sentiment: -0.38,
+    stance: -0.38,
     themeIds: ['sub-012', 'sub-013'],
     factionMentions: {
-      'faction-001': { volume: 195, sentiment: 0.55 },
-      'faction-002': { volume: 275, sentiment: -0.72 },
-      'faction-003': { volume: 185, sentiment: 0.25 },
-      'faction-006': { volume: 145, sentiment: -0.55 }
+      'faction-001': { volume: 195, stance: 0.55 },
+      'faction-002': { volume: 275, stance: -0.72 },
+      'faction-003': { volume: 185, stance: 0.25 },
+      'faction-006': { volume: 145, stance: -0.55 }
     },
     publisherVolumes: {
-      'pub-semiengi': { volume: 95, sentiment: 0.18 },
-      'pub-eetimes': { volume: 85, sentiment: 0.12 },
-      'pub-bloomberg': { volume: 115, sentiment: -0.45 },
-      'pub-wsj': { volume: 98, sentiment: -0.52 },
-      'pub-scmp': { volume: 78, sentiment: 0.35 },
-      'pub-x': { volume: 165, sentiment: -0.28 },
-      'pub-reddit': { volume: 88, sentiment: 0.22 }
+      'pub-semiengi': { volume: 95, stance: 0.18 },
+      'pub-eetimes': { volume: 85, stance: 0.12 },
+      'pub-bloomberg': { volume: 115, stance: -0.45 },
+      'pub-wsj': { volume: 98, stance: -0.52 },
+      'pub-scmp': { volume: 78, stance: 0.35 },
+      'pub-x': { volume: 165, stance: -0.28 },
+      'pub-reddit': { volume: 88, stance: 0.22 }
     },
     factionSources: {
       'faction-001': { 'pub-scmp': 65, 'pub-xinhua': 55, 'pub-weibo': 75 },
@@ -225,22 +225,22 @@ export const narratives = [
     text: 'Chinese companies develop alternatives to US EDA software tools',
     description: 'A consortium of Chinese technology companies has announced significant progress in developing indigenous electronic design automation (EDA) software to replace tools from US firms Cadence, Synopsys, and Mentor Graphics. Empyrean Technology and Huada Jiutian are leading the effort with government backing. While current tools lag behind US offerings, the companies claim their software can now handle designs up to 14nm, with 7nm capability expected within two years.',
     missionId: 'mission-003',
-    sentiment: 0.28,
+    stance: 0.28,
     themeIds: ['sub-014', 'sub-015'],
     factionMentions: {
-      'faction-001': { volume: 245, sentiment: 0.82 },
-      'faction-002': { volume: 165, sentiment: -0.48 },
-      'faction-003': { volume: 215, sentiment: 0.35 },
-      'faction-005': { volume: 125, sentiment: 0.72 }
+      'faction-001': { volume: 245, stance: 0.82 },
+      'faction-002': { volume: 165, stance: -0.48 },
+      'faction-003': { volume: 215, stance: 0.35 },
+      'faction-005': { volume: 125, stance: 0.72 }
     },
     publisherVolumes: {
-      'pub-semiengi': { volume: 115, sentiment: 0.28 },
-      'pub-eetimes': { volume: 98, sentiment: 0.22 },
-      'pub-xinhua': { volume: 135, sentiment: 0.85 },
-      'pub-caixin': { volume: 95, sentiment: 0.68 },
-      'pub-scmp': { volume: 78, sentiment: 0.52 },
-      'pub-x': { volume: 145, sentiment: 0.32 },
-      'pub-linkedin': { volume: 72, sentiment: 0.42 }
+      'pub-semiengi': { volume: 115, stance: 0.28 },
+      'pub-eetimes': { volume: 98, stance: 0.22 },
+      'pub-xinhua': { volume: 135, stance: 0.85 },
+      'pub-caixin': { volume: 95, stance: 0.68 },
+      'pub-scmp': { volume: 78, stance: 0.52 },
+      'pub-x': { volume: 145, stance: 0.32 },
+      'pub-linkedin': { volume: 72, stance: 0.42 }
     },
     factionSources: {
       'faction-001': { 'pub-xinhua': 115, 'pub-caixin': 82, 'pub-scmp': 65, 'pub-weibo': 85 },
@@ -266,23 +266,23 @@ export const narratives = [
     text: 'TSMC Arizona fab faces delays and cost overruns amid worker disputes',
     description: 'Taiwan Semiconductor Manufacturing Company\'s $40 billion Arizona fabrication facility faces mounting challenges including construction delays, cost overruns, and conflicts between Taiwanese and American workers. Local unions have criticized TSMC\'s management practices, while company officials have expressed frustration with US worker productivity. The plant, initially planned to begin production in 2024, is now targeting late 2025 for 4nm chips. The setbacks raise questions about the feasibility of reshoring advanced semiconductor manufacturing to the US.',
     missionId: 'mission-002',
-    sentiment: -0.42,
+    stance: -0.42,
     themeIds: ['sub-016', 'sub-017'],
     factionMentions: {
-      'faction-001': { volume: 145, sentiment: 0.45 },
-      'faction-002': { volume: 225, sentiment: -0.35 },
-      'faction-005': { volume: 185, sentiment: -0.58 },
-      'faction-006': { volume: 165, sentiment: -0.48 }
+      'faction-001': { volume: 145, stance: 0.45 },
+      'faction-002': { volume: 225, stance: -0.35 },
+      'faction-005': { volume: 185, stance: -0.58 },
+      'faction-006': { volume: 165, stance: -0.48 }
     },
     publisherVolumes: {
-      'pub-bloomberg': { volume: 135, sentiment: -0.38 },
-      'pub-reuters': { volume: 118, sentiment: -0.32 },
-      'pub-wsj': { volume: 105, sentiment: -0.28 },
-      'pub-ft': { volume: 88, sentiment: -0.35 },
-      'pub-nikkei': { volume: 95, sentiment: -0.42 },
-      'pub-scmp': { volume: 72, sentiment: 0.38 },
-      'pub-x': { volume: 185, sentiment: -0.45 },
-      'pub-linkedin': { volume: 78, sentiment: -0.32 }
+      'pub-bloomberg': { volume: 135, stance: -0.38 },
+      'pub-reuters': { volume: 118, stance: -0.32 },
+      'pub-wsj': { volume: 105, stance: -0.28 },
+      'pub-ft': { volume: 88, stance: -0.35 },
+      'pub-nikkei': { volume: 95, stance: -0.42 },
+      'pub-scmp': { volume: 72, stance: 0.38 },
+      'pub-x': { volume: 185, stance: -0.45 },
+      'pub-linkedin': { volume: 78, stance: -0.32 }
     },
     factionSources: {
       'faction-001': { 'pub-scmp': 65, 'pub-globaltimes': 48, 'pub-x': 32 },
@@ -310,19 +310,19 @@ export const narratives = [
     text: 'Intel struggles to compete as foundry business falters',
     description: 'Intel Corporation faces mounting challenges as its foundry business fails to gain traction against TSMC and Samsung. A major restructuring in June 2025 results in 15,000 layoffs, and a September quarterly loss sends the stock plunging. However, the company secures $8.5 billion in CHIPS Act funding in December, providing a lifeline for its US manufacturing ambitions. Industry analysts question whether Intel can execute its turnaround strategy.',
     missionId: 'mission-002',
-    sentiment: -0.45,
+    stance: -0.45,
     themeIds: ['sub-018', 'sub-019'],
     factionMentions: {
-      'faction-002': { volume: 165, sentiment: -0.38 },
-      'faction-005': { volume: 285, sentiment: -0.55 },
-      'faction-006': { volume: 145, sentiment: 0.35 }
+      'faction-002': { volume: 165, stance: -0.38 },
+      'faction-005': { volume: 285, stance: -0.55 },
+      'faction-006': { volume: 145, stance: 0.35 }
     },
     publisherVolumes: {
-      'pub-bloomberg': { volume: 125, sentiment: -0.48 },
-      'pub-wsj': { volume: 108, sentiment: -0.42 },
-      'pub-semiengi': { volume: 95, sentiment: -0.35 },
-      'pub-eetimes': { volume: 85, sentiment: -0.32 },
-      'pub-x': { volume: 145, sentiment: -0.52 }
+      'pub-bloomberg': { volume: 125, stance: -0.48 },
+      'pub-wsj': { volume: 108, stance: -0.42 },
+      'pub-semiengi': { volume: 95, stance: -0.35 },
+      'pub-eetimes': { volume: 85, stance: -0.32 },
+      'pub-x': { volume: 145, stance: -0.52 }
     },
     factionSources: {
       'faction-002': { 'pub-wsj': 72, 'pub-bloomberg': 58, 'pub-x': 35 },
@@ -347,18 +347,18 @@ export const narratives = [
     text: 'South Korea semiconductor subsidies spark trade tensions',
     description: 'South Korea\'s announcement of $17 billion in semiconductor subsidies triggers trade tensions with the United States. The US objects at the WTO, arguing the subsidies distort global competition. Samsung and SK Hynix defend the investments as essential for maintaining technological leadership, while Korean government officials push back against US criticism. The dispute highlights challenges in allied efforts to counter China\'s chip ambitions.',
     missionId: 'mission-002',
-    sentiment: -0.38,
+    stance: -0.38,
     themeIds: ['sub-020', 'sub-021'],
     factionMentions: {
-      'faction-002': { volume: 175, sentiment: -0.42 },
-      'faction-006': { volume: 225, sentiment: 0.55 }
+      'faction-002': { volume: 175, stance: -0.42 },
+      'faction-006': { volume: 225, stance: 0.55 }
     },
     publisherVolumes: {
-      'pub-reuters': { volume: 95, sentiment: -0.28 },
-      'pub-ft': { volume: 85, sentiment: -0.35 },
-      'pub-wsj': { volume: 78, sentiment: -0.42 },
-      'pub-semiengi': { volume: 65, sentiment: 0.25 },
-      'pub-x': { volume: 125, sentiment: -0.32 }
+      'pub-reuters': { volume: 95, stance: -0.28 },
+      'pub-ft': { volume: 85, stance: -0.35 },
+      'pub-wsj': { volume: 78, stance: -0.42 },
+      'pub-semiengi': { volume: 65, stance: 0.25 },
+      'pub-x': { volume: 125, stance: -0.32 }
     },
     factionSources: {
       'faction-002': { 'pub-wsj': 68, 'pub-reuters': 52, 'pub-ft': 55 },
@@ -383,19 +383,19 @@ export const narratives = [
     text: 'China rare earth export restrictions tighten chip supply chain',
     description: 'China announces rare earth export quotas in August 2025, followed by tighter controls on gallium and germanium in October. The restrictions target materials essential for semiconductor manufacturing, raising supply chain concerns among US and allied chipmakers. Industry leaders warn of potential shortages, while China defends the measures as resource conservation. The moves are widely seen as retaliation for Western export controls on chip equipment.',
     missionId: 'mission-002',
-    sentiment: -0.55,
+    stance: -0.55,
     themeIds: ['sub-022', 'sub-023'],
     factionMentions: {
-      'faction-001': { volume: 285, sentiment: 0.72 },
-      'faction-002': { volume: 245, sentiment: -0.68 },
-      'faction-004': { volume: 195, sentiment: 0.78 }
+      'faction-001': { volume: 285, stance: 0.72 },
+      'faction-002': { volume: 245, stance: -0.68 },
+      'faction-004': { volume: 195, stance: 0.78 }
     },
     publisherVolumes: {
-      'pub-xinhua': { volume: 145, sentiment: 0.82 },
-      'pub-bloomberg': { volume: 125, sentiment: -0.55 },
-      'pub-scmp': { volume: 95, sentiment: 0.45 },
-      'pub-eetimes': { volume: 75, sentiment: -0.38 },
-      'pub-x': { volume: 165, sentiment: -0.42 }
+      'pub-xinhua': { volume: 145, stance: 0.82 },
+      'pub-bloomberg': { volume: 125, stance: -0.55 },
+      'pub-scmp': { volume: 95, stance: 0.45 },
+      'pub-eetimes': { volume: 75, stance: -0.38 },
+      'pub-x': { volume: 165, stance: -0.42 }
     },
     factionSources: {
       'faction-001': { 'pub-xinhua': 125, 'pub-scmp': 78, 'pub-x': 82 },
@@ -421,20 +421,20 @@ export const narratives = [
     text: 'Nvidia AI chip demand outpaces production capacity',
     description: 'Nvidia reports record demand for its AI chips, with customers waiting months for deliveries. The shortage intensifies competition in the AI accelerator market, with AMD and Intel racing to offer alternatives. SK Hynix ramps up HBM production to meet demand, while industry analysts debate whether the AI chip boom is sustainable or a bubble.',
     missionId: 'mission-003',
-    sentiment: 0.42,
+    stance: 0.42,
     themeIds: ['sub-024', 'sub-025'],
     factionMentions: {
-      'faction-002': { volume: 145, sentiment: 0.55 },
-      'faction-003': { volume: 185, sentiment: 0.62 },
-      'faction-005': { volume: 265, sentiment: 0.72 },
-      'faction-006': { volume: 195, sentiment: 0.65 }
+      'faction-002': { volume: 145, stance: 0.55 },
+      'faction-003': { volume: 185, stance: 0.62 },
+      'faction-005': { volume: 265, stance: 0.72 },
+      'faction-006': { volume: 195, stance: 0.65 }
     },
     publisherVolumes: {
-      'pub-bloomberg': { volume: 145, sentiment: 0.58 },
-      'pub-wsj': { volume: 125, sentiment: 0.52 },
-      'pub-semiengi': { volume: 115, sentiment: 0.65 },
-      'pub-eetimes': { volume: 98, sentiment: 0.58 },
-      'pub-x': { volume: 185, sentiment: 0.48 }
+      'pub-bloomberg': { volume: 145, stance: 0.58 },
+      'pub-wsj': { volume: 125, stance: 0.52 },
+      'pub-semiengi': { volume: 115, stance: 0.65 },
+      'pub-eetimes': { volume: 98, stance: 0.58 },
+      'pub-x': { volume: 185, stance: 0.48 }
     },
     factionSources: {
       'faction-002': { 'pub-wsj': 62, 'pub-bloomberg': 55, 'pub-x': 28 },

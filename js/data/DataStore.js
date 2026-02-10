@@ -52,9 +52,9 @@ class DataStore {
    */
   getDefaultSettings() {
     return {
-      copEnabled: true,              // Enable Common Operating Picture (global view)
-      defaultStartPage: 'cop',       // 'cop' or 'monitors'
-      defaultViewTab: 'dashboard',   // 'dashboard' or 'documents' (view tab, not COP)
+      situationalPictureEnabled: true,  // Enable Situational Picture (global view)
+      defaultStartPage: 'situational-picture',  // 'situational-picture' or 'monitors' or 'search'
+      defaultViewTab: 'dashboard',   // 'dashboard' or 'documents' (view tab)
       showClassification: true,      // Show portion marks and classification
       autoSummary: false,            // Auto-generate AI summary on page navigation
       suggestedQuestions: true       // Show suggested questions in chat
@@ -397,7 +397,7 @@ class DataStore {
       id,
       text: narrative.text,
       missionId: narrative.missionId || null,
-      sentiment: narrative.sentiment || 'neutral',
+      stance: narrative.stance ?? narrative.sentiment ?? 'neutral',
       themeIds: [],
       personIds: narrative.personIds || [],
       organizationIds: narrative.organizationIds || [],
@@ -439,7 +439,7 @@ class DataStore {
       id,
       text: theme.text,
       parentNarrativeId: theme.parentNarrativeId,
-      sentiment: theme.sentiment || 'neutral',
+      stance: theme.stance ?? theme.sentiment ?? 'neutral',
       personIds: theme.personIds || [],
       organizationIds: theme.organizationIds || [],
       locationIds: theme.locationIds || [],
@@ -512,9 +512,9 @@ class DataStore {
         o => !o.factionIds.includes(id)
       );
       this.removeIdFromArrayField('persons', 'affiliatedFactionIds', id);
-      this.removeKeyFromObjectField('persons', 'factionSentiment', id);
+      this.removeKeyFromObjectField('persons', 'factionStance', id);
       this.removeIdFromArrayField('organizations', 'affiliatedFactionIds', id);
-      this.removeKeyFromObjectField('organizations', 'factionSentiment', id);
+      this.removeKeyFromObjectField('organizations', 'factionStance', id);
     });
   }
 
@@ -629,7 +629,7 @@ class DataStore {
       affiliatedFactionIds: person.affiliatedFactionIds || [],
       relatedLocationIds: person.relatedLocationIds || [],
       relatedEventIds: person.relatedEventIds || [],
-      factionSentiment: person.factionSentiment || {}
+      factionStance: person.factionStance ?? person.factionSentiment ?? {}
     });
   }
 
@@ -657,7 +657,7 @@ class DataStore {
       type: org.type || 'general',
       affiliatedFactionIds: org.affiliatedFactionIds || [],
       relatedLocationIds: org.relatedLocationIds || [],
-      factionSentiment: org.factionSentiment || {}
+      factionStance: org.factionStance ?? org.factionSentiment ?? {}
     });
   }
 
@@ -733,7 +733,7 @@ class DataStore {
         newNarrative: true,
         newEvent: true,
         volumeSpike: { threshold: 500, timeWindow: '24h' },
-        sentimentShift: { threshold: 0.15, direction: 'any' },
+        stanceShift: { threshold: 0.15, direction: 'any' },
         factionEngagement: null
       },
       enabled: monitor.enabled ?? true,
@@ -1513,7 +1513,7 @@ class DataStore {
     this.data.factionOverlaps.push({
       factionIds: overlap.factionIds,
       overlapSize: overlap.overlapSize || 0,
-      sharedSentiment: overlap.sharedSentiment || {}
+      sharedStance: overlap.sharedStance ?? overlap.sharedSentiment ?? {}
     });
     this.save();
   }
@@ -1552,7 +1552,7 @@ class DataStore {
       type: doc.type || 'social_post',
       publisherId: doc.publisherId || '',
       content: doc.content || '',
-      sentiment: doc.sentiment || 'neutral',
+      stance: doc.stance ?? doc.sentiment ?? 'neutral',
       narrativeIds: doc.narrativeIds || [],
       factionId: doc.factionId || null,
       date: doc.date || new Date().toISOString(),

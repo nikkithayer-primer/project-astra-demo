@@ -37,12 +37,12 @@
 <body>
   <nav class="top-navbar">
     <div class="navbar-left">
-      <a href="index.html#/cop/" class="logo">
+      <a href="index.html#/situational-picture/" class="logo">
         <img src="img/logo.png" alt="Primer" class="logo-img">
       </a>
       
       <div class="navbar-links">
-        <a href="index.html#/cop/" class="nav-link">
+        <a href="index.html#/situational-picture/" class="nav-link">
           <svg class="nav-icon" viewBox="0 0 16 16" fill="none" stroke="var(--text-secondary)" stroke-width="1">
             <rect x="1" y="1" width="6" height="6" rx="1"/>
             <rect x="9" y="1" width="6" height="6" rx="1"/>
@@ -157,12 +157,12 @@
               <path d="M1 14V9l4-1 4 2 6-3v7H1z" opacity="0.5"/>
             </svg> Stacked Area
           </a></li>
-          <li><a href="#sentiment" class="nav-link" data-target="sentiment">
+          <li><a href="#stance" class="nav-link" data-target="stance">
             <svg class="nav-icon" viewBox="0 0 16 16" fill="none" stroke="var(--text-secondary)" stroke-width="1">
               <rect x="1" y="3" width="8" height="2" rx="0.5"/>
               <rect x="1" y="7" width="12" height="2" rx="0.5"/>
               <rect x="1" y="11" width="5" height="2" rx="0.5"/>
-            </svg> Sentiment
+            </svg> Stance
           </a></li>
           <li><a href="#venn" class="nav-link" data-target="venn">
             <svg class="nav-icon" viewBox="0 0 16 16" fill="none" stroke="var(--text-secondary)" stroke-width="1">
@@ -366,22 +366,22 @@ chart.update({
       </div>
     </section>
 
-    <!-- Sentiment Chart -->
-    <section id="sentiment" class="component-section">
-      <h2 class="section-title">Sentiment Chart</h2>
-      <p class="section-description">Horizontal bar chart showing sentiment by faction. Visualizes positive, neutral, and negative stances.</p>
+    <!-- Stance Chart -->
+    <section id="stance" class="component-section">
+      <h2 class="section-title">Stance Chart</h2>
+      <p class="section-description">Horizontal bar chart showing stance by faction. Visualizes positive, neutral, and negative stances.</p>
       <div class="demo-container">
-        <div id="sentiment-chart"></div>
+        <div id="stance-chart"></div>
         <div class="code-block">
-          <pre><span class="key">const</span> chart = <span class="key">new</span> SentimentChart(<span class="string">'container'</span>, {
+          <pre><span class="key">const</span> chart = <span class="key">new</span> StanceChart(<span class="string">'container'</span>, {
   height: <span class="number">200</span>,
   barHeight: <span class="number">28</span>,
   onFactionClick: (faction) => console.log(faction)
 });
 chart.update({
   factions: [
-    { name: <span class="string">'State Actors'</span>, sentiment: <span class="number">-0.73</span>, color: <span class="string">'#ef4444'</span> },
-    { name: <span class="string">'Media Outlets'</span>, sentiment: <span class="number">0.14</span>, color: <span class="string">'#3b82f6'</span> }
+    { name: <span class="string">'State Actors'</span>, stance: <span class="number">-0.73</span>, color: <span class="string">'#ef4444'</span> },
+    { name: <span class="string">'Media Outlets'</span>, stance: <span class="number">0.14</span>, color: <span class="string">'#3b82f6'</span> }
   ]
 });</pre>
         </div>
@@ -494,7 +494,7 @@ list.update({
     { 
       id: <span class="string">'1'</span>, 
       text: <span class="string">'Election fraud claims'</span>, 
-      sentiment: <span class="number">-0.68</span>, 
+      stance: <span class="number">-0.68</span>, 
       status: <span class="string">'new'</span>,
       factionMentions: { f1: { volume: <span class="number">12500</span> } },
       volumeOverTime: [...]
@@ -508,7 +508,7 @@ list.update({
     <!-- Theme List -->
     <section id="theme-list" class="component-section">
       <h2 class="section-title">Theme List</h2>
-      <p class="section-description">List of themes (sub-narratives) with sentiment badges and sparklines. Themes are more specific messaging patterns within a broader narrative.</p>
+      <p class="section-description">List of themes (sub-narratives) with stance badges and sparklines. Themes are more specific messaging patterns within a broader narrative.</p>
       <div class="demo-container">
         <div id="theme-list-demo"></div>
         <div class="code-block">
@@ -523,7 +523,7 @@ list.update({
     { 
       id: <span class="string">'1'</span>, 
       text: <span class="string">'Voting machines are compromised'</span>, 
-      sentiment: <span class="number">-0.72</span>,
+      stance: <span class="number">-0.72</span>,
       description: <span class="string">'Claims about vulnerabilities in voting software'</span>,
       factionMentions: { f1: { volume: <span class="number">5200</span> } },
       volumeOverTime: [...]
@@ -739,7 +739,7 @@ list.update({
     import { Sparkline } from './js/components/Sparkline.js';
     import { NetworkGraph } from './js/components/NetworkGraph.js';
     import { StackedAreaChart } from './js/components/StackedAreaChart.js';
-    import { SentimentChart } from './js/components/SentimentChart.js';
+    import { StanceChart } from './js/components/StanceChart.js';
     import { VennDiagram } from './js/components/VennDiagram.js';
     import { TimelineVolumeComposite } from './js/components/TimelineVolumeComposite.js';
     import { MapView } from './js/components/MapView.js';
@@ -756,11 +756,11 @@ list.update({
 
     // Demo Data
     const demoFactions = [
-      { id: 'f1', name: 'State Actors', color: '#ef4444', memberCount: 1250, sentiment: -0.73 },
-      { id: 'f2', name: 'Proxy Networks', color: '#f59e0b', memberCount: 890, sentiment: -0.48 },
-      { id: 'f3', name: 'Media Amplifiers', color: '#3b82f6', memberCount: 2100, sentiment: 0.14 },
-      { id: 'f4', name: 'Bot Networks', color: '#8b5cf6', memberCount: 15000, sentiment: -0.62 },
-      { id: 'f5', name: 'Organic Supporters', color: '#10b981', memberCount: 5600, sentiment: 0.56 }
+      { id: 'f1', name: 'State Actors', color: '#ef4444', memberCount: 1250, stance: -0.73 },
+      { id: 'f2', name: 'Proxy Networks', color: '#f59e0b', memberCount: 890, stance: -0.48 },
+      { id: 'f3', name: 'Media Amplifiers', color: '#3b82f6', memberCount: 2100, stance: 0.14 },
+      { id: 'f4', name: 'Bot Networks', color: '#8b5cf6', memberCount: 15000, stance: -0.62 },
+      { id: 'f5', name: 'Organic Supporters', color: '#10b981', memberCount: 5600, stance: 0.56 }
     ];
 
     // Initialize Sparklines
@@ -840,12 +840,12 @@ list.update({
       factions: demoFactions.slice(0, 4)
     });
 
-    // Initialize Sentiment Chart
-    const sentimentChart = new SentimentChart(document.getElementById('sentiment-chart'), {
+    // Initialize Stance Chart
+    const stanceChart = new StanceChart(document.getElementById('stance-chart'), {
       height: 250,
       onFactionClick: (faction) => console.log('Clicked faction:', faction)
     });
-    sentimentChart.update({ factions: demoFactions });
+    stanceChart.update({ factions: demoFactions });
 
     // Initialize Venn Diagram
     const vennDiagram = new VennDiagram(document.getElementById('venn-diagram'), {
@@ -995,7 +995,7 @@ list.update({
           id: '1',
           text: 'Election infrastructure vulnerability claims',
           description: 'Coordinated messaging about alleged weaknesses in electronic voting systems.',
-          sentiment: -0.68,
+          stance: -0.68,
           status: 'new',
           createdAt: '2025-01-05T08:00:00Z',
           factionMentions: { f1: { volume: 12500 }, f2: { volume: 8900 } },
@@ -1008,7 +1008,7 @@ list.update({
           id: '2',
           text: 'Economic instability narratives',
           description: 'Claims of imminent financial collapse targeting specific institutions.',
-          sentiment: -0.52,
+          stance: -0.52,
           status: 'in_progress',
           createdAt: '2025-01-08T14:00:00Z',
           factionMentions: { f1: { volume: 9800 }, f3: { volume: 4200 } },
@@ -1021,7 +1021,7 @@ list.update({
           id: '3',
           text: 'Health misinformation campaign',
           description: 'False claims about vaccine safety and government health policies.',
-          sentiment: -0.77,
+          stance: -0.77,
           status: 'new',
           createdAt: '2025-01-02T10:00:00Z',
           factionMentions: { f2: { volume: 15600 }, f4: { volume: 22000 } },
@@ -1034,7 +1034,7 @@ list.update({
           id: '4',
           text: 'Immigration crisis exaggeration',
           description: 'Amplified reporting of border incidents with misleading statistics.',
-          sentiment: 0.08,
+          stance: 0.08,
           status: 'in_progress',
           createdAt: '2025-01-10T16:00:00Z',
           factionMentions: { f3: { volume: 6700 } },
@@ -1047,7 +1047,7 @@ list.update({
           id: '5',
           text: 'Climate policy opposition',
           description: 'Coordinated attacks on environmental regulations and green energy initiatives.',
-          sentiment: 0.53,
+          stance: 0.53,
           status: 'new',
           createdAt: '2025-01-12T09:00:00Z',
           factionMentions: { f5: { volume: 4500 } },
@@ -1072,7 +1072,7 @@ list.update({
           id: 'sn1',
           text: 'Voting machines can be hacked remotely',
           description: 'Claims that electronic voting systems are vulnerable to remote attacks.',
-          sentiment: -0.72,
+          stance: -0.72,
           factionMentions: { f1: { volume: 5200 }, f2: { volume: 3100 } },
           volumeOverTime: dates.slice(-10).map((d) => ({
             date: d,
@@ -1083,7 +1083,7 @@ list.update({
           id: 'sn2',
           text: 'Mail-in ballots are easily forged',
           description: 'False claims about the security of mail-in voting processes.',
-          sentiment: -0.65,
+          stance: -0.65,
           factionMentions: { f1: { volume: 4800 }, f4: { volume: 6200 } },
           volumeOverTime: dates.slice(-10).map((d) => ({
             date: d,
@@ -1094,7 +1094,7 @@ list.update({
           id: 'sn3',
           text: 'Ballot counting stopped mysteriously',
           description: 'Misleading narratives about normal counting procedures.',
-          sentiment: -0.58,
+          stance: -0.58,
           factionMentions: { f2: { volume: 3500 } },
           volumeOverTime: dates.slice(-10).map((d) => ({
             date: d,
@@ -1105,7 +1105,7 @@ list.update({
           id: 'sn4',
           text: 'Dead people voted in large numbers',
           description: 'Debunked claims about deceased voters.',
-          sentiment: -0.81,
+          stance: -0.81,
           factionMentions: { f1: { volume: 2900 }, f2: { volume: 1800 }, f4: { volume: 4500 } },
           volumeOverTime: dates.slice(-10).map((d) => ({
             date: d,
@@ -1116,7 +1116,7 @@ list.update({
           id: 'sn5',
           text: 'Foreign interference changed vote totals',
           description: 'Unsubstantiated claims about international vote manipulation.',
-          sentiment: -0.69,
+          stance: -0.69,
           factionMentions: { f1: { volume: 3200 } },
           volumeOverTime: dates.slice(-10).map((d) => ({
             date: d,

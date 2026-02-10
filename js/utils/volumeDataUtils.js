@@ -3,7 +3,7 @@
  * Shared utilities for aggregating document volume data by publisher and faction
  * 
  * NOTE: Most views now use DataService.getVolumeDataForDocuments() instead of these utilities.
- * aggregateFactionSentiment is still used for sentiment calculations.
+ * aggregateFactionStance is still used for stance calculations.
  */
 
 import { DataService } from '../data/DataService.js';
@@ -88,11 +88,11 @@ export function aggregateFactionVolumeData(documents) {
 }
 
 /**
- * Aggregate faction sentiment data from documents
+ * Aggregate faction stance data from documents
  * @param {Array} documents - Array of document objects with factionMentions
- * @returns {Array} - Array of faction objects with sentiment property
+ * @returns {Array} - Array of faction objects with stance property
  */
-export function aggregateFactionSentiment(documents) {
+export function aggregateFactionStance(documents) {
   if (!documents || documents.length === 0) return [];
 
   const factionMap = new Map();
@@ -100,12 +100,13 @@ export function aggregateFactionSentiment(documents) {
   documents.forEach(doc => {
     Object.entries(doc.factionMentions || {}).forEach(([factionId, mention]) => {
       if (!factionMap.has(factionId)) {
-        factionMap.set(factionId, { volume: 0, sentimentSum: 0, count: 0 });
+        factionMap.set(factionId, { volume: 0, stanceSum: 0, count: 0 });
       }
       const data = factionMap.get(factionId);
+      const stance = mention.stance ?? mention.sentiment;
       data.volume += 1;
-      if (mention.sentiment !== undefined) {
-        data.sentimentSum += mention.sentiment;
+      if (typeof stance === 'number') {
+        data.stanceSum += stance;
         data.count += 1;
       }
     });
@@ -118,7 +119,7 @@ export function aggregateFactionSentiment(documents) {
       return {
         ...faction,
         volume: data.volume,
-        sentiment: data.count > 0 ? data.sentimentSum / data.count : 0
+        stance: data.count > 0 ? data.stanceSum / data.count : 0
       };
     })
     .filter(Boolean);

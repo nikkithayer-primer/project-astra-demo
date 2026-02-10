@@ -11,7 +11,7 @@ import {
   CardManager,
   NetworkGraphCard,
   NarrativeListCard,
-  SentimentChartCard,
+  StanceChartCard,
   VennDiagramCard,
   TimelineVolumeCompositeCard,
   TopicListCard,
@@ -118,20 +118,21 @@ export class FactionView extends DetailViewBase {
     const affiliatedPersons = DataService.getAffiliatedPersonsForFaction(this.factionId);
     const affiliatedOrgs = DataService.getAffiliatedOrganizationsForFaction(this.factionId);
 
-    // Build sentiment data for persons/orgs this faction has sentiment toward (scoped)
-    const personsWithSentiment = DataService.getPersons(scopeDocIds)
-      .filter(p => p.factionSentiment && p.factionSentiment[this.factionId])
+    // Build stance data for persons/orgs this faction has stance toward (scoped)
+    const factionStanceKey = (e) => (e.factionStance ?? e.factionSentiment) && (e.factionStance ?? e.factionSentiment)[this.factionId];
+    const personsWithStance = DataService.getPersons(scopeDocIds)
+      .filter(p => factionStanceKey(p))
       .map(p => ({
         ...p,
-        sentiment: p.factionSentiment[this.factionId],
+        stance: (p.factionStance ?? p.factionSentiment)[this.factionId],
         color: faction.color
       }));
 
-    const orgsWithSentiment = DataService.getOrganizations(scopeDocIds)
-      .filter(o => o.factionSentiment && o.factionSentiment[this.factionId])
+    const orgsWithStance = DataService.getOrganizations(scopeDocIds)
+      .filter(o => factionStanceKey(o))
       .map(o => ({
         ...o,
-        sentiment: o.factionSentiment[this.factionId],
+        stance: (o.factionStance ?? o.factionSentiment)[this.factionId],
         color: faction.color
       }));
 
@@ -198,8 +199,8 @@ export class FactionView extends DetailViewBase {
 
     return {
       relatedFactions, factionOverlaps, narratives, documents,
-      affiliatedPersons, affiliatedOrgs, personsWithSentiment,
-      orgsWithSentiment, hasNetwork, allFactions, personIds, orgIds,
+      affiliatedPersons, affiliatedOrgs, personsWithStance,
+      orgsWithStance, hasNetwork, allFactions, personIds, orgIds,
       publisherData, hasPublisherData, allEvents, events: allEvents, hasVolumeTimeline,
       topics, locations, mapLocations, narrativeDurations, entities, activity
     };
@@ -229,20 +230,20 @@ export class FactionView extends DetailViewBase {
     }
 
     // 2. Sentiment Toward People (half-width)
-    if (data.personsWithSentiment.length > 0) {
-      this.cardManager.add(new SentimentChartCard(this, 'faction-person-sentiment', {
+    if (data.personsWithStance.length > 0) {
+      this.cardManager.add(new StanceChartCard(this, 'faction-person-stance', {
         title: 'Faction Sentiment for People',
-        factions: data.personsWithSentiment,
+        factions: data.personsWithStance,
         halfWidth: true,
         clickRoute: 'person'
       }));
     }
 
     // 3. Sentiment Toward Organizations (half-width)
-    if (data.orgsWithSentiment.length > 0) {
-      this.cardManager.add(new SentimentChartCard(this, 'faction-org-sentiment', {
+    if (data.orgsWithStance.length > 0) {
+      this.cardManager.add(new StanceChartCard(this, 'faction-org-stance', {
         title: 'Faction Sentiment for Orgs',
-        factions: data.orgsWithSentiment,
+        factions: data.orgsWithStance,
         halfWidth: true,
         clickRoute: 'organization'
       }));

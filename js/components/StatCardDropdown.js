@@ -66,7 +66,7 @@ export class StatCardDropdown extends BaseComponent {
       // Context only (e.g., workspace home)
       baseRoute = `#/${contextId}/documents/`;
     } else {
-      // COP - use documents list view
+      // Situational Picture / global scope - use documents list view
       baseRoute = '#/documents';
     }
     

@@ -401,7 +401,7 @@
   color: var(--badge-blue);
 }
 
-.alert-type-badge.sentiment {
+.alert-type-badge.stance {
   background: rgba(168, 85, 247, 0.15);
   color: var(--badge-purple);
 }

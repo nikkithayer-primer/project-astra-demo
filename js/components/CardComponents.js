@@ -19,7 +19,7 @@ import { ColumnFilter } from './ColumnFilter.js';
 import { MapView } from './MapView.js';
 import { TimelineVolumeComposite } from './TimelineVolumeComposite.js';
 import { StackedAreaChart } from './StackedAreaChart.js';
-import { SentimentChart } from './SentimentChart.js';
+import { StanceChart } from './StanceChart.js';
 import { VennDiagram } from './VennDiagram.js';
 import { renderVerticalTimeline } from '../utils/verticalTimeline.js';
 
@@ -806,14 +806,14 @@ export class MapCard extends BaseCardComponent {
 }
 
 /**
- * Sentiment Chart Card Component
+ * Stance Chart Card Component
  */
-export class SentimentChartCard extends BaseCardComponent {
+export class StanceChartCard extends BaseCardComponent {
   constructor(view, containerId, options = {}) {
     super(view, containerId);
     this.options = options;
     this.factions = options.factions || [];
-    this.title = options.title || 'Sentiment';
+    this.title = options.title || 'Stance';
     this.halfWidth = options.halfWidth || false;
     this.clickRoute = options.clickRoute || 'faction';
   }
@@ -832,7 +832,7 @@ export class SentimentChartCard extends BaseCardComponent {
   initialize() {
     if (!this.hasData()) return null;
 
-    this.component = new SentimentChart(this.containerId, {
+    this.component = new StanceChart(this.containerId, {
       height: Math.max(150, this.factions.length * 50),
       onFactionClick: (f) => {
         this.navigateTo(f.id);
@@ -1604,7 +1604,7 @@ export default {
   MapCard,
   TimelineVolumeCompositeCard,
   StackedAreaChartCard,
-  SentimentChartCard,
+  StanceChartCard,
   VennDiagramCard,
   BulletPointsCard,
   QuotesTableCard,

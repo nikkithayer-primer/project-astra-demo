@@ -93,7 +93,7 @@ export const datasetName = 'China Semiconductor';
 
 // Default settings for this dataset
 export const defaultSettings = {
-  copEnabled: false,
+  situationalPictureEnabled: false,
   defaultStartPage: 'search',
   defaultViewTab: 'documents',
   showClassification: true

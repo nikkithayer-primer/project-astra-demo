@@ -15,7 +15,7 @@ export class Sparkline extends BaseComponent {
       strokeWidth: 1.5,
       showDot: true,
       showArea: false,
-      sentiment: null,
+      stance: null,
       ...options
     });
     this.tooltip = null;
@@ -24,7 +24,7 @@ export class Sparkline extends BaseComponent {
   render() {
     if (!this.data || !this.data.length || !this.container) return;
 
-    const { width, height, margin, color, strokeWidth, showDot, showArea, sentiment } = this.options;
+    const { width, height, margin, color, strokeWidth, showDot, showArea, stance } = this.options;
 
     this.clear();
     this.removeTooltip();
@@ -34,7 +34,7 @@ export class Sparkline extends BaseComponent {
       .attr('width', width)
       .attr('height', height)
       .attr('class', 'sparkline')
-      .style('cursor', sentiment !== null ? 'pointer' : 'default');
+      .style('cursor', stance !== null ? 'pointer' : 'default');
 
     const innerWidth = width - margin.left - margin.right;
     const innerHeight = height - margin.top - margin.bottom;
@@ -86,17 +86,17 @@ export class Sparkline extends BaseComponent {
         .attr('fill', color);
     }
 
-    // Add tooltip for sentiment if provided
-    if (sentiment !== null) {
-      this.addSentimentTooltip(svg, sentiment);
+    // Add tooltip for stance if provided
+    if (stance !== null) {
+      this.addStanceTooltip(svg, stance);
     }
   }
 
-  addSentimentTooltip(svg, sentiment) {
-    const sentimentValue = typeof sentiment === 'number' ? sentiment : 0;
-    const sign = sentimentValue > 0 ? '+' : '';
-    const label = this.getSentimentLabel(sentimentValue);
-    const tooltipText = `Sentiment: ${sign}${sentimentValue.toFixed(2)} (${label})`;
+  addStanceTooltip(svg, stance) {
+    const stanceValue = typeof stance === 'number' ? stance : 0;
+    const sign = stanceValue > 0 ? '+' : '';
+    const label = this.getStanceLabel(stanceValue);
+    const tooltipText = `Stance: ${sign}${stanceValue.toFixed(2)} (${label})`;
 
     svg
       .on('mouseenter', (event) => {
@@ -110,7 +110,7 @@ export class Sparkline extends BaseComponent {
       });
   }
 
-  getSentimentLabel(value) {
+  getStanceLabel(value) {
     if (value <= -0.6) return 'Very Negative';
     if (value <= -0.2) return 'Negative';
     if (value < 0.2) return 'Neutral';

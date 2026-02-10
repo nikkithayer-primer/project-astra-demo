@@ -24,12 +24,12 @@ const SCHEMAS = {
   narratives: {
     idPrefix: 'narr-',
     required: ['id', 'text'],
-    optional: ['missionId', 'description', 'sentiment', 'tagIds', 'themeIds', 'personIds',
+    optional: ['missionId', 'description', 'stance', 'tagIds', 'themeIds', 'personIds',
                'organizationIds', 'locationIds', 'eventIds', 'documentIds',
                'createdAt', 'updatedAt'],
     types: {
       text: 'string',
-      sentiment: { type: 'number', min: -1, max: 1 }
+      stance: { type: 'number', min: -1, max: 1 }
     },
     references: {
       missionId: 'missions',  // DEPRECATED: Use tagIds with Mission group tags
@@ -46,11 +46,11 @@ const SCHEMAS = {
   themes: {
     idPrefix: 'sub-',
     required: ['id', 'parentNarrativeId', 'text'],
-    optional: ['sentiment', 'personIds', 'organizationIds', 'locationIds',
+    optional: ['stance', 'personIds', 'organizationIds', 'locationIds',
                'eventIds', 'documentIds', 'createdAt', 'updatedAt'],
     types: {
       text: 'string',
-      sentiment: { type: 'number', min: -1, max: 1 }
+      stance: { type: 'number', min: -1, max: 1 }
     },
     references: {
       parentNarrativeId: 'narratives',
@@ -121,13 +121,13 @@ const SCHEMAS = {
     required: ['id', 'name'],
     optional: ['description', 'type', 'imageUrl', 'affiliatedOrganizationId',
                'affiliatedFactionIds', 'relatedLocationIds', 'relatedEventIds',
-               'documentIds', 'factionSentiment', 'tagIds', 'createdAt', 'updatedAt'],
+               'documentIds', 'factionStance', 'tagIds', 'createdAt', 'updatedAt'],
     types: {
       name: 'string',
       type: ['politician', 'executive', 'government_official', 'judge', 'analyst',
              'journalist', 'activist', 'labor_leader', 'civilian', 'employee',
              'legal_professional', 'general'],
-      factionSentiment: { type: 'sentimentMap' }
+      factionStance: { type: 'stanceMap' }
     },
     references: {
       affiliatedOrganizationId: 'organizations',
@@ -143,7 +143,7 @@ const SCHEMAS = {
     idPrefix: 'org-',
     required: ['id', 'name'],
     optional: ['description', 'type', 'imageUrl', 'affiliatedFactionIds',
-               'relatedLocationIds', 'documentIds', 'factionSentiment', 'tagIds',
+               'relatedLocationIds', 'documentIds', 'factionStance', 'tagIds',
                'createdAt', 'updatedAt'],
     types: {
       name: 'string',
@@ -253,7 +253,7 @@ const SCHEMAS = {
                'relatedLocationIds', 'metadata'],
     types: {
       type: ['volume_spike', 'new_event', 'new_narrative',
-             'sentiment_shift', 'faction_engagement'],
+             'stance_shift', 'faction_engagement'],
       triggeredAt: 'datetime'
     },
     references: {
@@ -349,7 +349,7 @@ const SCHEMAS = {
   factionOverlaps: {
     idPrefix: null,
     required: ['factionIds'],
-    optional: ['overlapSize', 'sharedSentiment'],
+    optional: ['overlapSize', 'sharedStance'],
     types: {
       factionIds: 'array',
       overlapSize: 'number'
@@ -568,7 +568,7 @@ export class SchemaValidator {
         }
       }
 
-      // factionMentions map: { [factionId]: { sentiment: number } }
+      // factionMentions map: { [factionId]: { stance: number } }
       if (typeSpec.type === 'factionMentionsMap') {
         if (typeof value !== 'object' || value === null) {
           result.addError(`${field} must be an object`, { field, entity: entityId });
@@ -582,17 +582,17 @@ export class SchemaValidator {
             }
             if (typeof data !== 'object' || data === null) {
               result.addError(
-                `${field}['${factionId}'] must be an object with sentiment`,
+                `${field}['${factionId}'] must be an object with stance`,
                 { field, entity: entityId }
               );
-            } else if (typeof data.sentiment !== 'number') {
+            } else if (typeof data.stance !== 'number') {
               result.addError(
-                `${field}['${factionId}'].sentiment must be a number`,
+                `${field}['${factionId}'].stance must be a number`,
                 { field, entity: entityId }
               );
-            } else if (data.sentiment < -1 || data.sentiment > 1) {
+            } else if (data.stance < -1 || data.stance > 1) {
               result.addError(
-                `${field}['${factionId}'].sentiment must be between -1 and 1`,
+                `${field}['${factionId}'].stance must be between -1 and 1`,
                 { field, entity: entityId }
               );
             }
@@ -600,19 +600,19 @@ export class SchemaValidator {
         }
       }
 
-      // factionSentiment map: { [factionId]: number }
-      if (typeSpec.type === 'sentimentMap') {
+      // factionStance map: { [factionId]: number }
+      if (typeSpec.type === 'stanceMap') {
         if (typeof value !== 'object' || value === null) {
           result.addError(`${field} must be an object`, { field, entity: entityId });
         } else {
-          for (const [factionId, sentiment] of Object.entries(value)) {
+          for (const [factionId, stance] of Object.entries(value)) {
             if (!factionId.startsWith('faction-')) {
               result.addWarning(
                 `${field} key '${factionId}' should start with 'faction-'`,
                 { field, entity: entityId }
               );
             }
-            if (typeof sentiment !== 'number' || sentiment < -1 || sentiment > 1) {
+            if (typeof stance !== 'number' || stance < -1 || stance > 1) {
               result.addError(
                 `${field}['${factionId}'] must be a number between -1 and 1`,
                 { field, entity: entityId }

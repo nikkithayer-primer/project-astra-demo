@@ -1319,12 +1319,12 @@
 /* Sentiment Badges */
 .badge-positive {
   background: rgba(0, 200, 83, 0.15);
-  color: var(--sentiment-positive, #00C853);
+  color: var(--stance-positive, #00C853);
 }
 
 .badge-negative {
   background: rgba(255, 61, 87, 0.15);
-  color: var(--sentiment-negative, #FF3D57);
+  color: var(--stance-negative, #FF3D57);
 }
 
 .badge-neutral {
@@ -4727,49 +4727,49 @@ body.has-fullscreen-card {
    Sentiment Slider
    ============================================ */
 
-.sentiment-slider-container {
+.stance-slider-container {
   display: flex;
   flex-direction: column;
   gap: var(--space-xs);
   padding: var(--space-sm) 0;
 }
 
-.sentiment-slider-labels {
+.stance-slider-labels {
   display: flex;
   justify-content: space-between;
   font-size: var(--text-xs);
   color: var(--text-muted);
 }
 
-.sentiment-label-negative {
-  color: var(--sentiment-negative, #FF3D57);
+.stance-label-negative {
+  color: var(--stance-negative, #FF3D57);
 }
 
-.sentiment-label-neutral {
+.stance-label-neutral {
   color: var(--text-muted);
 }
 
-.sentiment-label-positive {
-  color: var(--sentiment-positive, #00C853);
+.stance-label-positive {
+  color: var(--stance-positive, #00C853);
 }
 
-.sentiment-slider {
+.stance-slider {
   -webkit-appearance: none;
   appearance: none;
   width: 100%;
   height: 8px;
   border-radius: var(--radius-md);
   background: linear-gradient(to right, 
-    var(--sentiment-negative) 0%, 
+    var(--stance-negative) 0%, 
     var(--color-neutral) 50%, 
-    var(--sentiment-positive) 100%
+    var(--stance-positive) 100%
   );
   outline: none;
   cursor: pointer;
   --slider-color: var(--color-neutral);
 }
 
-.sentiment-slider::-webkit-slider-thumb {
+.stance-slider::-webkit-slider-thumb {
   -webkit-appearance: none;
   appearance: none;
   width: 20px;
@@ -4782,17 +4782,17 @@ body.has-fullscreen-card {
   transition: transform 0.15s ease, box-shadow 0.15s ease;
 }
 
-.sentiment-slider::-webkit-slider-thumb:hover {
+.stance-slider::-webkit-slider-thumb:hover {
   transform: scale(1.1);
   box-shadow: 0 3px 8px rgba(0, 0, 0, 0.4);
 }
 
-.sentiment-slider::-webkit-slider-thumb:active {
+.stance-slider::-webkit-slider-thumb:active {
   cursor: grabbing;
   transform: scale(1.05);
 }
 
-.sentiment-slider::-moz-range-thumb {
+.stance-slider::-moz-range-thumb {
   width: 20px;
   height: 20px;
   border-radius: var(--radius-full);
@@ -4803,17 +4803,17 @@ body.has-fullscreen-card {
   transition: transform 0.15s ease, box-shadow 0.15s ease;
 }
 
-.sentiment-slider::-moz-range-thumb:hover {
+.stance-slider::-moz-range-thumb:hover {
   transform: scale(1.1);
 }
 
-.sentiment-slider-value {
+.stance-slider-value {
   display: flex;
   justify-content: center;
   margin-top: var(--space-xs);
 }
 
-.sentiment-value-display {
+.stance-value-display {
   font-size: var(--text-sm);
   font-weight: 500;
   color: var(--text-primary);
@@ -4824,31 +4824,31 @@ body.has-fullscreen-card {
   text-align: center;
 }
 
-/* Compact faction sentiment slider */
-.faction-sentiment-field {
+/* Compact faction stance slider */
+.faction-stance-field {
   display: flex;
   align-items: center;
   gap: var(--space-xs);
   flex: 1;
 }
 
-.faction-sentiment-slider {
+.faction-stance-slider {
   -webkit-appearance: none;
   appearance: none;
   width: 60px;
   height: 4px;
   border-radius: var(--radius-xs);
   background: linear-gradient(to right, 
-    var(--sentiment-negative) 0%, 
+    var(--stance-negative) 0%, 
     var(--color-neutral) 50%, 
-    var(--sentiment-positive) 100%
+    var(--stance-positive) 100%
   );
   outline: none;
   cursor: pointer;
   --slider-color: var(--color-neutral);
 }
 
-.faction-sentiment-slider::-webkit-slider-thumb {
+.faction-stance-slider::-webkit-slider-thumb {
   -webkit-appearance: none;
   appearance: none;
   width: 12px;
@@ -4860,7 +4860,7 @@ body.has-fullscreen-card {
   cursor: grab;
 }
 
-.faction-sentiment-slider::-moz-range-thumb {
+.faction-stance-slider::-moz-range-thumb {
   width: 12px;
   height: 12px;
   border-radius: var(--radius-full);
@@ -4870,7 +4870,7 @@ body.has-fullscreen-card {
   cursor: grab;
 }
 
-.faction-sentiment-value {
+.faction-stance-value {
   font-size: var(--text-xs);
   font-weight: 500;
   color: var(--text-secondary);
@@ -6797,7 +6797,7 @@ body.dragging-active * {
 
 .api-key-configured {
   background: rgba(102, 187, 106, 0.15);
-  color: var(--sentiment-positive, #66BB6A);
+  color: var(--stance-positive, #66BB6A);
   border: 1px solid rgba(102, 187, 106, 0.3);
 }
 
@@ -6809,8 +6809,8 @@ body.dragging-active * {
 
 /* Danger button variant for settings */
 .btn-danger {
-  background: var(--sentiment-negative, #E57373);
-  border-color: var(--sentiment-negative, #E57373);
+  background: var(--stance-negative, #E57373);
+  border-color: var(--stance-negative, #E57373);
   color: white;
 }
 

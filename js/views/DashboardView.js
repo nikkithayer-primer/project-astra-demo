@@ -15,7 +15,7 @@ import {
   TopicListCard,
   MapCard,
   TimelineVolumeCompositeCard,
-  SentimentChartCard
+  StanceChartCard
 } from '../components/CardComponents.js';
 
 export class DashboardView extends BaseView {
@@ -129,8 +129,8 @@ export class DashboardView extends BaseView {
     const recentEvents = DataService.getRecentEvents(null, this.timeRange);
     const narrativeDurations = DataService.getNarrativeDurations(this.missionId, this.timeRange);
 
-    // Faction sentiments
-    const factionSentiments = DataService.getAggregateFactionSentiments(this.missionId, this.timeRange);
+    // Faction stances
+    const factionStances = DataService.getAggregateFactionStances(this.missionId, this.timeRange);
 
     // Locations for map
     const locations = DataService.getAllLocationsWithCounts(this.timeRange);
@@ -151,7 +151,7 @@ export class DashboardView extends BaseView {
       publisherData,
       recentEvents,
       narrativeDurations,
-      factionSentiments,
+      factionStances,
       locations
     };
   }
@@ -250,11 +250,11 @@ export class DashboardView extends BaseView {
       }));
     }
 
-    // 3. Sentiment by Faction (half width)
-    if (data.factionSentiments.length > 0) {
-      this.cardManager.add(new SentimentChartCard(this, 'dashboard-sentiment-chart', {
-        title: 'Sentiment by Faction',
-        factions: data.factionSentiments,
+    // 3. Stance by Faction (half width)
+    if (data.factionStances.length > 0) {
+      this.cardManager.add(new StanceChartCard(this, 'dashboard-stance-chart', {
+        title: 'Stance by Faction',
+        factions: data.factionStances,
         halfWidth: true,
         clickRoute: 'faction'
       }));

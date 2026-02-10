@@ -13,7 +13,7 @@ import {
   NetworkGraphCard,
   NarrativeListCard,
   MapCard,
-  SentimentChartCard,
+  StanceChartCard,
   VennDiagramCard,
   TimelineVolumeCompositeCard,
   TopicListCard,
@@ -121,11 +121,12 @@ export class EntityDetailView extends DetailViewBase {
       data.documents = DataService.getDocumentsForOrganization(this.entityId, scopeDocIds);
     }
 
-    // Build sentiment data - how factions feel about this entity
-    data.factionSentimentData = Object.entries(entity.factionSentiment || {})
-      .map(([factionId, sentiment]) => {
+    // Build stance data - how factions feel about this entity
+    const factionStanceMap = entity.factionStance ?? entity.factionSentiment ?? {};
+    data.factionStanceData = Object.entries(factionStanceMap)
+      .map(([factionId, stance]) => {
         const faction = DataService.getFaction(factionId);
-        return faction ? { ...faction, sentiment } : null;
+        return faction ? { ...faction, stance } : null;
       })
       .filter(Boolean);
 
@@ -169,12 +170,12 @@ export class EntityDetailView extends DetailViewBase {
       if (!doc.factionMentions) return;
       Object.entries(doc.factionMentions).forEach(([factionId, mentions]) => {
         if (!factionMentionMap.has(factionId)) {
-          factionMentionMap.set(factionId, { volume: 0, sentiment: 0, count: 0 });
+          factionMentionMap.set(factionId, { volume: 0, stanceSum: 0, count: 0 });
         }
         const entry = factionMentionMap.get(factionId);
+        const stance = mentions.stance ?? mentions.sentiment;
         entry.volume += mentions.volume || 1;
-        entry.sentiment += mentions.sentiment || 0;
-        entry.count += 1;
+        if (typeof stance === 'number') { entry.stanceSum += stance; entry.count += 1; }
       });
     });
 
@@ -184,7 +185,7 @@ export class EntityDetailView extends DetailViewBase {
       return {
         ...faction,
         volume: stats.volume,
-        sentiment: stats.count > 0 ? stats.sentiment / stats.count : 0
+        stance: stats.count > 0 ? stats.stanceSum / stats.count : 0
       };
     }).filter(Boolean);
 
@@ -265,10 +266,10 @@ export class EntityDetailView extends DetailViewBase {
     }
 
     // 2. Faction Sentiment (half-width)
-    if (data.factionSentimentData.length > 0) {
-      this.cardManager.add(new SentimentChartCard(this, `${prefix}-sentiment`, {
+    if (data.factionStanceData.length > 0) {
+      this.cardManager.add(new StanceChartCard(this, `${prefix}-stance`, {
         title: `Faction Sentiment Toward ${entity.name}`,
-        factions: data.factionSentimentData,
+        factions: data.factionStanceData,
         halfWidth: true,
         clickRoute: 'faction'
       }));

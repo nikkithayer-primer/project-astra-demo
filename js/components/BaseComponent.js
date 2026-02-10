@@ -5,11 +5,11 @@
  */
 
 import {
-  normalizeSentiment,
-  getSentimentClass,
-  formatSentiment,
-  formatSentimentValue,
-  getSentimentColor,
+  normalizeStance,
+  getStanceClass,
+  formatStance,
+  formatStanceValue,
+  getStanceColor,
   formatNumber,
   formatDate
 } from '../utils/formatters.js';
@@ -309,43 +309,43 @@ export class BaseComponent {
   }
 
   /**
-   * Get sentiment color based on numeric sentiment value
+   * Get stance color based on numeric stance value
    * Delegates to shared formatters.js
    */
-  getSentimentColor(sentiment) {
-    return getSentimentColor(sentiment);
+  getStanceColor(stance) {
+    return getStanceColor(stance);
   }
 
   /**
-   * Normalize sentiment value to -1 to 1 range
+   * Normalize stance value to -1 to 1 range
    * Delegates to shared formatters.js
    */
-  normalizeSentiment(sentiment) {
-    return normalizeSentiment(sentiment);
+  normalizeStance(stance) {
+    return normalizeStance(stance);
   }
 
   /**
-   * Format sentiment value for display
+   * Format stance value for display
    * Delegates to shared formatters.js
    */
-  formatSentimentLabel(sentiment) {
-    return formatSentiment(sentiment);
+  formatStanceLabel(stance) {
+    return formatStance(stance);
   }
 
   /**
-   * Format sentiment value as a number string
+   * Format stance value as a number string
    * Delegates to shared formatters.js
    */
-  formatSentimentValue(sentiment) {
-    return formatSentimentValue(sentiment);
+  formatStanceValue(stance) {
+    return formatStanceValue(stance);
   }
 
   /**
-   * Get sentiment class based on numeric sentiment value
+   * Get stance class based on numeric stance value
    * Delegates to shared formatters.js
    */
-  getSentimentClass(sentiment) {
-    return getSentimentClass(sentiment);
+  getStanceClass(stance) {
+    return getStanceClass(stance);
   }
 
   /**

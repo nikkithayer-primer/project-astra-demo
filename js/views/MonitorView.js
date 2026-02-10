@@ -13,7 +13,7 @@ import {
   NetworkGraphCard,
   NarrativeListCard,
   TopicListCard,
-  SentimentChartCard,
+  StanceChartCard,
   MapCard,
   TimelineVolumeCompositeCard
 } from '../components/CardComponents.js';
@@ -354,7 +354,7 @@ export class MonitorView extends DetailViewBase {
         startDate,
         endDate,
         totalVolume,
-        sentiment: n.sentiment || 0,
+        stance: n.stance ?? n.sentiment ?? 0,
         color: primaryFaction?.color || 'var(--accent-primary)'
       };
     }).filter(Boolean);
@@ -402,7 +402,7 @@ export class MonitorView extends DetailViewBase {
 
     // Faction Engagement (half-width)
     if (data.factions.length > 0) {
-      this.cardManager.add(new SentimentChartCard(this, 'monitor-faction-sentiment', {
+      this.cardManager.add(new StanceChartCard(this, 'monitor-faction-stance', {
         title: 'Faction Engagement',
         factions: data.factions,
         halfWidth: true,
@@ -537,7 +537,8 @@ export class MonitorView extends DetailViewBase {
   getAlertTypeClass(type) {
     const classes = {
       'volume_spike': 'volume',
-      'sentiment_shift': 'sentiment',
+      'stance_shift': 'stance',
+      'sentiment_shift': 'stance',
       'new_narrative': 'narrative',
       'new_event': 'event',
       'faction_engagement': 'faction'
@@ -551,7 +552,8 @@ export class MonitorView extends DetailViewBase {
   getAlertTypeLabel(type) {
     const labels = {
       'volume_spike': 'Volume Spike',
-      'sentiment_shift': 'Sentiment Shift',
+      'stance_shift': 'Stance Shift',
+      'sentiment_shift': 'Stance Shift',
       'new_narrative': 'New Narrative',
       'new_event': 'New Event',
       'faction_engagement': 'Faction Engagement'

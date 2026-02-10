@@ -14,7 +14,7 @@ import {
   VennDiagramCard,
   MapCard,
   NarrativeListCard,
-  SentimentChartCard,
+  StanceChartCard,
   TimelineVolumeCompositeCard
 } from '../components/CardComponents.js';
 
@@ -155,27 +155,28 @@ export class TopicView extends DetailViewBase {
     });
     const hasNetwork = personIds.size > 0 || orgIds.size > 0;
 
-    // Get factions and sentiment from documents
-    const factionSentimentMap = new Map();
+    // Get factions and stance from documents
+    const factionStanceMap = new Map();
     documents.forEach(doc => {
       Object.entries(doc.factionMentions || {}).forEach(([factionId, data]) => {
-        if (!factionSentimentMap.has(factionId)) {
-          factionSentimentMap.set(factionId, { sum: 0, count: 0 });
+        if (!factionStanceMap.has(factionId)) {
+          factionStanceMap.set(factionId, { sum: 0, count: 0 });
         }
-        const entry = factionSentimentMap.get(factionId);
-        if (data.sentiment !== undefined) {
-          entry.sum += data.sentiment;
+        const entry = factionStanceMap.get(factionId);
+        const stance = data.stance ?? data.sentiment;
+        if (typeof stance === 'number') {
+          entry.sum += stance;
           entry.count += 1;
         }
       });
     });
 
-    const factions = [...factionSentimentMap.keys()].map(id => DataService.getFaction(id)).filter(Boolean);
-    const sentimentFactions = factions.map(f => {
-      const entry = factionSentimentMap.get(f.id);
+    const factions = [...factionStanceMap.keys()].map(id => DataService.getFaction(id)).filter(Boolean);
+    const stanceFactions = factions.map(f => {
+      const entry = factionStanceMap.get(f.id);
       return {
         ...f,
-        sentiment: entry.count > 0 ? entry.sum / entry.count : 0
+        stance: entry.count > 0 ? entry.sum / entry.count : 0
       };
     });
 
@@ -229,7 +230,7 @@ export class TopicView extends DetailViewBase {
       hasNetwork,
       factions,
       narrativeDurations,
-      sentimentFactions,
+      stanceFactions,
       factionOverlaps,
       locations,
       mapLocations,
@@ -348,10 +349,10 @@ export class TopicView extends DetailViewBase {
     }
 
     // 7. Sentiment by Faction - half-width
-    if (data.sentimentFactions.length > 0) {
-      this.cardManager.add(new SentimentChartCard(this, 'topic-sentiment', {
+    if (data.stanceFactions.length > 0) {
+      this.cardManager.add(new StanceChartCard(this, 'topic-stance', {
         title: 'Sentiment by Faction',
-        factions: data.sentimentFactions,
+        factions: data.stanceFactions,
         halfWidth: true,
         clickRoute: 'faction'
       }));

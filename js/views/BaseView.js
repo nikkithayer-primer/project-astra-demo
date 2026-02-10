@@ -5,8 +5,8 @@
  */
 
 import {
-  getSentimentClass,
-  formatSentiment,
+  getStanceClass,
+  formatStance,
   formatNumber,
   formatStatus,
   truncateText
@@ -97,7 +97,7 @@ export class BaseView {
     parts.push(...entityIds.filter(Boolean));
     
     if (parts.length === 0) {
-      return '#/cop/';
+      return '#/situational-picture/';
     }
     
     return `#/${parts.join('/')}/`;
@@ -126,10 +126,10 @@ export class BaseView {
         breadcrumbs.push({ label: 'Projects', href: '#/projects' });
         breadcrumbs.push({ label: ctx.getName(), href: `#/${ctx.id}/` });
       } else {
-        breadcrumbs.push({ label: 'Common Operating Picture', href: '#/cop/' });
+        breadcrumbs.push({ label: 'Situational Picture', href: '#/situational-picture/' });
       }
     } else {
-      breadcrumbs.push({ label: 'Common Operating Picture', href: '#/cop/' });
+      breadcrumbs.push({ label: 'Situational Picture', href: '#/situational-picture/' });
     }
     
     // Add remaining items
@@ -248,21 +248,21 @@ export class BaseView {
   }
 
   /**
-   * Get sentiment CSS class
-   * @param {number|string} sentiment
+   * Get stance CSS class
+   * @param {number|string} stance
    * @returns {string} CSS class suffix
    */
-  getSentimentClass(sentiment) {
-    return getSentimentClass(sentiment);
+  getStanceClass(stance) {
+    return getStanceClass(stance);
   }
 
   /**
-   * Format sentiment for display
-   * @param {number|string} sentiment
-   * @returns {string} Human-readable sentiment label
+   * Format stance for display
+   * @param {number|string} stance
+   * @returns {string} Human-readable stance label
    */
-  formatSentiment(sentiment) {
-    return formatSentiment(sentiment);
+  formatStance(stance) {
+    return formatStance(stance);
   }
 
   /**
@@ -318,7 +318,7 @@ export class BaseView {
           <li class="narrative-link-item" data-id="${this.escapeHtml(n.id || '')}">
             <div class="narrative-link-text">${this.escapeHtml(n.text || 'Untitled narrative')}</div>
             <div class="narrative-link-meta">
-              <span class="badge badge-${this.getSentimentClass(n.sentiment)}">${this.formatSentiment(n.sentiment)}</span>
+              <span class="badge badge-${this.getStanceClass(n.stance ?? n.sentiment)}">${this.formatStance(n.stance ?? n.sentiment)}</span>
             </div>
           </li>
         `;

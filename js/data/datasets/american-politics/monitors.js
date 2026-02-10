@@ -23,7 +23,7 @@ export const monitors = [
       newNarrative: true,
       newEvent: true,
       volumeSpike: { threshold: 500, timeWindow: '24h' },
-      sentimentShift: { threshold: 0.15, direction: 'any' },
+      stanceShift: { threshold: 0.15, direction: 'any' },
       factionEngagement: null
     },
     enabled: true,
@@ -49,7 +49,7 @@ export const monitors = [
       newNarrative: true,
       newEvent: false,
       volumeSpike: { threshold: 800, timeWindow: '24h' },
-      sentimentShift: { threshold: 0.20, direction: 'any' },
+      stanceShift: { threshold: 0.20, direction: 'any' },
       factionEngagement: { factionIds: ['faction-001', 'faction-002'], threshold: 200 }
     },
     enabled: true,
@@ -76,7 +76,7 @@ export const monitors = [
       newNarrative: true,
       newEvent: true,
       volumeSpike: { threshold: 400, timeWindow: '24h' },
-      sentimentShift: { threshold: 0.15, direction: 'negative' },
+      stanceShift: { threshold: 0.15, direction: 'negative' },
       factionEngagement: { factionIds: ['faction-005', 'faction-006'], threshold: 100 }
     },
     enabled: true,
@@ -103,7 +103,7 @@ export const monitors = [
       newNarrative: true,
       newEvent: true,
       volumeSpike: { threshold: 200, timeWindow: '12h' },
-      sentimentShift: null,
+      stanceShift: null,
       factionEngagement: null
     },
     enabled: true,
@@ -130,7 +130,7 @@ export const monitors = [
       newNarrative: true,
       newEvent: true,
       volumeSpike: { threshold: 300, timeWindow: '24h' },
-      sentimentShift: { threshold: 0.20, direction: 'negative' },
+      stanceShift: { threshold: 0.20, direction: 'negative' },
       factionEngagement: null
     },
     enabled: false, // Paused
@@ -181,9 +181,9 @@ export const alerts = [
   {
     id: 'alert-003',
     monitorId: 'monitor-002',
-    type: 'sentiment_shift',
+    type: 'stance_shift',
     title: 'Sentiment shift: Trump Administration Actions',
-    description: '-23% sentiment change detected following Greenland diplomatic message leak',
+    description: '-23% stance change detected following Greenland diplomatic message leak',
     severity: 'medium',
     triggeredAt: '2026-01-20T11:30:00Z',
     acknowledged: false,

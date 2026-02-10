@@ -119,7 +119,7 @@ export class DetailViewBase extends BaseView {
   }
 
   /**
-   * Calculate faction sentiment from documents
+   * Calculate faction stance from documents
    * @param {Array} documents - Array of document objects
    * @returns {Object} Object with factions array and factionOverlaps array
    */
@@ -130,12 +130,12 @@ export class DetailViewBase extends BaseView {
       if (!doc.factionMentions) return;
       Object.entries(doc.factionMentions).forEach(([factionId, mentions]) => {
         if (!factionMentionMap.has(factionId)) {
-          factionMentionMap.set(factionId, { volume: 0, sentiment: 0, count: 0 });
+          factionMentionMap.set(factionId, { volume: 0, stanceSum: 0, count: 0 });
         }
         const entry = factionMentionMap.get(factionId);
+        const stance = mentions.stance ?? mentions.sentiment;
         entry.volume += mentions.volume || 1;
-        entry.sentiment += mentions.sentiment || 0;
-        entry.count += 1;
+        if (typeof stance === 'number') { entry.stanceSum += stance; entry.count += 1; }
       });
     });
 
@@ -145,7 +145,7 @@ export class DetailViewBase extends BaseView {
       return {
         ...faction,
         volume: stats.volume,
-        sentiment: stats.count > 0 ? stats.sentiment / stats.count : 0
+        stance: stats.count > 0 ? stats.stanceSum / stats.count : 0
       };
     }).filter(Boolean);
 

@@ -8,8 +8,8 @@
  * Examples:
  *   - #/monitor-001/person-003/ (person within monitor scope)
  *   - #/workspace-001/narr-005/ (narrative within workspace scope)  
- *   - #/person-003/ (person in COP/global scope)
- *   - #/cop/ (COP home)
+   *   - #/person-003/ (person in Situational Picture / global scope)
+   *   - #/situational-picture/ (Situational Picture home)
  * 
  * See docs/ROUTING.md for full specification
  */
@@ -67,7 +67,7 @@ const ENTITY_VIEW_MAP = {
 };
 
 // Top-level routes that don't follow the ID-based pattern
-const TOP_LEVEL_ROUTES = ['workspaces', 'monitors', 'search', 'projects', 'activity', 'documents', 'settings', 'data-model', 'component-demos', 'status', 'cop'];
+const TOP_LEVEL_ROUTES = ['workspaces', 'monitors', 'search', 'projects', 'activity', 'documents', 'settings', 'data-model', 'component-demos', 'status', 'situational-picture'];
 
 export class Router {
   constructor(containerId) {
@@ -153,7 +153,7 @@ export class Router {
         <div class="content-area">
           <div class="card">
             <div class="card-body" style="padding: var(--space-2xl); text-align: center;">
-              <p>Try <a href="#/cop/">returning to the Common Operating Picture</a> or refreshing the page.</p>
+              <p>Try <a href="#/situational-picture/">returning to the Situational Picture</a> or refreshing the page.</p>
             </div>
           </div>
         </div>
@@ -177,8 +177,8 @@ export class Router {
       const settings = dataStore.getSettings();
       let defaultPage = settings.defaultStartPage || 'monitors';
       
-      // If COP is disabled and was set as start page, fall back to monitors
-      if (!settings.copEnabled && (defaultPage === 'cop' || defaultPage === 'dashboard')) {
+      // If Situational Picture is disabled and was set as start page, fall back to monitors
+      if (!settings.situationalPictureEnabled && (defaultPage === 'situational-picture' || defaultPage === 'dashboard')) {
         defaultPage = 'monitors';
       }
       
@@ -404,8 +404,8 @@ export class Router {
    *   - #/workspace-001/narr-005/ (narrative within workspace scope)
    *   - #/project-parent/project-child/ (nested project view)
    *   - #/project-parent/project-child/doc-123/ (document within nested project)
-   *   - #/person-003/ (person in COP scope)
-   *   - #/cop/ (COP home)
+   *   - #/person-003/ (person in Situational Picture scope)
+   *   - #/situational-picture/ (Situational Picture home)
    *   - #/workspaces (top-level list)
    * 
    * @param {string} hash - The hash path without #/ and query string
@@ -417,22 +417,22 @@ export class Router {
     // Default result structure
     const result = {
       contextId: null,         // ID of context (monitor-001, workspace-001, etc.) - for projects, this is the deepest project
-      contextType: null,       // 'monitor' | 'workspace' | 'project' | 'cop'
+      contextType: null,       // 'monitor' | 'workspace' | 'project' | 'situational-picture'
       projectChain: [],        // For nested projects: array of project IDs from root to deepest
       entityId: null,          // Primary entity ID being viewed
       entityType: null,        // Entity type derived from ID prefix
       entityChain: [],         // Full chain of entity IDs for nested navigation
       subRoute: null,          // 'documents' for documents tab
       isContextHome: false,    // true if viewing context home (no entity)
-      isCopHome: false,        // true if viewing COP home
+      isSituationalPictureHome: false,  // true if viewing Situational Picture home
       is404: false,            // true if route is invalid
       topLevelRoute: null      // For non-context routes like 'workspaces', 'search'
     };
 
     if (segments.length === 0) {
-      // Empty hash - default to COP home
-      result.isCopHome = true;
-      result.contextType = 'cop';
+      // Empty hash - default to Situational Picture home
+      result.isSituationalPictureHome = true;
+      result.contextType = 'situational-picture';
       return result;
     }
 
@@ -440,12 +440,12 @@ export class Router {
 
     // Check for top-level non-context routes
     if (TOP_LEVEL_ROUTES.includes(firstSegment)) {
-      if (firstSegment === 'cop') {
-        result.contextType = 'cop';
+      if (firstSegment === 'situational-picture') {
+        result.contextType = 'situational-picture';
         if (segments.length === 1) {
-          result.isCopHome = true;
+          result.isSituationalPictureHome = true;
         } else {
-          // COP with entity chain
+          // Situational Picture with entity chain
           this._parseEntityChain(segments.slice(1), result);
         }
       } else {
@@ -491,8 +491,8 @@ export class Router {
         }
       }
     } else {
-      // No context prefix - treat as COP-scoped
-      result.contextType = 'cop';
+      // No context prefix - treat as Situational Picture scope
+      result.contextType = 'situational-picture';
       // Parse all segments as entity chain
       this._parseEntityChain(segments, result);
     }
@@ -528,17 +528,17 @@ export class Router {
   /**
    * Resolve context to a scope object with document IDs
    * Now accepts a context ID directly and derives type from prefix
-   * @param {string} contextId - Context ID (e.g., 'monitor-001') or null for COP
+   * @param {string} contextId - Context ID (e.g., 'monitor-001') or null for Situational Picture
    * @param {string[]} projectChain - Optional array of project IDs for nested projects
    * @returns {Object} Scope object with type, id, and documentIds
    */
   resolveContextScope(contextId, projectChain = []) {
     if (!contextId) {
       return { 
-        type: 'cop', 
+        type: 'situational-picture', 
         id: null, 
         documentIds: null,
-        getName: () => 'Common Operating Picture'
+        getName: () => 'Situational Picture'
       };
     }
     
@@ -618,7 +618,7 @@ export class Router {
 
   /**
    * Build an ID-based route URL
-   * @param {string} contextId - Context ID (e.g., 'monitor-001') or null for COP
+   * @param {string} contextId - Context ID (e.g., 'monitor-001') or null for Situational Picture
    * @param {...string} entityIds - Entity IDs to include in the route
    * @returns {string} Full hash URL
    */
@@ -632,7 +632,7 @@ export class Router {
     parts.push(...entityIds.filter(Boolean));
     
     if (parts.length === 0) {
-      return '#/cop/';
+      return '#/situational-picture/';
     }
     
     return `#/${parts.join('/')}/`;
@@ -649,7 +649,7 @@ export class Router {
     // No hash or empty path: redirect to dataset's default start page
     if (!rawHash || rawHash === '/') {
       let defaultPage = settings.defaultStartPage || 'monitors';
-      if (!settings.copEnabled && defaultPage === 'cop') {
+      if (!settings.situationalPictureEnabled && defaultPage === 'situational-picture') {
         defaultPage = 'monitors';
       }
       window.location.hash = `#/${defaultPage}`;
@@ -666,15 +666,15 @@ export class Router {
     // Parse the route using ID-based parser
     const parsed = this.parseIdBasedRoute(hash);
 
-    // Check for COP disabled with COP-scoped route
-    if (parsed.contextType === 'cop' && !parsed.topLevelRoute && !settings.copEnabled) {
-      // COP is disabled and route requires COP - show 404 or redirect
+    // Check for Situational Picture disabled with situational-picture-scoped route
+    if (parsed.contextType === 'situational-picture' && !parsed.topLevelRoute && !settings.situationalPictureEnabled) {
+      // Situational Picture is disabled and route requires it - redirect to monitors
       window.location.hash = '#/monitors';
       return;
     }
 
     // Determine the primary route for nav link highlighting
-    this.currentRoute = parsed.topLevelRoute || parsed.contextType || 'cop';
+    this.currentRoute = parsed.topLevelRoute || parsed.contextType || 'situational-picture';
     this.currentContext = this.resolveContextScope(parsed.contextId, parsed.projectChain || []);
 
     // Destroy current view and clean up sticky header
@@ -684,7 +684,7 @@ export class Router {
       console.error('Router: Error destroying sticky header:', e);
     }
     
-    // Clean up COP filters if navigating away from COP
+    // Clean up dashboard filters if navigating away from Situational Picture
     this.cleanupDashboardFilters();
     
     if (this.currentView && this.currentView.destroy) {
@@ -721,21 +721,21 @@ export class Router {
       context: this.currentContext // Pass context scope to views
     };
 
-    // Track if this is the COP home for filter initialization
-    let isCopHome = false;
+    // Track if this is the Situational Picture home for filter initialization
+    let isSituationalPictureHome = false;
 
     // Route based on parsed structure
     if (parsed.topLevelRoute) {
       // Handle top-level routes (workspaces, monitors, search, etc.)
       this._handleTopLevelRoute(parsed.topLevelRoute, filterOptions, settings);
-    } else if (parsed.isCopHome || parsed.isContextHome || parsed.entityId) {
+    } else if (parsed.isSituationalPictureHome || parsed.isContextHome || parsed.entityId) {
       // Handle ID-based routes
       this._handleIdBasedRoute(parsed, filterOptions, settings);
-      isCopHome = parsed.isCopHome;
+      isSituationalPictureHome = parsed.isSituationalPictureHome;
     } else {
       // No recognized route - redirect to default
       let defaultPage = settings.defaultStartPage || 'monitors';
-      if (!settings.copEnabled && defaultPage === 'cop') {
+      if (!settings.situationalPictureEnabled && defaultPage === 'situational-picture') {
         defaultPage = 'monitors';
       }
       window.location.hash = `#/${defaultPage}`;
@@ -747,8 +747,8 @@ export class Router {
       try {
         this.currentView.render();
         
-        // Initialize COP filters after render (only for COP home)
-        if (isCopHome) {
+        // Initialize dashboard filters after render (only for Situational Picture home)
+        if (isSituationalPictureHome) {
           this.initDashboardFilters();
         }
       } catch (e) {
@@ -818,14 +818,14 @@ export class Router {
         return;
         
       case 'status':
-        // Redirect to COP
-        window.location.hash = '#/cop/';
+        // Redirect to Situational Picture
+        window.location.hash = '#/situational-picture/';
         return;
         
       default:
         // Unknown top-level route - redirect to default
         let defaultPage = settings.defaultStartPage || 'monitors';
-        if (!settings.copEnabled && defaultPage === 'cop') {
+        if (!settings.situationalPictureEnabled && defaultPage === 'situational-picture') {
           defaultPage = 'monitors';
         }
         window.location.hash = `#/${defaultPage}`;
@@ -837,11 +837,11 @@ export class Router {
    * Routes are determined by ID prefixes, not explicit type segments
    */
   _handleIdBasedRoute(parsed, filterOptions, settings) {
-    const { contextId, contextType, entityId, entityType, isCopHome, isContextHome } = parsed;
+    const { contextId, contextType, entityId, entityType, isSituationalPictureHome, isContextHome } = parsed;
     
-    // COP home
-    if (isCopHome) {
-      if (!settings.copEnabled) {
+    // Situational Picture home
+    if (isSituationalPictureHome) {
+      if (!settings.situationalPictureEnabled) {
         window.location.hash = '#/monitors';
         return;
       }
@@ -898,8 +898,8 @@ export class Router {
       // Check if this link matches the current route/context
       const matches = 
         linkRoute === route ||
-        linkRoute === 'cop' && route === 'cop' ||
-        linkRoute === 'cop/' && route === 'cop' ||
+        linkRoute === 'situational-picture' && route === 'situational-picture' ||
+        linkRoute === 'situational-picture/' && route === 'situational-picture' ||
         linkRoute === 'monitors' && (route === 'monitors' || route === 'monitor') ||
         linkRoute === 'workspaces' && (route === 'workspaces' || route === 'workspace') ||
         linkRoute === 'projects' && (route === 'projects' || route === 'project');
@@ -922,7 +922,7 @@ export class Router {
       // Context-scoped navigation
       hash = `#/${context.id}/${entityId}/`;
     } else {
-      // COP-scoped navigation
+      // Situational Picture scope navigation
       hash = `#/${entityId}/`;
     }
     
@@ -934,7 +934,7 @@ export class Router {
    * @returns {Object} Parsed route with context, entityType, entityId, etc.
    */
   getCurrentRoute() {
-    const fullHash = window.location.hash.slice(2) || 'cop';
+    const fullHash = window.location.hash.slice(2) || 'situational-picture';
     const queryIndex = fullHash.indexOf('?');
     const hash = queryIndex === -1 ? fullHash : fullHash.slice(0, queryIndex);
     const queryParams = this.parseQueryParams(fullHash);
@@ -963,7 +963,7 @@ export class Router {
    * @returns {string} The full hash URL
    */
   buildUrl(params = {}) {
-    const fullHash = window.location.hash.slice(2) || 'cop';
+    const fullHash = window.location.hash.slice(2) || 'situational-picture';
     const queryIndex = fullHash.indexOf('?');
     const basePath = queryIndex === -1 ? `#/${fullHash}` : `#/${fullHash.slice(0, queryIndex)}`;
     

@@ -10,7 +10,7 @@ import {
   CardManager,
   NetworkGraphCard,
   MapCard,
-  SentimentChartCard,
+  StanceChartCard,
   VennDiagramCard,
   TimelineVolumeCompositeCard,
   TopicListCard
@@ -63,7 +63,7 @@ export class ThemeView extends DetailViewBase {
     const headerHtml = PageHeader.render({
       breadcrumbs,
       title: theme.text,
-      subtitle: `<span class="badge badge-${this.getSentimentClass(theme.sentiment)}">${this.formatSentiment(theme.sentiment)}</span>`,
+      subtitle: `<span class="badge badge-${this.getStanceClass(theme.stance ?? theme.sentiment)}">${this.formatStance(theme.stance ?? theme.sentiment)}</span>`,
       description: theme.description,
       descriptionLink: theme.description 
         ? `<a href="#" class="btn btn-small btn-secondary source-link" data-source-type="theme" data-source-id="${theme.id}">View source</a>` 
@@ -151,10 +151,10 @@ export class ThemeView extends DetailViewBase {
     const hasPublisherData = publisherData && publisherData.dates.length > 0;
     const hasVolumeTimeline = hasVolumeData || hasPublisherData || allEvents.length > 0;
 
-    // Build sentiment data for the sentiment chart
-    const sentimentFactions = factionData.map(fd => ({
+    // Build stance data for the stance chart
+    const stanceFactions = factionData.map(fd => ({
       ...fd.faction,
-      sentiment: fd.sentiment
+      stance: fd.stance ?? fd.sentiment
     }));
 
     // Get related topics (topics that share documents with this theme's documents) - scoped
@@ -180,7 +180,7 @@ export class ThemeView extends DetailViewBase {
       parentNarrative, factionData, factions, factionOverlaps,
       volumeOverTime, hasVolumeData, volumeData, publisherData, hasPublisherData,
       hasVolumeTimeline, locations, mapLocations, events, allEvents,
-      personIds, orgIds, hasNetwork, documents, sentimentFactions, topics,
+      personIds, orgIds, hasNetwork, documents, stanceFactions, topics,
       narrativeDurations
     };
   }
@@ -209,11 +209,11 @@ export class ThemeView extends DetailViewBase {
       }));
     }
 
-    // 2. Sentiment by Faction (half-width)
-    if (data.sentimentFactions.length > 0) {
-      this.cardManager.add(new SentimentChartCard(this, 'theme-sentiment-chart', {
-        title: 'Sentiment by Faction',
-        factions: data.sentimentFactions,
+    // 2. Stance by Faction (half-width)
+    if (data.stanceFactions.length > 0) {
+      this.cardManager.add(new StanceChartCard(this, 'theme-stance-chart', {
+        title: 'Stance by Faction',
+        factions: data.stanceFactions,
         halfWidth: true,
         clickRoute: 'faction'
       }));

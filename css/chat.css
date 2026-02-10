@@ -397,7 +397,7 @@
 }
 
 .chat-error {
-  color: var(--sentiment-negative, #E57373);
+  color: var(--stance-negative, #E57373);
   font-size: 13px;
 }
 
@@ -438,7 +438,7 @@
 
 .chat-status-ai {
   background: rgba(102, 187, 106, 0.15);
-  color: var(--sentiment-positive, #66BB6A);
+  color: var(--stance-positive, #66BB6A);
 }
 
 .chat-status-demo {

@@ -76,12 +76,12 @@ export class BaseItemList extends BaseComponent {
   }
 
   /**
-   * Format sentiment value to human-readable string
-   * @param {number} sentiment - Sentiment value (-1 to 1)
+   * Format stance value to human-readable string
+   * @param {number} stance - Stance value (-1 to 1)
    * @returns {string}
    */
-  formatSentiment(sentiment) {
-    const value = typeof sentiment === 'number' ? sentiment : 0;
+  formatStance(stance) {
+    const value = typeof stance === 'number' ? stance : 0;
     if (value <= -0.6) return 'Very Negative';
     if (value <= -0.2) return 'Negative';
     if (value < 0.2) return 'Neutral';
@@ -146,7 +146,7 @@ export class BaseItemList extends BaseComponent {
    * @returns {string}
    */
   getSparklineColor(item) {
-    return this.getSentimentColor(item.sentiment);
+    return this.getStanceColor(item.stance ?? item.sentiment);
   }
 
   /**
@@ -344,7 +344,7 @@ export class BaseItemList extends BaseComponent {
             width: 80,
             height: 24,
             color: data.color,
-            sentiment: data.sentiment
+            stance: data.stance ?? data.sentiment
           });
           sparkline.update(data.values);
           this.sparklines.push(sparkline);
@@ -357,13 +357,13 @@ export class BaseItemList extends BaseComponent {
    * Get sparkline data for all items
    * Override if items have nested sparklines
    * @param {Array} items - The items
-   * @returns {Array} Array of { values, color, sentiment }
+   * @returns {Array} Array of { values, color, stance }
    */
   getSparklineData(items) {
     return items.map(item => ({
       values: this.getSparklineValues(item),
       color: this.getSparklineColor(item),
-      sentiment: item.sentiment
+      stance: item.stance ?? item.sentiment
     }));
   }
 

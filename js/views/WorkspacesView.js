@@ -21,7 +21,7 @@ export class WorkspacesView extends BaseView {
 
     const headerHtml = PageHeader.render({
       breadcrumbs: [
-        { label: 'Common Operating Picture', href: '#/cop' },
+        { label: 'Situational Picture', href: '#/situational-picture' },
         'Workspaces'
       ],
       title: 'Workspaces',

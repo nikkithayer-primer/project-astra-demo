@@ -12,7 +12,7 @@ import {
   NetworkGraphCard,
   NarrativeListCard,
   TopicListCard,
-  SentimentChartCard,
+  StanceChartCard,
   VennDiagramCard,
   MapCard,
   TimelineVolumeCompositeCard
@@ -157,7 +157,7 @@ export class WorkspaceView extends DetailViewBase {
       const factionMentions = DataService.getAggregateFactionMentionsForNarrative(n.id);
       Object.keys(factionMentions).forEach(fId => factionIds.add(fId));
     });
-    const factions = this.calculateFactionSentiment(narratives, [...factionIds]);
+    const factions = this.calculateFactionStance(narratives, [...factionIds]);
 
     // Get faction overlaps for Venn diagram
     const factionOverlaps = DataService.getFactionOverlaps();
@@ -199,29 +199,30 @@ export class WorkspaceView extends DetailViewBase {
   }
 
   /**
-   * Calculate aggregated faction sentiment from narratives using document-based aggregation
+   * Calculate aggregated faction stance from narratives using document-based aggregation
    */
-  calculateFactionSentiment(narratives, factionIds) {
+  calculateFactionStance(narratives, factionIds) {
     const factionStats = new Map();
     
     // Initialize stats for each faction
     factionIds.forEach(fId => {
-      factionStats.set(fId, { totalVolume: 0, weightedSentiment: 0 });
+      factionStats.set(fId, { totalVolume: 0, weightedStance: 0 });
     });
     
-    // Aggregate volume and sentiment across narratives using document data
+    // Aggregate volume and stance across narratives using document data
     narratives.forEach(n => {
       const factionMentions = DataService.getAggregateFactionMentionsForNarrative(n.id);
       Object.entries(factionMentions).forEach(([factionId, data]) => {
         const stats = factionStats.get(factionId);
-        if (stats && data.volume && typeof data.sentiment === 'number') {
+        const stance = data.stance ?? data.sentiment;
+        if (stats && data.volume && typeof stance === 'number') {
           stats.totalVolume += data.volume;
-          stats.weightedSentiment += data.sentiment * data.volume;
+          stats.weightedStance += stance * data.volume;
         }
       });
     });
     
-    // Calculate weighted average sentiment and return factions with data
+    // Calculate weighted average stance and return factions with data
     return factionIds
       .map(fId => {
         const faction = DataService.getFaction(fId);
@@ -229,12 +230,12 @@ export class WorkspaceView extends DetailViewBase {
         
         const stats = factionStats.get(fId);
         if (!stats || stats.totalVolume === 0) {
-          return { ...faction, sentiment: 0, volume: 0 };
+          return { ...faction, stance: 0, volume: 0 };
         }
         
         return {
           ...faction,
-          sentiment: stats.weightedSentiment / stats.totalVolume,
+          stance: stats.weightedStance / stats.totalVolume,
           volume: stats.totalVolume
         };
       })
@@ -324,7 +325,7 @@ export class WorkspaceView extends DetailViewBase {
 
     // 6. Faction Sentiment (half-width)
     if (data.factions.length > 0) {
-      this.cardManager.add(new SentimentChartCard(this, 'workspace-factions', {
+      this.cardManager.add(new StanceChartCard(this, 'workspace-factions', {
         title: 'Faction Sentiment',
         factions: data.factions,
         halfWidth: true,

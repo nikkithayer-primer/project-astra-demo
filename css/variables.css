@@ -27,8 +27,8 @@
   --accent-warning: #d97706;
   
   /* Sentiment colors (softened for readability) */
-  --sentiment-positive: #66BB6A;
-  --sentiment-negative: #E57373;
+  --stance-positive: #66BB6A;
+  --stance-negative: #E57373;
   
   --status-high: #dc2626;
   --status-medium: #d97706;
@@ -129,8 +129,8 @@
   --accent-warning: #D29922;
   
   /* Sentiment colors (adjusted for dark mode) */
-  --sentiment-positive: #3FB950;
-  --sentiment-negative: #F85149;
+  --stance-positive: #3FB950;
+  --stance-negative: #F85149;
   
   --status-high: #F85149;
   --status-medium: #D29922;

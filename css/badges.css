@@ -1,6 +1,6 @@
 /**
  * Badge Styles
- * Badges, status indicators, and sentiment badges
+ * Badges, status indicators, and stance badges
  */
 
 /* Tags/Badges */
@@ -57,12 +57,12 @@
 /* Sentiment Badges */
 .badge-positive {
   background: rgba(0, 200, 83, 0.15);
-  color: var(--sentiment-positive, #00C853);
+  color: var(--stance-positive, #00C853);
 }
 
 .badge-negative {
   background: rgba(255, 61, 87, 0.15);
-  color: var(--sentiment-negative, #FF3D57);
+  color: var(--stance-negative, #FF3D57);
 }
 
 .badge-neutral {

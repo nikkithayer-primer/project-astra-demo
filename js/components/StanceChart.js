@@ -1,12 +1,12 @@
 /**
- * SentimentChart.js
- * Horizontal bar chart showing sentiment by faction
+ * StanceChart.js
+ * Horizontal bar chart showing stance by faction
  */
 
 import { BaseComponent } from './BaseComponent.js';
 import { getEntityCardModal } from './EntityCardModal.js';
 
-export class SentimentChart extends BaseComponent {
+export class StanceChart extends BaseComponent {
   constructor(containerId, options = {}) {
     super(containerId, {
       height: 200,
@@ -18,7 +18,7 @@ export class SentimentChart extends BaseComponent {
 
   render() {
     if (!this.data || !this.data.factions || !this.data.factions.length) {
-      this.showEmptyState('No sentiment data');
+      this.showEmptyState('No stance data');
       return;
     }
 
@@ -81,12 +81,12 @@ export class SentimentChart extends BaseComponent {
     // Draw bars
     factions.forEach((faction, i) => {
       const y = i * (barHeight + 12) + 10;
-      const value = this.normalizeSentiment(faction.sentiment);
+      const value = this.normalizeStance(faction.stance ?? faction.sentiment);
       const barStart = x(Math.min(0, value));
       const barWidth = Math.abs(x(value) - x(0));
 
       const group = g.append('g')
-        .attr('class', 'sentiment-bar-group')
+        .attr('class', 'stance-bar-group')
         .attr('transform', `translate(0, ${y})`);
 
       // Faction label (outside left) - clickable link to faction page
@@ -125,24 +125,22 @@ export class SentimentChart extends BaseComponent {
         .attr('fill', 'var(--bg-tertiary)')
         .attr('rx', 4);
 
-      // Sentiment bar
+      // Stance bar
       group.append('rect')
-        .attr('class', 'sentiment-bar')
+        .attr('class', 'stance-bar')
         .attr('x', barStart)
         .attr('y', 4)
         .attr('width', barWidth)
         .attr('height', barHeight - 8)
-        .attr('fill', this.getSentimentColor(faction.sentiment))
+        .attr('fill', this.getStanceColor(faction.stance ?? faction.sentiment))
         .attr('rx', 3);
 
-      // Sentiment value label (inside the bar)
-      // Position label inside the bar, offset from the end
-      const minBarWidthForLabel = 35; // Minimum bar width to show label inside
+      // Stance value label (inside the bar)
+      const minBarWidthForLabel = 35;
       const labelOffset = 8;
       let labelX, textAnchor;
       
       if (barWidth >= minBarWidthForLabel) {
-        // Label inside the bar
         if (value >= 0) {
           labelX = barStart + barWidth - labelOffset;
           textAnchor = 'end';
@@ -151,7 +149,6 @@ export class SentimentChart extends BaseComponent {
           textAnchor = 'start';
         }
       } else {
-        // Bar too small, place label at center of bar area
         labelX = x(0) + (value >= 0 ? 8 : -8);
         textAnchor = value >= 0 ? 'start' : 'end';
       }
@@ -164,7 +161,7 @@ export class SentimentChart extends BaseComponent {
         .attr('font-size', '10px')
         .attr('font-weight', '600')
         .attr('font-family', 'var(--font-sans)')
-        .text(this.formatSentimentValue(faction.sentiment));
+        .text(this.formatStanceValue(faction.stance ?? faction.sentiment));
 
       // Faction color indicator at the value position
       group.append('circle')
@@ -192,4 +189,4 @@ export class SentimentChart extends BaseComponent {
   }
 }
 
-export default SentimentChart;
+export default StanceChart;

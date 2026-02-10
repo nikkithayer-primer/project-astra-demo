@@ -15,7 +15,7 @@ export const persons = [
     relatedEventIds: [],
     documentIds: [],
     tagIds: ['tag-006'],
-    factionSentiment: {
+    factionStance: {
       'faction-001': 0.82,
       'faction-002': -0.35,
       'faction-006': -0.45
@@ -33,7 +33,7 @@ export const persons = [
     relatedEventIds: [],
     documentIds: [],
     tagIds: ['tag-006'],
-    factionSentiment: {
+    factionStance: {
       'faction-001': 0.78,
       'faction-002': -0.25
     }
@@ -50,7 +50,7 @@ export const persons = [
     relatedEventIds: [],
     documentIds: [],
     tagIds: ['tag-005'],
-    factionSentiment: {
+    factionStance: {
       'faction-001': -0.55,
       'faction-002': 0.42,
       'faction-006': 0.68
@@ -68,7 +68,7 @@ export const persons = [
     relatedEventIds: [],
     documentIds: [],
     tagIds: ['tag-005'],
-    factionSentiment: {
+    factionStance: {
       'faction-001': 0.25,
       'faction-005': 0.72,
       'faction-007': 0.15
@@ -86,7 +86,7 @@ export const persons = [
     relatedEventIds: [],
     documentIds: [],
     tagIds: ['tag-006'],
-    factionSentiment: {
+    factionStance: {
       'faction-001': 0.72,
       'faction-003': -0.55,
       'faction-005': -0.35
@@ -104,7 +104,7 @@ export const persons = [
     relatedEventIds: [],
     documentIds: [],
     tagIds: ['tag-006'],
-    factionSentiment: {
+    factionStance: {
       'faction-001': 0.75,
       'faction-003': -0.68,
       'faction-006': -0.58
@@ -122,7 +122,7 @@ export const persons = [
     relatedEventIds: [],
     documentIds: [],
     tagIds: ['tag-005'],
-    factionSentiment: {
+    factionStance: {
       'faction-001': -0.25,
       'faction-002': 0.35,
       'faction-006': 0.72,
@@ -141,7 +141,7 @@ export const persons = [
     relatedEventIds: [],
     documentIds: [],
     tagIds: ['tag-005'],
-    factionSentiment: {
+    factionStance: {
       'faction-001': -0.15,
       'faction-003': 0.85,
       'faction-004': 0.78
@@ -159,7 +159,7 @@ export const persons = [
     relatedEventIds: [],
     documentIds: [],
     tagIds: ['tag-006'],
-    factionSentiment: {
+    factionStance: {
       'faction-001': 0.78,
       'faction-002': -0.28,
       'faction-006': -0.42,
@@ -178,7 +178,7 @@ export const persons = [
     relatedEventIds: [],
     documentIds: [],
     tagIds: ['tag-005'],
-    factionSentiment: {
+    factionStance: {
       'faction-001': 0.65,
       'faction-006': -0.52,
       'faction-008': -0.72
@@ -196,7 +196,7 @@ export const persons = [
     relatedEventIds: [],
     documentIds: [],
     tagIds: ['tag-005'],
-    factionSentiment: {
+    factionStance: {
       'faction-001': -0.62,
       'faction-002': 0.55,
       'faction-006': 0.75
@@ -214,7 +214,7 @@ export const persons = [
     relatedEventIds: [],
     documentIds: [],
     tagIds: ['tag-004', 'tag-origin-002'],
-    factionSentiment: {
+    factionStance: {
       'faction-001': -0.45,
       'faction-003': 0.88,
       'faction-004': 0.82
@@ -232,7 +232,7 @@ export const persons = [
     relatedEventIds: [],
     documentIds: [],
     tagIds: ['tag-006'],
-    factionSentiment: {
+    factionStance: {
       'faction-001': 0.82,
       'faction-007': 0.65
     }
@@ -249,7 +249,7 @@ export const persons = [
     relatedEventIds: [],
     documentIds: [],
     tagIds: ['tag-005'],
-    factionSentiment: {
+    factionStance: {
       'faction-001': 0.35,
       'faction-005': 0.78,
       'faction-007': 0.42
@@ -267,7 +267,7 @@ export const persons = [
     relatedEventIds: [],
     documentIds: [],
     tagIds: ['tag-005'],
-    factionSentiment: {
+    factionStance: {
       'faction-001': -0.58,
       'faction-006': 0.72,
       'faction-008': 0.25
@@ -285,7 +285,7 @@ export const persons = [
     relatedEventIds: [],
     documentIds: [],
     tagIds: ['tag-004', 'tag-origin-004'],
-    factionSentiment: {
+    factionStance: {
       'faction-001': -0.85,
       'faction-002': 0.88
     }
@@ -302,7 +302,7 @@ export const persons = [
     relatedEventIds: [],
     documentIds: [],
     tagIds: ['tag-006'],
-    factionSentiment: {
+    factionStance: {
       'faction-001': 0.68,
       'faction-006': -0.42
     }
@@ -319,7 +319,7 @@ export const persons = [
     relatedEventIds: [],
     documentIds: [],
     tagIds: ['tag-006'],
-    factionSentiment: {
+    factionStance: {
       'faction-001': 0.75
     }
   },
@@ -335,7 +335,7 @@ export const persons = [
     relatedEventIds: [],
     documentIds: [],
     tagIds: ['tag-006'],
-    factionSentiment: {
+    factionStance: {
       'faction-001': 0.78,
       'faction-007': 0.52
     }
@@ -352,7 +352,7 @@ export const persons = [
     relatedEventIds: [],
     documentIds: [],
     tagIds: ['tag-005'],
-    factionSentiment: {
+    factionStance: {
       'faction-001': -0.72,
       'faction-006': 0.78
     }
@@ -369,7 +369,7 @@ export const persons = [
     relatedEventIds: [],
     documentIds: [],
     tagIds: ['tag-004', 'tag-origin-002'],
-    factionSentiment: {
+    factionStance: {
       'faction-001': -0.55,
       'faction-003': 0.82,
       'faction-004': 0.78
@@ -387,7 +387,7 @@ export const persons = [
     relatedEventIds: [],
     documentIds: [],
     tagIds: ['tag-006'],
-    factionSentiment: {
+    factionStance: {
       'faction-001': 0.72
     }
   },
@@ -403,7 +403,7 @@ export const persons = [
     relatedEventIds: [],
     documentIds: [],
     tagIds: ['tag-005'],
-    factionSentiment: {
+    factionStance: {
       'faction-001': -0.45,
       'faction-006': 0.68,
       'faction-007': 0.25
@@ -421,7 +421,7 @@ export const persons = [
     relatedEventIds: [],
     documentIds: [],
     tagIds: ['tag-006'],
-    factionSentiment: {
+    factionStance: {
       'faction-001': 0.75
     }
   },
@@ -437,7 +437,7 @@ export const persons = [
     relatedEventIds: [],
     documentIds: [],
     tagIds: ['tag-005'],
-    factionSentiment: {
+    factionStance: {
       'faction-001': -0.35,
       'faction-006': 0.45
     }
@@ -454,7 +454,7 @@ export const organizations = [
     affiliatedFactionIds: ['faction-001'],
     relatedLocationIds: ['loc-001', 'loc-002'],
     documentIds: [],
-    factionSentiment: {
+    factionStance: {
       'faction-001': 0.85,
       'faction-002': -0.42,
       'faction-006': -0.38
@@ -469,7 +469,7 @@ export const organizations = [
     affiliatedFactionIds: ['faction-001'],
     relatedLocationIds: ['loc-001', 'loc-002', 'loc-003'],
     documentIds: [],
-    factionSentiment: {
+    factionStance: {
       'faction-001': 0.88,
       'faction-002': -0.35,
       'faction-007': 0.62
@@ -484,7 +484,7 @@ export const organizations = [
     affiliatedFactionIds: ['faction-001'],
     relatedLocationIds: ['loc-001', 'loc-003'],
     documentIds: [],
-    factionSentiment: {
+    factionStance: {
       'faction-001': 0.82,
       'faction-002': -0.32
     }
@@ -498,7 +498,7 @@ export const organizations = [
     affiliatedFactionIds: ['faction-001'],
     relatedLocationIds: ['loc-001', 'loc-008', 'loc-007'],
     documentIds: [],
-    factionSentiment: {
+    factionStance: {
       'faction-001': 0.82
     }
   },
@@ -511,7 +511,7 @@ export const organizations = [
     affiliatedFactionIds: ['faction-001'],
     relatedLocationIds: ['loc-001', 'loc-009'],
     documentIds: [],
-    factionSentiment: {
+    factionStance: {
       'faction-001': 0.85
     }
   },
@@ -524,7 +524,7 @@ export const organizations = [
     affiliatedFactionIds: ['faction-001'],
     relatedLocationIds: ['loc-001'],
     documentIds: [],
-    factionSentiment: {
+    factionStance: {
       'faction-001': 0.72,
       'faction-006': -0.55
     }
@@ -538,7 +538,7 @@ export const organizations = [
     affiliatedFactionIds: ['faction-001'],
     relatedLocationIds: ['loc-001'],
     documentIds: [],
-    factionSentiment: {
+    factionStance: {
       'faction-001': 0.78,
       'faction-006': -0.48
     }
@@ -552,7 +552,7 @@ export const organizations = [
     affiliatedFactionIds: ['faction-001'],
     relatedLocationIds: ['loc-001'],
     documentIds: [],
-    factionSentiment: {
+    factionStance: {
       'faction-001': 0.75,
       'faction-003': -0.45,
       'faction-005': -0.35
@@ -567,7 +567,7 @@ export const organizations = [
     affiliatedFactionIds: ['faction-001'],
     relatedLocationIds: ['loc-001'],
     documentIds: [],
-    factionSentiment: {
+    factionStance: {
       'faction-001': 0.82,
       'faction-006': -0.52
     }
@@ -581,7 +581,7 @@ export const organizations = [
     affiliatedFactionIds: ['faction-001'],
     relatedLocationIds: ['loc-001'],
     documentIds: [],
-    factionSentiment: {
+    factionStance: {
       'faction-001': 0.65,
       'faction-006': -0.58,
       'faction-008': -0.65
@@ -596,7 +596,7 @@ export const organizations = [
     affiliatedFactionIds: ['faction-006'],
     relatedLocationIds: ['loc-001'],
     documentIds: [],
-    factionSentiment: {
+    factionStance: {
       'faction-001': -0.25,
       'faction-006': 0.72,
       'faction-007': 0.35
@@ -611,7 +611,7 @@ export const organizations = [
     affiliatedFactionIds: ['faction-006'],
     relatedLocationIds: ['loc-001'],
     documentIds: [],
-    factionSentiment: {
+    factionStance: {
       'faction-001': -0.42,
       'faction-006': 0.68
     }
@@ -625,7 +625,7 @@ export const organizations = [
     affiliatedFactionIds: ['faction-006'],
     relatedLocationIds: ['loc-001'],
     documentIds: [],
-    factionSentiment: {
+    factionStance: {
       'faction-001': -0.58,
       'faction-006': 0.75
     }
@@ -639,7 +639,7 @@ export const organizations = [
     affiliatedFactionIds: ['faction-001'],
     relatedLocationIds: ['loc-001'],
     documentIds: [],
-    factionSentiment: {
+    factionStance: {
       'faction-001': 0.78,
       'faction-007': 0.55
     }
@@ -653,7 +653,7 @@ export const organizations = [
     affiliatedFactionIds: ['faction-001'],
     relatedLocationIds: ['loc-001'],
     documentIds: [],
-    factionSentiment: {
+    factionStance: {
       'faction-001': 0.72,
       'faction-002': -0.45
     }
@@ -667,7 +667,7 @@ export const organizations = [
     affiliatedFactionIds: ['faction-001'],
     relatedLocationIds: ['loc-001'],
     documentIds: [],
-    factionSentiment: {
+    factionStance: {
       'faction-001': 0.68,
       'faction-006': -0.52
     }
@@ -681,7 +681,7 @@ export const organizations = [
     affiliatedFactionIds: ['faction-003', 'faction-004'],
     relatedLocationIds: ['loc-006'],
     documentIds: [],
-    factionSentiment: {
+    factionStance: {
       'faction-001': -0.25,
       'faction-003': 0.88,
       'faction-004': 0.85
@@ -696,7 +696,7 @@ export const organizations = [
     affiliatedFactionIds: ['faction-003', 'faction-004'],
     relatedLocationIds: ['loc-006'],
     documentIds: [],
-    factionSentiment: {
+    factionStance: {
       'faction-001': -0.58,
       'faction-003': 0.85,
       'faction-004': 0.82
@@ -711,7 +711,7 @@ export const organizations = [
     affiliatedFactionIds: ['faction-003', 'faction-004'],
     relatedLocationIds: ['loc-006'],
     documentIds: [],
-    factionSentiment: {
+    factionStance: {
       'faction-003': 0.82,
       'faction-004': 0.78
     }
@@ -725,7 +725,7 @@ export const organizations = [
     affiliatedFactionIds: [],
     relatedLocationIds: ['loc-004', 'loc-005'],
     documentIds: [],
-    factionSentiment: {
+    factionStance: {
       'faction-005': 0.75
     }
   },
@@ -738,7 +738,7 @@ export const organizations = [
     affiliatedFactionIds: ['faction-003', 'faction-004'],
     relatedLocationIds: ['loc-006', 'loc-007'],
     documentIds: [],
-    factionSentiment: {
+    factionStance: {
       'faction-001': -0.35,
       'faction-003': 0.82,
       'faction-004': 0.78
@@ -753,7 +753,7 @@ export const organizations = [
     affiliatedFactionIds: ['faction-003', 'faction-004'],
     relatedLocationIds: ['loc-006', 'loc-007'],
     documentIds: [],
-    factionSentiment: {
+    factionStance: {
       'faction-001': -0.42,
       'faction-003': 0.78
     }
@@ -767,7 +767,7 @@ export const organizations = [
     affiliatedFactionIds: [],
     relatedLocationIds: ['loc-001', 'loc-004'],
     documentIds: [],
-    factionSentiment: {
+    factionStance: {
       'faction-001': 0.55,
       'faction-003': -0.25,
       'faction-007': 0.45
@@ -782,7 +782,7 @@ export const organizations = [
     affiliatedFactionIds: ['faction-001'],
     relatedLocationIds: ['loc-001', 'loc-004'],
     documentIds: [],
-    factionSentiment: {
+    factionStance: {
       'faction-001': 0.72,
       'faction-003': -0.55
     }
@@ -796,7 +796,7 @@ export const organizations = [
     affiliatedFactionIds: [],
     relatedLocationIds: ['loc-001'],
     documentIds: [],
-    factionSentiment: {
+    factionStance: {
       'faction-001': 0.55,
       'faction-006': -0.35
     }
@@ -810,7 +810,7 @@ export const organizations = [
     affiliatedFactionIds: [],
     relatedLocationIds: ['loc-001'],
     documentIds: [],
-    factionSentiment: {
+    factionStance: {
       'faction-001': 0.52,
       'faction-006': -0.38
     }

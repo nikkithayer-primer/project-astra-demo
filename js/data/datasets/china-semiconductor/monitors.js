@@ -23,7 +23,7 @@ export const monitors = [
       newNarrative: true,
       newEvent: true,
       volumeSpike: { threshold: 400, timeWindow: '24h' },
-      sentimentShift: { threshold: 0.20, direction: 'any' },
+      stanceShift: { threshold: 0.20, direction: 'any' },
       factionEngagement: { factionIds: ['faction-001', 'faction-002'], threshold: 200 }
     },
     enabled: true,
@@ -49,7 +49,7 @@ export const monitors = [
       newNarrative: true,
       newEvent: true,
       volumeSpike: { threshold: 500, timeWindow: '24h' },
-      sentimentShift: { threshold: 0.15, direction: 'negative' },
+      stanceShift: { threshold: 0.15, direction: 'negative' },
       factionEngagement: null
     },
     enabled: true,
@@ -75,7 +75,7 @@ export const monitors = [
       newNarrative: true,
       newEvent: false,
       volumeSpike: { threshold: 300, timeWindow: '24h' },
-      sentimentShift: null,
+      stanceShift: null,
       factionEngagement: { factionIds: ['faction-001', 'faction-005'], threshold: 150 }
     },
     enabled: true,
@@ -101,7 +101,7 @@ export const monitors = [
       newNarrative: true,
       newEvent: true,
       volumeSpike: { threshold: 350, timeWindow: '24h' },
-      sentimentShift: { threshold: 0.20, direction: 'any' },
+      stanceShift: { threshold: 0.20, direction: 'any' },
       factionEngagement: null
     },
     enabled: true,
@@ -127,7 +127,7 @@ export const monitors = [
       newNarrative: true,
       newEvent: true,
       volumeSpike: { threshold: 400, timeWindow: '24h' },
-      sentimentShift: { threshold: 0.15, direction: 'negative' },
+      stanceShift: { threshold: 0.15, direction: 'negative' },
       factionEngagement: null
     },
     enabled: false, // Paused
@@ -186,9 +186,9 @@ export const alerts = [
   {
     id: 'alert-003',
     monitorId: 'monitor-002',
-    type: 'sentiment_shift',
+    type: 'stance_shift',
     title: 'Sentiment shift: Export controls narrative',
-    description: '-18% sentiment change following expanded ASML restrictions announcement',
+    description: '-18% stance change following expanded ASML restrictions announcement',
     triggeredAt: '2026-01-17T14:00:00Z',
     relatedNarrativeIds: ['narr-002'],
     relatedThemeIds: ['sub-004', 'sub-005'],

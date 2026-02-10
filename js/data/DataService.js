@@ -1813,7 +1813,7 @@ export const DataService = {
    * @param {Object} timeRange - Optional { start, end } date range
    * @param {Array} statusFilter - Optional array of narrative statuses
    * @param {string[]|null} scopeDocIds - Optional document ID scope
-   * @returns {Array} [{ id, text, startDate, endDate, totalVolume, sentiment, color }, ...]
+   * @returns {Array} [{ id, text, startDate, endDate, totalVolume, stance, color }, ...]
    */
   getNarrativeDurations: (missionId = null, timeRange = null, statusFilter = null, scopeDocIds = null) => {
     let narratives = DataService.getNarratives(missionId, timeRange, scopeDocIds);
@@ -1874,7 +1874,7 @@ export const DataService = {
         startDate,
         endDate,
         totalVolume,
-        sentiment: n.sentiment || 0,
+        stance: (n.stance ?? n.sentiment) ?? 0,
         color: primaryFaction?.color || 'var(--accent-primary)'
       };
     }).filter(Boolean);
@@ -1888,16 +1888,16 @@ export const DataService = {
   // ============================================
   // Document-Based Aggregation Methods
   // ============================================
-  // These methods compute volume and sentiment from documents (source of truth)
+  // These methods compute volume and stance from documents (source of truth)
   // rather than from pre-computed values on narratives.
 
   /**
    * Get aggregate faction mentions for a narrative from its linked documents.
    * Volume = count of documents mentioning the faction.
-   * Sentiment = average of document sentiments.
+   * Stance = average of document stances.
    * @param {string} narrativeId - The narrative ID
    * @param {string[]|null} scopeDocIds - Optional document ID scope
-   * @returns {Object} { factionId: { volume, sentiment } }
+   * @returns {Object} { factionId: { volume, stance } }
    */
   getAggregateFactionMentionsForNarrative: (narrativeId, scopeDocIds = null) => {
     const narrative = dataStore.data.narratives.find(n => n.id === narrativeId);
@@ -1913,11 +1913,12 @@ export const DataService = {
     documents.forEach(doc => {
       Object.entries(doc.factionMentions || {}).forEach(([factionId, data]) => {
         if (!factionStats.has(factionId)) {
-          factionStats.set(factionId, { count: 0, sentimentSum: 0 });
+          factionStats.set(factionId, { count: 0, stanceSum: 0 });
         }
         const stats = factionStats.get(factionId);
+        const val = data.stance ?? data.sentiment ?? 0;
         stats.count += 1;
-        stats.sentimentSum += data.sentiment || 0;
+        stats.stanceSum += typeof val === 'number' ? val : 0;
       });
     });
     
@@ -1925,7 +1926,7 @@ export const DataService = {
     factionStats.forEach((stats, factionId) => {
       result[factionId] = {
         volume: stats.count,
-        sentiment: stats.count > 0 ? stats.sentimentSum / stats.count : 0
+        stance: stats.count > 0 ? stats.stanceSum / stats.count : 0
       };
     });
     
@@ -2030,7 +2031,7 @@ export const DataService = {
    * Get aggregate publisher volumes for a narrative from its linked documents.
    * @param {string} narrativeId - The narrative ID
    * @param {string[]|null} scopeDocIds - Optional document ID scope
-   * @returns {Object} { publisherId: { volume, sentiment }, ... }
+   * @returns {Object} { publisherId: { volume, stance }, ... }
    */
   getAggregatePublisherVolumesForNarrative: (narrativeId, scopeDocIds = null) => {
     const narrative = dataStore.data.narratives.find(n => n.id === narrativeId);
@@ -2047,19 +2048,18 @@ export const DataService = {
       if (!doc.publisherId) return;
       
       if (!publisherStats.has(doc.publisherId)) {
-        publisherStats.set(doc.publisherId, { count: 0, sentimentSum: 0, sentimentCount: 0 });
+        publisherStats.set(doc.publisherId, { count: 0, stanceSum: 0, stanceCount: 0 });
       }
       const stats = publisherStats.get(doc.publisherId);
       stats.count += 1;
       
-      // Average sentiment across all factions in this doc for this publisher
-      const factionSentiments = Object.values(doc.factionMentions || {})
-        .map(f => f.sentiment)
+      const factionStances = Object.values(doc.factionMentions || {})
+        .map(f => f.stance ?? f.sentiment)
         .filter(s => typeof s === 'number');
-      if (factionSentiments.length > 0) {
-        const avgSentiment = factionSentiments.reduce((a, b) => a + b, 0) / factionSentiments.length;
-        stats.sentimentSum += avgSentiment;
-        stats.sentimentCount += 1;
+      if (factionStances.length > 0) {
+        const avgStance = factionStances.reduce((a, b) => a + b, 0) / factionStances.length;
+        stats.stanceSum += avgStance;
+        stats.stanceCount += 1;
       }
     });
     
@@ -2067,7 +2067,7 @@ export const DataService = {
     publisherStats.forEach((stats, publisherId) => {
       result[publisherId] = {
         volume: stats.count,
-        sentiment: stats.sentimentCount > 0 ? stats.sentimentSum / stats.sentimentCount : 0
+        stance: stats.stanceCount > 0 ? stats.stanceSum / stats.stanceCount : 0
       };
     });
     
@@ -2240,7 +2240,7 @@ export const DataService = {
    * Get aggregate faction mentions for a theme from its linked documents.
    * @param {string} themeId - The theme ID
    * @param {string[]|null} scopeDocIds - Optional document ID scope
-   * @returns {Object} { factionId: { volume, sentiment } }
+   * @returns {Object} { factionId: { volume, stance } }
    */
   getAggregateFactionMentionsForTheme: (themeId, scopeDocIds = null) => {
     const theme = dataStore.data.themes.find(t => t.id === themeId);
@@ -2256,11 +2256,12 @@ export const DataService = {
     documents.forEach(doc => {
       Object.entries(doc.factionMentions || {}).forEach(([factionId, data]) => {
         if (!factionStats.has(factionId)) {
-          factionStats.set(factionId, { count: 0, sentimentSum: 0 });
+          factionStats.set(factionId, { count: 0, stanceSum: 0 });
         }
         const stats = factionStats.get(factionId);
+        const val = data.stance ?? data.sentiment ?? 0;
         stats.count += 1;
-        stats.sentimentSum += data.sentiment || 0;
+        stats.stanceSum += typeof val === 'number' ? val : 0;
       });
     });
     
@@ -2268,7 +2269,7 @@ export const DataService = {
     factionStats.forEach((stats, factionId) => {
       result[factionId] = {
         volume: stats.count,
-        sentiment: stats.count > 0 ? stats.sentimentSum / stats.count : 0
+        stance: stats.count > 0 ? stats.stanceSum / stats.count : 0
       };
     });
     
@@ -2329,17 +2330,15 @@ export const DataService = {
   // End of Document-Based Aggregation Methods
   // ============================================
 
-  // Aggregate faction sentiments across all narratives (weighted by volume)
+  // Aggregate faction stances across all narratives (weighted by volume)
   // Uses document-based aggregation with optional scope support
-  getAggregateFactionSentiments: (missionId = null, timeRange = null, statusFilter = null, scopeDocIds = null) => {
+  getAggregateFactionStances: (missionId = null, timeRange = null, statusFilter = null, scopeDocIds = null) => {
     let narratives = DataService.getNarratives(missionId, null, scopeDocIds);
     
-    // Apply status filter if provided
     if (statusFilter && statusFilter.length > 0) {
       narratives = narratives.filter(n => statusFilter.includes(n.status || 'new'));
     }
     
-    // Filter by time range if provided
     if (timeRange) {
       narratives = narratives.filter(n => DataService.narrativeHasActivityInRange(n, timeRange));
     }
@@ -2347,36 +2346,34 @@ export const DataService = {
     const factions = DataService.getFactions(scopeDocIds);
     const factionStats = new Map();
     
-    // Initialize stats for each faction
     factions.forEach(f => {
-      factionStats.set(f.id, { totalVolume: 0, weightedSentiment: 0 });
+      factionStats.set(f.id, { totalVolume: 0, weightedStance: 0 });
     });
     
-    // Aggregate volume and sentiment across narratives from documents (scoped)
     narratives.forEach(n => {
       const factionMentions = DataService.getAggregateFactionMentionsForNarrative(n.id, scopeDocIds);
       Object.entries(factionMentions).forEach(([factionId, data]) => {
         const stats = factionStats.get(factionId);
-        if (stats && data.volume && typeof data.sentiment === 'number') {
+        const stance = data.stance ?? data.sentiment;
+        if (stats && data.volume && typeof stance === 'number') {
           stats.totalVolume += data.volume;
-          stats.weightedSentiment += data.sentiment * data.volume;
+          stats.weightedStance += stance * data.volume;
         }
       });
     });
     
-    // Calculate weighted average sentiment and return factions with data
     return factions
       .map(f => {
         const stats = factionStats.get(f.id);
         if (stats.totalVolume === 0) return null;
         return {
           ...f,
-          sentiment: stats.weightedSentiment / stats.totalVolume,
+          stance: stats.weightedStance / stats.totalVolume,
           volume: stats.totalVolume
         };
       })
       .filter(Boolean)
-      .sort((a, b) => b.volume - a.volume); // Sort by volume descending
+      .sort((a, b) => b.volume - a.volume);
   },
 
   // Get all locations with related narratives and events (with time range and status support)
@@ -2866,10 +2863,11 @@ export const DataService = {
     if (triggers.volumeSpike) {
       labels.push(`Volume >${triggers.volumeSpike.threshold}/${triggers.volumeSpike.timeWindow}`);
     }
-    if (triggers.sentimentShift) {
-      const dir = triggers.sentimentShift.direction === 'any' ? '±' : 
-                  triggers.sentimentShift.direction === 'negative' ? '-' : '+';
-      labels.push(`Sentiment ${dir}${Math.round(triggers.sentimentShift.threshold * 100)}%`);
+    if (triggers.stanceShift ?? triggers.sentimentShift) {
+      const trigger = triggers.stanceShift ?? triggers.sentimentShift;
+      const dir = trigger.direction === 'any' ? '±' : 
+                  trigger.direction === 'negative' ? '-' : '+';
+      labels.push(`Stance ${dir}${Math.round(trigger.threshold * 100)}%`);
     }
     if (triggers.factionEngagement) {
       labels.push('Faction Engagement');
@@ -2994,24 +2992,23 @@ export const DataService = {
 
   /**
    * Get all factions engaged with narratives matching a monitor's scope.
-   * Returns factions with aggregated sentiment and volume from documents.
+   * Returns factions with aggregated stance and volume from documents.
    */
   getFactionsForMonitor: (monitorId) => {
     const narratives = DataService.getNarrativesForMonitor(monitorId);
     const factionStats = new Map();
     
-    // Aggregate faction data from documents linked to each narrative
     narratives.forEach(n => {
       const factionMentions = DataService.getAggregateFactionMentionsForNarrative(n.id);
       Object.entries(factionMentions).forEach(([factionId, data]) => {
         if (!factionStats.has(factionId)) {
-          factionStats.set(factionId, { totalVolume: 0, weightedSentiment: 0 });
+          factionStats.set(factionId, { totalVolume: 0, weightedStance: 0 });
         }
         const stats = factionStats.get(factionId);
         const volume = data.volume || 0;
-        const sentiment = typeof data.sentiment === 'number' ? data.sentiment : 0;
+        const stance = typeof (data.stance ?? data.sentiment) === 'number' ? (data.stance ?? data.sentiment) : 0;
         stats.totalVolume += volume;
-        stats.weightedSentiment += sentiment * volume;
+        stats.weightedStance += stance * volume;
       });
     });
     
@@ -3023,7 +3020,7 @@ export const DataService = {
         return {
           ...faction,
           volume: stats.totalVolume,
-          sentiment: stats.weightedSentiment / stats.totalVolume
+          stance: stats.weightedStance / stats.totalVolume
         };
       })
       .filter(Boolean)

@@ -11,7 +11,7 @@ import { TopicList } from '../components/TopicList.js';
 import { StackedAreaChart } from '../components/StackedAreaChart.js';
 import { TimelineVolumeComposite } from '../components/TimelineVolumeComposite.js';
 import { VennDiagram } from '../components/VennDiagram.js';
-import { SentimentChart } from '../components/SentimentChart.js';
+import { StanceChart } from '../components/StanceChart.js';
 import { NetworkGraph } from '../components/NetworkGraph.js';
 import { getEntityCardModal } from '../components/EntityCardModal.js';
 import { DocumentTable } from '../components/DocumentTable.js';
@@ -32,7 +32,7 @@ const VISUALIZATION_TYPES = [
   { id: 'topics', label: 'Topics' },
   { id: 'locations', label: 'Locations' },
   { id: 'faction_overlaps', label: 'Faction overlaps' },
-  { id: 'faction_sentiment', label: 'Faction sentiment' },
+  { id: 'faction_stance', label: 'Faction stance' },
   { id: 'network_graph', label: 'People & orgs network graph' },
   { id: 'documents', label: 'Documents' }
 ];
@@ -41,27 +41,27 @@ const VISUALIZATION_TYPES = [
 const DEFAULT_MONITOR_VISUALIZATIONS = {
   'Immigration Enforcement Activity': 'volume_events',
   'Public Health Policy': 'narratives',
-  'Trump Administration Actions': 'faction_sentiment',
+  'Trump Administration Actions': 'faction_stance',
   'Judicial Safety Watch': 'topics',
   'US-European Orgs': 'network_graph',
   'SMIC Technology Progress': 'faction_overlaps',
   'Chinese Investment Watch': 'volume_events',
-  'Export Controls Impact': 'faction_sentiment',
+  'Export Controls Impact': 'faction_stance',
   'Huawei Sanctions Monitoring': 'narratives',
   'Supply Chain and Manufacturing': 'topics',
   'Store Closure Impact': 'locations',
-  'Pricing Perception Monitor': 'faction_sentiment',
+  'Pricing Perception Monitor': 'faction_stance',
   'Employee Experience Tracker': 'documents',
   'Self Checkout Complaints': 'volume',
   'Product Availability Issues': 'volume',
   'Product Safety Alerts': 'narratives',
   'Competitor Activity Tracker': 'topics',
   // Singapore MCO dataset
-  'NS Sentiment Tracker': 'faction_sentiment',
+  'NS Sentiment Tracker': 'faction_stance',
   'PRC Influence Detection': 'narratives',
   'Malaysia Relations Watch': 'volume',
   'SAF Incident Watch': 'locations',
-  'Racial Harmony Monitor': 'faction_sentiment',
+  'Racial Harmony Monitor': 'faction_stance',
   'Coordinated Campaign Detection': 'faction_overlaps'
 };
 
@@ -184,7 +184,8 @@ export class MonitorsView extends BaseView {
   getAlertTypeLabel(type) {
     const labels = {
       'volume_spike': 'Volume Spike',
-      'sentiment_shift': 'Sentiment Shift',
+      'stance_shift': 'Stance Shift',
+      'sentiment_shift': 'Stance Shift',
       'new_narrative': 'New Narrative',
       'new_event': 'New Event',
       'faction_engagement': 'Faction Engagement'
@@ -198,7 +199,8 @@ export class MonitorsView extends BaseView {
   getAlertTypeClass(type) {
     const classes = {
       'volume_spike': 'volume',
-      'sentiment_shift': 'sentiment',
+      'stance_shift': 'stance',
+      'sentiment_shift': 'stance',
       'new_narrative': 'narrative',
       'new_event': 'event',
       'faction_engagement': 'faction'
@@ -588,8 +590,9 @@ export class MonitorsView extends BaseView {
       case 'faction_overlaps':
         this.renderFactionOverlapsVisualization(monitor, container);
         break;
+      case 'faction_stance':
       case 'faction_sentiment':
-        this.renderFactionSentimentVisualization(monitor, container);
+        this.renderFactionStanceVisualization(monitor, container);
         break;
       case 'network_graph':
         this.renderNetworkGraphVisualization(monitor, container);
@@ -810,24 +813,25 @@ export class MonitorsView extends BaseView {
   }
 
   /**
-   * Render Faction Sentiment visualization
-   * Uses document-based aggregation for volume and sentiment
+   * Render Faction Stance visualization
+   * Uses document-based aggregation for volume and stance
    */
-  renderFactionSentimentVisualization(monitor, container) {
+  renderFactionStanceVisualization(monitor, container) {
     const narratives = monitor.matchedNarratives;
     
-    // Aggregate faction sentiments from documents linked to matched narratives
+    // Aggregate faction stances from documents linked to matched narratives
     const factionStats = new Map();
     narratives.forEach(n => {
       const factionMentions = DataService.getAggregateFactionMentionsForNarrative(n.id);
       Object.entries(factionMentions).forEach(([factionId, data]) => {
         if (!factionStats.has(factionId)) {
-          factionStats.set(factionId, { totalVolume: 0, weightedSentiment: 0 });
+          factionStats.set(factionId, { totalVolume: 0, weightedStance: 0 });
         }
         const stats = factionStats.get(factionId);
-        if (data.volume && typeof data.sentiment === 'number') {
+        const stance = data.stance ?? data.sentiment;
+        if (data.volume && typeof stance === 'number') {
           stats.totalVolume += data.volume;
-          stats.weightedSentiment += data.sentiment * data.volume;
+          stats.weightedStance += stance * data.volume;
         }
       });
     });
@@ -838,7 +842,7 @@ export class MonitorsView extends BaseView {
         if (!faction || stats.totalVolume === 0) return null;
         return {
           ...faction,
-          sentiment: stats.weightedSentiment / stats.totalVolume,
+          stance: stats.weightedStance / stats.totalVolume,
           volume: stats.totalVolume
         };
       })
@@ -846,16 +850,16 @@ export class MonitorsView extends BaseView {
       .sort((a, b) => b.volume - a.volume);
     
     if (factions.length > 0) {
-      const chart = new SentimentChart(container, {
+      const chart = new StanceChart(container, {
         height: Math.max(200, factions.length * 40 + 60),
         onFactionClick: (f) => {
           window.location.hash = `#/faction/${f.id}`;
         }
       });
       chart.update({ factions });
-      this.visualizationComponents.push({ monitorId: monitor.id, component: chart, type: 'faction_sentiment' });
+      this.visualizationComponents.push({ monitorId: monitor.id, component: chart, type: 'faction_stance' });
     } else {
-      this.showEmptyVisualization(container, 'No faction sentiment data available');
+      this.showEmptyVisualization(container, 'No faction stance data available');
     }
   }
 
