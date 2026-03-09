@@ -1,0 +1,176 @@
+/**
+ * Events for AFRICOM Threat Analysis dataset
+ */
+
+export const events = [
+  // --- East Africa ---
+  {
+    id: 'event-001',
+    text: 'Al-Shabaab VBIED attack on SNA checkpoint in Lower Shabelle',
+    description: 'Al-Shabaab detonated a vehicle-borne improvised explosive device at a Somali National Army checkpoint near Afgooye, Lower Shabelle region. The blast killed 14 SNA soldiers and 3 civilians. A follow-up assault by gunmen was repelled by ATMIS quick-reaction forces. Al-Shabaab claimed the attack via its propaganda arm.',
+    date: '2026-01-28T06:30:00Z',
+    parentEventId: null,
+    subEventIds: [],
+    locationId: 'loc-003',
+    personIds: ['person-001'],
+    organizationIds: ['org-001', 'org-010'],
+    tagIds: ['tag-004', 'tag-region-east'],
+    documentIds: ['doc-001', 'doc-003']
+  },
+  {
+    id: 'event-002',
+    text: 'US airstrike targets Al-Shabaab command node near Jilib',
+    description: 'AFRICOM conducted a precision airstrike targeting an Al-Shabaab command and control node approximately 15km north of Jilib, Middle Juba region. Initial battle damage assessment indicates the strike eliminated a senior operational planner and disrupted planning for additional attacks. No civilian casualties reported.',
+    date: '2026-01-30T02:15:00Z',
+    parentEventId: null,
+    subEventIds: [],
+    locationId: 'loc-003',
+    personIds: ['person-009'],
+    organizationIds: ['org-001', 'org-008'],
+    tagIds: ['tag-004', 'tag-region-east'],
+    documentIds: ['doc-005', 'doc-013']
+  },
+  {
+    id: 'event-003',
+    text: 'ISWAP overruns MNJTF position on Lake Chad island',
+    description: 'An estimated 200 ISWAP fighters in motorized boats and canoes overran a Multinational Joint Task Force outpost on Kirta Wulgo island in the Nigerian sector of Lake Chad. Eight MNJTF soldiers killed, with the attackers seizing weapons, ammunition, and communications equipment before withdrawing. The attack demonstrates ISWAP\'s continued ability to mass forces for large-scale assaults.',
+    date: '2026-02-02T05:00:00Z',
+    parentEventId: null,
+    subEventIds: [],
+    locationId: 'loc-006',
+    personIds: ['person-002'],
+    organizationIds: ['org-002', 'org-011'],
+    tagIds: ['tag-004', 'tag-region-west'],
+    documentIds: ['doc-002', 'doc-006']
+  },
+  {
+    id: 'event-004',
+    text: 'JNIM ambush of FAMa convoy in Liptako-Gourma',
+    description: 'JNIM fighters ambushed a Mali Armed Forces (FAMa) logistics convoy traveling between Gao and Ménaka using a complex IED-and-small-arms attack. 11 FAMa soldiers killed and 6 vehicles destroyed, including 2 armored personnel carriers. The ambush occurred in an area where French forces had previously conducted operations before their withdrawal.',
+    date: '2026-02-05T11:00:00Z',
+    parentEventId: null,
+    subEventIds: [],
+    locationId: 'loc-008',
+    personIds: ['person-003'],
+    organizationIds: ['org-003', 'org-012'],
+    tagIds: ['tag-004', 'tag-region-sahel'],
+    documentIds: ['doc-004', 'doc-007']
+  },
+  {
+    id: 'event-005',
+    text: 'Al-Shabaab complex attack on Mogadishu hotel',
+    description: 'Al-Shabaab launched a complex attack on a hotel in Mogadishu\'s Hamarweyne district, beginning with a VBIED detonation at the entrance followed by armed assault by at least 6 gunmen. The siege lasted 12 hours before Somali special forces (Danab) with US advisory support ended it. 22 killed including 3 government officials. Al-Shabaab\'s Amniyat division, led by Mahad Karate, is assessed to have planned the operation.',
+    date: '2026-02-10T19:45:00Z',
+    parentEventId: null,
+    subEventIds: [],
+    locationId: 'loc-001',
+    personIds: ['person-001', 'person-007', 'person-014'],
+    organizationIds: ['org-001', 'org-010', 'org-015'],
+    tagIds: ['tag-004', 'tag-region-east'],
+    documentIds: ['doc-003', 'doc-015', 'doc-025']
+  },
+  {
+    id: 'event-006',
+    text: 'ISWAP releases propaganda video showing captured weapons',
+    description: 'ISWAP\'s media wing released a 12-minute propaganda video on Telegram showing weapons and equipment captured from the Kirta Wulgo attack, including PKM machine guns, RPGs, and military radios. The video included a statement from a masked commander pledging continued attacks and calling for recruits, filmed at an undisclosed Lake Chad location.',
+    date: '2026-02-04T14:00:00Z',
+    parentEventId: 'event-003',
+    subEventIds: [],
+    locationId: 'loc-006',
+    personIds: ['person-002'],
+    organizationIds: ['org-002'],
+    tagIds: ['tag-005', 'tag-region-west'],
+    documentIds: ['doc-016', 'doc-026']
+  },
+  {
+    id: 'event-007',
+    text: 'Wagner/Africa Corps troops deployed to Ménaka region',
+    description: 'SIGINT and commercial satellite imagery confirm deployment of approximately 150 Wagner/Africa Corps personnel alongside FAMa forces to the Ménaka region of northeastern Mali following the JNIM convoy ambush. This represents the deepest penetration of Russian PMC forces into the JNIM-contested Liptako-Gourma zone. Russian forces are operating T-72 tanks and BTR-80 APCs.',
+    date: '2026-02-08T00:00:00Z',
+    parentEventId: null,
+    subEventIds: [],
+    locationId: 'loc-007',
+    personIds: ['person-012'],
+    organizationIds: ['org-016', 'org-012'],
+    tagIds: ['tag-004', 'tag-region-sahel'],
+    documentIds: ['doc-007', 'doc-022', 'doc-023']
+  },
+  {
+    id: 'event-008',
+    text: 'ISIS-Mozambique raids villages in Macomia district',
+    description: 'ISIS-Mozambique fighters conducted coordinated raids on three villages in Macomia district, Cabo Delgado Province. Approximately 50 fighters attacked at dawn, burning homes, looting food stores, and killing at least 9 civilians. SADC forces arrived 4 hours after the attack began. The raids signal a resurgence in insurgent activity after a period of relative quiet.',
+    date: '2026-02-12T04:30:00Z',
+    parentEventId: null,
+    subEventIds: [],
+    locationId: 'loc-010',
+    personIds: ['person-004'],
+    organizationIds: ['org-006', 'org-017'],
+    tagIds: ['tag-004', 'tag-region-south'],
+    documentIds: ['doc-008', 'doc-028']
+  },
+  {
+    id: 'event-009',
+    text: 'TotalEnergies announces continued force majeure on Mozambique LNG',
+    description: 'TotalEnergies CEO announced at an investor briefing that force majeure remains in effect for the Mozambique LNG project due to the ongoing insurgency in Cabo Delgado. The company cited the Macomia raids as evidence that the security environment has not sufficiently improved to resume construction. The $20B project suspension continues to impact Mozambique\'s economic prospects.',
+    date: '2026-02-15T10:00:00Z',
+    parentEventId: null,
+    subEventIds: [],
+    locationId: 'loc-010',
+    personIds: [],
+    organizationIds: ['org-018', 'org-006'],
+    tagIds: ['tag-005', 'tag-region-south'],
+    documentIds: ['doc-009', 'doc-018']
+  },
+  {
+    id: 'event-010',
+    text: 'UN Panel of Experts publishes JNIM financing report',
+    description: 'The UN Panel of Experts on Mali published a detailed report documenting JNIM\'s financing networks, including revenue from artisanal gold mining sites in Burkina Faso ($10-20M annually), kidnapping for ransom ($5-8M), and taxation of trade routes. The report identified key financier Sidan ag Hitta and mapped hawala transfer networks linking Gulf-based donors to Sahelian operations.',
+    date: '2026-02-18T09:00:00Z',
+    parentEventId: null,
+    subEventIds: [],
+    locationId: 'loc-008',
+    personIds: ['person-003', 'person-006'],
+    organizationIds: ['org-003'],
+    tagIds: ['tag-004', 'tag-region-sahel'],
+    documentIds: ['doc-010', 'doc-011', 'doc-019', 'doc-029']
+  },
+  {
+    id: 'event-011',
+    text: 'OFAC designates three Al-Shabaab financial facilitators',
+    description: 'The US Treasury Department\'s Office of Foreign Assets Control designated three individuals as Specially Designated Global Terrorists for their roles in Al-Shabaab\'s financial network. The designations target a hawala operator in Mogadishu, a charcoal export facilitator in Kismayo, and a Dubai-based remittance coordinator. All assets under US jurisdiction frozen.',
+    date: '2026-02-20T15:00:00Z',
+    parentEventId: null,
+    subEventIds: [],
+    locationId: 'loc-001',
+    personIds: ['person-007'],
+    organizationIds: ['org-001'],
+    tagIds: ['tag-004', 'tag-region-east'],
+    documentIds: ['doc-011', 'doc-020']
+  },
+  {
+    id: 'event-012',
+    text: 'Al-Shabaab recruitment video targets Kenyan youth on Telegram',
+    description: 'Al-Shabaab\'s media arm released a Swahili-language recruitment video on multiple Telegram channels specifically targeting Kenyan youth. The professionally produced 8-minute video features testimonials from Kenyan fighters, promises of community and purpose, and exploits grievances around economic marginalization and police brutality in Eastleigh.',
+    date: '2026-02-22T12:00:00Z',
+    parentEventId: null,
+    subEventIds: [],
+    locationId: 'loc-002',
+    personIds: ['person-008'],
+    organizationIds: ['org-001'],
+    tagIds: ['tag-004', 'tag-region-east'],
+    documentIds: ['doc-012', 'doc-030']
+  },
+  {
+    id: 'event-013',
+    text: 'Niger junta formally revokes US military basing agreement',
+    description: 'Niger\'s ruling junta formally notified the US government that the bilateral military cooperation agreement is terminated, requiring complete withdrawal of US personnel and equipment from Air Base 201 and Air Base 101. This eliminates the primary US ISR platform for monitoring JNIM and ISCGS activity in the central Sahel.',
+    date: '2026-01-15T00:00:00Z',
+    parentEventId: null,
+    subEventIds: [],
+    locationId: 'loc-014',
+    personIds: [],
+    organizationIds: ['org-008'],
+    tagIds: ['tag-004', 'tag-region-sahel'],
+    documentIds: ['doc-022', 'doc-023', 'doc-024']
+  }
+];

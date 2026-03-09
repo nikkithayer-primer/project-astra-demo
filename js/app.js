@@ -13,6 +13,7 @@ import { mockData as americanPoliticsData, datasetId as americanPoliticsId, data
 import { mockData as chinaSemiconductorData, datasetId as chinaSemiconductorId, datasetName as chinaSemiconductorName, defaultSettings as chinaSemiconductorSettings } from './data/datasets/china-semiconductor/index.js';
 import { mockData as walmartBrandData, datasetId as walmartBrandId, datasetName as walmartBrandName, defaultSettings as walmartBrandSettings } from './data/datasets/walmart-brand/index.js';
 import { mockData as singaporeMcoData, datasetId as singaporeMcoId, datasetName as singaporeMcoName, defaultSettings as singaporeMcoSettings } from './data/datasets/singapore-mco/index.js';
+import { mockData as africomTerrorData, datasetId as africomTerrorId, datasetName as africomTerrorName, defaultSettings as africomTerrorSettings } from './data/datasets/africom-terror/index.js';
 import { Router } from './router.js';
 import { getSourceViewer } from './components/SourceViewerModal.js';
 import { getEntityCardModal } from './components/EntityCardModal.js';
@@ -45,6 +46,12 @@ const DATASETS = {
     name: singaporeMcoName, 
     data: singaporeMcoData,
     defaultSettings: singaporeMcoSettings
+  },
+  [africomTerrorId]: { 
+    id: africomTerrorId,
+    name: africomTerrorName, 
+    data: africomTerrorData,
+    defaultSettings: africomTerrorSettings
   }
 };
 
