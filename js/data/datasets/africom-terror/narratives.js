@@ -19,18 +19,22 @@ export const narratives = [
       'pub-telegram': { volume: 85, stance: -0.90 },
       'pub-reg-garowe': { volume: 18, stance: -0.60 }
     },
+    factionMentions: {
+      'faction-001': { volume: 180, stance: -0.78 },
+      'faction-003': { volume: 95, stance: 0.45 }
+    },
     personIds: ['person-001', 'person-007', 'person-009', 'person-011', 'person-014'],
     organizationIds: ['org-001', 'org-008', 'org-009', 'org-010'],
     locationIds: ['loc-001', 'loc-003', 'loc-013'],
     eventIds: ['event-001', 'event-002', 'event-005'],
     volumeOverTime: [
-      { date: '2026-01-20', publisherVolumes: { 'pub-africom-j2': 4, 'pub-dia': 2, 'pub-int-bbc-africa': 3, 'pub-telegram': 8 } },
-      { date: '2026-01-25', publisherVolumes: { 'pub-africom-j2': 5, 'pub-dia': 3, 'pub-int-reuters': 4, 'pub-telegram': 12 } },
-      { date: '2026-01-28', publisherVolumes: { 'pub-africom-j2': 8, 'pub-dia': 5, 'pub-int-bbc-africa': 6, 'pub-int-reuters': 5, 'pub-telegram': 18 } },
-      { date: '2026-02-01', publisherVolumes: { 'pub-africom-j2': 6, 'pub-dia': 4, 'pub-int-bbc-africa': 5, 'pub-telegram': 14 } },
-      { date: '2026-02-05', publisherVolumes: { 'pub-africom-j2': 5, 'pub-dia': 3, 'pub-int-reuters': 3, 'pub-telegram': 10 } },
-      { date: '2026-02-10', publisherVolumes: { 'pub-africom-j2': 10, 'pub-dia': 6, 'pub-int-bbc-africa': 8, 'pub-int-reuters': 6, 'pub-telegram': 22, 'pub-reg-garowe': 5 } },
-      { date: '2026-02-15', publisherVolumes: { 'pub-africom-j2': 7, 'pub-dia': 5, 'pub-int-bbc-africa': 5, 'pub-telegram': 12 } }
+      { date: '2026-01-20', factionVolumes: { 'faction-001': 10, 'faction-003': 5 }, publisherVolumes: { 'pub-africom-j2': 4, 'pub-dia': 2, 'pub-int-bbc-africa': 3, 'pub-telegram': 8 } },
+      { date: '2026-01-25', factionVolumes: { 'faction-001': 15, 'faction-003': 8 }, publisherVolumes: { 'pub-africom-j2': 5, 'pub-dia': 3, 'pub-int-reuters': 4, 'pub-telegram': 12 } },
+      { date: '2026-01-28', factionVolumes: { 'faction-001': 28, 'faction-003': 14 }, publisherVolumes: { 'pub-africom-j2': 8, 'pub-dia': 5, 'pub-int-bbc-africa': 6, 'pub-int-reuters': 5, 'pub-telegram': 18 } },
+      { date: '2026-02-01', factionVolumes: { 'faction-001': 20, 'faction-003': 10 }, publisherVolumes: { 'pub-africom-j2': 6, 'pub-dia': 4, 'pub-int-bbc-africa': 5, 'pub-telegram': 14 } },
+      { date: '2026-02-05', factionVolumes: { 'faction-001': 14, 'faction-003': 7 }, publisherVolumes: { 'pub-africom-j2': 5, 'pub-dia': 3, 'pub-int-reuters': 3, 'pub-telegram': 10 } },
+      { date: '2026-02-10', factionVolumes: { 'faction-001': 38, 'faction-003': 22 }, publisherVolumes: { 'pub-africom-j2': 10, 'pub-dia': 6, 'pub-int-bbc-africa': 8, 'pub-int-reuters': 6, 'pub-telegram': 22, 'pub-reg-garowe': 5 } },
+      { date: '2026-02-15', factionVolumes: { 'faction-001': 20, 'faction-003': 10 }, publisherVolumes: { 'pub-africom-j2': 7, 'pub-dia': 5, 'pub-int-bbc-africa': 5, 'pub-telegram': 12 } }
     ],
     documentIds: ['doc-001', 'doc-003', 'doc-005', 'doc-013', 'doc-015', 'doc-025'],
     createdAt: '2026-01-20T00:00:00Z'
@@ -51,17 +55,21 @@ export const narratives = [
       'pub-reg-premium': { volume: 12, stance: -0.48 },
       'pub-telegram': { volume: 45, stance: -0.85 }
     },
+    factionMentions: {
+      'faction-002': { volume: 110, stance: -0.70 },
+      'faction-003': { volume: 40, stance: 0.32 }
+    },
     personIds: ['person-002'],
     organizationIds: ['org-002', 'org-004', 'org-011'],
     locationIds: ['loc-005', 'loc-006', 'loc-015'],
     eventIds: ['event-003', 'event-006'],
     volumeOverTime: [
-      { date: '2026-01-20', publisherVolumes: { 'pub-africom-j2': 2, 'pub-reg-vanguard': 3, 'pub-telegram': 5 } },
-      { date: '2026-01-27', publisherVolumes: { 'pub-africom-j2': 3, 'pub-dia': 2, 'pub-reg-premium': 2, 'pub-telegram': 6 } },
-      { date: '2026-02-02', publisherVolumes: { 'pub-africom-j2': 5, 'pub-dia': 4, 'pub-int-bbc-africa': 4, 'pub-reg-vanguard': 5, 'pub-telegram': 12 } },
-      { date: '2026-02-04', publisherVolumes: { 'pub-africom-j2': 4, 'pub-dia': 3, 'pub-reg-vanguard': 4, 'pub-telegram': 10 } },
-      { date: '2026-02-10', publisherVolumes: { 'pub-africom-j2': 3, 'pub-dia': 2, 'pub-reg-premium': 3, 'pub-telegram': 7 } },
-      { date: '2026-02-18', publisherVolumes: { 'pub-africom-j2': 3, 'pub-reg-vanguard': 3, 'pub-telegram': 5 } }
+      { date: '2026-01-20', factionVolumes: { 'faction-002': 8, 'faction-003': 3 }, publisherVolumes: { 'pub-africom-j2': 2, 'pub-reg-vanguard': 3, 'pub-telegram': 5 } },
+      { date: '2026-01-27', factionVolumes: { 'faction-002': 10, 'faction-003': 4 }, publisherVolumes: { 'pub-africom-j2': 3, 'pub-dia': 2, 'pub-reg-premium': 2, 'pub-telegram': 6 } },
+      { date: '2026-02-02', factionVolumes: { 'faction-002': 25, 'faction-003': 10 }, publisherVolumes: { 'pub-africom-j2': 5, 'pub-dia': 4, 'pub-int-bbc-africa': 4, 'pub-reg-vanguard': 5, 'pub-telegram': 12 } },
+      { date: '2026-02-04', factionVolumes: { 'faction-002': 20, 'faction-003': 7 }, publisherVolumes: { 'pub-africom-j2': 4, 'pub-dia': 3, 'pub-reg-vanguard': 4, 'pub-telegram': 10 } },
+      { date: '2026-02-10', factionVolumes: { 'faction-002': 12, 'faction-003': 5 }, publisherVolumes: { 'pub-africom-j2': 3, 'pub-dia': 2, 'pub-reg-premium': 3, 'pub-telegram': 7 } },
+      { date: '2026-02-18', factionVolumes: { 'faction-002': 8, 'faction-003': 3 }, publisherVolumes: { 'pub-africom-j2': 3, 'pub-reg-vanguard': 3, 'pub-telegram': 5 } }
     ],
     documentIds: ['doc-002', 'doc-006', 'doc-016', 'doc-026'],
     createdAt: '2026-01-20T00:00:00Z'
@@ -83,18 +91,23 @@ export const narratives = [
       'pub-int-reuters': { volume: 18, stance: -0.50 },
       'pub-acled': { volume: 12, stance: -0.70 }
     },
+    factionMentions: {
+      'faction-001': { volume: 120, stance: -0.80 },
+      'faction-004': { volume: 65, stance: -0.50 },
+      'faction-005': { volume: 50, stance: -0.58 }
+    },
     personIds: ['person-003', 'person-012', 'person-013'],
     organizationIds: ['org-003', 'org-005', 'org-012', 'org-013', 'org-016'],
     locationIds: ['loc-007', 'loc-008', 'loc-009', 'loc-014'],
     eventIds: ['event-004', 'event-007', 'event-013'],
     volumeOverTime: [
-      { date: '2026-01-15', publisherVolumes: { 'pub-africom-j2': 3, 'pub-dia': 2, 'pub-int-france24': 4 } },
-      { date: '2026-01-22', publisherVolumes: { 'pub-africom-j2': 4, 'pub-cia-da': 2, 'pub-int-aljazeera': 3, 'pub-int-reuters': 2 } },
-      { date: '2026-01-29', publisherVolumes: { 'pub-africom-j2': 4, 'pub-dia': 3, 'pub-int-france24': 3, 'pub-acled': 2 } },
-      { date: '2026-02-05', publisherVolumes: { 'pub-africom-j2': 7, 'pub-dia': 5, 'pub-cia-da': 3, 'pub-int-france24': 6, 'pub-int-aljazeera': 5, 'pub-int-reuters': 4, 'pub-acled': 3 } },
-      { date: '2026-02-08', publisherVolumes: { 'pub-africom-j2': 6, 'pub-dia': 4, 'pub-int-france24': 5, 'pub-int-reuters': 3 } },
-      { date: '2026-02-15', publisherVolumes: { 'pub-africom-j2': 5, 'pub-dia': 3, 'pub-int-aljazeera': 3, 'pub-acled': 2 } },
-      { date: '2026-02-18', publisherVolumes: { 'pub-africom-j2': 6, 'pub-dia': 5, 'pub-cia-da': 4, 'pub-int-france24': 5, 'pub-int-reuters': 4, 'pub-acled': 3 } }
+      { date: '2026-01-15', factionVolumes: { 'faction-001': 5, 'faction-004': 3, 'faction-005': 2 }, publisherVolumes: { 'pub-africom-j2': 3, 'pub-dia': 2, 'pub-int-france24': 4 } },
+      { date: '2026-01-22', factionVolumes: { 'faction-001': 7, 'faction-004': 4, 'faction-005': 3 }, publisherVolumes: { 'pub-africom-j2': 4, 'pub-cia-da': 2, 'pub-int-aljazeera': 3, 'pub-int-reuters': 2 } },
+      { date: '2026-01-29', factionVolumes: { 'faction-001': 7, 'faction-004': 3, 'faction-005': 2 }, publisherVolumes: { 'pub-africom-j2': 4, 'pub-dia': 3, 'pub-int-france24': 3, 'pub-acled': 2 } },
+      { date: '2026-02-05', factionVolumes: { 'faction-001': 22, 'faction-004': 12, 'faction-005': 10 }, publisherVolumes: { 'pub-africom-j2': 7, 'pub-dia': 5, 'pub-cia-da': 3, 'pub-int-france24': 6, 'pub-int-aljazeera': 5, 'pub-int-reuters': 4, 'pub-acled': 3 } },
+      { date: '2026-02-08', factionVolumes: { 'faction-001': 15, 'faction-004': 8, 'faction-005': 7 }, publisherVolumes: { 'pub-africom-j2': 6, 'pub-dia': 4, 'pub-int-france24': 5, 'pub-int-reuters': 3 } },
+      { date: '2026-02-15', factionVolumes: { 'faction-001': 10, 'faction-004': 5, 'faction-005': 4 }, publisherVolumes: { 'pub-africom-j2': 5, 'pub-dia': 3, 'pub-int-aljazeera': 3, 'pub-acled': 2 } },
+      { date: '2026-02-18', factionVolumes: { 'faction-001': 18, 'faction-004': 10, 'faction-005': 8 }, publisherVolumes: { 'pub-africom-j2': 6, 'pub-dia': 5, 'pub-cia-da': 4, 'pub-int-france24': 5, 'pub-int-reuters': 4, 'pub-acled': 3 } }
     ],
     documentIds: ['doc-004', 'doc-007', 'doc-017', 'doc-022', 'doc-023', 'doc-024', 'doc-027'],
     createdAt: '2026-01-15T00:00:00Z'
@@ -115,17 +128,21 @@ export const narratives = [
       'pub-ofac': { volume: 6, stance: -0.68 },
       'pub-int-reuters': { volume: 10, stance: -0.48 }
     },
+    factionMentions: {
+      'faction-001': { volume: 60, stance: -0.72 },
+      'faction-003': { volume: 35, stance: 0.55 }
+    },
     personIds: ['person-003', 'person-006', 'person-007'],
     organizationIds: ['org-001', 'org-003'],
     locationIds: ['loc-008', 'loc-009'],
     eventIds: ['event-010', 'event-011'],
     volumeOverTime: [
-      { date: '2026-01-25', publisherVolumes: { 'pub-dia': 2, 'pub-cia-da': 2, 'pub-int-reuters': 1 } },
-      { date: '2026-02-01', publisherVolumes: { 'pub-dia': 3, 'pub-cia-da': 2, 'pub-un-panel': 1, 'pub-int-reuters': 2 } },
-      { date: '2026-02-10', publisherVolumes: { 'pub-dia': 3, 'pub-cia-da': 3, 'pub-fatf': 2, 'pub-ofac': 1 } },
-      { date: '2026-02-18', publisherVolumes: { 'pub-dia': 5, 'pub-cia-da': 4, 'pub-un-panel': 5, 'pub-fatf': 3, 'pub-ofac': 2, 'pub-int-reuters': 4 } },
-      { date: '2026-02-20', publisherVolumes: { 'pub-dia': 4, 'pub-cia-da': 3, 'pub-ofac': 3, 'pub-int-reuters': 2 } },
-      { date: '2026-02-25', publisherVolumes: { 'pub-dia': 3, 'pub-cia-da': 2, 'pub-un-panel': 2, 'pub-int-reuters': 1 } }
+      { date: '2026-01-25', factionVolumes: { 'faction-001': 4, 'faction-003': 2 }, publisherVolumes: { 'pub-dia': 2, 'pub-cia-da': 2, 'pub-int-reuters': 1 } },
+      { date: '2026-02-01', factionVolumes: { 'faction-001': 6, 'faction-003': 3 }, publisherVolumes: { 'pub-dia': 3, 'pub-cia-da': 2, 'pub-un-panel': 1, 'pub-int-reuters': 2 } },
+      { date: '2026-02-10', factionVolumes: { 'faction-001': 7, 'faction-003': 4 }, publisherVolumes: { 'pub-dia': 3, 'pub-cia-da': 3, 'pub-fatf': 2, 'pub-ofac': 1 } },
+      { date: '2026-02-18', factionVolumes: { 'faction-001': 18, 'faction-003': 10 }, publisherVolumes: { 'pub-dia': 5, 'pub-cia-da': 4, 'pub-un-panel': 5, 'pub-fatf': 3, 'pub-ofac': 2, 'pub-int-reuters': 4 } },
+      { date: '2026-02-20', factionVolumes: { 'faction-001': 10, 'faction-003': 6 }, publisherVolumes: { 'pub-dia': 4, 'pub-cia-da': 3, 'pub-ofac': 3, 'pub-int-reuters': 2 } },
+      { date: '2026-02-25', factionVolumes: { 'faction-001': 6, 'faction-003': 3 }, publisherVolumes: { 'pub-dia': 3, 'pub-cia-da': 2, 'pub-un-panel': 2, 'pub-int-reuters': 1 } }
     ],
     documentIds: ['doc-010', 'doc-011', 'doc-019', 'doc-020', 'doc-029'],
     createdAt: '2026-01-25T00:00:00Z'
@@ -146,17 +163,21 @@ export const narratives = [
       'pub-reg-zitamar': { volume: 16, stance: -0.55 },
       'pub-int-france24': { volume: 8, stance: -0.50 }
     },
+    factionMentions: {
+      'faction-002': { volume: 65, stance: -0.65 },
+      'faction-003': { volume: 30, stance: 0.30 }
+    },
     personIds: ['person-004'],
     organizationIds: ['org-006', 'org-017', 'org-018'],
     locationIds: ['loc-010', 'loc-011'],
     eventIds: ['event-008', 'event-009'],
     volumeOverTime: [
-      { date: '2026-01-20', publisherVolumes: { 'pub-africom-j2': 2, 'pub-reg-zitamar': 2, 'pub-int-bbc-africa': 1 } },
-      { date: '2026-02-01', publisherVolumes: { 'pub-africom-j2': 2, 'pub-dia': 1, 'pub-reg-zitamar': 3 } },
-      { date: '2026-02-12', publisherVolumes: { 'pub-africom-j2': 4, 'pub-dia': 3, 'pub-int-bbc-africa': 4, 'pub-int-reuters': 3, 'pub-reg-zitamar': 5, 'pub-int-france24': 2 } },
-      { date: '2026-02-15', publisherVolumes: { 'pub-africom-j2': 3, 'pub-dia': 2, 'pub-int-bbc-africa': 3, 'pub-int-reuters': 3, 'pub-reg-zitamar': 4, 'pub-int-france24': 3 } },
-      { date: '2026-02-20', publisherVolumes: { 'pub-africom-j2': 3, 'pub-dia': 2, 'pub-reg-zitamar': 3, 'pub-int-reuters': 1 } },
-      { date: '2026-02-25', publisherVolumes: { 'pub-africom-j2': 2, 'pub-reg-zitamar': 2 } }
+      { date: '2026-01-20', factionVolumes: { 'faction-002': 3, 'faction-003': 2 }, publisherVolumes: { 'pub-africom-j2': 2, 'pub-reg-zitamar': 2, 'pub-int-bbc-africa': 1 } },
+      { date: '2026-02-01', factionVolumes: { 'faction-002': 4, 'faction-003': 2 }, publisherVolumes: { 'pub-africom-j2': 2, 'pub-dia': 1, 'pub-reg-zitamar': 3 } },
+      { date: '2026-02-12', factionVolumes: { 'faction-002': 15, 'faction-003': 8 }, publisherVolumes: { 'pub-africom-j2': 4, 'pub-dia': 3, 'pub-int-bbc-africa': 4, 'pub-int-reuters': 3, 'pub-reg-zitamar': 5, 'pub-int-france24': 2 } },
+      { date: '2026-02-15', factionVolumes: { 'faction-002': 12, 'faction-003': 6 }, publisherVolumes: { 'pub-africom-j2': 3, 'pub-dia': 2, 'pub-int-bbc-africa': 3, 'pub-int-reuters': 3, 'pub-reg-zitamar': 4, 'pub-int-france24': 3 } },
+      { date: '2026-02-20', factionVolumes: { 'faction-002': 7, 'faction-003': 3 }, publisherVolumes: { 'pub-africom-j2': 3, 'pub-dia': 2, 'pub-reg-zitamar': 3, 'pub-int-reuters': 1 } },
+      { date: '2026-02-25', factionVolumes: { 'faction-002': 3 }, publisherVolumes: { 'pub-africom-j2': 2, 'pub-reg-zitamar': 2 } }
     ],
     documentIds: ['doc-008', 'doc-009', 'doc-018', 'doc-028'],
     createdAt: '2026-01-20T00:00:00Z'
@@ -177,17 +198,20 @@ export const narratives = [
       'pub-reg-nation': { volume: 12, stance: -0.55 },
       'pub-int-bbc-africa': { volume: 8, stance: -0.50 }
     },
+    factionMentions: {
+      'faction-001': { volume: 95, stance: -0.72 }
+    },
     personIds: ['person-008'],
     organizationIds: ['org-001'],
     locationIds: ['loc-002', 'loc-004'],
     eventIds: ['event-012'],
     volumeOverTime: [
-      { date: '2026-01-25', publisherVolumes: { 'pub-nsa-sigint': 2, 'pub-telegram': 8, 'pub-whatsapp': 4 } },
-      { date: '2026-02-01', publisherVolumes: { 'pub-nsa-sigint': 2, 'pub-humint': 1, 'pub-telegram': 10, 'pub-whatsapp': 5 } },
-      { date: '2026-02-10', publisherVolumes: { 'pub-nsa-sigint': 3, 'pub-humint': 2, 'pub-telegram': 12, 'pub-whatsapp': 6 } },
-      { date: '2026-02-18', publisherVolumes: { 'pub-nsa-sigint': 2, 'pub-telegram': 8, 'pub-whatsapp': 4, 'pub-reg-nation': 3 } },
-      { date: '2026-02-22', publisherVolumes: { 'pub-nsa-sigint': 4, 'pub-humint': 3, 'pub-telegram': 18, 'pub-whatsapp': 8, 'pub-reg-nation': 5, 'pub-int-bbc-africa': 4 } },
-      { date: '2026-02-25', publisherVolumes: { 'pub-nsa-sigint': 2, 'pub-telegram': 10, 'pub-whatsapp': 4, 'pub-reg-nation': 3 } }
+      { date: '2026-01-25', factionVolumes: { 'faction-001': 10 }, publisherVolumes: { 'pub-nsa-sigint': 2, 'pub-telegram': 8, 'pub-whatsapp': 4 } },
+      { date: '2026-02-01', factionVolumes: { 'faction-001': 14 }, publisherVolumes: { 'pub-nsa-sigint': 2, 'pub-humint': 1, 'pub-telegram': 10, 'pub-whatsapp': 5 } },
+      { date: '2026-02-10', factionVolumes: { 'faction-001': 16 }, publisherVolumes: { 'pub-nsa-sigint': 3, 'pub-humint': 2, 'pub-telegram': 12, 'pub-whatsapp': 6 } },
+      { date: '2026-02-18', factionVolumes: { 'faction-001': 12 }, publisherVolumes: { 'pub-nsa-sigint': 2, 'pub-telegram': 8, 'pub-whatsapp': 4, 'pub-reg-nation': 3 } },
+      { date: '2026-02-22', factionVolumes: { 'faction-001': 28 }, publisherVolumes: { 'pub-nsa-sigint': 4, 'pub-humint': 3, 'pub-telegram': 18, 'pub-whatsapp': 8, 'pub-reg-nation': 5, 'pub-int-bbc-africa': 4 } },
+      { date: '2026-02-25', factionVolumes: { 'faction-001': 14 }, publisherVolumes: { 'pub-nsa-sigint': 2, 'pub-telegram': 10, 'pub-whatsapp': 4, 'pub-reg-nation': 3 } }
     ],
     documentIds: ['doc-012', 'doc-020', 'doc-030'],
     createdAt: '2026-01-25T00:00:00Z'
@@ -209,17 +233,22 @@ export const narratives = [
       'pub-int-ap': { volume: 10, stance: -0.50 },
       'pub-acled': { volume: 8, stance: -0.55 }
     },
+    factionMentions: {
+      'faction-004': { volume: 55, stance: -0.52 },
+      'faction-005': { volume: 65, stance: -0.60 },
+      'faction-003': { volume: 40, stance: 0.48 }
+    },
     personIds: ['person-012', 'person-013', 'person-015'],
     organizationIds: ['org-012', 'org-013', 'org-016'],
     locationIds: ['loc-007', 'loc-008', 'loc-009', 'loc-014'],
     eventIds: ['event-007', 'event-013'],
     volumeOverTime: [
-      { date: '2026-01-15', publisherVolumes: { 'pub-africom-j2': 3, 'pub-cia-da': 2, 'pub-int-france24': 3 } },
-      { date: '2026-01-25', publisherVolumes: { 'pub-africom-j2': 2, 'pub-dia': 2, 'pub-int-aljazeera': 2, 'pub-int-ap': 1 } },
-      { date: '2026-02-05', publisherVolumes: { 'pub-africom-j2': 3, 'pub-cia-da': 2, 'pub-int-france24': 3, 'pub-acled': 2 } },
-      { date: '2026-02-08', publisherVolumes: { 'pub-africom-j2': 5, 'pub-cia-da': 4, 'pub-dia': 3, 'pub-int-france24': 5, 'pub-int-aljazeera': 4, 'pub-int-ap': 3, 'pub-acled': 3 } },
-      { date: '2026-02-15', publisherVolumes: { 'pub-africom-j2': 4, 'pub-cia-da': 3, 'pub-int-france24': 3, 'pub-int-ap': 2 } },
-      { date: '2026-02-22', publisherVolumes: { 'pub-africom-j2': 3, 'pub-dia': 2, 'pub-int-aljazeera': 2, 'pub-acled': 2 } }
+      { date: '2026-01-15', factionVolumes: { 'faction-004': 4, 'faction-005': 5, 'faction-003': 3 }, publisherVolumes: { 'pub-africom-j2': 3, 'pub-cia-da': 2, 'pub-int-france24': 3 } },
+      { date: '2026-01-25', factionVolumes: { 'faction-004': 3, 'faction-005': 4, 'faction-003': 2 }, publisherVolumes: { 'pub-africom-j2': 2, 'pub-dia': 2, 'pub-int-aljazeera': 2, 'pub-int-ap': 1 } },
+      { date: '2026-02-05', factionVolumes: { 'faction-004': 5, 'faction-005': 6, 'faction-003': 4 }, publisherVolumes: { 'pub-africom-j2': 3, 'pub-cia-da': 2, 'pub-int-france24': 3, 'pub-acled': 2 } },
+      { date: '2026-02-08', factionVolumes: { 'faction-004': 12, 'faction-005': 15, 'faction-003': 10 }, publisherVolumes: { 'pub-africom-j2': 5, 'pub-cia-da': 4, 'pub-dia': 3, 'pub-int-france24': 5, 'pub-int-aljazeera': 4, 'pub-int-ap': 3, 'pub-acled': 3 } },
+      { date: '2026-02-15', factionVolumes: { 'faction-004': 7, 'faction-005': 8, 'faction-003': 5 }, publisherVolumes: { 'pub-africom-j2': 4, 'pub-cia-da': 3, 'pub-int-france24': 3, 'pub-int-ap': 2 } },
+      { date: '2026-02-22', factionVolumes: { 'faction-004': 4, 'faction-005': 5, 'faction-003': 3 }, publisherVolumes: { 'pub-africom-j2': 3, 'pub-dia': 2, 'pub-int-aljazeera': 2, 'pub-acled': 2 } }
     ],
     documentIds: ['doc-007', 'doc-022', 'doc-023', 'doc-024'],
     createdAt: '2026-01-15T00:00:00Z'

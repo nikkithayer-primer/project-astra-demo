@@ -9,7 +9,7 @@ export const documents = [
     id: 'doc-001',
     documentType: 'intelligence_report',
     repositoryId: 'repo-edl',
-    classification: 'S//NF',
+    classification: 'S',
     title: 'SITREP: Al-Shabaab VBIED Attack, Afgooye Corridor, Lower Shabelle – 28 JAN 2026',
     url: null,
     publishedDate: '2026-01-28T10:00:00Z',
@@ -38,7 +38,11 @@ export const documents = [
     quotes: [],
     activities: [
       { id: 'activity-001-01', actorId: 'org-001', actorType: 'organization', action: 'attacked', targetId: 'org-010', targetType: 'organization', targetText: 'SNA checkpoint on Afgooye corridor' }
-    ]
+    ],
+    factionMentions: {
+      'faction-001': { stance: -0.85 },
+      'faction-003': { stance: 0.40 }
+    }
   },
 
   // --- doc-002: ISWAP attack intelligence report ---
@@ -74,7 +78,11 @@ export const documents = [
     quotes: [],
     activities: [
       { id: 'activity-002-01', actorId: 'org-002', actorType: 'organization', action: 'attacked', targetId: 'org-011', targetType: 'organization', targetText: 'MNJTF outpost on Kirta Wulgo island' }
-    ]
+    ],
+    factionMentions: {
+      'faction-002': { stance: -0.78 },
+      'faction-003': { stance: 0.35 }
+    }
   },
 
   // --- doc-003: BBC report on Mogadishu hotel attack ---
@@ -111,7 +119,11 @@ export const documents = [
     ],
     activities: [
       { id: 'activity-003-01', actorId: 'org-001', actorType: 'organization', action: 'attacked', targetId: null, targetType: null, targetText: 'Hotel in Mogadishu\'s Hamarweyne district' }
-    ]
+    ],
+    factionMentions: {
+      'faction-001': { stance: -0.88 },
+      'faction-003': { stance: 0.45 }
+    }
   },
 
   // --- doc-004: JNIM ambush report ---
@@ -119,7 +131,7 @@ export const documents = [
     id: 'doc-004',
     documentType: 'intelligence_report',
     repositoryId: 'repo-edl',
-    classification: 'S//NF',
+    classification: 'S',
     title: 'SITREP: JNIM Complex Ambush on FAMa Convoy, Liptako-Gourma – 05 FEB 2026',
     url: null,
     publishedDate: '2026-02-05T18:00:00Z',
@@ -146,7 +158,11 @@ export const documents = [
     quotes: [],
     activities: [
       { id: 'activity-004-01', actorId: 'org-003', actorType: 'organization', action: 'attacked', targetId: 'org-012', targetType: 'organization', targetText: 'FAMa logistics convoy on Gao-Ménaka road' }
-    ]
+    ],
+    factionMentions: {
+      'faction-001': { stance: -0.82 },
+      'faction-004': { stance: -0.40 }
+    }
   },
 
   // --- doc-005: US airstrike report ---
@@ -154,7 +170,7 @@ export const documents = [
     id: 'doc-005',
     documentType: 'intelligence_report',
     repositoryId: 'repo-edl',
-    classification: 'S//NF',
+    classification: 'S',
     title: 'Battle Damage Assessment: US Airstrike on Al-Shabaab Command Node, Jilib Vicinity – 30 JAN 2026',
     url: null,
     publishedDate: '2026-01-30T12:00:00Z',
@@ -180,7 +196,11 @@ export const documents = [
     quotes: [],
     activities: [
       { id: 'activity-005-01', actorId: 'org-008', actorType: 'organization', action: 'struck', targetId: 'org-001', targetType: 'organization', targetText: 'Al-Shabaab command node near Jilib' }
-    ]
+    ],
+    factionMentions: {
+      'faction-001': { stance: -0.75 },
+      'faction-003': { stance: 0.65 }
+    }
   },
 
   // --- doc-006: Vanguard Nigeria report on ISWAP ---
@@ -211,7 +231,11 @@ export const documents = [
     eventIds: ['event-003'],
     tagIds: ['tag-004', 'tag-region-west'],
     quotes: [],
-    activities: []
+    activities: [],
+    factionMentions: {
+      'faction-002': { stance: -0.72 },
+      'faction-003': { stance: 0.30 }
+    }
   },
 
   // --- doc-007: France 24 report on Wagner in Sahel ---
@@ -243,7 +267,12 @@ export const documents = [
     eventIds: ['event-004', 'event-007'],
     tagIds: ['tag-004', 'tag-region-sahel'],
     quotes: [],
-    activities: []
+    activities: [],
+    factionMentions: {
+      'faction-001': { stance: -0.70 },
+      'faction-004': { stance: -0.45 },
+      'faction-005': { stance: -0.55 }
+    }
   },
 
   // --- doc-008: ISIS-Mozambique village raids ---
@@ -277,7 +306,11 @@ export const documents = [
     quotes: [],
     activities: [
       { id: 'activity-008-01', actorId: 'org-006', actorType: 'organization', action: 'raided', targetId: null, targetType: null, targetText: 'Three villages in Macomia district, Cabo Delgado' }
-    ]
+    ],
+    factionMentions: {
+      'faction-002': { stance: -0.80 },
+      'faction-003': { stance: 0.25 }
+    }
   },
 
   // --- doc-009: Reuters on TotalEnergies force majeure ---
@@ -308,9 +341,12 @@ export const documents = [
     eventIds: ['event-009'],
     tagIds: ['tag-005', 'tag-region-south'],
     quotes: [
-      { id: 'quote-009-01', speakerId: null, speakerType: null, text: 'The recent attacks on villages near Macomia show that the insurgency remains active and capable of conducting coordinated operations. We cannot put our workers at risk.' }
+      { id: 'quote-009-01', speakerId: 'org-018', speakerType: 'organization', text: 'The recent attacks on villages near Macomia show that the insurgency remains active and capable of conducting coordinated operations. We cannot put our workers at risk.' }
     ],
-    activities: []
+    activities: [],
+    factionMentions: {
+      'faction-002': { stance: -0.60 }
+    }
   },
 
   // --- doc-010: UN Panel report on JNIM financing ---
@@ -318,7 +354,7 @@ export const documents = [
     id: 'doc-010',
     documentType: 'internal_report',
     repositoryId: 'repo-struct',
-    classification: 'U//FOUO',
+    classification: 'U',
     title: 'UN Panel of Experts: JNIM Financing Networks in the Sahel – February 2026',
     url: null,
     publishedDate: '2026-02-18T09:00:00Z',
@@ -344,7 +380,10 @@ export const documents = [
     eventIds: ['event-010'],
     tagIds: ['tag-004', 'tag-region-sahel'],
     quotes: [],
-    activities: []
+    activities: [],
+    factionMentions: {
+      'faction-001': { stance: -0.75 }
+    }
   },
 
   // --- doc-011: OFAC sanctions designation ---
@@ -374,7 +413,11 @@ export const documents = [
     eventIds: ['event-011'],
     tagIds: ['tag-004', 'tag-region-east'],
     quotes: [],
-    activities: []
+    activities: [],
+    factionMentions: {
+      'faction-001': { stance: -0.70 },
+      'faction-003': { stance: 0.55 }
+    }
   },
 
   // --- doc-012: Al-Shabaab recruitment video analysis ---
@@ -408,7 +451,10 @@ export const documents = [
     quotes: [],
     activities: [
       { id: 'activity-012-01', actorId: 'person-008', actorType: 'person', action: 'distributed', targetId: null, targetType: null, targetText: 'Al-Shabaab recruitment video on Telegram' }
-    ]
+    ],
+    factionMentions: {
+      'faction-001': { stance: -0.82 }
+    }
   },
 
   // --- doc-013: AFRICOM posture assessment ---
@@ -416,7 +462,7 @@ export const documents = [
     id: 'doc-013',
     documentType: 'internal_report',
     repositoryId: 'repo-edl',
-    classification: 'S//NF',
+    classification: 'S',
     title: 'AFRICOM Counterterrorism Posture Assessment – Q1 2026',
     url: null,
     publishedDate: '2026-02-01T08:00:00Z',
@@ -443,7 +489,12 @@ export const documents = [
     eventIds: ['event-002'],
     tagIds: ['tag-002'],
     quotes: [],
-    activities: []
+    activities: [],
+    factionMentions: {
+      'faction-001': { stance: -0.65 },
+      'faction-002': { stance: -0.55 },
+      'faction-003': { stance: 0.60 }
+    }
   },
 
   // --- doc-014: State Department coordination memo ---
@@ -472,7 +523,11 @@ export const documents = [
     eventIds: [],
     tagIds: ['tag-002'],
     quotes: [],
-    activities: []
+    activities: [],
+    factionMentions: {
+      'faction-001': { stance: -0.60 },
+      'faction-003': { stance: 0.70 }
+    }
   },
 
   // --- doc-015 through doc-030: Additional documents ---
@@ -500,11 +555,15 @@ export const documents = [
     eventIds: ['event-001', 'event-005'],
     tagIds: ['tag-002', 'tag-region-east'],
     quotes: [],
-    activities: []
+    activities: [],
+    factionMentions: {
+      'faction-001': { stance: -0.78 },
+      'faction-003': { stance: 0.42 }
+    }
   },
   {
     id: 'doc-016',
-    documentType: 'social_media',
+    documentType: 'social_post',
     repositoryId: 'repo-osint',
     classification: 'U',
     title: 'ISWAP propaganda video: Kirta Wulgo operation and weapons display',
@@ -526,13 +585,16 @@ export const documents = [
     eventIds: ['event-006'],
     tagIds: ['tag-004', 'tag-region-west'],
     quotes: [],
-    activities: []
+    activities: [],
+    factionMentions: {
+      'faction-002': { stance: -0.88 }
+    }
   },
   {
     id: 'doc-017',
     documentType: 'intelligence_report',
     repositoryId: 'repo-edl',
-    classification: 'S//NF',
+    classification: 'S',
     title: 'Threat Assessment: JNIM Organizational Structure and Expansion – FEB 2026',
     url: null,
     publishedDate: '2026-02-10T08:00:00Z',
@@ -553,7 +615,10 @@ export const documents = [
     eventIds: [],
     tagIds: ['tag-001', 'tag-region-sahel'],
     quotes: [],
-    activities: []
+    activities: [],
+    factionMentions: {
+      'faction-001': { stance: -0.80 }
+    }
   },
   {
     id: 'doc-018',
@@ -580,7 +645,10 @@ export const documents = [
     eventIds: ['event-008', 'event-009'],
     tagIds: ['tag-005', 'tag-region-south'],
     quotes: [],
-    activities: []
+    activities: [],
+    factionMentions: {
+      'faction-002': { stance: -0.58 }
+    }
   },
   {
     id: 'doc-019',
@@ -606,13 +674,16 @@ export const documents = [
     eventIds: ['event-010'],
     tagIds: ['tag-004', 'tag-region-sahel'],
     quotes: [],
-    activities: []
+    activities: [],
+    factionMentions: {
+      'faction-001': { stance: -0.72 }
+    }
   },
   {
     id: 'doc-020',
     documentType: 'intelligence_report',
     repositoryId: 'repo-edl',
-    classification: 'S//NF',
+    classification: 'S',
     title: 'HUMINT Report: Al-Shabaab Recruitment and Financial Networks – East Africa',
     url: null,
     publishedDate: '2026-02-20T08:00:00Z',
@@ -633,7 +704,10 @@ export const documents = [
     eventIds: ['event-011', 'event-012'],
     tagIds: ['tag-004', 'tag-region-east'],
     quotes: [],
-    activities: []
+    activities: [],
+    factionMentions: {
+      'faction-001': { stance: -0.78 }
+    }
   },
   {
     id: 'doc-021',
@@ -659,13 +733,17 @@ export const documents = [
     eventIds: [],
     tagIds: ['tag-002'],
     quotes: [],
-    activities: []
+    activities: [],
+    factionMentions: {
+      'faction-001': { stance: -0.55 },
+      'faction-003': { stance: 0.65 }
+    }
   },
   {
     id: 'doc-022',
     documentType: 'intelligence_report',
     repositoryId: 'repo-edl',
-    classification: 'S//NF',
+    classification: 'S',
     title: 'Assessment: Russian PMC Operations in the Sahel – Impact on CT Cooperation',
     url: null,
     publishedDate: '2026-02-08T08:00:00Z',
@@ -687,7 +765,11 @@ export const documents = [
     eventIds: ['event-007'],
     tagIds: ['tag-004', 'tag-region-sahel'],
     quotes: [],
-    activities: []
+    activities: [],
+    factionMentions: {
+      'faction-004': { stance: -0.50 },
+      'faction-005': { stance: -0.62 }
+    }
   },
   {
     id: 'doc-023',
@@ -715,7 +797,11 @@ export const documents = [
     eventIds: [],
     tagIds: ['tag-004', 'tag-region-sahel'],
     quotes: [],
-    activities: []
+    activities: [],
+    factionMentions: {
+      'faction-004': { stance: -0.48 },
+      'faction-005': { stance: -0.55 }
+    }
   },
   {
     id: 'doc-024',
@@ -742,7 +828,11 @@ export const documents = [
     eventIds: ['event-013'],
     tagIds: ['tag-004', 'tag-region-sahel'],
     quotes: [],
-    activities: []
+    activities: [],
+    factionMentions: {
+      'faction-003': { stance: 0.50 },
+      'faction-004': { stance: -0.45 }
+    }
   },
   {
     id: 'doc-025',
@@ -768,7 +858,11 @@ export const documents = [
     eventIds: ['event-001', 'event-005'],
     tagIds: ['tag-002', 'tag-region-east'],
     quotes: [],
-    activities: []
+    activities: [],
+    factionMentions: {
+      'faction-001': { stance: -0.72 },
+      'faction-003': { stance: 0.38 }
+    }
   },
   {
     id: 'doc-026',
@@ -795,7 +889,10 @@ export const documents = [
     eventIds: ['event-003'],
     tagIds: ['tag-005', 'tag-region-west'],
     quotes: [],
-    activities: []
+    activities: [],
+    factionMentions: {
+      'faction-002': { stance: -0.65 }
+    }
   },
   {
     id: 'doc-027',
@@ -822,7 +919,10 @@ export const documents = [
     eventIds: [],
     tagIds: ['tag-004', 'tag-region-sahel'],
     quotes: [],
-    activities: []
+    activities: [],
+    factionMentions: {
+      'faction-001': { stance: -0.76 }
+    }
   },
   {
     id: 'doc-028',
@@ -849,7 +949,11 @@ export const documents = [
     eventIds: ['event-008'],
     tagIds: ['tag-004', 'tag-region-south'],
     quotes: [],
-    activities: []
+    activities: [],
+    factionMentions: {
+      'faction-002': { stance: -0.75 },
+      'faction-003': { stance: 0.28 }
+    }
   },
   {
     id: 'doc-029',
@@ -876,7 +980,10 @@ export const documents = [
     eventIds: ['event-010'],
     tagIds: ['tag-004', 'tag-region-sahel'],
     quotes: [],
-    activities: []
+    activities: [],
+    factionMentions: {
+      'faction-001': { stance: -0.74 }
+    }
   },
   {
     id: 'doc-030',
@@ -903,6 +1010,9 @@ export const documents = [
     eventIds: ['event-012'],
     tagIds: ['tag-004', 'tag-region-east'],
     quotes: [],
-    activities: []
+    activities: [],
+    factionMentions: {
+      'faction-001': { stance: -0.80 }
+    }
   }
 ];

@@ -361,6 +361,141 @@ const SCHEMAS = {
     required: ['id', 'name'],
     optional: ['color'],
     types: { name: 'string' }
+  },
+
+  // Extracted entity types
+  weapons: {
+    idPrefix: 'weapon-',
+    required: ['id', 'name'],
+    optional: ['description', 'type', 'documentIds', 'tagIds'],
+    types: { name: 'string', description: 'string', type: 'string' }
+  },
+  militaryVehicles: {
+    idPrefix: 'milveh-',
+    required: ['id', 'name'],
+    optional: ['description', 'type', 'documentIds', 'tagIds'],
+    types: { name: 'string', description: 'string', type: 'string' }
+  },
+  civilianVehicles: {
+    idPrefix: 'civveh-',
+    required: ['id', 'name'],
+    optional: ['description', 'type', 'documentIds', 'tagIds'],
+    types: { name: 'string', description: 'string', type: 'string' }
+  },
+  communicationDevices: {
+    idPrefix: 'comms-',
+    required: ['id', 'name'],
+    optional: ['description', 'type', 'documentIds', 'tagIds'],
+    types: { name: 'string', description: 'string', type: 'string' }
+  },
+  currencies: {
+    idPrefix: 'currency-',
+    required: ['id', 'name'],
+    optional: ['description', 'type', 'documentIds', 'tagIds'],
+    types: { name: 'string', description: 'string', type: 'string' }
+  },
+  facilities: {
+    idPrefix: 'facility-',
+    required: ['id', 'name'],
+    optional: ['description', 'type', 'documentIds', 'tagIds'],
+    types: { name: 'string', description: 'string', type: 'string' }
+  },
+  substances: {
+    idPrefix: 'substance-',
+    required: ['id', 'name'],
+    optional: ['description', 'type', 'documentIds', 'tagIds'],
+    types: { name: 'string', description: 'string', type: 'string' }
+  },
+  roles: {
+    idPrefix: 'role-',
+    required: ['id', 'name'],
+    optional: ['description', 'type', 'documentIds', 'tagIds'],
+    types: { name: 'string', description: 'string', type: 'string' }
+  },
+  namedEvents: {
+    idPrefix: 'named-event-',
+    required: ['id', 'name'],
+    optional: ['description', 'type', 'documentIds', 'tagIds'],
+    types: { name: 'string', description: 'string', type: 'string' }
+  },
+  unnamedEvents: {
+    idPrefix: null,
+    required: ['id', 'name'],
+    optional: ['description', 'type', 'documentIds', 'tagIds'],
+    types: { name: 'string', description: 'string', type: 'string' }
+  },
+  animals: {
+    idPrefix: null,
+    required: ['id', 'name'],
+    optional: ['description', 'type', 'documentIds', 'tagIds'],
+    types: { name: 'string' }
+  },
+  fungi: {
+    idPrefix: null,
+    required: ['id', 'name'],
+    optional: ['description', 'type', 'documentIds', 'tagIds'],
+    types: { name: 'string' }
+  },
+  microbes: {
+    idPrefix: null,
+    required: ['id', 'name'],
+    optional: ['description', 'type', 'documentIds', 'tagIds'],
+    types: { name: 'string' }
+  },
+  plants: {
+    idPrefix: null,
+    required: ['id', 'name'],
+    optional: ['description', 'type', 'documentIds', 'tagIds'],
+    types: { name: 'string' }
+  },
+  diseases: {
+    idPrefix: null,
+    required: ['id', 'name'],
+    optional: ['description', 'type', 'documentIds', 'tagIds'],
+    types: { name: 'string' }
+  },
+  dateTimeMentions: {
+    idPrefix: null,
+    required: ['id', 'name'],
+    optional: ['description', 'type', 'documentIds', 'tagIds'],
+    types: { name: 'string' }
+  },
+  miscellaneous: {
+    idPrefix: 'misc-',
+    required: ['id', 'name'],
+    optional: ['description', 'type', 'documentIds', 'tagIds'],
+    types: { name: 'string' }
+  },
+  unidentifiedEquipment: {
+    idPrefix: null,
+    required: ['id', 'name'],
+    optional: ['description', 'type', 'documentIds', 'tagIds'],
+    types: { name: 'string' }
+  },
+
+  // Relationship model
+  relationshipTypes: {
+    idPrefix: 'reltype-',
+    required: ['id', 'name'],
+    optional: ['description', 'directionality', 'sourceEntityTypes', 'targetEntityTypes',
+               'color', 'lineStyle', 'createdAt', 'updatedAt'],
+    types: { name: 'string', description: 'string', directionality: 'string', color: 'string', lineStyle: 'string' }
+  },
+  relationships: {
+    idPrefix: 'rel-',
+    required: ['id', 'relationshipTypeId', 'sourceEntityId', 'targetEntityId'],
+    optional: ['confidence', 'documentIds', 'notes', 'createdAt', 'updatedAt'],
+    types: { confidence: 'string' }
+  },
+
+  // Visualizations
+  visualizations: {
+    idPrefix: 'viz-',
+    required: ['id', 'type', 'title'],
+    optional: ['parentType', 'parentId', 'sortOrder', 'dataConfig', 'displayConfig',
+               'createdAt', 'updatedAt'],
+    types: { type: 'string', title: 'string', parentType: 'string', parentId: 'string',
+             sortOrder: 'number', dataConfig: 'object', displayConfig: 'object' }
   }
 };
 

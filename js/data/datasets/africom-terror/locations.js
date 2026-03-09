@@ -111,7 +111,7 @@ export const locations = [
     name: 'Camp Lemonnier, Djibouti',
     description: 'AFRICOM\'s primary forward operating base in Africa, hosting approximately 4,500 US personnel. Serves as the hub for counterterrorism operations in East Africa and the Arabian Peninsula. Co-located with Djibouti–Ambouli International Airport.',
     coordinates: { lat: 11.5469, lng: 43.1562 },
-    type: 'military_base',
+    type: 'facility',
     tagIds: ['tag-006'],
     documentIds: ['doc-013', 'doc-014', 'doc-021']
   },
@@ -120,7 +120,7 @@ export const locations = [
     name: 'Baledogle Airfield, Somalia',
     description: 'Somali military airfield that hosts US military advisors and serves as a base for drone operations and training of Somali special forces (Danab). Key facility for US strike operations against Al-Shabaab high-value targets.',
     coordinates: { lat: 2.3550, lng: 45.2050 },
-    type: 'military_base',
+    type: 'facility',
     tagIds: ['tag-005', 'tag-region-east'],
     documentIds: ['doc-005', 'doc-013']
   },
